@@ -62,10 +62,11 @@ export default function ProfessionalDashboard() {
   
   // CMDK & Debounce State
   const [locationQuery, setLocationQuery] = useState("");
-  const [debouncedQuery] = useDebounce(locationQuery, 250); // 250ms debounce
+  const [debouncedQuery] = useDebounce(locationQuery, 500); // Increased to 500ms to prevent API rate limits
   const [locationResults, setLocationResults] = useState<LocationResult[]>([]);
   const [selectedLocationName, setSelectedLocationName] = useState("");
   const [isCommandOpen, setIsCommandOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false); // Added loading state for UX
   
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [activeTab, setActiveTab] = useState<'D1' | 'D9' | 'Chalit' | 'Chandra' | 'Gochar' | 'Dasha'>('D1');
@@ -90,7 +91,6 @@ export default function ProfessionalDashboard() {
     setFormData(prev => ({ ...prev, hour: parseInt(h), minute: parseInt(m) }));
   };
 
-  // --- FORMATTERS FOR INPUT VALUES ---
   const natalDateString = `${formData.year}-${String(formData.month).padStart(2, '0')}-${String(formData.day).padStart(2, '0')}`;
   const natalTimeString = `${String(formData.hour).padStart(2, '0')}:${String(formData.minute).padStart(2, '0')}`;
   const transitDateString = `${formData.transit_year}-${String(formData.transit_month).padStart(2, '0')}-${String(formData.transit_day).padStart(2, '0')}`;
@@ -98,11 +98,21 @@ export default function ProfessionalDashboard() {
   // Debounced API Call for OpenStreetMap
   useEffect(() => {
     const fetchLocations = async () => {
-      if (!debouncedQuery) return setLocationResults([]);
+      if (!debouncedQuery) {
+        setLocationResults([]);
+        setIsSearching(false);
+        return;
+      }
+      setIsSearching(true);
       try {
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedQuery)}&limit=5`);
-        setLocationResults(await res.json());
-      } catch (error) { console.error(error); }
+        const data = await res.json();
+        setLocationResults(data);
+      } catch (error) { 
+        console.error(error); 
+      } finally {
+        setIsSearching(false);
+      }
     };
     fetchLocations();
   }, [debouncedQuery]);
@@ -119,7 +129,6 @@ export default function ProfessionalDashboard() {
     if (formData.latitude === 0 && formData.longitude === 0) return alert("Please select a location.");
     setIsLoading(true);
     try {
-      // Use the Render URL in production, or localhost when testing on your computer
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       
       const response = await fetch(`${API_URL}/api/v1/compute-charts`, { 
@@ -163,8 +172,8 @@ export default function ProfessionalDashboard() {
   const renderData = getRenderData();
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] p-4 md:p-8 text-gray-900 selection:bg-indigo-100">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <main className="min-h-screen bg-[#FAFAFA] p-4 md:p-8 text-gray-900 selection:bg-indigo-100 flex flex-col">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow w-full">
         
         {/* LEFT COLUMN: Form */}
         <motion.div layout className="lg:col-span-4 space-y-6">
@@ -190,7 +199,8 @@ export default function ProfessionalDashboard() {
                     initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }}
                     className="absolute top-0 left-0 w-full z-50 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden"
                   >
-                    <Command className="w-full">
+                    {/* shouldFilter={false} is critical here to stop cmdk from hiding API results */}
+                    <Command className="w-full" shouldFilter={false}>
                       <div className="flex items-center px-3 border-b border-gray-100">
                         <Search size={16} className="text-indigo-400 mr-2" />
                         <Command.Input 
@@ -200,13 +210,19 @@ export default function ProfessionalDashboard() {
                           placeholder="Type to search..." 
                           className="w-full py-4 text-sm outline-none bg-transparent placeholder:text-gray-300"
                         />
-                        <button onClick={() => setIsCommandOpen(false)} className="text-[10px] bg-gray-100 px-2 py-1 rounded text-gray-500 hover:bg-gray-200">ESC</button>
+                        {/* ESC button successfully removed */}
                       </div>
                       <Command.List className="max-h-60 overflow-y-auto p-2">
-                        {locationResults.length === 0 && locationQuery && <div className="p-4 text-sm text-center text-gray-400">Loading coordinates...</div>}
-                        {locationResults.map((loc, i) => (
+                        {isSearching && (
+                          <div className="p-4 text-sm text-center text-gray-400">Searching coordinates...</div>
+                        )}
+                        {!isSearching && locationResults.length === 0 && locationQuery && (
+                          <div className="p-4 text-sm text-center text-gray-400">No locations found.</div>
+                        )}
+                        {!isSearching && locationResults.map((loc, i) => (
                           <Command.Item 
                             key={i} 
+                            value={loc.display_name} // Added value for cmdk mapping
                             onSelect={() => selectLocation(loc)}
                             className="flex items-center gap-2 p-3 text-sm rounded-lg hover:bg-indigo-50 cursor-pointer text-gray-700 data-[selected=true]:bg-indigo-50"
                           >
@@ -377,6 +393,13 @@ export default function ProfessionalDashboard() {
           </AnimatePresence>
         </div>
       </div>
+      
+      {/* Footer Watermark */}
+      <div className="w-full mt-12 pb-4 text-center opacity-30 pointer-events-none">
+        <span className="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase">
+          vaibhav
+        </span>
+      </div>
     </main>
   );
 }
@@ -455,6 +478,29 @@ export default function ProfessionalDashboard() {
 //   const [gocharBase, setGocharBase] = useState<'Lagna' | 'Chandra'>('Lagna');
 //   const [isLoading, setIsLoading] = useState(false);
 
+//   // --- DATE & TIME HANDLERS ---
+//   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'natal' | 'transit') => {
+//     if (!e.target.value) return;
+//     const [y, m, d] = e.target.value.split('-');
+    
+//     if (type === 'natal') {
+//       setFormData(prev => ({ ...prev, year: parseInt(y), month: parseInt(m), day: parseInt(d) }));
+//     } else {
+//       setFormData(prev => ({ ...prev, transit_year: parseInt(y), transit_month: parseInt(m), transit_day: parseInt(d) }));
+//     }
+//   };
+
+//   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if (!e.target.value) return;
+//     const [h, m] = e.target.value.split(':');
+//     setFormData(prev => ({ ...prev, hour: parseInt(h), minute: parseInt(m) }));
+//   };
+
+//   // --- FORMATTERS FOR INPUT VALUES ---
+//   const natalDateString = `${formData.year}-${String(formData.month).padStart(2, '0')}-${String(formData.day).padStart(2, '0')}`;
+//   const natalTimeString = `${String(formData.hour).padStart(2, '0')}:${String(formData.minute).padStart(2, '0')}`;
+//   const transitDateString = `${formData.transit_year}-${String(formData.transit_month).padStart(2, '0')}-${String(formData.transit_day).padStart(2, '0')}`;
+
 //   // Debounced API Call for OpenStreetMap
 //   useEffect(() => {
 //     const fetchLocations = async () => {
@@ -479,7 +525,15 @@ export default function ProfessionalDashboard() {
 //     if (formData.latitude === 0 && formData.longitude === 0) return alert("Please select a location.");
 //     setIsLoading(true);
 //     try {
-//       const response = await fetch('http://localhost:8000/api/v1/compute-charts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+//       // Use the Render URL in production, or localhost when testing on your computer
+//       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      
+//       const response = await fetch(`${API_URL}/api/v1/compute-charts`, { 
+//         method: 'POST', 
+//         headers: { 'Content-Type': 'application/json' }, 
+//         body: JSON.stringify(formData) 
+//       });
+      
 //       if (!response.ok) throw new Error("Calculation Failed.");
 //       setChartData(await response.json());
 //     } catch (err: any) { alert(err.message); } 
@@ -574,25 +628,42 @@ export default function ProfessionalDashboard() {
 //             </div>
 
 //             <form onSubmit={generateCharts} className="space-y-6">
+//               {/* --- NATAL PARAMETERS --- */}
 //               <div>
 //                 <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 mb-4">Natal Parameters</h3>
-//                 <div className="grid grid-cols-3 gap-3 mb-3">
-//                   <div><input type="number" placeholder="DD" value={formData.day || ''} onChange={e => setFormData({...formData, day: +e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl text-center text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50" min="1" max="31"/></div>
-//                   <div><input type="number" placeholder="MM" value={formData.month || ''} onChange={e => setFormData({...formData, month: +e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl text-center text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50" min="1" max="12"/></div>
-//                   <div><input type="number" placeholder="YYYY" value={formData.year || ''} onChange={e => setFormData({...formData, year: +e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl text-center text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50" /></div>
-//                 </div>
-//                 <div className="grid grid-cols-2 gap-3">
-//                   <div><input type="number" placeholder="HH (0-23)" value={formData.hour ?? ''} onChange={e => setFormData({...formData, hour: +e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl text-center text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50" min="0" max="23"/></div>
-//                   <div><input type="number" placeholder="Min (0-59)" value={formData.minute ?? ''} onChange={e => setFormData({...formData, minute: +e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl text-center text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50" min="0" max="59"/></div>
+//                 <div className="grid grid-cols-2 gap-4">
+//                   <div>
+//                     <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">Date of Birth</label>
+//                     <input 
+//                       type="date" 
+//                       value={natalDateString}
+//                       onChange={(e) => handleDateChange(e, 'natal')}
+//                       className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" 
+//                     />
+//                   </div>
+//                   <div>
+//                     <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">Time of Birth</label>
+//                     <input 
+//                       type="time" 
+//                       value={natalTimeString}
+//                       onChange={handleTimeChange}
+//                       className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" 
+//                     />
+//                   </div>
 //                 </div>
 //               </div>
 
+//               {/* --- GOCHAR OVERLAY --- */}
 //               <div>
 //                 <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 mb-4">Gochar Overlay (Transit)</h3>
-//                 <div className="grid grid-cols-3 gap-3">
-//                   <div><input type="number" value={formData.transit_day} onChange={e => setFormData({...formData, transit_day: +e.target.value})} className="w-full p-3 border border-emerald-100 rounded-xl text-center text-sm text-emerald-900 bg-emerald-50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all" /></div>
-//                   <div><input type="number" value={formData.transit_month} onChange={e => setFormData({...formData, transit_month: +e.target.value})} className="w-full p-3 border border-emerald-100 rounded-xl text-center text-sm text-emerald-900 bg-emerald-50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all" /></div>
-//                   <div><input type="number" value={formData.transit_year} onChange={e => setFormData({...formData, transit_year: +e.target.value})} className="w-full p-3 border border-emerald-100 rounded-xl text-center text-sm text-emerald-900 bg-emerald-50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all" /></div>
+//                 <div className="w-full">
+//                   <label className="block text-[10px] text-emerald-600/70 mb-1.5 ml-1">Transit Date</label>
+//                   <input 
+//                     type="date" 
+//                     value={transitDateString}
+//                     onChange={(e) => handleDateChange(e, 'transit')}
+//                     className="w-full p-3 border border-emerald-200 rounded-xl text-sm text-emerald-900 bg-emerald-50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all cursor-pointer" 
+//                   />
 //                 </div>
 //               </div>
 

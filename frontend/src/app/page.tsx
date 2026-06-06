@@ -119,7 +119,15 @@ export default function ProfessionalDashboard() {
     if (formData.latitude === 0 && formData.longitude === 0) return alert("Please select a location.");
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/v1/compute-charts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+      // Use the Render URL in production, or localhost when testing on your computer
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      
+      const response = await fetch(`${API_URL}/api/v1/compute-charts`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(formData) 
+      });
+      
       if (!response.ok) throw new Error("Calculation Failed.");
       setChartData(await response.json());
     } catch (err: any) { alert(err.message); } 

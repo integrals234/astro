@@ -17,11 +17,11 @@ from timezonefinder import TimezoneFinder
 
 app = FastAPI(title="Professional Jyotish Engine")
 app.add_middleware(
-    CORSMiddleware, 
+    CORSMiddleware,
     allow_origins=["*"], 
-    allow_credentials=True, 
-    allow_methods=["*"], 
-    allow_headers=["*"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 tf = TimezoneFinder()

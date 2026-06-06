@@ -397,7 +397,7 @@ export default function ProfessionalDashboard() {
       {/* Footer Watermark */}
       <div className="w-full mt-12 pb-4 text-center opacity-30 pointer-events-none">
         <span className="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase">
-          vaibhav
+          vaibhav shukla
         </span>
       </div>
     </main>

@@ -1,0 +1,16 @@
+# Next.js UI artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env*
+
+# Python Engine artifacts
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/venv/
+
+# Environment / OS variables
+.DS_Store
+.idea/
+.vscode/

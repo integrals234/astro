@@ -95,8 +95,8 @@ const translations = {
     errNoLoc: "कृपया एक स्थान चुनें।",
     errCalc: "गणना विफल रही।",
     tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Dasha: "दशा" },
-    tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवांश कुण्डली (D9)", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Dasha: "विंशोत्तरी दशा" },
-    planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: "शनि", Rahu: "राहु", Ketu: "केतु", Uranus: "अरुण", Neptune: "वरुण", Pluto: "यम", Ascendant: "लग्न" },
+    tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली (D9)", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Dasha: "विंशोत्तरी दशा" },
+    planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Uranus: "अरुण", Neptune: "वरुण", Pluto: "यम", Ascendant: "लग्न" },
     signs: { Aries: "मेष", Taurus: "वृषभ", Gemini: "मिथुन", Cancer: "कर्क", Leo: "सिंह", Virgo: "कन्या", Libra: "तुला", Scorpio: "वृश्चिक", Sagittarius: "धनु", Capricorn: "मकर", Aquarius: "कुंभ", Pisces: "मीन" }
   },
   ja: {
@@ -216,9 +216,9 @@ export default function ProfessionalDashboard() {
   const [isClient, setIsClient] = useState(false);
   const today = new Date();
   
-  const [lang, setLang] = useState<LanguageCode>('en');
+  const [lang, setLang] = useState<LanguageCode>('hi');
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({ year: 1990, month: 9, day: 5, hour: 14, minute: 30, latitude: 0, longitude: 0, transit_year: today.getFullYear(), transit_month: today.getMonth() + 1, transit_day: today.getDate() });
+  const [formData, setFormData] = useState({ year: 2004, month: 4, day: 23, hour: 10, minute: 0, latitude: 25.4488, longitude: 78.5698, transit_year: today.getFullYear(), transit_month: today.getMonth() + 1, transit_day: today.getDate() });
   
   const [locationQuery, setLocationQuery] = useState("");
   const [debouncedQuery] = useDebounce(locationQuery, 500); 

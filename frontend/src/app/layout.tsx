@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Inter for clean data, numbers, and UI elements
 const inter = Inter({ 
@@ -17,7 +19,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Astro | Precision Ephemeris",
+  title: "Astro",
   description: "Professional grade astronomical calculations.",
 };
 
@@ -30,6 +32,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans bg-gray-50 text-gray-900 selection:bg-indigo-200" suppressHydrationWarning>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

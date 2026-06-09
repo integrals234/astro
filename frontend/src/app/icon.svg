@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Soft Cream/Yellow Background -->
+  <rect width="512" height="512" rx="128" fill="#FFFBEB" />
+
+  <!-- Glowing Sun Halos -->
+  <circle cx="256" cy="256" r="130" fill="#FEF3C7" />
+  <circle cx="256" cy="256" r="85" fill="#FDE68A" />
+
+  <!-- The Central Sun -->
+  <circle cx="256" cy="256" r="50" fill="#F59E0B" />
+
+  <!-- Orbit 1 (Inner) -->
+  <ellipse cx="256" cy="256" rx="150" ry="55" fill="none" stroke="#FBBF24" stroke-width="6" transform="rotate(25 256 256)" />
+  
+  <!-- Planet 1 -->
+  <g transform="translate(256 256) rotate(25)">
+    <circle cx="150" cy="0" r="14" fill="#D97706" />
+  </g>
+
+  <!-- Orbit 2 (Outer with Ringed Planet) -->
+  <ellipse cx="256" cy="256" rx="220" ry="80" fill="none" stroke="#FBBF24" stroke-width="6" transform="rotate(-40 256 256)" />
+  
+  <!-- Planet 2 (Saturn-like) -->
+  <g transform="translate(256 256) rotate(-40)">
+    <circle cx="0" cy="80" r="22" fill="#B45309" />
+    <!-- Planetary Ring -->
+    <ellipse cx="0" cy="80" rx="40" ry="12" fill="none" stroke="#D97706" stroke-width="5" transform="rotate(15 0 80)" />
+  </g>
+
+  <!-- Orbit 3 (Dashed Comet/Planet Trajectory) -->
+  <ellipse cx="256" cy="256" rx="100" ry="200" fill="none" stroke="#FCD34D" stroke-width="5" stroke-dasharray="12 10" transform="rotate(15 256 256)" />
+  
+  <!-- Planet 3 -->
+  <g transform="translate(256 256) rotate(15)">
+    <circle cx="-86.6" cy="-100" r="10" fill="#F59E0B" />
+  </g>
+
+  <!-- Decorative Celestial Stars -->
+  <path d="M120 100 L124 116 L140 120 L124 124 L120 140 L116 124 L100 120 L116 116 Z" fill="#FBBF24" />
+  <circle cx="410" cy="140" r="6" fill="#FCD34D" />
+  <circle cx="90" cy="380" r="7" fill="#FCD34D" />
+  <path d="M420 370 L423 382 L435 385 L423 388 L420 400 L417 388 L405 385 L417 382 Z" fill="#F59E0B" />
+</svg>

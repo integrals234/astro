@@ -2,10 +2,11 @@
 Professional Jyotish Computational Engine (Final Version)
 Features: D1 (Whole Sign), D9 (Navamsha), Sripati Bhava Chalit, Gochar (Transit),
 and 4-Level Vimshottari Dasha (Savana Calendar Math, NASA JPL Precision).
+Added: High-precision Astral Sunrise/Sunset calculations.
 """
 
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -14,6 +15,10 @@ from dateutil.relativedelta import relativedelta
 import pytz
 import swisseph as swe
 from timezonefinder import TimezoneFinder
+
+# NEW IMPORTS FOR SUNRISE/SUNSET
+from astral import LocationInfo
+from astral.sun import sun
 
 app = FastAPI(title="Professional Jyotish Engine")
 app.add_middleware(
@@ -83,9 +88,30 @@ class FullChartResponse(BaseModel):
     chalit_cusps: List[float]
     vimshottari_dashas: List[DashaPeriod]
     timezone_detected: str
+    # Added optional string fields for the new data
+    sunrise: Optional[str] = None
+    sunset: Optional[str] = None
 
 
 # --- MATHEMATICAL ALGORITHMS ---
+
+def get_solar_timings(latitude: float, longitude: float, year: int, month: int, day: int, timezone_str: str):
+    """
+    Calculates sunrise and sunset for a given location and date, 
+    returned in local time HH:MM:SS format.
+    """
+    try:
+        loc = LocationInfo(latitude=latitude, longitude=longitude, timezone=timezone_str)
+        birth_date = datetime(year, month, day).date()
+        s = sun(loc.observer, date=birth_date, tzinfo=loc.timezone)
+        
+        sunrise_str = s["sunrise"].strftime("%H:%M:%S")
+        sunset_str = s["sunset"].strftime("%H:%M:%S")
+        
+        return sunrise_str, sunset_str
+    except Exception as e:
+        print(f"Error calculating solar timings: {e}")
+        return None, None
 
 def get_sign(longitude: float) -> str:
     return ZODIAC_SIGNS[int(longitude // 30)]
@@ -206,6 +232,16 @@ async def compute_charts(payload: BirthDataRequest):
         tz_str = tf.timezone_at(lng=payload.longitude, lat=payload.latitude) or "UTC"
         local_tz = pytz.timezone(tz_str)
         
+        # Calculate Sunrise and Sunset
+        sunrise_str, sunset_str = get_solar_timings(
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+            year=payload.year,
+            month=payload.month,
+            day=payload.day,
+            timezone_str=tz_str
+        )
+        
         # 1. NATAL MATRIX SETUP
         local_time = datetime(payload.year, payload.month, payload.day, payload.hour, payload.minute)
         utc_time = local_tz.localize(local_time).astimezone(pytz.utc)
@@ -282,7 +318,9 @@ async def compute_charts(payload: BirthDataRequest):
             transit_planets=transit_planets,
             chalit_cusps=[round(c, 6) for c in cusps],
             vimshottari_dashas=dashas,
-            timezone_detected=tz_str
+            timezone_detected=tz_str,
+            sunrise=sunrise_str,  # Injected here
+            sunset=sunset_str     # Injected here
         )
 
     except Exception as err:

@@ -11,7 +11,18 @@ import KundliChart from '@/components/KundliChart';
 interface Planet { name: string; longitude: number; sign: string; d1_house: number; d9_sign: string; chalit_house: number; }
 interface TransitPlanet { name: string; longitude: number; sign: string; natal_house: number; }
 interface Dasha { lord: string; start_date: string; end_date: string; sub_dashas?: Dasha[]; }
-interface ChartData { ascendant_longitude: number; ascendant_sign: string; d9_ascendant_sign: string; planets: Planet[]; transit_planets: TransitPlanet[]; chalit_cusps: number[]; vimshottari_dashas: Dasha[]; timezone_detected: string; }
+interface ChartData { 
+  ascendant_longitude: number; 
+  ascendant_sign: string; 
+  d9_ascendant_sign: string; 
+  planets: Planet[]; 
+  transit_planets: TransitPlanet[]; 
+  chalit_cusps: number[]; 
+  vimshottari_dashas: Dasha[]; 
+  timezone_detected: string;
+  sunrise?: string;
+  sunset?: string;
+}
 interface LocationResult { display_name: string; lat: string; lon: string; }
 
 type LanguageCode = 'en' | 'hi' | 'ja' | 'ko';
@@ -38,6 +49,8 @@ const translations = {
     awaitingTitle: "Awaiting Parameters",
     awaitingDesc: "Search for a location using the command menu and generate to view your professional workspace.",
     timezone: "Timezone",
+    sunrise: "Sunrise",
+    sunset: "Sunset",
     absoluteLagna: "Absolute Lagna",
     exactLongitudes: "Exact Planetary Longitudes",
     transitCoords: "Transit Coordinates",
@@ -67,8 +80,10 @@ const translations = {
     generateBtn: "कुण्डली बनाएं",
     computingBtn: "गणना हो रही है...",
     awaitingTitle: "जानकारी की प्रतीक्षा",
-    awaitingDesc: "अपना कार्यस्थान देखने के लिए स्थान खोजें और कुण्डली बनाएं।",
+    awaitingDesc: "अपना जन्म स्थान खोजें और कुण्डली बनाएं।",
     timezone: "समय क्षेत्र",
+    sunrise: "सूर्योदय",
+    sunset: "सूर्यास्त",
     absoluteLagna: "स्पष्ट लग्न",
     exactLongitudes: "स्पष्ट ग्रह स्थिति",
     transitCoords: "गोचर निर्देशांक",
@@ -79,7 +94,7 @@ const translations = {
     watermark: "वैभव शुक्ला",
     errNoLoc: "कृपया एक स्थान चुनें।",
     errCalc: "गणना विफल रही।",
-    tabs: { D1: "डी1", D9: "डी9", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Dasha: "दशा" },
+    tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Dasha: "दशा" },
     tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवांश कुण्डली (D9)", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Dasha: "विंशोत्तरी दशा" },
     planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: "शनि", Rahu: "राहु", Ketu: "केतु", Uranus: "अरुण", Neptune: "वरुण", Pluto: "यम", Ascendant: "लग्न" },
     signs: { Aries: "मेष", Taurus: "वृषभ", Gemini: "मिथुन", Cancer: "कर्क", Leo: "सिंह", Virgo: "कन्या", Libra: "तुला", Scorpio: "वृश्चिक", Sagittarius: "धनु", Capricorn: "मकर", Aquarius: "कुंभ", Pisces: "मीन" }
@@ -100,6 +115,8 @@ const translations = {
     awaitingTitle: "パラメータ待機中",
     awaitingDesc: "場所を検索し、生成してプロフェッショナルワークスペースを表示します。",
     timezone: "タイムゾーン",
+    sunrise: "日の出",
+    sunset: "日の入り",
     absoluteLagna: "アセンダント",
     exactLongitudes: "惑星の正確な位置",
     transitCoords: "トランジット座標",
@@ -131,6 +148,8 @@ const translations = {
     awaitingTitle: "매개변수 대기 중",
     awaitingDesc: "위치를 검색하고 생성하여 전문 작업 공간을 확인하세요.",
     timezone: "시간대",
+    sunrise: "일출",
+    sunset: "일몰",
     absoluteLagna: "어센던트 (Lagna)",
     exactLongitudes: "정확한 행성 위치",
     transitCoords: "트랜짓 좌표",
@@ -156,7 +175,6 @@ const languages = [
 ];
 
 // --- FLUID ACCORDION COMPONENT ---
-// Passes the 't' object recursively to translate the API Dasha Lords
 const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasSubs = dasha.sub_dashas && dasha.sub_dashas.length > 0;
@@ -174,7 +192,6 @@ const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: a
         <div className="flex items-center gap-2">
           {hasSubs && <motion.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] opacity-40">▶</motion.span>}
           {!hasSubs && <span className="w-3"></span>} 
-          {/* Dynamically translates API strings like 'Jupiter' to '목성' */}
           <span>{t.planets[dasha.lord] || dasha.lord}</span>
         </div>
         <div className="text-right flex gap-4 opacity-80 font-mono text-xs">
@@ -274,7 +291,6 @@ export default function ProfessionalDashboard() {
   const getRenderData = () => {
     if (!chartData) return { planets: [], transitPlanets: [], asc: "Aries" };
     
-    // Intercept and translate planets & ascendants specifically for KundliChart rendering
     const mappedPlanets = (p: Planet, house: number) => ({ name: t.planets[p.name as keyof typeof t.planets] || p.name, house, degree: getIntegerDegree(p.longitude) });
     const mappedTransits = (p: TransitPlanet, house: number) => ({ name: t.planets[p.name as keyof typeof t.planets] || p.name, house, degree: getIntegerDegree(p.longitude) });
     
@@ -452,14 +468,35 @@ export default function ProfessionalDashboard() {
                 </div>
 
                 <div className="p-8 md:p-12 min-h-[600px]">
-                  <div className="flex justify-between items-end mb-10 pb-6 border-b border-gray-100">
-                    <div>
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.timezone}</div>
-                      <div className="font-mono text-sm text-gray-900">{chartData.timezone_detected}</div>
+                  
+                  {/* --- TOP GRID: Timezone, Sunrise, Lagna, Sunset --- */}
+                  <div className="flex justify-between items-start mb-10 pb-6 border-b border-gray-100">
+                    <div className="space-y-5">
+                      <div>
+                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.timezone}</div>
+                        <div className="font-mono text-sm text-gray-900">{chartData.timezone_detected}</div>
+                      </div>
+                      
+                      {chartData.sunrise && (
+                        <div>
+                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.sunrise}</div>
+                          <div className="font-mono text-sm text-amber-600 font-medium">{chartData.sunrise}</div>
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.absoluteLagna}</div>
-                      <div className="font-mono text-sm text-indigo-600 font-bold">{formatDMS(chartData.ascendant_longitude)}</div>
+
+                    <div className="space-y-5 text-right">
+                      <div>
+                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.absoluteLagna}</div>
+                        <div className="font-mono text-sm text-indigo-600 font-bold">{formatDMS(chartData.ascendant_longitude)}</div>
+                      </div>
+                      
+                      {chartData.sunset && (
+                        <div>
+                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.sunset}</div>
+                          <div className="font-mono text-sm text-orange-600 font-medium">{chartData.sunset}</div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -545,6 +582,8 @@ export default function ProfessionalDashboard() {
     </main>
   );
 }
+
+// नवमांश
 
 // 'use client';
 

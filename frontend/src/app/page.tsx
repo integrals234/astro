@@ -202,7 +202,7 @@ export default function ProfessionalDashboard() {
   const [isClient, setIsClient] = useState(false);
   const today = new Date();
   
-  const [lang, setLang] = useState<LanguageCode>('en');
+  const [lang, setLang] = useState<LanguageCode>('hi');
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ 
     year: 2004, month: 4, day: 23, hour: 10, minute: 0, 

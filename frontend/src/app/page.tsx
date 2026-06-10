@@ -28,6 +28,7 @@ interface TransitPlanet {
   longitude: number; 
   sign: string; 
   natal_house: number; 
+  is_retrograde: boolean;
 }
 
 interface Dasha { 
@@ -293,7 +294,8 @@ export default function ProfessionalDashboard() {
     const mappedTransits = (p: TransitPlanet, house: number) => ({ 
       name: t.planets?.[p.name] || p.name, 
       house, 
-      degree: getIntegerDegree(p.longitude) 
+      degree: getIntegerDegree(p.longitude),
+      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde 
     });
     
     if (activeTab === 'D1') return { planets: chartData.planets.map(p => mappedPlanets(p, p.d1_house)), transitPlanets: [], asc: chartData.ascendant_sign };

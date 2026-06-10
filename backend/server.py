@@ -85,6 +85,7 @@ class TransitPlanetData(BaseModel):
     longitude: float
     sign: str
     natal_house: int
+    is_retrograde: bool
 
 class DashaPeriod(BaseModel):
     lord: str
@@ -316,14 +317,16 @@ async def compute_charts(payload: BirthDataRequest):
             lon = calc_result[0]
             transit_planets.append(TransitPlanetData(
                 name=name, longitude=round(lon, 6), sign=get_sign(lon),
-                natal_house=calculate_d1_house(lon, asc_lon)
+                natal_house=calculate_d1_house(lon, asc_lon),
+                is_retrograde=is_retro
             ))
             
         t_rahu = next(p for p in transit_planets if p.name == "Rahu")
         t_ketu_lon = (t_rahu.longitude + 180.0) % 360.0
         transit_planets.append(TransitPlanetData(
             name="Ketu", longitude=round(t_ketu_lon, 6), sign=get_sign(t_ketu_lon),
-            natal_house=calculate_d1_house(t_ketu_lon, asc_lon)
+            natal_house=calculate_d1_house(t_ketu_lon, asc_lon),
+            is_retrograde=True
         ))
 
         dashas = generate_vimshottari(moon_lon, local_time)

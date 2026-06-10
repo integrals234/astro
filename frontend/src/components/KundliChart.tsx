@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// Added isRetrograde to the interface
 interface MappedPlanet { 
   name: string; 
   house: number; 
@@ -34,6 +33,8 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
     return signNum > 12 ? signNum - 12 : signNum;
   };
 
+  const isGocharChart = transitPlanets.length > 0;
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -41,7 +42,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full max-w-md mx-auto bg-white p-2 rounded-xl border border-gray-100 shadow-sm relative"
     >
-      {transitPlanets.length > 0 && (
+      {isGocharChart && (
         <div className="absolute top-4 left-4 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
           ● Transit Overlay
         </div>
@@ -74,17 +75,18 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                     {i > 0 ? ', ' : ''}
                     {p.name.substring(0, 2)}
                     
-                    {/* Retrograde Asterisk */}
-                    {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>}
+                    {/* Retrograde Asterisk - Hidden if we are showing the Gochar Overlay */}
+                    {p.isRetrograde && !isGocharChart && (
+                      <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                    )}
                     
-                    {/* Planetary Degree */}
                     <tspan baselineShift="super" fontSize="9" className="fill-indigo-400">{p.degree}</tspan>
                   </tspan>
                 ))}
               </text>
 
               {/* Transit Planets */}
-              {transitInHouse.length > 0 && (
+              {isGocharChart && (
                 <text x={x} y={y + 20} textAnchor="middle" className="stroke-none fill-emerald-600 text-xs font-bold font-sans tracking-tight cursor-pointer">
                   {transitInHouse.map((p, i) => (
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
@@ -92,10 +94,11 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                       {i > 0 ? ', ' : ''}
                       {p.name.substring(0, 2)}
                       
-                      {/* Retrograde Asterisk for Transits */}
-                      {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>}
+                      {/* Retrograde Asterisk for Transits ONLY */}
+                      {p.isRetrograde && (
+                        <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                      )}
                       
-                      {/* Transit Degree */}
                       <tspan baselineShift="super" fontSize="8" className="fill-emerald-400/80">{p.degree}</tspan>
                     </tspan>
                   ))}

@@ -520,7 +520,14 @@ export default function ProfessionalDashboard() {
                             </div>
                           )}
                           
-                          <KundliChart planets={renderData.planets} transitPlanets={renderData.transitPlanets} ascendantSign={renderData.asc} />
+                          <KundliChart 
+                            planets={renderData.planets} 
+                            transitPlanets={renderData.transitPlanets} 
+                            ascendantSign={renderData.asc} 
+                            // Pass the translated label and degree ONLY for D1 and Gochar charts
+                            ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
+                            ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined}
+                          />
                         </div>
                       )}
 

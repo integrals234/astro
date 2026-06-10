@@ -561,7 +561,9 @@ export default function ProfessionalDashboard() {
                                     </div>
                                     <div className="pt-2 mt-2 border-t border-gray-200/60">
                                       <div className="flex justify-between items-center">
-                                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Nakshatra</span> 
+                                        <span className={`font-bold text-indigo-400 uppercase tracking-widest ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>
+                                        {t.ui?.nakshatraLabel || 'Nakshatra'}
+                                        </span> 
                                         <span className={`font-semibold text-indigo-900 ${lang === 'hi' ? 'text-base' : 'text-sm'}`}>
                                           {t.nakshatras?.[p.nakshatra] || p.nakshatra}
                                         </span>

@@ -275,12 +275,6 @@ export default function ProfessionalDashboard() {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) 
       });
       if (!response.ok) throw new Error(t.errCalc || "Calculation Failed.");
-      
-      const data = await response.json();
-
-      const jupiterData = data.transit_planets.find((p: any) => p.name === "Jupiter");
-      console.log("JUPITER TRANSIT DATA FROM BACKEND:", jupiterData);
-
       setChartData(await response.json());
     } catch (err: any) { alert(err.message); } 
     finally { setIsLoading(false); }

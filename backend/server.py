@@ -315,6 +315,9 @@ async def compute_charts(payload: BirthDataRequest):
         for name, internal_id in PLANET_MAP.items():
             calc_result, _ = swe.calc_ut(t_julian_day, internal_id, calc_flags)
             lon = calc_result[0]
+            speed = calc_result[3] # Index 3 holds planetary speed
+            is_retro = speed < 0 if name not in ["Sun", "Moon", "Rahu"] else False
+            
             transit_planets.append(TransitPlanetData(
                 name=name, longitude=round(lon, 6), sign=get_sign(lon),
                 natal_house=calculate_d1_house(lon, asc_lon),

@@ -85,7 +85,7 @@ class TransitPlanetData(BaseModel):
     longitude: float
     sign: str
     natal_house: int
-    is_retrograde: bool
+    is_retrograde: bool = False
 
 class DashaPeriod(BaseModel):
     lord: str

@@ -1,8 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface MappedPlanet { name: string; house: number; degree: number; }
-interface KundliChartProps { planets: MappedPlanet[]; transitPlanets?: MappedPlanet[]; ascendantSign: string; }
+// Added isRetrograde to the interface
+interface MappedPlanet { 
+  name: string; 
+  house: number; 
+  degree: number; 
+  isRetrograde?: boolean; 
+}
+
+interface KundliChartProps { 
+  planets: MappedPlanet[]; 
+  transitPlanets?: MappedPlanet[]; 
+  ascendantSign: string; 
+}
 
 const signToNumber: Record<string, number> = {
   "Aries": 1, "Taurus": 2, "Gemini": 3, "Cancer": 4, "Leo": 5, "Virgo": 6,
@@ -37,6 +48,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
       )}
 
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full h-auto stroke-indigo-900 fill-transparent" style={{ strokeWidth: 1 }}>
+        {/* Diamond Chart Lines */}
         <rect x="0" y="0" width={SIZE} height={SIZE} className="stroke-gray-400" />
         <line x1="0" y1="0" x2={SIZE} y2={SIZE} className="stroke-gray-400" />
         <line x1="0" y1={SIZE} x2={SIZE} y2="0" className="stroke-gray-400" />
@@ -49,26 +61,41 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
           
           return (
             <g key={`house-${houseNum}`}>
+              {/* Zodiac Sign Number in the House */}
               <text x={x} y={y - 22} textAnchor="middle" className="stroke-none fill-red-400/50 text-xs font-semibold font-mono">
                 {getSignForHouse(houseNum)}
               </text>
               
+              {/* Natal Planets */}
               <text x={x} y={y + 2} textAnchor="middle" className="stroke-none fill-indigo-950 text-sm font-bold font-sans tracking-tight cursor-pointer">
                 {natalInHouse.map((p, i) => (
                   <tspan key={`n-${p.name}`} className="transition-all duration-300 hover:fill-indigo-600">
-                    <title>{`${p.name} at ${p.degree}°`}</title>
-                    {i > 0 ? ', ' : ''}{p.name.substring(0, 2)}
+                    <title>{`${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
+                    {i > 0 ? ', ' : ''}
+                    {p.name.substring(0, 2)}
+                    
+                    {/* Retrograde Asterisk */}
+                    {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="12">*</tspan>}
+                    
+                    {/* Planetary Degree */}
                     <tspan baselineShift="super" fontSize="9" className="fill-indigo-400">{p.degree}</tspan>
                   </tspan>
                 ))}
               </text>
 
+              {/* Transit Planets */}
               {transitInHouse.length > 0 && (
                 <text x={x} y={y + 20} textAnchor="middle" className="stroke-none fill-emerald-600 text-xs font-bold font-sans tracking-tight cursor-pointer">
                   {transitInHouse.map((p, i) => (
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
-                      <title>{`Transit ${p.name} at ${p.degree}°`}</title>
-                      {i > 0 ? ', ' : ''}{p.name.substring(0, 2)}
+                      <title>{`Transit ${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
+                      {i > 0 ? ', ' : ''}
+                      {p.name.substring(0, 2)}
+                      
+                      {/* Retrograde Asterisk for Transits */}
+                      {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="11">*</tspan>}
+                      
+                      {/* Transit Degree */}
                       <tspan baselineShift="super" fontSize="8" className="fill-emerald-400/80">{p.degree}</tspan>
                     </tspan>
                   ))}

@@ -6,6 +6,7 @@ import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
 import { Search, MapPin, Globe, ChevronDown, Sparkles, Eye } from 'lucide-react';
 import KundliChart from '@/components/KundliChart';
+import SouthKundliChart from '@/components/SouthKundliChart';
 
 // --- TYPES ---
 interface Planet { 
@@ -218,6 +219,7 @@ export default function ProfessionalDashboard() {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false); 
   
+  const [chartStyle, setChartStyle] = useState<'North' | 'South'>('North');
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [activeTab, setActiveTab] = useState<'D1' | 'D9' | 'Chalit' | 'Chandra' | 'Gochar' | 'Details' | 'Aspects' | 'Dasha'>('D1');
   const [gocharBase, setGocharBase] = useState<'Lagna' | 'Chandra'>('Lagna');
@@ -288,14 +290,16 @@ export default function ProfessionalDashboard() {
       name: t.planets?.[p.name] || p.name, 
       house, 
       degree: getIntegerDegree(p.longitude),
-      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : Boolean(p.is_retrograde)
+      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : Boolean(p.is_retrograde),
+      sign: p.sign
     });
     
     const mappedTransits = (p: TransitPlanet, house: number) => ({ 
       name: t.planets?.[p.name] || p.name, 
       house, 
       degree: getIntegerDegree(p.longitude),
-      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde 
+      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde,
+      sign: p.sign
     });
     
     if (activeTab === 'D1') return { planets: chartData.planets.map(p => mappedPlanets(p, p.d1_house)), transitPlanets: [], asc: chartData.ascendant_sign };
@@ -509,25 +513,54 @@ export default function ProfessionalDashboard() {
                       {/* STANDARD CHARTS */}
                       {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
                         <div className="flex flex-col items-center">
-                          <h2 className="text-2xl font-serif text-indigo-950 mb-8">{t.tabTitles?.[activeTab] || activeTab}</h2>
+                          <h2 className={`font-serif text-indigo-950 mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
+                            {t.tabTitles?.[activeTab] || activeTab}
+                          </h2>
                           
                           {activeTab === 'Gochar' && (
                             <div className="flex justify-center mb-8">
                               <div className="bg-gray-100/80 p-1 rounded-xl inline-flex">
-                                <button onClick={() => setGocharBase('Lagna')} className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Lagna' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'}`}>{t.lagnaBase}</button>
-                                <button onClick={() => setGocharBase('Chandra')} className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Chandra' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'}`}>{t.chandraBase}</button>
+                                <button onClick={() => setGocharBase('Lagna')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Lagna' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.lagnaBase}</button>
+                                <button onClick={() => setGocharBase('Chandra')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Chandra' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.chandraBase}</button>
                               </div>
                             </div>
                           )}
                           
-                          <KundliChart 
-                            planets={renderData.planets} 
-                            transitPlanets={renderData.transitPlanets} 
-                            ascendantSign={renderData.asc} 
-                            // Pass the translated label and degree ONLY for D1 and Gochar charts
-                            ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
-                            ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined}
-                          />
+                          {/* Conditional Chart Rendering */}
+                          {chartStyle === 'North' ? (
+                            <KundliChart 
+                              planets={renderData.planets} 
+                              transitPlanets={renderData.transitPlanets} 
+                              ascendantSign={renderData.asc}
+                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
+                              ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
+                            />
+                          ) : (
+                            <SouthKundliChart 
+                              planets={renderData.planets} 
+                              transitPlanets={renderData.transitPlanets} 
+                              ascendantSign={renderData.asc}
+                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
+                              ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
+                            />
+                          )}
+
+                          {/* Elegant Style Switcher */}
+                          <div className="mt-10 bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
+                            <button 
+                              onClick={() => setChartStyle('North')} 
+                              className={`px-6 py-2 text-xs font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'North' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                              North Indian
+                            </button>
+                            <button 
+                              onClick={() => setChartStyle('South')} 
+                              className={`px-6 py-2 text-xs font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'South' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                              South Indian
+                            </button>
+                          </div>
+
                         </div>
                       )}
 

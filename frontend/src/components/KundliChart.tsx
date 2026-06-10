@@ -75,7 +75,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                     {p.name.substring(0, 2)}
                     
                     {/* Retrograde Asterisk */}
-                    {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="12">*</tspan>}
+                    {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>}
                     
                     {/* Planetary Degree */}
                     <tspan baselineShift="super" fontSize="9" className="fill-indigo-400">{p.degree}</tspan>
@@ -93,7 +93,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                       {p.name.substring(0, 2)}
                       
                       {/* Retrograde Asterisk for Transits */}
-                      {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="11">*</tspan>}
+                      {p.isRetrograde && <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>}
                       
                       {/* Transit Degree */}
                       <tspan baselineShift="super" fontSize="8" className="fill-emerald-400/80">{p.degree}</tspan>

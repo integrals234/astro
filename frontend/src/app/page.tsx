@@ -78,137 +78,63 @@ const getIntegerDegree = (raw: number) => Math.floor(raw % 30);
 // --- TRANSLATION DICTIONARY ---
 const translations: Record<LanguageCode, any> = {
   en: {
-    appTitle: "Astro", 
-    birthCity: "Birth City", 
-    searchPlaceholder: "Search global cities...", 
-    searching: "Searching coordinates...", 
-    noLocations: "No locations found.",
-    natalParams: "Natal Parameters", 
-    dob: "Date of Birth", 
-    tob: "Time of Birth", 
-    gocharOverlay: "Gochar Overlay (Transit)", 
-    transitDate: "Transit Date",
-    generateBtn: "Generate Analysis", 
-    computingBtn: "Computing Ephemeris...", 
-    awaitingTitle: "Awaiting Parameters", 
-    awaitingDesc: "Search for a location using the command menu and generate to view your professional workspace.",
-    timezone: "Timezone", 
-    sunrise: "Sunrise", 
-    sunset: "Sunset", 
-    absoluteLagna: "Absolute Lagna", 
-    exactLongitudes: "Exact Planetary Longitudes", 
-    transitCoords: "Transit Coordinates",
-    dashaTimeline: "Vimshottari Timeline", 
-    dashaSub: "Maha • Antar • Pratyantar • Sookshma", 
-    lagnaBase: "Lagna Base", 
-    chandraBase: "Chandra Base", 
-    watermark: "vaibhav shukla",
-    errNoLoc: "Please select a location.", 
-    errCalc: "Calculation Failed.",
-    tabs: { D1: "D1", D9: "D9", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
-    tabTitles: { D1: "Natal Chart (Lagna)", D9: "D9 Navamsha", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
+    appTitle: "Astro", birthCity: "Birth City", searchPlaceholder: "Search global cities...", searching: "Searching coordinates...", noLocations: "No locations found.",
+    natalParams: "Natal Parameters", dob: "Date of Birth", tob: "Time of Birth", gocharOverlay: "Gochar Overlay (Transit)", transitDate: "Transit Date",
+    generateBtn: "Generate Analysis", computingBtn: "Computing Ephemeris...", awaitingTitle: "Awaiting Parameters", awaitingDesc: "Search for a location using the command menu and generate to view your professional workspace.",
+    timezone: "Timezone", sunrise: "Sunrise", sunset: "Sunset", absoluteLagna: "Absolute Lagna", exactLongitudes: "Exact Planetary Longitudes", transitCoords: "Transit Coordinates",
+    dashaTimeline: "Vimshottari Timeline", dashaSub: "Maha • Antar • Pratyantar • Sookshma", lagnaBase: "Lagna Base", chandraBase: "Chandra Base", watermark: "vaibhav shukla",
+    errNoLoc: "Please select a location.", errCalc: "Calculation Failed.",
+    tabs: { D1: "Lagna", D9: "Navmansha", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
+    tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
     planets: { Sun: "Sun", Moon: "Moon", Mars: "Mars", Mercury: "Mercury", Jupiter: "Jupiter", Venus: "Venus", Saturn: "Saturn", Rahu: "Rahu", Ketu: "Ketu", Ascendant: "Ascendant" },
     signs: { Aries: "Aries", Taurus: "Taurus", Gemini: "Gemini", Cancer: "Cancer", Leo: "Leo", Virgo: "Virgo", Libra: "Libra", Scorpio: "Scorpio", Sagittarius: "Sagittarius", Capricorn: "Capricorn", Aquarius: "Aquarius", Pisces: "Pisces" },
-    ui: { house: "House", retrograde: "Retrograde", pada: "Pada", lord: "Lord", aspects: "Aspects Houses", dignity: { Exalted: "Exalted", Debilitated: "Debilitated", "Own Sign": "Own Sign", Neutral: "Neutral" } }
+    ui: { house: "House", retrograde: "Retrograde", pada: "Pada", lord: "Lord", aspects: "Aspects Houses", dignity: { Exalted: "Exalted", Debilitated: "Debilitated", "Own Sign": "Own Sign", Neutral: "Neutral" } },
+    nakshatras: { Ashwini: "Ashwini", Bharani: "Bharani", Krittika: "Krittika", Rohini: "Rohini", Mrigashira: "Mrigashira", Ardra: "Ardra", Punarvasu: "Punarvasu", Pushya: "Pushya", Ashlesha: "Ashlesha", Magha: "Magha", "Purva Phalguni": "Purva Phalguni", "Uttara Phalguni": "Uttara Phalguni", Hasta: "Hasta", Chitra: "Chitra", Swati: "Swati", Vishakha: "Vishakha", Anuradha: "Anuradha", Jyeshtha: "Jyeshtha", Mula: "Mula", "Purva Ashadha": "Purva Ashadha", "Uttara Ashadha": "Uttara Ashadha", Shravana: "Shravana", Dhanishta: "Dhanishta", Shatabhisha: "Shatabhisha", "Purva Bhadrapada": "Purva Bhadrapada", "Uttara Bhadrapada": "Uttara Bhadrapada", Revati: "Revati" }
   },
-  hi: { appTitle: "ज्योतिष",
-    birthCity: "जन्म स्थान",
-    searchPlaceholder: "शहर खोजें...",
-    searching: "निर्देशांक खोजे जा रहे हैं...",
-    noLocations: "कोई स्थान नहीं मिला।",
-    natalParams: "जन्म विवरण",
-    dob: "जन्म तिथि",
-    tob: "जन्म समय",
-    gocharOverlay: "गोचर (Transit)",
-    transitDate: "गोचर तिथि",
-    generateBtn: "कुण्डली बनाएं",
-    computingBtn: "गणना हो रही है...",
-    awaitingTitle: "जानकारी की प्रतीक्षा",
-    awaitingDesc: "अपना जन्म स्थान खोजें और कुण्डली बनाएं।",
-    timezone: "समय क्षेत्र",
-    sunrise: "सूर्योदय",
-    sunset: "सूर्यास्त",
-    absoluteLagna: "स्पष्ट लग्न",
-    exactLongitudes: "स्पष्ट ग्रह स्थिति",
-    transitCoords: "गोचर निर्देशांक",
-    dashaTimeline: "विंशोत्तरी दशा",
-    dashaSub: "महा • अंतर • प्रत्यंतर • सूक्ष्म",
-    lagnaBase: "लग्न आधार",
-    chandraBase: "चन्द्र आधार",
-    watermark: "वैभव शुक्ला",
-    errNoLoc: "कृपया एक स्थान चुनें।",
-    errCalc: "गणना विफल रही।",
-    tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Dasha: "दशा" },
-    tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली (D9)", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Dasha: "विंशोत्तरी दशा" },
-    planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Uranus: "अरुण", Neptune: "वरुण", Pluto: "यम", Ascendant: "लग्न" },
-    signs: { Aries: "मेष", Taurus: "वृषभ", Gemini: "मिथुन", Cancer: "कर्क", Leo: "सिंह", Virgo: "कन्या", Libra: "तुला", Scorpio: "वृश्चिक", Sagittarius: "धनु", Capricorn: "मकर", Aquarius: "कुंभ", Pisces: "मीन" }, 
-    ui: { house: "भाव", retrograde: "वक्री", pada: "पद", lord: "स्वामी", aspects: "दृष्टि भाव", dignity: { Exalted: "उच्च", Debilitated: "नीच", "Own Sign": "स्वराशि", Neutral: "सम" } } 
+  
+  hi: {
+    appTitle: "ज्योतिष", birthCity: "जन्म स्थान", searchPlaceholder: "शहर खोजें...", searching: "निर्देशांक खोजे जा रहे हैं...", noLocations: "कोई स्थान नहीं मिला।",
+    natalParams: "जन्म विवरण", dob: "जन्म तिथि", tob: "जन्म समय", gocharOverlay: "गोचर (Transit)", transitDate: "गोचर तिथि",
+    generateBtn: "कुण्डली बनाएं", computingBtn: "गणना हो रही है...", awaitingTitle: "जानकारी की प्रतीक्षा", awaitingDesc: "अपना जन्म स्थान खोजें और कुण्डली बनाएं।",
+    timezone: "समय क्षेत्र", sunrise: "सूर्योदय", sunset: "सूर्यास्त", absoluteLagna: "स्पष्ट लग्न", exactLongitudes: "स्पष्ट ग्रह स्थिति", transitCoords: "गोचर निर्देशांक",
+    dashaTimeline: "विंशोत्तरी दशा", dashaSub: "महा • अंतर • प्रत्यंतर • सूक्ष्म", lagnaBase: "लग्न आधार", chandraBase: "चन्द्र आधार", watermark: "वैभव शुक्ला",
+    errNoLoc: "कृपया एक स्थान चुनें।", errCalc: "गणना विफल रही।",
+    tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Details: "विवरण", Aspects: "दृष्टि", Dasha: "दशा" },
+    tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Details: "ग्रह विवरण", Aspects: "वैदिक दृष्टि (Drishti)", Dasha: "विंशोत्तरी दशा" },
+    planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Ascendant: "लग्न" },
+    signs: { Aries: "मेष", Taurus: "वृषभ", Gemini: "मिथुन", Cancer: "कर्क", Leo: "सिंह", Virgo: "कन्या", Libra: "तुला", Scorpio: "वृश्चिक", Sagittarius: "धनु", Capricorn: "मकर", Aquarius: "कुंभ", Pisces: "मीन" },
+    ui: { house: "भाव", retrograde: "वक्री", pada: "पद", lord: "स्वामी", aspects: "दृष्टि भाव", dignity: { Exalted: "उच्च", Debilitated: "नीच", "Own Sign": "स्वराशि", Neutral: "सम" } },
+    nakshatras: { Ashwini: "अश्विनी", Bharani: "भरणी", Krittika: "कृत्तिका", Rohini: "रोहिणी", Mrigashira: "मृगशिरा", Ardra: "आर्द्रा", Punarvasu: "पुनर्वसु", Pushya: "पुष्य", Ashlesha: "आश्लेषा", Magha: "मघा", "Purva Phalguni": "पूर्वाफाल्गुनी", "Uttara Phalguni": "उत्तराफाल्गुनी", Hasta: "हस्त", Chitra: "चित्रा", Swati: "स्वाती", Vishakha: "विशाखा", Anuradha: "अनुराधा", Jyeshtha: "ज्येष्ठा", Mula: "मूल", "Purva Ashadha": "पूर्वाषाढा", "Uttara Ashadha": "उत्तराषाढा", Shravana: "श्रवण", Dhanishta: "धनिष्ठा", Shatabhisha: "शतभिषा", "Purva Bhadrapada": "पूर्वाभाद्रपद", "Uttara Bhadrapada": "उत्तराभाद्रपद", Revati: "रेवती" }
   },
-  ja: { appTitle: "アストロ",
-    birthCity: "出生地",
-    searchPlaceholder: "都市を検索...",
-    searching: "座標を検索中...",
-    noLocations: "見つかりません。",
-    natalParams: "出生データ",
-    dob: "生年月日",
-    tob: "出生時刻",
-    gocharOverlay: "トランジット (Gochar)",
-    transitDate: "トランジット日付",
-    generateBtn: "チャートを作成",
-    computingBtn: "計算中...",
-    awaitingTitle: "パラメータ待機中",
-    awaitingDesc: "場所を検索し、生成してプロフェッショナルワークスペースを表示します。",
-    timezone: "タイムゾーン",
-    sunrise: "日の出",
-    sunset: "日の入り",
-    absoluteLagna: "アセンダント",
-    exactLongitudes: "惑星の正確な位置",
-    transitCoords: "トランジット座標",
-    dashaTimeline: "ヴィムショッタリ・ダシャー",
-    dashaSub: "マハー • アンタル • プラティヤンタル • スークシュマ",
-    lagnaBase: "ラグナ基準",
-    chandraBase: "チャンドラ基準",
-    watermark: "ヴァイバヴ・シュクラ",
-    errNoLoc: "場所を選択してください。",
-    errCalc: "計算に失敗しました。",
-    tabs: { D1: "D1", D9: "D9", Chalit: "チャリット", Chandra: "チャンドラ", Gochar: "トランジット", Dasha: "ダシャー" },
-    tabTitles: { D1: "ネイタルチャート (ラグナ)", D9: "D9 チャート", Chalit: "チャリットチャート", Chandra: "チャンドラチャート", Gochar: "トランジットチャート", Dasha: "ヴィムショッタリ・ダシャー" },
-    planets: { Sun: "太陽", Moon: "月", Mars: "火星", Mercury: "水星", Jupiter: "木星", Venus: "金星", Saturn: "土星", Rahu: "ラーフ", Ketu: "ケトゥ", Uranus: "天王星", Neptune: "海王星", Pluto: "冥王星", Ascendant: "アセンダント" },
-    signs: { Aries: "牡羊座", Taurus: "牡牛座", Gemini: "双子座", Cancer: "蟹座", Leo: "獅子座", Virgo: "乙女座", Libra: "天秤座", Scorpio: "蠍座", Sagittarius: "射手座", Capricorn: "山羊座", Aquarius: "水瓶座", Pisces: "魚座" }, 
-    ui: { house: "室", retrograde: "逆行", pada: "パダ", lord: "支配星", aspects: "アスペクト", dignity: { Exalted: "高揚", Debilitated: "減衰", "Own Sign": "本来の座", Neutral: "中立" } } 
+
+  ja: {
+    appTitle: "アストロ", birthCity: "出生地", searchPlaceholder: "都市を検索...", searching: "座標を検索中...", noLocations: "見つかりません。",
+    natalParams: "出生データ", dob: "生年月日", tob: "出生時刻", gocharOverlay: "トランジット (Gochar)", transitDate: "トランジット日付",
+    generateBtn: "チャートを作成", computingBtn: "計算中...", awaitingTitle: "パラメータ待機中", awaitingDesc: "場所を検索し、生成してプロフェッショナルワークスペースを表示します。",
+    timezone: "タイムゾーン", sunrise: "日の出", sunset: "日の入り", absoluteLagna: "アセンダント", exactLongitudes: "惑星の正確な位置", transitCoords: "トランジット座標",
+    dashaTimeline: "ヴィムショッタリ・ダシャー", dashaSub: "マハー • アンタル • プラティヤンタル • スークシュマ", lagnaBase: "ラグナ基準", chandraBase: "チャンドラ基準", watermark: "ヴァイバヴ・シュクラ",
+    errNoLoc: "場所を選択してください。", errCalc: "計算に失敗しました。",
+    tabs: { D1: "D1", D9: "D9", Chalit: "チャリット", Chandra: "チャンドラ", Gochar: "トランジット", Details: "詳細", Aspects: "アスペクト", Dasha: "ダシャー" },
+    tabTitles: { D1: "ネイタルチャート (ラグナ)", D9: "D9 チャート", Chalit: "チャリットチャート", Chandra: "チャンドラチャート", Gochar: "トランジットチャート", Details: "惑星の詳細", Aspects: "ヴェーダのアスペクト (Drishti)", Dasha: "ヴィムショッタリ・ダシャー" },
+    planets: { Sun: "太陽", Moon: "月", Mars: "火星", Mercury: "水星", Jupiter: "木星", Venus: "金星", Saturn: "土星", Rahu: "ラーフ", Ketu: "ケトゥ", Ascendant: "アセンダント" },
+    signs: { Aries: "牡羊座", Taurus: "牡牛座", Gemini: "双子座", Cancer: "蟹座", Leo: "獅子座", Virgo: "乙女座", Libra: "天秤座", Scorpio: "蠍座", Sagittarius: "射手座", Capricorn: "山羊座", Aquarius: "水瓶座", Pisces: "魚座" },
+    ui: { house: "室", retrograde: "逆行", pada: "パダ", lord: "支配星", aspects: "アスペクトのハウス", dignity: { Exalted: "高揚", Debilitated: "減衰", "Own Sign": "本来の座", Neutral: "中立" } },
+    nakshatras: { Ashwini: "アシュヴィニー", Bharani: "バラニー", Krittika: "クリッティカー", Rohini: "ローヒニー", Mrigashira: "ムリガシラー", Ardra: "アールドラー", Punarvasu: "プナルヴァス", Pushya: "プシャ", Ashlesha: "アーシュレーシャー", Magha: "マガー", "Purva Phalguni": "プールヴァ・ファルグニー", "Uttara Phalguni": "ウッタラ・ファルグニー", Hasta: "ハスタ", Chitra: "チトラー", Swati: "スヴァーティー", Vishakha: "ヴィシャーカ", Anuradha: "アヌラーダー", Jyeshtha: "ジェーシュター", Mula: "ムーラ", "Purva Ashadha": "プールヴァーシャーダー", "Uttara Ashadha": "ウッタラーシャーダー", Shravana: "シュラヴァナ", Dhanishta: "ダニシュター", Shatabhisha: "シャタビシャー", "Purva Bhadrapada": "プールヴァ・バードラパダー", "Uttara Bhadrapada": "ウッタラ・バードラパダー", Revati: "レーヴァティー" }
   },
-  ko: { appTitle: "아스트로",
-    birthCity: "출생지",
-    searchPlaceholder: "도시 검색...",
-    searching: "좌표 검색 중...",
-    noLocations: "위치를 찾을 수 없습니다.",
-    natalParams: "출생 데이터",
-    dob: "생년월일",
-    tob: "태어난 시간",
-    gocharOverlay: "트랜짓 (Gochar)",
-    transitDate: "트랜짓 날짜",
-    generateBtn: "차트 생성",
-    computingBtn: "계산 중...",
-    awaitingTitle: "매개변수 대기 중",
-    awaitingDesc: "위치를 검색하고 생성하여 전문 작업 공간을 확인하세요.",
-    timezone: "시간대",
-    sunrise: "일출",
-    sunset: "일몰",
-    absoluteLagna: "어센던트 (Lagna)",
-    exactLongitudes: "정확한 행성 위치",
-    transitCoords: "트랜짓 좌표",
-    dashaTimeline: "빔쇼타리 다샤",
-    dashaSub: "마하 • 안타르 • 프라티얀타르 • 수크슈마",
-    lagnaBase: "라그나 기준",
-    chandraBase: "찬드라 기준",
-    watermark: "바이바브 슈클라",
-    errNoLoc: "위치를 선택해 주세요.",
-    errCalc: "계산에 실패했습니다.",
-    tabs: { D1: "D1", D9: "D9", Chalit: "찰리트", Chandra: "찬드라", Gochar: "트랜짓", Dasha: "다샤" },
-    tabTitles: { D1: "네이탈 차트 (Lagna)", D9: "D9 차트", Chalit: "찰리트 차트", Chandra: "찬드라 차트", Gochar: "트랜짓 차트", Dasha: "빔쇼타리 다샤" },
-    planets: { Sun: "태양", Moon: "달", Mars: "화성", Mercury: "수성", Jupiter: "목성", Venus: "금성", Saturn: "토성", Rahu: "라후", Ketu: "케투", Uranus: "천왕성", Neptune: "해왕성", Pluto: "명왕성", Ascendant: "어센던트" },
-    signs: { Aries: "양자리", Taurus: "황소자리", Gemini: "쌍둥이자리", Cancer: "게자리", Leo: "사자자리", Virgo: "처녀자리", Libra: "천칭자리", Scorpio: "전갈자리", Sagittarius: "궁수자리", Capricorn: "염소자리", Aquarius: "물병자리", Pisces: "물고기자리" }, 
-    ui: { house: "하우스", retrograde: "역행", pada: "파다", lord: "지배성", aspects: "애스펙트", dignity: { Exalted: "고양", Debilitated: "쇠약", "Own Sign": "자신의 별자리", Neutral: "중립" } } 
+
+  ko: {
+    appTitle: "아스트로", birthCity: "출생지", searchPlaceholder: "도시 검색...", searching: "좌표 검색 중...", noLocations: "위치를 찾을 수 없습니다.",
+    natalParams: "출생 데이터", dob: "생년월일", tob: "태어난 시간", gocharOverlay: "트랜짓 (Gochar)", transitDate: "트랜짓 날짜",
+    generateBtn: "차트 생성", computingBtn: "계산 중...", awaitingTitle: "매개변수 대기 중", awaitingDesc: "위치를 검색하고 생성하여 전문 작업 공간을 확인하세요.",
+    timezone: "시간대", sunrise: "일출", sunset: "일몰", absoluteLagna: "어센던트 (Lagna)", exactLongitudes: "정확한 행성 위치", transitCoords: "트랜짓 좌표",
+    dashaTimeline: "빔쇼타리 다샤", dashaSub: "마하 • 안타르 • 프라티얀타르 • 수크슈마", lagnaBase: "라그나 기준", chandraBase: "찬드라 기준", watermark: "바이바브 슈클라",
+    errNoLoc: "위치를 선택해 주세요.", errCalc: "계산에 실패했습니다.",
+    tabs: { D1: "D1", D9: "D9", Chalit: "찰리트", Chandra: "찬드라", Gochar: "트랜짓", Details: "세부 정보", Aspects: "애스펙트", Dasha: "다샤" },
+    tabTitles: { D1: "네이탈 차트 (Lagna)", D9: "D9 차트", Chalit: "찰리트 차트", Chandra: "찬드라 차트", Gochar: "트랜짓 차트", Details: "행성 세부 정보", Aspects: "베다 애스펙트 (Drishti)", Dasha: "빔쇼타리 다샤" },
+    planets: { Sun: "태양", Moon: "달", Mars: "화성", Mercury: "수성", Jupiter: "목성", Venus: "금성", Saturn: "토성", Rahu: "라후", Ketu: "케투", Ascendant: "어센던트" },
+    signs: { Aries: "양자리", Taurus: "황소자리", Gemini: "쌍둥이자리", Cancer: "게자리", Leo: "사자자리", Virgo: "처녀자리", Libra: "천칭자리", Scorpio: "전갈자리", Sagittarius: "궁수자리", Capricorn: "염소자리", Aquarius: "물병자리", Pisces: "물고기자리" },
+    ui: { house: "하우스", retrograde: "역행", pada: "파다", lord: "지배성", aspects: "애스펙트 하우스", dignity: { Exalted: "고양", Debilitated: "쇠약", "Own Sign": "자신의 별자리", Neutral: "중립" } },
+    nakshatras: { Ashwini: "아슈비니", Bharani: "바라니", Krittika: "크리티카", Rohini: "로히니", Mrigashira: "므리가시라", Ardra: "아르드라", Punarvasu: "푸나르바수", Pushya: "푸샤", Ashlesha: "아슐레샤", Magha: "마가", "Purva Phalguni": "푸르바 팔구니", "Uttara Phalguni": "우타라 팔구니", Hasta: "하스타", Chitra: "치트라", Swati: "스와티", Vishakha: "비샤카", Anuradha: "아누라다", Jyeshtha: "제슈타", Mula: "물라", "Purva Ashadha": "푸르바 아샤다", "Uttara Ashadha": "우타라 아샤다", Shravana: "슈라바나", Dhanishta: "다니슈타", Shatabhisha: "샤타비샤", "Purva Bhadrapada": "푸르바 바드라파다", "Uttara Bhadrapada": "우타라 바드라파다", Revati: "레바티" }
   }
 };
 
@@ -361,7 +287,7 @@ export default function ProfessionalDashboard() {
       name: t.planets?.[p.name] || p.name, 
       house, 
       degree: getIntegerDegree(p.longitude),
-      isRetrograde: p.is_retrograde
+      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde
     });
     
     const mappedTransits = (p: TransitPlanet, house: number) => ({ 
@@ -599,40 +525,54 @@ export default function ProfessionalDashboard() {
                       {/* NEW: PLANETARY DETAILS TAB */}
                       {activeTab === 'Details' && (
                         <div className="space-y-6">
-                           <h2 className="text-2xl font-serif text-indigo-950 mb-8 flex items-center gap-2"><Sparkles className="text-amber-500" size={24} /> {t.tabTitles?.Details}</h2>
-                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                             {chartData.planets.map((p, idx) => (
-                               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-md transition-shadow">
-                                 <div className="flex justify-between items-start mb-3">
-                                   <div className="flex items-center gap-2">
-                                     <h3 className="text-lg font-bold text-indigo-950">{t.planets?.[p.name] || p.name}</h3>
-                                     {p.is_retrograde && <span className="text-[10px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">R</span>}
-                                   </div>
-                                   <DignityBadge dignity={p.dignity} t={t} />
-                                 </div>
-                                 <div className="space-y-2 text-sm text-gray-600">
-                                   <div className="flex justify-between">
-                                     <span className="text-gray-400">{t.ui?.house} {p.d1_house}</span> 
-                                     <span className="font-mono text-gray-900">{t.signs?.[p.sign] || p.sign} {formatDMS(p.longitude)}</span>
-                                   </div>
-                                   <div className="flex justify-between">
-                                     <span className="text-gray-400">{t.ui?.lord}</span> 
-                                     <span className="font-medium text-gray-900">{t.planets?.[p.sign_lord] || p.sign_lord}</span>
-                                   </div>
-                                   <div className="pt-2 mt-2 border-t border-gray-200/60">
-                                     <div className="flex justify-between items-center">
-                                       <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Nakshatra</span> 
-                                       <span className="font-semibold text-indigo-900">{p.nakshatra}</span>
-                                     </div>
-                                     <div className="flex justify-between items-center mt-1">
-                                       <span className="text-[10px] text-gray-400 uppercase tracking-widest">{t.ui?.pada}</span> 
-                                       <span className="font-mono text-xs text-gray-500">{p.nakshatra_pada}</span>
-                                     </div>
-                                   </div>
-                                 </div>
-                               </motion.div>
-                             ))}
-                           </div>
+                            <h2 className={`font-serif text-indigo-950 mb-8 flex items-center gap-2 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
+                              <Sparkles className="text-amber-500" size={24} /> {t.tabTitles?.Details}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {chartData.planets.map((p, idx) => {
+                                // Force Rahu/Ketu Retrograde locally for the details cards
+                                const isRetro = p.name === 'Rahu' || p.name === 'Ketu' ? true : p.is_retrograde;
+                                
+                                return (
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-md transition-shadow">
+                                  <div className="flex justify-between items-start mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <h3 className={`font-bold text-indigo-950 ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
+                                        {t.planets?.[p.name] || p.name}
+                                      </h3>
+                                      {isRetro && (
+                                        <span className={`font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded uppercase tracking-wider ${lang === 'hi' ? 'text-xs' : 'text-[10px]'}`}>
+                                          {t.ui?.retrograde || 'Retrograde'}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <DignityBadge dignity={p.dignity} t={t} />
+                                  </div>
+                                  <div className="space-y-2 text-sm text-gray-600">
+                                    <div className="flex justify-between">
+                                      <span className={`text-gray-400 ${lang === 'hi' ? 'text-base' : ''}`}>{t.ui?.house} {p.d1_house}</span> 
+                                      <span className="font-mono text-gray-900">{t.signs?.[p.sign] || p.sign} {formatDMS(p.longitude)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className={`text-gray-400 ${lang === 'hi' ? 'text-base' : ''}`}>{t.ui?.lord}</span> 
+                                      <span className={`font-medium text-gray-900 ${lang === 'hi' ? 'text-base' : ''}`}>{t.planets?.[p.sign_lord] || p.sign_lord}</span>
+                                    </div>
+                                    <div className="pt-2 mt-2 border-t border-gray-200/60">
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Nakshatra</span> 
+                                        <span className={`font-semibold text-indigo-900 ${lang === 'hi' ? 'text-base' : 'text-sm'}`}>
+                                          {t.nakshatras?.[p.nakshatra] || p.nakshatra}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center mt-1">
+                                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">{t.ui?.pada}</span> 
+                                        <span className="font-mono text-xs text-gray-500">{p.nakshatra_pada}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )})}
+                            </div>
                         </div>
                       )}
 

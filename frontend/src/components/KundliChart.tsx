@@ -63,7 +63,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
           
           return (
             <g key={`house-${houseNum}`}>
-              <text x={x} y={y - 22} textAnchor="middle" className="stroke-none fill-red-400/50 text-xs font-semibold font-mono">
+              <text x={x} y={y - 22} textAnchor="middle" className="stroke-none fill-red-400/60 text-sm font-bold font-mono">
                 {getSignForHouse(houseNum)}
               </text>
               

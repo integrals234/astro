@@ -82,7 +82,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
           return (
             <g key={`sign-${signName}`}>
               {/* Faint Zodiac Number (Optional, helps beginners) */}
-              <text x={x + 10} y={y + 20} textAnchor="start" className="stroke-none fill-gray-200 text-[10px] font-bold font-mono">
+              <text x={x + 10} y={y + 20} textAnchor="start" className="stroke-none fill-red-400/60 text-xs font-bold font-mono">
                 {signNumbers[signName]}
               </text>
 

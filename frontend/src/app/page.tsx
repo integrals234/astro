@@ -295,7 +295,7 @@ export default function ProfessionalDashboard() {
       name: t.planets?.[p.name] || p.name, 
       house, 
       degree: getIntegerDegree(p.longitude),
-      isRetrograde: (p.name === 'Jupiter' || p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde 
+      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde 
     });
     
     if (activeTab === 'D1') return { planets: chartData.planets.map(p => mappedPlanets(p, p.d1_house)), transitPlanets: [], asc: chartData.ascendant_sign };

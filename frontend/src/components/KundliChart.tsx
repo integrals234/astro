@@ -15,14 +15,20 @@ interface KundliChartProps {
   ascLabel?: string;  
   ascDegree?: number; 
   transitLabel?: string;
+  useSymbols?: boolean;
 }
+
+const planetSymbols: Record<string, string> = {
+  Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
+  Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
+};
 
 const signToNumber: Record<string, number> = {
   "Aries": 1, "Taurus": 2, "Gemini": 3, "Cancer": 4, "Leo": 5, "Virgo": 6,
   "Libra": 7, "Scorpio": 8, "Sagittarius": 9, "Capricorn": 10, "Aquarius": 11, "Pisces": 12
 };
 
-export default function KundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel }: KundliChartProps) {
+export default function KundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel, useSymbols }: KundliChartProps) {
   const SIZE = 400;
   const houseCenters: Record<number, { x: number; y: number }> = {
     1: { x: 200, y: 100 }, 2: { x: 100, y: 50 }, 3: { x: 50, y: 100 }, 4: { x: 100, y: 200 },
@@ -84,7 +90,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                   <tspan key={`n-${p.name}`} className="transition-all duration-300 hover:fill-indigo-600">
                     <title>{`${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
                     {i > 0 ? ', ' : ''}
-                    {p.name.substring(0, 2)}
+                    {useSymbols ? planetSymbols[p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                     
                     {p.isRetrograde && !isGocharChart && (
                       <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
@@ -102,7 +108,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
                       <title>{`Transit ${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
                       {i > 0 ? ', ' : ''}
-                      {p.name.substring(0, 2)}
+                      {useSymbols ? planetSymbols[p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                       
                       {p.isRetrograde && (
                         <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>

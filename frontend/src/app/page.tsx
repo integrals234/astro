@@ -90,7 +90,7 @@ const translations: Record<LanguageCode, any> = {
     tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
     planets: { Sun: "Sun", Moon: "Moon", Mars: "Mars", Mercury: "Mercury", Jupiter: "Jupiter", Venus: "Venus", Saturn: "Saturn", Rahu: "Rahu", Ketu: "Ketu", Ascendant: "Ascendant" },
     signs: { Aries: "Aries", Taurus: "Taurus", Gemini: "Gemini", Cancer: "Cancer", Leo: "Leo", Virgo: "Virgo", Libra: "Libra", Scorpio: "Scorpio", Sagittarius: "Sagittarius", Capricorn: "Capricorn", Aquarius: "Aquarius", Pisces: "Pisces" },
-    ui: { transitBadge: "Transit Overlay", northStyle: "North Indian", southStyle: "South Indian", asc: "ASC", nakshatraLabel: "Nakshatra", house: "House", retrograde: "Ret.", pada: "Pada", lord: "Lord", aspects: "Aspects Houses", dignity: { Exalted: "Exalted", Debilitated: "Debilitated", "Own Sign": "Own Sign", Neutral: "Neutral" } },
+    ui: { textToggle: "Text", symbolToggle: "Symbols", transitBadge: "Transit Overlay", northStyle: "North Indian", southStyle: "South Indian", asc: "ASC", nakshatraLabel: "Nakshatra", house: "House", retrograde: "Ret.", pada: "Pada", lord: "Lord", aspects: "Aspects Houses", dignity: { Exalted: "Exalted", Debilitated: "Debilitated", "Own Sign": "Own Sign", Neutral: "Neutral" } },
     nakshatras: { Ashwini: "Ashwini", Bharani: "Bharani", Krittika: "Krittika", Rohini: "Rohini", Mrigashira: "Mrigashira", Ardra: "Ardra", Punarvasu: "Punarvasu", Pushya: "Pushya", Ashlesha: "Ashlesha", Magha: "Magha", "Purva Phalguni": "Purva Phalguni", "Uttara Phalguni": "Uttara Phalguni", Hasta: "Hasta", Chitra: "Chitra", Swati: "Swati", Vishakha: "Vishakha", Anuradha: "Anuradha", Jyeshtha: "Jyeshtha", Mula: "Mula", "Purva Ashadha": "Purva Ashadha", "Uttara Ashadha": "Uttara Ashadha", Shravana: "Shravana", Dhanishta: "Dhanishta", Shatabhisha: "Shatabhisha", "Purva Bhadrapada": "Purva Bhadrapada", "Uttara Bhadrapada": "Uttara Bhadrapada", Revati: "Revati" }
   },
   
@@ -105,7 +105,7 @@ const translations: Record<LanguageCode, any> = {
     tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Details: "ग्रह विवरण", Aspects: "वैदिक दृष्टि (Drishti)", Dasha: "विंशोत्तरी दशा" },
     planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Ascendant: "लग्न" },
     signs: { Aries: "मेष", Taurus: "वृषभ", Gemini: "मिथुन", Cancer: "कर्क", Leo: "सिंह", Virgo: "कन्या", Libra: "तुला", Scorpio: "वृश्चिक", Sagittarius: "धनु", Capricorn: "मकर", Aquarius: "कुंभ", Pisces: "मीन" },
-    ui: { transitBadge: "गोचर", northStyle: "उत्तर भारतीय", southStyle: "दक्षिण भारतीय", asc: "ल", nakshatraLabel: "नक्षत्र", house: "भाव", retrograde: "वक्री", pada: "पद", lord: "स्वामी", aspects: "दृष्टि भाव", dignity: { Exalted: "उच्च", Debilitated: "नीच", "Own Sign": "स्वराशि", Neutral: "सम" } },
+    ui: { textToggle: "पाठ", symbolToggle: "प्रतीक", transitBadge: "गोचर", northStyle: "उत्तर भारतीय", southStyle: "दक्षिण भारतीय", asc: "ल", nakshatraLabel: "नक्षत्र", house: "भाव", retrograde: "वक्री", pada: "पद", lord: "स्वामी", aspects: "दृष्टि भाव", dignity: { Exalted: "उच्च", Debilitated: "नीच", "Own Sign": "स्वराशि", Neutral: "सम" } },
     nakshatras: { Ashwini: "अश्विनी", Bharani: "भरणी", Krittika: "कृत्तिका", Rohini: "रोहिणी", Mrigashira: "मृगशिरा", Ardra: "आर्द्रा", Punarvasu: "पुनर्वसु", Pushya: "पुष्य", Ashlesha: "आश्लेषा", Magha: "मघा", "Purva Phalguni": "पूर्वाफाल्गुनी", "Uttara Phalguni": "उत्तराफाल्गुनी", Hasta: "हस्त", Chitra: "चित्रा", Swati: "स्वाती", Vishakha: "विशाखा", Anuradha: "अनुराधा", Jyeshtha: "ज्येष्ठा", Mula: "मूल", "Purva Ashadha": "पूर्वाषाढा", "Uttara Ashadha": "उत्तराषाढा", Shravana: "श्रवण", Dhanishta: "धनिष्ठा", Shatabhisha: "शतभिषा", "Purva Bhadrapada": "पूर्वाभाद्रपद", "Uttara Bhadrapada": "उत्तराभाद्रपद", Revati: "रेवती" }
   },
 
@@ -120,7 +120,7 @@ const translations: Record<LanguageCode, any> = {
     tabTitles: { D1: "ネイタルチャート (ラグナ)", D9: "D9 チャート", Chalit: "チャリットチャート", Chandra: "チャンドラチャート", Gochar: "トランジットチャート", Details: "惑星の詳細", Aspects: "ヴェーダのアスペクト (Drishti)", Dasha: "ヴィムショッタリ・ダシャー" },
     planets: { Sun: "太陽", Moon: "月", Mars: "火星", Mercury: "水星", Jupiter: "木星", Venus: "金星", Saturn: "土星", Rahu: "ラーフ", Ketu: "ケトゥ", Ascendant: "アセンダント" },
     signs: { Aries: "牡羊座", Taurus: "牡牛座", Gemini: "双子座", Cancer: "蟹座", Leo: "獅子座", Virgo: "乙女座", Libra: "天秤座", Scorpio: "蠍座", Sagittarius: "射手座", Capricorn: "山羊座", Aquarius: "水瓶座", Pisces: "魚座" },
-    ui: { transitBadge: "トランジット", northStyle: "北インド式", southStyle: "南インド式", asc: "ASC", nakshatraLabel: "ナクシャトラ", house: "室", retrograde: "逆行", pada: "パダ", lord: "支配星", aspects: "アスペクトのハウス", dignity: { Exalted: "高揚", Debilitated: "減衰", "Own Sign": "本来の座", Neutral: "中立" } },
+    ui: { textToggle: "テキスト", symbolToggle: "記号", transitBadge: "トランジット", northStyle: "北インド式", southStyle: "南インド式", asc: "ASC", nakshatraLabel: "ナクシャトラ", house: "室", retrograde: "逆行", pada: "パダ", lord: "支配星", aspects: "アスペクトのハウス", dignity: { Exalted: "高揚", Debilitated: "減衰", "Own Sign": "本来の座", Neutral: "中立" } },
     nakshatras: { Ashwini: "アシュヴィニー", Bharani: "バラニー", Krittika: "クリッティカー", Rohini: "ローヒニー", Mrigashira: "ムリガシラー", Ardra: "アールドラー", Punarvasu: "プナルヴァス", Pushya: "プシャ", Ashlesha: "アーシュレーシャー", Magha: "マガー", "Purva Phalguni": "プールヴァ・ファルグニー", "Uttara Phalguni": "ウッタラ・ファルグニー", Hasta: "ハスタ", Chitra: "チトラー", Swati: "スヴァーティー", Vishakha: "ヴィシャーカ", Anuradha: "アヌラーダー", Jyeshtha: "ジェーシュター", Mula: "ムーラ", "Purva Ashadha": "プールヴァーシャーダー", "Uttara Ashadha": "ウッタラーシャーダー", Shravana: "シュラヴァナ", Dhanishta: "ダニシュター", Shatabhisha: "シャタビシャー", "Purva Bhadrapada": "プールヴァ・バードラパダー", "Uttara Bhadrapada": "ウッタラ・バードラパダー", Revati: "レーヴァティー" }
   },
 
@@ -135,7 +135,7 @@ const translations: Record<LanguageCode, any> = {
     tabTitles: { D1: "네이탈 차트 (Lagna)", D9: "D9 차트", Chalit: "찰리트 차트", Chandra: "찬드라 차트", Gochar: "트랜짓 차트", Details: "행성 세부 정보", Aspects: "베다 애스펙트 (Drishti)", Dasha: "빔쇼타리 다샤" },
     planets: { Sun: "태양", Moon: "달", Mars: "화성", Mercury: "수성", Jupiter: "목성", Venus: "금성", Saturn: "토성", Rahu: "라후", Ketu: "케투", Ascendant: "어센던트" },
     signs: { Aries: "양자리", Taurus: "황소자리", Gemini: "쌍둥이자리", Cancer: "게자리", Leo: "사자자리", Virgo: "처녀자리", Libra: "천칭자리", Scorpio: "전갈자리", Sagittarius: "궁수자리", Capricorn: "염소자리", Aquarius: "물병자리", Pisces: "물고기자리" },
-    ui: { transitBadge: "트랜짓 오버레이", northStyle: "북인도 방식", southStyle: "남인도 방식", asc: "ASC", nakshatraLabel: "낙샤트라", house: "하우스", retrograde: "역행", pada: "파다", lord: "지배성", aspects: "애스펙트 하우스", dignity: { Exalted: "고양", Debilitated: "쇠약", "Own Sign": "자신의 별자리", Neutral: "중립" } },
+    ui: { textToggle: "텍스트", symbolToggle: "기호", transitBadge: "트랜짓 오버레이", northStyle: "북인도 방식", southStyle: "남인도 방식", asc: "ASC", nakshatraLabel: "낙샤트라", house: "하우스", retrograde: "역행", pada: "파다", lord: "지배성", aspects: "애스펙트 하우스", dignity: { Exalted: "고양", Debilitated: "쇠약", "Own Sign": "자신의 별자리", Neutral: "중립" } },
     nakshatras: { Ashwini: "아슈비니", Bharani: "바라니", Krittika: "크리티카", Rohini: "로히니", Mrigashira: "므리가시라", Ardra: "아르드라", Punarvasu: "푸나르바수", Pushya: "푸샤", Ashlesha: "아슐레샤", Magha: "마가", "Purva Phalguni": "푸르바 팔구니", "Uttara Phalguni": "우타라 팔구니", Hasta: "하스타", Chitra: "치트라", Swati: "스와티", Vishakha: "비샤카", Anuradha: "아누라다", Jyeshtha: "제슈타", Mula: "물라", "Purva Ashadha": "푸르바 아샤다", "Uttara Ashadha": "우타라 아샤다", Shravana: "슈라바나", Dhanishta: "다니슈타", Shatabhisha: "샤타비샤", "Purva Bhadrapada": "푸르바 바드라파다", "Uttara Bhadrapada": "우타라 바드라파다", Revati: "레바티" }
   }
 };
@@ -220,6 +220,13 @@ export default function ProfessionalDashboard() {
   const [isSearching, setIsSearching] = useState(false); 
   
   const [chartStyle, setChartStyle] = useState<'North' | 'South'>('North');
+  const [useSymbols, setUseSymbols] = useState(false);
+
+  const planetSymbols: Record<string, string> = {
+      Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
+      Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
+    };
+
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [activeTab, setActiveTab] = useState<'D1' | 'D9' | 'Chalit' | 'Chandra' | 'Gochar' | 'Details' | 'Aspects' | 'Dasha'>('D1');
   const [gocharBase, setGocharBase] = useState<'Lagna' | 'Chandra'>('Lagna');
@@ -535,6 +542,7 @@ export default function ProfessionalDashboard() {
                               ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
                               ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
                               transitLabel={t.ui?.transitBadge}
+                              useSymbols={useSymbols}
                             />
                           ) : (
                             <SouthKundliChart 
@@ -544,10 +552,11 @@ export default function ProfessionalDashboard() {
                               ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
                               ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
                               transitLabel={t.ui?.transitBadge}
+                              useSymbols={useSymbols}
                             />
                           )}
 
-                          {/* Elegant Style Switcher */}
+                          {/* Elegant Style Switcher
                           <div className="mt-10 bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
                           <button 
                             onClick={() => setChartStyle('North')} 
@@ -561,7 +570,7 @@ export default function ProfessionalDashboard() {
                           >
                             {t.ui?.southStyle || 'South Indian'}
                           </button>
-                        </div>
+                        </div> */}
 
                         </div>
                       )}
@@ -582,6 +591,7 @@ export default function ProfessionalDashboard() {
                                   <div className="flex justify-between items-start mb-3">
                                     <div className="flex items-center gap-2">
                                       <h3 className={`font-bold text-indigo-950 ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
+                                        {useSymbols && <span className="mr-2 text-indigo-500">{planetSymbols[p.name]}</span>}
                                         {t.planets?.[p.name] || p.name}
                                       </h3>
                                       {isRetro && (
@@ -630,7 +640,7 @@ export default function ProfessionalDashboard() {
                              {chartData.planets.filter(p => p.aspects_houses.length > 0).map((p, idx) => (
                                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="flex flex-col p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
                                   <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold text-xs">{p.name.substring(0, 2).toUpperCase()}</div>
+                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold text-xs">{planetSymbols[p.name]}</div>
                                     <span className="font-bold text-indigo-950">{t.planets?.[p.name] || p.name}</span>
                                     <span className="text-xs text-indigo-400">in {t.ui?.house} {p.d1_house}</span>
                                   </div>
@@ -664,6 +674,45 @@ export default function ProfessionalDashboard() {
                     </motion.div>
                   </AnimatePresence>
                 </div>
+                {/* --- GLOBAL CONTROLS AREA --- */}
+                  <div className="mt-12 flex flex-col items-center gap-4">
+                    
+                    {/* 1. Symbol Switcher (Visible on all tabs EXCEPT Aspects) */}
+                    {activeTab !== 'Aspects' && (
+                      <div className="bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
+                        <button 
+                          onClick={() => setUseSymbols(false)} 
+                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${!useSymbols ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                        >
+                          {t.ui?.textToggle || 'Text'}
+                        </button>
+                        <button 
+                          onClick={() => setUseSymbols(true)} 
+                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${useSymbols ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                        >
+                          {t.ui?.symbolToggle || 'Symbols'}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* 2. Chart Style Switcher (Only visible when viewing a Chart tab) */}
+                    {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
+                      <div className="bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
+                        <button 
+                          onClick={() => setChartStyle('North')} 
+                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'North' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                        >
+                          {t.ui?.northStyle || 'North Indian'}
+                        </button>
+                        <button 
+                          onClick={() => setChartStyle('South')} 
+                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'South' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                        >
+                          {t.ui?.southStyle || 'South Indian'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
               </motion.div>
             ) : (
               // Empty State

@@ -14,6 +14,7 @@ interface KundliChartProps {
   ascendantSign: string; 
   ascLabel?: string;  
   ascDegree?: number; 
+  transitLabel?: string;
 }
 
 const signToNumber: Record<string, number> = {
@@ -21,7 +22,7 @@ const signToNumber: Record<string, number> = {
   "Libra": 7, "Scorpio": 8, "Sagittarius": 9, "Capricorn": 10, "Aquarius": 11, "Pisces": 12
 };
 
-export default function KundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree }: KundliChartProps) {
+export default function KundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel }: KundliChartProps) {
   const SIZE = 400;
   const houseCenters: Record<number, { x: number; y: number }> = {
     1: { x: 200, y: 100 }, 2: { x: 100, y: 50 }, 3: { x: 50, y: 100 }, 4: { x: 100, y: 200 },
@@ -46,7 +47,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
     >
       {isGocharChart && (
         <div className="absolute top-4 left-4 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
-          ● Transit Overlay
+          ● {transitLabel || 'Transit Overlay'}
         </div>
       )}
 

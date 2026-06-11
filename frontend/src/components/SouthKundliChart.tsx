@@ -16,6 +16,7 @@ interface KundliChartProps {
   ascendantSign: string; 
   ascLabel?: string;
   ascDegree?: number;
+  transitLabel?: string;
 }
 
 // Fixed positions for South Indian Chart (Aries is always top row, 2nd column)
@@ -30,7 +31,7 @@ const signNumbers: Record<string, number> = {
   "Libra": 7, "Scorpio": 8, "Sagittarius": 9, "Capricorn": 10, "Aquarius": 11, "Pisces": 12
 };
 
-export default function SouthKundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree }: KundliChartProps) {
+export default function SouthKundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel }: KundliChartProps) {
   const SIZE = 400;
   const isGocharChart = transitPlanets.length > 0;
 
@@ -43,7 +44,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
     >
       {isGocharChart && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
-          ● Transit Overlay
+          ● {transitLabel || 'Transit Overlay'}
         </div>
       )}
 

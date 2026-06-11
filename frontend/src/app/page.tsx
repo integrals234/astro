@@ -685,7 +685,7 @@ export default function ProfessionalDashboard() {
                   </AnimatePresence>
                 </div>
                 {/* --- GLOBAL CONTROLS AREA --- */}
-                  <div className="mt-6 pb-10 flex flex-col items-center gap-4">
+                  <div className="mt-2 pb-10 flex flex-col items-center gap-4">
                     
                     {/* 1. Symbol Switcher (Visible on all tabs EXCEPT Aspects) */}
                     {!['Aspects', 'Details', 'Dasha'].includes(activeTab) && (

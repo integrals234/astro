@@ -147,6 +147,11 @@ const languages = [
   { code: 'ko', native: '한국어' },
 ];
 
+const planetSymbols: Record<string, string> = {
+  Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
+  Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
+};
+
 // --- FLUID ACCORDION COMPONENT ---
 const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -165,7 +170,10 @@ const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: a
         <div className="flex items-center gap-2">
           {hasSubs && <motion.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] opacity-40">▶</motion.span>}
           {!hasSubs && <span className="w-3"></span>} 
-          <span>{t.planets?.[dasha.lord] || dasha.lord}</span>
+          <span>
+            <span className="mr-2 text-indigo-500 font-sans">{planetSymbols[dasha.lord]}</span>
+            {t.planets?.[dasha.lord] || dasha.lord}
+          </span>
         </div>
         <div className="text-right flex gap-4 opacity-80 font-mono text-xs">
           <span>{dasha.start_date}</span>
@@ -295,6 +303,7 @@ export default function ProfessionalDashboard() {
     // Pass is_retrograde to KundliChart mapper
     const mappedPlanets = (p: Planet, house: number) => ({ 
       name: t.planets?.[p.name] || p.name, 
+      enName: p.name,
       house, 
       degree: getIntegerDegree(p.longitude),
       isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : Boolean(p.is_retrograde),
@@ -303,6 +312,7 @@ export default function ProfessionalDashboard() {
     
     const mappedTransits = (p: TransitPlanet, house: number) => ({ 
       name: t.planets?.[p.name] || p.name, 
+      enName: p.name,
       house, 
       degree: getIntegerDegree(p.longitude),
       isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : p.is_retrograde,
@@ -591,7 +601,7 @@ export default function ProfessionalDashboard() {
                                   <div className="flex justify-between items-start mb-3">
                                     <div className="flex items-center gap-2">
                                       <h3 className={`font-bold text-indigo-950 ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
-                                        {useSymbols && <span className="mr-2 text-indigo-500">{planetSymbols[p.name]}</span>}
+                                        <span className="mr-2 text-indigo-500">{planetSymbols[p.name]}</span>
                                         {t.planets?.[p.name] || p.name}
                                       </h3>
                                       {isRetro && (
@@ -640,7 +650,7 @@ export default function ProfessionalDashboard() {
                              {chartData.planets.filter(p => p.aspects_houses.length > 0).map((p, idx) => (
                                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="flex flex-col p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
                                   <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold text-xs">{planetSymbols[p.name]}</div>
+                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold text-base">{planetSymbols[p.name]}</div>
                                     <span className="font-bold text-indigo-950">{t.planets?.[p.name] || p.name}</span>
                                     <span className="text-xs text-indigo-400">in {t.ui?.house} {p.d1_house}</span>
                                   </div>
@@ -675,10 +685,10 @@ export default function ProfessionalDashboard() {
                   </AnimatePresence>
                 </div>
                 {/* --- GLOBAL CONTROLS AREA --- */}
-                  <div className="mt-12 flex flex-col items-center gap-4">
+                  <div className="mt-6 pb-10 flex flex-col items-center gap-4">
                     
                     {/* 1. Symbol Switcher (Visible on all tabs EXCEPT Aspects) */}
-                    {activeTab !== 'Aspects' && (
+                    {!['Aspects', 'Details', 'Dasha'].includes(activeTab) && (
                       <div className="bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
                         <button 
                           onClick={() => setUseSymbols(false)} 

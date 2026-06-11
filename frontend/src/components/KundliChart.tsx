@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 interface MappedPlanet { 
   name: string; 
+  enName?: string;
   house: number; 
   degree: number; 
   isRetrograde?: boolean; 
@@ -90,7 +91,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                   <tspan key={`n-${p.name}`} className="transition-all duration-300 hover:fill-indigo-600">
                     <title>{`${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
                     {i > 0 ? ', ' : ''}
-                    {useSymbols ? planetSymbols[p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
+                    {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                     
                     {p.isRetrograde && !isGocharChart && (
                       <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
@@ -108,7 +109,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
                       <title>{`Transit ${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
                       {i > 0 ? ', ' : ''}
-                      {useSymbols ? planetSymbols[p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
+                      {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                       
                       {p.isRetrograde && (
                         <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>

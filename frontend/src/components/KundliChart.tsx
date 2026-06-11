@@ -68,13 +68,13 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
               </text>
               
               {/* NATAL PLANETS & ASCENDANT */}
-              <text x={x} y={y + 2} textAnchor="middle" className="stroke-none fill-indigo-950 text-sm font-bold font-sans tracking-tight cursor-pointer">
+              <text x={x} y={y + 2} textAnchor="middle" className="stroke-none fill-indigo-950 text-base font-bold font-sans tracking-tight cursor-pointer">
                 
                 {/* Render the Ascendant Marker ONLY in the 1st House */}
                 {houseNum === 1 && ascLabel && (
-                  <tspan className="fill-indigo-400/70">
+                  <tspan className="fill-indigo-400/70 text-xs">
                     {ascLabel}
-                    {ascDegree !== undefined && <tspan baselineShift="super" fontSize="9">{ascDegree}</tspan>}
+                    {ascDegree !== undefined && <tspan baselineShift="super" fontSize="8">{ascDegree}</tspan>}
                     {natalInHouse.length > 0 ? ', ' : ''}
                   </tspan>
                 )}
@@ -89,14 +89,14 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                       <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                     )}
                     
-                    <tspan baselineShift="super" fontSize="9" className="fill-indigo-400">{p.degree}</tspan>
+                    <tspan baselineShift="super" fontSize="10" className="fill-indigo-400">{p.degree}</tspan>
                   </tspan>
                 ))}
               </text>
 
               {/* TRANSIT PLANETS (Green) */}
               {isGocharChart && (
-                <text x={x} y={y + 20} textAnchor="middle" className="stroke-none fill-emerald-600 text-xs font-bold font-sans tracking-tight cursor-pointer">
+                <text x={x} y={y + 20} textAnchor="middle" className="stroke-none fill-emerald-600 text-sm font-bold font-sans tracking-tight cursor-pointer">
                   {transitInHouse.map((p, i) => (
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
                       <title>{`Transit ${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
@@ -107,7 +107,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                         <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                       )}
                       
-                      <tspan baselineShift="super" fontSize="8" className="fill-emerald-400/80">{p.degree}</tspan>
+                      <tspan baselineShift="super" fontSize="9" className="fill-emerald-400/80">{p.degree}</tspan>
                     </tspan>
                   ))}
                 </text>

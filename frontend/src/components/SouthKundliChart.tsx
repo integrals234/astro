@@ -95,7 +95,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
               )}
 
               {/* NATAL PLANETS */}
-              <text x={x + 50} y={y + 55} textAnchor="middle" className="stroke-none fill-indigo-950 text-sm font-bold font-sans tracking-tight">
+              <text x={x + 50} y={y + 55} textAnchor="middle" className="stroke-none fill-indigo-950 text-base font-bold font-sans tracking-tight">
                 {natalInSign.map((p, i) => (
                   <tspan key={`n-${p.name}`} className="transition-all duration-300 hover:fill-indigo-600">
                     <title>{`${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
@@ -106,14 +106,14 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
                       <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                     )}
                     
-                    <tspan baselineShift="super" fontSize="9" className="fill-indigo-400">{p.degree}</tspan>
+                    <tspan baselineShift="super" fontSize="10" className="fill-indigo-400">{p.degree}</tspan>
                   </tspan>
                 ))}
               </text>
 
               {/* TRANSIT PLANETS */}
               {isGocharChart && (
-                <text x={x + 50} y={y + 75} textAnchor="middle" className="stroke-none fill-emerald-600 text-xs font-bold font-sans tracking-tight">
+                <text x={x + 50} y={y + 75} textAnchor="middle" className="stroke-none fill-emerald-600 text-sm font-bold font-sans tracking-tight">
                   {transitInSign.map((p, i) => (
                     <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
                       <title>{`Transit ${p.name} at ${p.degree}°${p.isRetrograde ? ' (Retrograde)' : ''}`}</title>
@@ -124,7 +124,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
                         <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                       )}
                       
-                      <tspan baselineShift="super" fontSize="8" className="fill-emerald-400/80">{p.degree}</tspan>
+                      <tspan baselineShift="super" fontSize="9" className="fill-emerald-400/80">{p.degree}</tspan>
                     </tspan>
                   ))}
                 </text>

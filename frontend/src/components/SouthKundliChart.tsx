@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// We added 'sign' here because South Indian charts group by Zodiac sign, not house.
 interface MappedPlanet { 
   name: string; 
   enName?: string;
@@ -26,7 +25,6 @@ const planetSymbols: Record<string, string> = {
   Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
 };
 
-// Fixed positions for South Indian Chart (Aries is always top row, 2nd column)
 const boxMap: Record<string, { x: number; y: number }> = {
   "Pisces": { x: 0, y: 0 }, "Aries": { x: 100, y: 0 }, "Taurus": { x: 200, y: 0 }, "Gemini": { x: 300, y: 0 },
   "Cancer": { x: 300, y: 100 }, "Leo": { x: 300, y: 200 }, "Virgo": { x: 300, y: 300 }, "Libra": { x: 200, y: 300 },

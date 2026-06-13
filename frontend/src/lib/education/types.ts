@@ -29,7 +29,7 @@ export interface PlanetAttribute {
 
 export interface PlanetEntry {
   id: string;
-  image?: string;
+  image: string;
   name: BilingualText;
   sanskrit: BilingualText;
   attributes: PlanetAttribute[];

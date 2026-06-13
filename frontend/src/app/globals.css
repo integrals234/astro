@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-:root {
+/* Dark theme (default) */
+:root,
+.dark {
   --shell-bg: #1c1b19;
   --shell-sidebar: #141312;
   --shell-elevated: #242220;
@@ -11,6 +13,20 @@
   --shell-accent-soft: rgba(212, 165, 116, 0.12);
   --background: #1c1b19;
   --foreground: #ece2d4;
+}
+
+/* Light theme */
+.light {
+  --shell-bg: #f5f2ed;
+  --shell-sidebar: #ebe6de;
+  --shell-elevated: #ffffff;
+  --shell-border: rgba(28, 25, 23, 0.08);
+  --shell-warm: #2c2825;
+  --shell-muted: #6b6560;
+  --shell-accent: #b8844a;
+  --shell-accent-soft: rgba(184, 132, 74, 0.14);
+  --background: #f5f2ed;
+  --foreground: #2c2825;
 }
 
 @theme inline {
@@ -31,6 +47,74 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Embedded chart workspace — blend with shell, no white box */
+.chart-workspace-embedded {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--shell-warm);
+}
+
+.chart-workspace-embedded .bg-white {
+  background-color: color-mix(in oklab, var(--shell-elevated) 50%, transparent);
+}
+
+.chart-workspace-embedded .bg-white\/50 {
+  background-color: color-mix(in oklab, var(--shell-elevated) 35%, transparent);
+}
+
+.chart-workspace-embedded .bg-gray-50,
+.chart-workspace-embedded .bg-gray-50\/50 {
+  background-color: color-mix(in oklab, var(--shell-bg) 55%, var(--shell-elevated));
+}
+
+.chart-workspace-embedded .border-gray-100,
+.chart-workspace-embedded .border-gray-200,
+.chart-workspace-embedded .border-dashed.border-gray-200 {
+  border-color: var(--shell-border);
+}
+
+.chart-workspace-embedded .text-gray-900,
+.chart-workspace-embedded .text-indigo-950 {
+  color: var(--shell-warm);
+}
+
+.chart-workspace-embedded .text-gray-300,
+.chart-workspace-embedded .text-gray-400,
+.chart-workspace-embedded .text-gray-500,
+.chart-workspace-embedded .text-gray-600,
+.chart-workspace-embedded .text-gray-700 {
+  color: var(--shell-muted);
+}
+
+.chart-workspace-embedded .text-indigo-600,
+.chart-workspace-embedded .text-indigo-700,
+.chart-workspace-embedded .text-indigo-800,
+.chart-workspace-embedded .text-indigo-900 {
+  color: var(--shell-accent);
+}
+
+.chart-workspace-embedded .shadow-\[0_2px_20px_rgba\(0\,0\,0\,0\.04\)\] {
+  box-shadow: none;
+}
+
+.chart-workspace-embedded input,
+.chart-workspace-embedded button[type="button"]:not(.bg-indigo-950) {
+  border-color: var(--shell-border);
+}
+
+.chart-workspace-embedded input[type="date"],
+.chart-workspace-embedded input[type="time"],
+.chart-workspace-embedded input[type="text"] {
+  background-color: color-mix(in oklab, var(--shell-bg) 65%, var(--shell-elevated));
+  color: var(--shell-warm);
+}
+
+.chart-workspace-embedded .hover\:bg-gray-50:hover,
+.chart-workspace-embedded .hover\:bg-gray-50\/50:hover {
+  background-color: color-mix(in oklab, var(--shell-elevated) 70%, transparent);
 }
 
 /* Clerk auth components */

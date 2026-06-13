@@ -946,14 +946,14 @@ function ChartWorkspaceInner({
 
   if (embedded) {
     return (
-      <div className="rounded-[2rem] border border-shell-border/80 bg-[#f7f4ef] text-gray-900 selection:bg-indigo-100 shadow-[0_24px_80px_rgba(0,0,0,0.28)] overflow-hidden">
-        <div className="p-4 md:p-8 flex flex-col">{shellContent}</div>
+      <div className="chart-workspace-embedded w-full">
+        <div className="flex flex-col">{shellContent}</div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] p-4 md:p-8 text-gray-900 selection:bg-indigo-100 flex flex-col">
+    <main className="min-h-screen bg-background p-4 md:p-8 text-foreground selection:bg-indigo-200 flex flex-col dark:selection:bg-indigo-900/40">
       {shellContent}
     </main>
   );

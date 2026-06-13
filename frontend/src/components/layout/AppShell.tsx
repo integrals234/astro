@@ -17,7 +17,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar />
 
       <div className="flex min-h-screen flex-1 flex-col min-w-0 w-full">
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-shell-border bg-shell-bg/85 backdrop-blur-xl px-4 py-4 md:px-8">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-shell-border bg-shell-sidebar px-4 py-4 md:px-8 supports-[padding:max(0px)]:pt-[max(1rem,env(safe-area-inset-top))]">
           <div className="flex items-center gap-3 min-w-0">
             <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
             <div className="min-w-0">
@@ -40,8 +40,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden min-h-[calc(100vh-5rem)]">
-          <div className="px-4 py-6 md:px-8 md:py-8 w-full">{children}</div>
+        <main className="flex-1 overflow-x-hidden min-h-[calc(100vh-5rem)] bg-shell-bg">
+          <div className="px-4 py-4 md:px-8 md:py-8 w-full">{children}</div>
         </main>
       </div>
     </div>

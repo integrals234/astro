@@ -3,12 +3,12 @@
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
-import { Settings, Bell, Globe, Shield, Palette, CreditCard } from "lucide-react";
+import AppearanceSetting from "@/components/settings/AppearanceSetting";
+import { Settings, Bell, Globe, Shield, CreditCard } from "lucide-react";
 
 const preferenceRows = [
   { icon: Bell, label: "Transit alerts", description: "Email when Saturn changes house", enabled: true },
   { icon: Globe, label: "Default language", description: "Hindi (हिन्दी)", enabled: false },
-  { icon: Palette, label: "Chart style", description: "North Indian — symbols off", enabled: false },
   { icon: Shield, label: "Private charts", description: "Only you can open saved charts", enabled: true },
 ];
 
@@ -59,6 +59,8 @@ export default function SettingsPageContent() {
           </div>
         )}
       </section>
+
+      <AppearanceSetting />
 
       <section className="rounded-3xl border border-shell-border bg-shell-elevated/60 overflow-hidden">
         <div className="px-6 py-4 border-b border-shell-border">

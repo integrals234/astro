@@ -17,6 +17,7 @@ import {
   CalendarRange,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
+import { SITE_NAME } from "@/lib/navigation";
 import {
   educationSections,
   introHero,
@@ -136,7 +137,7 @@ function PublicHeader({ lang }: { lang: EducationLang }) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
         <Link href="/" className="group">
           <span className="font-serif text-xl tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">
-            Astro
+            {SITE_NAME}
           </span>
         </Link>
         <nav className="flex items-center gap-2 md:gap-4">
@@ -765,19 +766,14 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
 
       <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
         {/* Hero strip */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.28em] text-shell-muted">
-              {lang === "ja" ? "学習ハブ" : "Learning Hub"}
-            </p>
-            <h1 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight mt-1">
-              {lang === "ja" ? "ヴェーダ占星術を学ぶ" : "Learn Vedic Astrology"}
-            </h1>
-          </div>
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="font-serif text-2xl tracking-tight text-shell-warm md:text-3xl">
+            {lang === "ja" ? "ヴェーダ占星術" : "Vedic Astrology"}
+          </h1>
           <button
             type="button"
             onClick={() => setLang(lang === "en" ? "ja" : "en")}
-            className="inline-flex items-center gap-2 self-start rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm hover:border-shell-accent/40 transition-colors"
+            className="inline-flex items-center gap-2 self-start rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40 sm:self-auto"
           >
             <Languages size={14} className="text-shell-accent" />
             {lang === "en" ? "日本語" : "English"}

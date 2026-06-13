@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
-import { mainNavItems } from "@/lib/navigation";
+import { mainNavItems, SITE_NAME } from "@/lib/navigation";
 
 interface MobileNavProps {
   open: boolean;
@@ -69,7 +69,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
             >
               <div className="flex items-center justify-between px-5 py-5 border-b border-shell-border">
                 <div>
-                  <p className="font-serif text-lg text-shell-warm">Astro</p>
+                  <p className="font-serif text-lg text-shell-warm">{SITE_NAME}</p>
                   <p className="text-[10px] uppercase tracking-[0.24em] text-shell-muted">
                     Navigation
                   </p>

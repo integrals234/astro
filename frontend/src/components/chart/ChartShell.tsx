@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
+import { SITE_NAME } from "@/lib/navigation";
 import ChartSectionNav from "@/components/chart/ChartSectionNav";
 
 interface ChartShellProps {
@@ -17,7 +18,7 @@ function PublicChartAuthBar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <Link href="/" className="group">
           <span className="font-serif text-lg tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">
-            Astro
+            {SITE_NAME}
           </span>
         </Link>
         <div className="flex items-center gap-3">

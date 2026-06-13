@@ -20,8 +20,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Astro",
-  description: "Professional grade astronomical calculations.",
+  title: "Jyotish Life",
+  description: "Vedic astrology charts, learning, and horoscopes.",
 };
 
 export default function RootLayout({

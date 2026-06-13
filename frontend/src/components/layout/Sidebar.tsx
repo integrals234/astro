@@ -13,7 +13,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 h-full border-r border-shell-border bg-shell-sidebar">
+    <aside className="hidden md:flex md:w-64 md:flex-col shrink-0 h-full border-r border-shell-border bg-shell-sidebar">
       <div className="px-6 py-7 border-b border-shell-border">
         <Link href="/dashboard" className="group inline-flex flex-col">
           <span className="font-serif text-xl tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">

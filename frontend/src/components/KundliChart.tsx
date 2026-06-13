@@ -50,7 +50,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="w-full max-w-md mx-auto bg-white p-2 rounded-xl border border-gray-100 shadow-sm relative"
+      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-xl border shadow-sm relative"
     >
       {isGocharChart && (
         <div className="absolute top-4 left-4 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">

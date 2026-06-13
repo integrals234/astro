@@ -130,6 +130,36 @@ body {
   }
 }
 
+/* Chart canvas — light parchment surface so glyphs stay readable in dark site theme */
+.kundli-chart-surface {
+  background-color: #faf8f5;
+  border-color: rgba(120, 100, 70, 0.22);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.dark .kundli-chart-surface {
+  background-color: #faf8f5;
+  border-color: rgba(212, 165, 116, 0.28);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+}
+
+/* Keep chart SVG text dark on the parchment surface (embedded mode overrides .text-* only) */
+.chart-workspace-embedded .kundli-chart-surface .fill-indigo-950,
+.chart-workspace-embedded .kundli-chart-surface .fill-indigo-600 {
+  fill: #1e1b4b;
+}
+
+.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400,
+.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400\/70,
+.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400\/80 {
+  fill: #6366f1;
+}
+
+.chart-workspace-embedded .kundli-chart-surface .stroke-indigo-900,
+.chart-workspace-embedded .kundli-chart-surface .stroke-gray-400 {
+  stroke: #9ca3af;
+}
+
 /* Embedded chart workspace — blend with shell, no white box */
 .chart-workspace-embedded {
   background: transparent;

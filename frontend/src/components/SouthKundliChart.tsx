@@ -45,7 +45,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="w-full max-w-md mx-auto bg-white p-2 rounded-xl border border-gray-100 shadow-sm relative"
+      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-xl border shadow-sm relative"
     >
       {isGocharChart && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
@@ -58,7 +58,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
         <rect x="0" y="0" width={SIZE} height={SIZE} className="stroke-gray-400" />
         
         {/* Inner Hollow Square */}
-        <rect x="100" y="100" width="200" height="200" className="stroke-gray-400" fill="#FAFAFA" />
+        <rect x="100" y="100" width="200" height="200" className="stroke-gray-400 fill-transparent" />
 
         {/* Vertical Lines */}
         <line x1="100" y1="0" x2="100" y2="100" className="stroke-gray-400" />

@@ -66,13 +66,13 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
             <p className="text-shell-muted text-sm mb-4">
               {mode === "saved"
                 ? "No saved charts yet. Generate a chart and tap Save Chart."
-                : "No recent charts yet. Generate your first chart on the dashboard."}
+                : "No recent charts yet. Generate your first chart in the Chart tab."}
             </p>
             <Link
               href="/chart"
               className="inline-flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm transition-colors"
             >
-              Go to Dashboard
+              Go to Chart Generator
               <ArrowUpRight size={14} />
             </Link>
           </div>

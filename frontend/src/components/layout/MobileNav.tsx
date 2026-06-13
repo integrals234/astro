@@ -15,6 +15,9 @@ interface MobileNavProps {
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+  if (href === "/chart") {
+    return pathname === "/chart" || pathname.startsWith("/chart/");
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 

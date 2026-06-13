@@ -1,5 +1,5 @@
-import ChartCollectionPage from "@/components/charts/ChartCollectionPage";
+import { redirect } from "next/navigation";
 
-export default function SavedChartsPage() {
-  return <ChartCollectionPage mode="saved" />;
+export default function SavedChartsRedirectPage() {
+  redirect("/chart/saved");
 }

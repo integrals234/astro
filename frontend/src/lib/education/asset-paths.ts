@@ -22,7 +22,7 @@ export const nakshatraImages: Record<string, string | undefined> = {
   punarvasu: "/assets/punarvasu-1.webp",
   pushya: "/assets/pushya-1.webp",
   ashlesha: "/assets/Ashlesha_Nakshatra-1.webp",
-  magha: undefined,
+  magha: "/assets/magha-1.webp",
   "purva-phalguni": "/assets/purva_phalguni-1.webp",
   "uttara-phalguni": "/assets/uttara_phalguni-1.webp",
   hasta: "/assets/hasta-1.webp",

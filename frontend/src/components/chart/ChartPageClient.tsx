@@ -1,20 +1,12 @@
 "use client";
 
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import AppShell from "@/components/layout/AppShell";
+import ChartShell from "@/components/chart/ChartShell";
 import ChartWorkspace from "@/components/ChartWorkspace";
 
 export default function ChartPageClient() {
   return (
-    <>
-      <SignedIn>
-        <AppShell>
-          <ChartWorkspace embedded enablePersistence />
-        </AppShell>
-      </SignedIn>
-      <SignedOut>
-        <ChartWorkspace showAuthNav />
-      </SignedOut>
-    </>
+    <ChartShell showPublicAuthBar>
+      <ChartWorkspace embedded enablePersistence />
+    </ChartShell>
   );
 }

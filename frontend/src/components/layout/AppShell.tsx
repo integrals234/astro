@@ -13,10 +13,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pageTitle = getNavLabel(pathname);
 
   return (
-    <div className="min-h-screen bg-shell-bg text-shell-warm flex">
+    <div className="min-h-screen bg-shell-bg text-shell-warm flex w-full">
       <Sidebar />
 
-      <div className="flex min-h-screen flex-1 flex-col min-w-0">
+      <div className="flex min-h-screen flex-1 flex-col min-w-0 w-full">
         <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-shell-border bg-shell-bg/85 backdrop-blur-xl px-4 py-4 md:px-8">
           <div className="flex items-center gap-3 min-w-0">
             <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
@@ -40,8 +40,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden">
-          <div className="px-4 py-6 md:px-8 md:py-8">{children}</div>
+        <main className="flex-1 overflow-x-hidden min-h-[calc(100vh-5rem)]">
+          <div className="px-4 py-6 md:px-8 md:py-8 w-full">{children}</div>
         </main>
       </div>
     </div>

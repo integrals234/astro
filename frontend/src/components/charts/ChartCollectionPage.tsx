@@ -61,19 +61,47 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
           Loading charts…
         </div>
       ) : charts.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-shell-border bg-shell-elevated/20 p-12 text-center">
-          <p className="text-shell-muted text-sm mb-4">
-            {mode === "saved"
-              ? "No saved charts yet. Generate a chart and tap Save Chart."
-              : "No recent charts yet. Generate your first chart on the dashboard."}
-          </p>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm transition-colors"
-          >
-            Go to Dashboard
-            <ArrowUpRight size={14} />
-          </Link>
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-dashed border-shell-border bg-shell-elevated/20 p-8 text-center">
+            <p className="text-shell-muted text-sm mb-4">
+              {mode === "saved"
+                ? "No saved charts yet. Generate a chart and tap Save Chart."
+                : "No recent charts yet. Generate your first chart on the dashboard."}
+            </p>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm transition-colors"
+            >
+              Go to Dashboard
+              <ArrowUpRight size={14} />
+            </Link>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.24em] text-shell-muted mb-3">
+              Preview layout
+            </p>
+            <ul className="grid gap-4 md:grid-cols-2 opacity-60">
+              {[
+                { name: "Vaibhav Shukla", place: "Gwalior, India", date: "Sample entry" },
+                { name: "Example Chart", place: "Delhi, India", date: "Sample entry" },
+              ].map((sample) => (
+                <li
+                  key={sample.name}
+                  className="rounded-3xl border border-shell-border bg-shell-elevated/30 p-5"
+                >
+                  <h3 className="font-medium text-shell-warm">{sample.name}</h3>
+                  <p className="flex items-center gap-1.5 text-xs text-shell-muted mt-1">
+                    <MapPin size={12} className="text-shell-accent/70" />
+                    {sample.place}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-widest text-shell-muted/70 mt-3">
+                    {sample.date}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       ) : (
         <ul className="grid gap-4 md:grid-cols-2">

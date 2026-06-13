@@ -24,11 +24,8 @@ export function getResendConfig():
   const recipientEmail =
     readEnv("INQUIRY_RECIPIENT_EMAIL") ?? DEFAULT_INQUIRY_RECIPIENT;
 
-  const missing: string[] = [];
-  if (!apiKey) missing.push("RESEND_API_KEY");
-
-  if (missing.length > 0) {
-    return { ok: false, missing };
+  if (!apiKey) {
+    return { ok: false, missing: ["RESEND_API_KEY"] };
   }
 
   return {

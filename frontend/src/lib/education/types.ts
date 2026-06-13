@@ -5,7 +5,8 @@ export type EducationSectionId =
   | "rashis"
   | "planets"
   | "nakshatras"
-  | "aspects";
+  | "aspects"
+  | "horoscope";
 
 export interface BilingualText {
   en: string;

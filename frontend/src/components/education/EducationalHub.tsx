@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -14,6 +14,7 @@ import {
   Sparkles,
   ArrowRight,
   Circle,
+  CalendarRange,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import {
@@ -32,10 +33,19 @@ import {
   universalAspect,
   specialAspects,
   conjunctionBlock,
+  horoscopeIntro,
+  horoscopeSigns,
+  horoscopeSectionLabels,
+  generateHoroscopeReading,
+  periodTypeLabel,
+  getPeriodForType,
+  useHoroscopePeriods,
   type EducationLang,
   type EducationSectionId,
   type BilingualText,
   type RashiEntry,
+  type HoroscopePeriodType,
+  type HoroscopeSignId,
 } from "@/lib/education";
 
 const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
@@ -44,6 +54,7 @@ const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   planets: Orbit,
   nakshatras: Star,
   aspects: Eye,
+  horoscope: CalendarRange,
 };
 
 function t(text: BilingualText, lang: EducationLang) {
@@ -558,6 +569,173 @@ function AspectsSection({ lang }: { lang: EducationLang }) {
   );
 }
 
+const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearly"];
+
+function HoroscopeSection({ lang }: { lang: EducationLang }) {
+  const { now, periods } = useHoroscopePeriods();
+  const [periodType, setPeriodType] = useState<HoroscopePeriodType>("weekly");
+  const [selectedSign, setSelectedSign] = useState<HoroscopeSignId>("aries");
+
+  const activePeriod = getPeriodForType(periods, periodType);
+  const selectedMeta = horoscopeSigns.find((sign) => sign.id === selectedSign) ?? horoscopeSigns[0];
+
+  const readingsBySign = useMemo(() => {
+    return Object.fromEntries(
+      horoscopeSigns.map((sign) => [
+        sign.id,
+        generateHoroscopeReading(sign, activePeriod),
+      ])
+    ) as Record<HoroscopeSignId, ReturnType<typeof generateHoroscopeReading>>;
+  }, [activePeriod.key, activePeriod.type]);
+
+  const reading = readingsBySign[selectedSign];
+
+  const updatedLabel = now.toLocaleString(lang === "ja" ? "ja-JP" : "en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  return (
+    <div className="space-y-8">
+      <div className="max-w-3xl">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+          {lang === "ja" ? "自動更新" : "Live Forecasts"}
+        </p>
+        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+          {lang === "ja" ? "ホロスコープ" : "Horoscope"}
+        </h2>
+        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
+          {horoscopeIntro[lang]}
+        </p>
+        <p className="mt-3 text-xs text-shell-muted/80">
+          {lang === "ja" ? "最終更新" : "Updated"}: {updatedLabel}
+          <span className="mx-2">·</span>
+          {activePeriod.rangeLabel[lang]}
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {horoscopePeriodTypes.map((type) => {
+          const active = periodType === type;
+          const period = getPeriodForType(periods, type);
+          return (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setPeriodType(type)}
+              className={`rounded-xl border px-4 py-2.5 text-left transition-all ${
+                active
+                  ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
+                  : "border-shell-border bg-shell-elevated/40 text-shell-muted hover:text-shell-warm"
+              }`}
+            >
+              <span className="block text-sm font-medium">{periodTypeLabel(type, lang)}</span>
+              <span className="block text-[11px] mt-0.5 opacity-80">{period.label[lang]}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+        {horoscopeSigns.map((sign) => {
+          const active = selectedSign === sign.id;
+          return (
+            <button
+              key={sign.id}
+              type="button"
+              onClick={() => setSelectedSign(sign.id)}
+              className={`rounded-xl border px-2 py-2 text-center transition-all ${
+                active
+                  ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
+                  : "border-shell-border/60 bg-shell-elevated/30 text-shell-muted hover:text-shell-warm"
+              }`}
+            >
+              <span className="block text-[11px] font-medium leading-tight">{t(sign.name, lang)}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-52 lg:w-60 shrink-0 md:border-r border-shell-border/60 p-4 md:p-5 flex flex-col items-center text-center gap-3">
+            <div className="w-full max-w-[200px]">
+              <InfographicImage
+                src={selectedMeta.image}
+                alt={t(selectedMeta.name, lang)}
+                variant="transparent"
+                className="rounded-xl"
+                sizes="200px"
+              />
+            </div>
+            <div>
+              <h3 className="font-serif text-2xl text-shell-warm">{t(selectedMeta.name, lang)}</h3>
+              <p className="text-sm text-shell-accent">{t(selectedMeta.sanskrit, lang)}</p>
+              <p className="text-xs text-shell-muted mt-1">
+                {t(selectedMeta.element, lang)} · {t(selectedMeta.ruler, lang)}
+              </p>
+            </div>
+            <div className="rounded-full border border-shell-accent/30 bg-shell-accent-soft px-3 py-1 text-[11px] text-shell-warm">
+              {t(horoscopeSectionLabels.mood, lang)}: {t(reading.mood, lang)}
+            </div>
+          </div>
+
+          <div className="flex-1 min-w-0 p-6 md:p-8 space-y-5">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-2">
+                {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
+              </p>
+              <p className="text-sm leading-relaxed text-shell-muted">{t(reading.overview, lang)}</p>
+            </div>
+
+            {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
+              .filter((key) => key !== "mood")
+              .map((key) => (
+                <div
+                  key={key}
+                  className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
+                >
+                  <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
+                    {t(horoscopeSectionLabels[key], lang)}
+                  </p>
+                  <p className="text-sm text-shell-warm/90 leading-relaxed">
+                    {t(reading[key], lang)}
+                  </p>
+                </div>
+              ))}
+          </div>
+        </div>
+      </article>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {horoscopeSigns
+          .filter((sign) => sign.id !== selectedSign)
+          .map((sign) => {
+            const preview = readingsBySign[sign.id];
+            return (
+              <button
+                key={sign.id}
+                type="button"
+                onClick={() => setSelectedSign(sign.id)}
+                className="rounded-2xl border border-shell-border bg-shell-elevated/30 p-4 text-left hover:border-shell-accent/30 transition-colors"
+              >
+                <div className="flex items-baseline justify-between gap-2 mb-2">
+                  <h4 className="font-serif text-lg text-shell-warm">{t(sign.name, lang)}</h4>
+                  <span className="text-[10px] text-shell-muted">{t(preview.mood, lang)}</span>
+                </div>
+                <p className="text-xs leading-relaxed text-shell-muted line-clamp-3">
+                  {t(preview.overview, lang)}
+                </p>
+              </button>
+            );
+          })}
+      </div>
+    </div>
+  );
+}
+
 function EducationContent({
   section,
   lang,
@@ -572,6 +750,7 @@ function EducationContent({
       {section === "planets" && <PlanetsSection lang={lang} />}
       {section === "nakshatras" && <NakshatrasSection lang={lang} />}
       {section === "aspects" && <AspectsSection lang={lang} />}
+      {section === "horoscope" && <HoroscopeSection lang={lang} />}
     </SectionFade>
   );
 }

@@ -3,37 +3,45 @@ import type { ChartData, ChartFormData } from "./chart-types";
 import {
   PAGE,
   PDF_COLORS,
-  PLANET_SYMBOL,
   contentWidth,
   drawKeyValueTable,
   drawNorthIndianChart,
   drawSectionTitle,
   drawTable,
-  flattenDashas,
+  ensureSpace,
   formatDMS,
   formatLat,
   formatLon,
+  getCurrentDashaRows,
   isRetrograde,
   mapChalitChart,
   mapChandraChart,
   mapD1Chart,
   mapD9Chart,
 } from "./chart-pdf/helpers";
+import {
+  getPdfLabels,
+  truncateLocation,
+  translateDignity,
+  translatePlanet,
+  translateSign,
+  type PdfLanguage,
+} from "./chart-pdf/i18n";
 
 interface PdfInput {
   name: string;
   locationName: string;
   formData: ChartFormData;
   chartData: ChartData;
+  lang?: PdfLanguage;
 }
 
-function ensureSpace(doc: jsPDF, y: number, needed: number): number {
-  if (y + needed <= PAGE.footerY - 20) return y;
-  doc.addPage();
-  return PAGE.margin + 12;
-}
-
-function drawPageHeader(doc: jsPDF, name: string, subtitle: string) {
+function drawPageHeader(
+  doc: jsPDF,
+  name: string,
+  subtitle: string,
+  labels: ReturnType<typeof getPdfLabels>,
+) {
   doc.setFillColor(...PDF_COLORS.primary);
   doc.rect(0, 0, PAGE.width, 72, "F");
 
@@ -41,9 +49,9 @@ function drawPageHeader(doc: jsPDF, name: string, subtitle: string) {
   doc.rect(0, 72, PAGE.width, 3, "F");
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
+  doc.setFontSize(langFontSize(labels, 18));
   doc.setTextColor(255, 255, 255);
-  doc.text("Vedic Birth Chart Report", PAGE.margin, 32);
+  doc.text(labels.reportTitle, PAGE.margin, 32);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
@@ -54,15 +62,23 @@ function drawPageHeader(doc: jsPDF, name: string, subtitle: string) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.text(
-    `Generated ${new Date().toLocaleString()}`,
+    `${labels.generated} ${new Date().toLocaleString()}`,
     PAGE.width - PAGE.margin,
     32,
     { align: "right" },
   );
-  doc.text("Jyotish Life", PAGE.width - PAGE.margin, 44, { align: "right" });
+  doc.text(labels.brand, PAGE.width - PAGE.margin, 44, { align: "right" });
 }
 
-function drawFooters(doc: jsPDF, name: string) {
+function langFontSize(labels: ReturnType<typeof getPdfLabels>, base: number) {
+  return labels.reportTitle.length > 20 ? base - 2 : base;
+}
+
+function drawFooters(
+  doc: jsPDF,
+  name: string,
+  labels: ReturnType<typeof getPdfLabels>,
+) {
   const total = doc.getNumberOfPages();
   for (let page = 1; page <= total; page += 1) {
     doc.setPage(page);
@@ -71,10 +87,13 @@ function drawFooters(doc: jsPDF, name: string) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...PDF_COLORS.muted);
-    doc.text(`${name} — Confidential Birth Chart Report`, PAGE.margin, PAGE.footerY);
-    doc.text(`Page ${page} of ${total}`, PAGE.width - PAGE.margin, PAGE.footerY, {
-      align: "right",
-    });
+    doc.text(`${name} — ${labels.footer}`, PAGE.margin, PAGE.footerY);
+    doc.text(
+      `${labels.page} ${page} ${labels.of} ${total}`,
+      PAGE.width - PAGE.margin,
+      PAGE.footerY,
+      { align: "right" },
+    );
   }
 }
 
@@ -83,233 +102,224 @@ export function downloadChartPdf({
   locationName,
   formData,
   chartData,
+  lang = "en",
 }: PdfInput) {
+  const labels = getPdfLabels(lang);
   const doc = new jsPDF({ unit: "pt", format: "a4" });
 
   const natalDate = `${formData.year}-${String(formData.month).padStart(2, "0")}-${String(formData.day).padStart(2, "0")}`;
   const natalTime = `${String(formData.hour).padStart(2, "0")}:${String(formData.minute).padStart(2, "0")}`;
   const transitDate = `${formData.transit_year}-${String(formData.transit_month).padStart(2, "0")}-${String(formData.transit_day).padStart(2, "0")}`;
-  const displayName = name.trim() || "Birth Chart";
+  const displayName = name.trim() || labels.birthChart;
 
-  drawPageHeader(doc, displayName, "Complete Natal Analysis");
+  const currentMaha = getCurrentDashaRows(chartData.vimshottari_dashas, labels);
+  const moon = chartData.planets.find((p) => p.name === "Moon");
+
+  drawPageHeader(doc, displayName, labels.completeNatal, labels);
 
   let y = 92;
 
-  y = drawSectionTitle(doc, "Birth Particulars", y);
-  y = drawKeyValueTable(doc, y, [
-    ["Name", displayName],
-    ["Date of Birth", natalDate],
-    ["Time of Birth", natalTime],
-    ["Birth Place", locationName || "—"],
-    ["Latitude", formatLat(formData.latitude)],
-    ["Longitude", formatLon(formData.longitude)],
-    ["Timezone", chartData.timezone_detected],
-    ["Transit Reference Date", transitDate],
-    ...(chartData.sunrise ? [["Sunrise", chartData.sunrise] as [string, string]] : []),
-    ...(chartData.sunset ? [["Sunset", chartData.sunset] as [string, string]] : []),
-  ]);
-
-  y = ensureSpace(doc, y, 120);
-  y = drawSectionTitle(doc, "Ascendant & Moon Summary", y);
-  y = drawKeyValueTable(doc, y, [
-    ["Lagna (Ascendant)", `${chartData.ascendant_sign} — ${formatDMS(chartData.ascendant_longitude)}`],
-    ["Ascendant Nakshatra", chartData.ascendant_nakshatra],
-    ["Navamsha (D9) Ascendant", chartData.d9_ascendant_sign],
+  y = drawSectionTitle(doc, labels.birthParticulars, y);
+  y = drawKeyValueTable(
+    doc,
+    y,
     [
-      "Moon Sign / House",
-      (() => {
-        const moon = chartData.planets.find((p) => p.name === "Moon");
-        return moon ? `${moon.sign} — House ${moon.d1_house}` : "—";
-      })(),
+      [labels.name, displayName],
+      [labels.dateOfBirth, natalDate],
+      [labels.timeOfBirth, natalTime],
+      [labels.birthPlace, truncateLocation(locationName || labels.none)],
+      [labels.latitude, formatLat(formData.latitude)],
+      [labels.longitude, formatLon(formData.longitude)],
+      [labels.timezone, chartData.timezone_detected],
+      [labels.transitDate, transitDate],
+      ...(chartData.sunrise ? [[labels.sunrise, chartData.sunrise] as [string, string]] : []),
+      ...(chartData.sunset ? [[labels.sunset, chartData.sunset] as [string, string]] : []),
     ],
-    [
-      "Current Maha Dasha",
-      chartData.vimshottari_dashas[0]
-        ? `${chartData.vimshottari_dashas[0].lord} (${chartData.vimshottari_dashas[0].start_date} → ${chartData.vimshottari_dashas[0].end_date})`
-        : "—",
-    ],
-  ]);
+    labels,
+  );
 
-  // Page 2 — D1 chart + positions
+  y = ensureSpace(doc, y, 100);
+  y = drawSectionTitle(doc, labels.ascendantSummary, y);
+  y = drawKeyValueTable(
+    doc,
+    y,
+    [
+      [
+        labels.lagna,
+        `${translateSign(lang, chartData.ascendant_sign)} — ${formatDMS(chartData.ascendant_longitude)}`,
+      ],
+      [labels.ascNakshatra, chartData.ascendant_nakshatra],
+      [labels.d9Asc, translateSign(lang, chartData.d9_ascendant_sign)],
+      [
+        labels.moonSignHouse,
+        moon
+          ? `${translateSign(lang, moon.sign)} — ${labels.house} ${moon.d1_house}`
+          : labels.none,
+      ],
+      [
+        labels.currentMahaDasha,
+        currentMaha[0]
+          ? `${translatePlanet(lang, currentMaha[0][1])} (${currentMaha[0][2]} → ${currentMaha[0][3]})`
+          : labels.none,
+      ],
+    ],
+    labels,
+  );
+
+  // D1 chart — full width, centered
   doc.addPage();
-  drawPageHeader(doc, displayName, "Lagna Chart (D1)");
+  drawPageHeader(doc, displayName, labels.lagnaChartD1, labels);
   y = 92;
 
-  const chartSize = 210;
-  const chartX = PAGE.margin;
-  drawNorthIndianChart(
+  const chartSize = 230;
+  const chartX = PAGE.margin + (contentWidth() - chartSize) / 2;
+  y = drawNorthIndianChart(
     doc,
     chartX,
     y,
     chartSize,
     chartData.ascendant_sign,
     mapD1Chart(chartData),
-    "Rashi Chart — D1",
+    labels.rashiChartD1,
     true,
   );
 
-  const rightX = chartX + chartSize + 24;
-  const miniWidth = PAGE.width - PAGE.margin - rightX;
-  if (miniWidth > 180) {
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(...PDF_COLORS.primary);
-    doc.text("Quick Reference", rightX, y + 4);
-
-    const quickRows = chartData.planets.map((p) => [
-      PLANET_SYMBOL[p.name] ?? p.name.slice(0, 2),
-      p.sign,
-      String(p.d1_house),
-      isRetrograde(p) ? "R" : "—",
-    ]);
-
-    drawTable(
-      doc,
-      y + 12,
-      [
-        { header: "Gr.", width: 28, align: "center" },
-        { header: "Sign", width: miniWidth - 28 - 36 - 24 },
-        { header: "H", width: 24, align: "center" },
-        { header: "Rx", width: 24, align: "center" },
-      ],
-      quickRows,
-      { fontSize: 7.5, rowHeight: 14, x: rightX },
-    );
-  }
-
-  y = ensureSpace(doc, y + chartSize + 28, 180);
-  y = drawSectionTitle(doc, "Planetary Positions — D1", y);
-
-  const planetRows = chartData.planets.map((p) => [
-    p.name,
-    p.sign,
-    String(p.d1_house),
-    formatDMS(p.longitude),
-    `${p.nakshatra} · Pada ${p.nakshatra_pada}`,
-    p.sign_lord,
-    p.dignity,
-    isRetrograde(p) ? "Yes" : "No",
-  ]);
+  y = ensureSpace(doc, y + 12, 120);
+  y = drawSectionTitle(doc, labels.planetaryPositionsD1, y);
 
   y = drawTable(
     doc,
     y,
     [
-      { header: "Planet", width: 52 },
-      { header: "Sign", width: 68 },
-      { header: "House", width: 34, align: "center" },
-      { header: "Longitude", width: 72 },
-      { header: "Nakshatra", width: 92 },
-      { header: "Lord", width: 48 },
-      { header: "Dignity", width: 58 },
-      { header: "Retro", width: 34, align: "center" },
+      { header: labels.planet, width: 54 },
+      { header: labels.sign, width: 62 },
+      { header: labels.d1House, width: 36, align: "center" },
+      { header: labels.longitudeCol, width: 68 },
+      { header: labels.nakshatra, width: 88 },
+      { header: labels.lord, width: 46 },
+      { header: labels.dignity, width: 54 },
+      { header: labels.retrograde, width: 34, align: "center" },
     ],
-    planetRows,
+    chartData.planets.map((p) => [
+      translatePlanet(lang, p.name),
+      translateSign(lang, p.sign),
+      String(p.d1_house),
+      formatDMS(p.longitude),
+      `${p.nakshatra} · ${labels.pada} ${p.nakshatra_pada}`,
+      translatePlanet(lang, p.sign_lord),
+      translateDignity(lang, p.dignity),
+      isRetrograde(p) ? labels.yes : labels.no,
+    ]),
     { fontSize: 7.5, rowHeight: 15 },
   );
 
-  // Page 3 — D9 + Navamsha table
+  // D9 + Chalit
   doc.addPage();
-  drawPageHeader(doc, displayName, "Navamsha & Divisional Charts");
+  drawPageHeader(doc, displayName, labels.navamshaDivisional, labels);
   y = 92;
 
-  drawNorthIndianChart(
+  const pairSize = 185;
+  const pairGap = 24;
+  const pairX = PAGE.margin + (contentWidth() - pairSize * 2 - pairGap) / 2;
+
+  const afterD9 = drawNorthIndianChart(
     doc,
-    PAGE.margin,
+    pairX,
     y,
-    chartSize,
+    pairSize,
     chartData.d9_ascendant_sign,
     mapD9Chart(chartData),
-    "Navamsha Chart — D9",
+    labels.navamshaChartD9,
     true,
   );
 
-  drawNorthIndianChart(
+  const afterChalit = drawNorthIndianChart(
     doc,
-    PAGE.margin + chartSize + 28,
+    pairX + pairSize + pairGap,
     y,
-    chartSize,
+    pairSize,
     chartData.ascendant_sign,
     mapChalitChart(chartData),
-    "Bhava Chalit",
+    labels.bhavaChalit,
     true,
   );
 
-  y = ensureSpace(doc, y + chartSize + 30, 160);
-  y = drawSectionTitle(doc, "Navamsha (D9) Positions", y);
+  y = Math.max(afterD9, afterChalit) + 12;
+  y = ensureSpace(doc, y, 120);
+  y = drawSectionTitle(doc, labels.navamshaPositions, y);
 
   y = drawTable(
     doc,
     y,
     [
-      { header: "Planet", width: 58 },
-      { header: "D1 Sign", width: 72 },
-      { header: "D9 Sign", width: 72 },
-      { header: "D1 House", width: 48, align: "center" },
-      { header: "Chalit House", width: 58, align: "center" },
-      { header: "Nakshatra", width: contentWidth() - 58 - 72 - 72 - 48 - 58 },
+      { header: labels.planet, width: 52 },
+      { header: labels.d1Sign, width: 68 },
+      { header: labels.d9Sign, width: 68 },
+      { header: labels.d1House, width: 44, align: "center" },
+      { header: labels.chalitHouse, width: 48, align: "center" },
+      { header: labels.nakshatra, width: contentWidth() - 52 - 68 - 68 - 44 - 48 },
     ],
     chartData.planets.map((p) => [
-      p.name,
-      p.sign,
-      p.d9_sign,
+      translatePlanet(lang, p.name),
+      translateSign(lang, p.sign),
+      translateSign(lang, p.d9_sign),
       String(p.d1_house),
       String(p.chalit_house),
       `${p.nakshatra} P${p.nakshatra_pada}`,
     ]),
-    { fontSize: 8, rowHeight: 15 },
+    { fontSize: 7.5, rowHeight: 15 },
   );
 
-  // Page 4 — Chandra + transits
+  // Chandra + transits
   doc.addPage();
-  drawPageHeader(doc, displayName, "Moon Chart & Transits");
+  drawPageHeader(doc, displayName, labels.moonChartTransits, labels);
   y = 92;
 
-  const moon = chartData.planets.find((p) => p.name === "Moon");
-  drawNorthIndianChart(
+  const chandraX = PAGE.margin + (contentWidth() - pairSize) / 2;
+  y = drawNorthIndianChart(
     doc,
-    PAGE.margin,
+    chandraX,
     y,
-    chartSize,
+    pairSize,
     moon?.sign ?? "Aries",
     mapChandraChart(chartData),
-    "Chandra Chart (Moon as Ascendant)",
+    labels.chandraChart,
     true,
   );
 
-  y = ensureSpace(doc, y + chartSize + 24, 140);
-  y = drawSectionTitle(doc, "Gochar — Transit Positions", y);
+  y = ensureSpace(doc, y + 8, 120);
+  y = drawSectionTitle(doc, labels.gocharTransits, y);
   y = drawTable(
     doc,
     y,
     [
-      { header: "Planet", width: 58 },
-      { header: "Transit Sign", width: 80 },
-      { header: "Natal House", width: 58, align: "center" },
-      { header: "Longitude", width: 80 },
-      { header: "Retrograde", width: 52, align: "center" },
+      { header: labels.planet, width: 54 },
+      { header: labels.transitSign, width: 76 },
+      { header: labels.natalHouse, width: 52, align: "center" },
+      { header: labels.longitudeCol, width: 76 },
+      { header: labels.retrograde, width: 48, align: "center" },
     ],
     chartData.transit_planets.map((p) => [
-      p.name,
-      p.sign,
+      translatePlanet(lang, p.name),
+      translateSign(lang, p.sign),
       String(p.natal_house),
       formatDMS(p.longitude),
-      isRetrograde(p) ? "Yes" : "No",
+      isRetrograde(p) ? labels.yes : labels.no,
     ]),
-    { fontSize: 8, rowHeight: 15 },
+    { fontSize: 7.5, rowHeight: 15 },
   );
 
   if (chartData.chalit_cusps.length > 0) {
-    y = ensureSpace(doc, y + 10, 100);
-    y = drawSectionTitle(doc, "Bhava Chalit Cusps", y);
+    y = ensureSpace(doc, y + 8, 80);
+    y = drawSectionTitle(doc, labels.chalitCusps, y);
     const cuspRows: string[][] = [];
     for (let i = 0; i < chartData.chalit_cusps.length; i += 2) {
       const houseA = i + 1;
       const houseB = i + 2;
       cuspRows.push([
-        `House ${houseA}`,
+        `${labels.house} ${houseA}`,
         formatDMS(chartData.chalit_cusps[i]),
-        houseB <= chartData.chalit_cusps.length ? `House ${houseB}` : "",
+        houseB <= chartData.chalit_cusps.length ? `${labels.house} ${houseB}` : "",
         houseB <= chartData.chalit_cusps.length
           ? formatDMS(chartData.chalit_cusps[i + 1])
           : "",
@@ -319,66 +329,75 @@ export function downloadChartPdf({
       doc,
       y,
       [
-        { header: "House", width: 70 },
-        { header: "Cusp", width: 120 },
-        { header: "House", width: 70 },
-        { header: "Cusp", width: contentWidth() - 70 - 120 - 70 },
+        { header: labels.house, width: 68 },
+        { header: labels.cusp, width: 118 },
+        { header: labels.house, width: 68 },
+        { header: labels.cusp, width: contentWidth() - 68 - 118 - 68 },
       ],
       cuspRows,
-      { fontSize: 8, rowHeight: 15 },
+      { fontSize: 7.5, rowHeight: 15 },
     );
   }
 
-  // Page 5 — Aspects
+  // Aspects
   doc.addPage();
-  drawPageHeader(doc, displayName, "Vedic Aspects (Drishti)");
+  drawPageHeader(doc, displayName, labels.vedicAspects, labels);
   y = 92;
-  y = drawSectionTitle(doc, "Planetary Aspects", y);
+  y = drawSectionTitle(doc, labels.planetaryAspects, y);
 
   const aspectRows = chartData.planets
     .filter((p) => p.aspects_houses.length > 0)
     .map((p) => [
-      p.name,
+      translatePlanet(lang, p.name),
       String(p.d1_house),
-      p.sign,
-      p.aspects_houses.map((h) => `H${h}`).join(", "),
+      translateSign(lang, p.sign),
+      p.aspects_houses.map((h) => `${labels.house} ${h}`).join(", "),
     ]);
 
-  y = drawTable(
-    doc,
-    y,
-    [
-      { header: "Planet", width: 70 },
-      { header: "From House", width: 70, align: "center" },
-      { header: "Sign", width: 90 },
-      { header: "Aspects Houses", width: contentWidth() - 70 - 70 - 90 },
-    ],
-    aspectRows.length > 0 ? aspectRows : [["—", "—", "—", "No major aspects recorded"]],
-    { fontSize: 8.5, rowHeight: 16 },
-  );
-
-  // Page 6 — Dasha timeline
-  doc.addPage();
-  drawPageHeader(doc, displayName, "Vimshottari Dasha");
-  y = 92;
-  y = drawSectionTitle(doc, "Dasha Timeline", y);
-
-  const dashaRows = flattenDashas(chartData.vimshottari_dashas, 0, 3);
   drawTable(
     doc,
     y,
     [
-      { header: "Level", width: 72 },
-      { header: "Lord", width: 58 },
-      { header: "Start", width: 110 },
-      { header: "End", width: contentWidth() - 72 - 58 - 110 },
+      { header: labels.planet, width: 68 },
+      { header: labels.fromHouse, width: 62, align: "center" },
+      { header: labels.sign, width: 82 },
+      { header: labels.aspectsHouses, width: contentWidth() - 68 - 62 - 82 },
     ],
-    dashaRows.length > 0 ? dashaRows : [["—", "—", "—", "—"]],
-    { fontSize: 8, rowHeight: 14 },
+    aspectRows.length > 0
+      ? aspectRows
+      : [[labels.none, labels.none, labels.none, labels.noAspects]],
+    { fontSize: 8, rowHeight: 16 },
   );
 
-  drawFooters(doc, displayName);
+  // Current dasha only
+  doc.addPage();
+  drawPageHeader(doc, displayName, labels.vimshottariDasha, labels);
+  y = 92;
+  y = drawSectionTitle(doc, labels.dashaTimeline, y);
 
+  const dashaRows = currentMaha.map((row) => [
+    row[0],
+    translatePlanet(lang, row[1]),
+    row[2],
+    row[3],
+  ]);
+
+  drawTable(
+    doc,
+    y,
+    [
+      { header: labels.level, width: 78 },
+      { header: labels.lord, width: 58 },
+      { header: labels.start, width: 108 },
+      { header: labels.end, width: contentWidth() - 78 - 58 - 108 },
+    ],
+    dashaRows.length > 0 ? dashaRows : [[labels.none, labels.none, labels.none, labels.none]],
+    { fontSize: 8.5, rowHeight: 18 },
+  );
+
+  drawFooters(doc, displayName, labels);
+
+  const suffix = lang === "ja" ? "ja" : "en";
   const safeName = (name || "chart").replace(/[^a-z0-9-_]+/gi, "-").toLowerCase();
-  doc.save(`${safeName}-birth-chart-report.pdf`);
+  doc.save(`${safeName}-birth-chart-report-${suffix}.pdf`);
 }

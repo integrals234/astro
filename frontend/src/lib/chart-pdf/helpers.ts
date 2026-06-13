@@ -1,5 +1,6 @@
 import type { jsPDF } from "jspdf";
-import type { ChartData, Planet, TransitPlanet } from "../chart-types";
+import type { ChartData, Dasha, Planet, TransitPlanet } from "../chart-types";
+import type { PdfLabels } from "./i18n";
 
 export const SIGN_TO_NUMBER: Record<string, number> = {
   Aries: 1,
@@ -16,35 +17,7 @@ export const SIGN_TO_NUMBER: Record<string, number> = {
   Pisces: 12,
 };
 
-export const NUMBER_TO_SIGN = [
-  "",
-  "Aries",
-  "Taurus",
-  "Gemini",
-  "Cancer",
-  "Leo",
-  "Virgo",
-  "Libra",
-  "Scorpio",
-  "Sagittarius",
-  "Capricorn",
-  "Aquarius",
-  "Pisces",
-];
-
 export const PLANET_ABBR: Record<string, string> = {
-  Sun: "Su",
-  Moon: "Mo",
-  Mars: "Ma",
-  Mercury: "Me",
-  Jupiter: "Ju",
-  Venus: "Ve",
-  Saturn: "Sa",
-  Rahu: "Ra",
-  Ketu: "Ke",
-};
-
-export const PLANET_SYMBOL: Record<string, string> = {
   Sun: "Su",
   Moon: "Mo",
   Mars: "Ma",
@@ -72,7 +45,8 @@ export const PAGE = {
   width: 595.28,
   height: 841.89,
   margin: 42,
-  footerY: 812,
+  footerY: 800,
+  contentBottom: 780,
 };
 
 export function formatDMS(raw: number) {
@@ -81,11 +55,7 @@ export function formatDMS(raw: number) {
   const mF = (l - d) * 60;
   const m = Math.floor(mF);
   const s = Math.floor((mF - m) * 60);
-  return `${d}° ${m.toString().padStart(2, "0")}' ${s.toString().padStart(2, "0")}"`;
-}
-
-export function formatDegreeInt(raw: number) {
-  return `${Math.floor(raw % 30)}°`;
+  return `${d}°${m.toString().padStart(2, "0")}'${s.toString().padStart(2, "0")}"`;
 }
 
 export function formatLat(value: number) {
@@ -162,6 +132,42 @@ export function contentWidth() {
   return PAGE.width - PAGE.margin * 2;
 }
 
+function lineHeight(fontSize: number) {
+  return Math.ceil(fontSize * 1.35);
+}
+
+function splitCellLines(
+  doc: jsPDF,
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+): string[] {
+  doc.setFontSize(fontSize);
+  const lines = doc.splitTextToSize(text || "—", Math.max(20, maxWidth - 8));
+  return lines.length > 0 ? lines : ["—"];
+}
+
+function rowHeightForCells(
+  doc: jsPDF,
+  row: string[],
+  columns: TableColumn[],
+  fontSize: number,
+  minHeight: number,
+): number {
+  let maxLines = 1;
+  row.forEach((cell, index) => {
+    const lines = splitCellLines(doc, cell, columns[index].width, fontSize);
+    maxLines = Math.max(maxLines, lines.length);
+  });
+  return Math.max(minHeight, maxLines * lineHeight(fontSize) + 8);
+}
+
+export function ensureSpace(doc: jsPDF, y: number, needed: number): number {
+  if (y + needed <= PAGE.contentBottom) return y;
+  doc.addPage();
+  return PAGE.margin + 16;
+}
+
 export function drawSectionTitle(doc: jsPDF, title: string, y: number) {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -172,26 +178,22 @@ export function drawSectionTitle(doc: jsPDF, title: string, y: number) {
   doc.setLineWidth(1.2);
   doc.line(PAGE.margin, y + 4, PAGE.margin + 42, y + 4);
 
-  return y + 18;
+  return y + 20;
 }
 
-export function drawTable(
+function drawTableHeader(
   doc: jsPDF,
-  startY: number,
+  y: number,
+  x0: number,
   columns: TableColumn[],
-  rows: string[][],
-  options?: { rowHeight?: number; fontSize?: number; x?: number },
+  tableWidth: number,
+  rowHeight: number,
+  fontSize: number,
 ) {
-  const rowHeight = options?.rowHeight ?? 16;
-  const fontSize = options?.fontSize ?? 8;
-  const x0 = options?.x ?? PAGE.margin;
-  const tableWidth = columns.reduce((sum, col) => sum + col.width, 0);
-  let y = startY;
-
   doc.setFillColor(...PDF_COLORS.headerBg);
   doc.setDrawColor(...PDF_COLORS.border);
   doc.setLineWidth(0.5);
-  doc.rect(x0, y - 10, tableWidth, rowHeight + 4, "FD");
+  doc.rect(x0, y - 10, tableWidth, rowHeight + 2, "FD");
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(fontSize);
@@ -205,66 +207,109 @@ export function drawTable(
         : col.align === "center"
           ? x + col.width / 2
           : x;
-    doc.text(col.header, textX, y, {
-      align: col.align ?? "left",
-    });
+    doc.text(col.header, textX, y, { align: col.align ?? "left" });
     x += col.width;
   });
+}
 
-  y += rowHeight - 2;
+export function drawTable(
+  doc: jsPDF,
+  startY: number,
+  columns: TableColumn[],
+  rows: string[][],
+  options?: {
+    rowHeight?: number;
+    fontSize?: number;
+    x?: number;
+    repeatHeader?: boolean;
+  },
+): number {
+  const minRowHeight = options?.rowHeight ?? 16;
+  const fontSize = options?.fontSize ?? 8;
+  const x0 = options?.x ?? PAGE.margin;
+  const tableWidth = columns.reduce((sum, col) => sum + col.width, 0);
+  const repeatHeader = options?.repeatHeader ?? true;
+
+  let y = startY;
+  let tableTop = y - 10;
+
+  const drawHeader = () => {
+    drawTableHeader(doc, y, x0, columns, tableWidth, minRowHeight, fontSize);
+    y += minRowHeight - 2;
+  };
+
+  drawHeader();
 
   rows.forEach((row, rowIndex) => {
+    const dynamicHeight = rowHeightForCells(doc, row, columns, fontSize, minRowHeight);
+
+    if (y + dynamicHeight > PAGE.contentBottom) {
+      doc.setDrawColor(...PDF_COLORS.border);
+      doc.rect(x0, tableTop, tableWidth, y - tableTop + 6);
+      doc.addPage();
+      y = PAGE.margin + 16;
+      tableTop = y - 10;
+      if (repeatHeader) drawHeader();
+    }
+
     if (rowIndex % 2 === 1) {
       doc.setFillColor(...PDF_COLORS.rowAlt);
-      doc.rect(x0, y - 9, tableWidth, rowHeight, "F");
+      doc.rect(x0, y - 9, tableWidth, dynamicHeight, "F");
     }
 
     doc.setDrawColor(...PDF_COLORS.border);
-    doc.line(x0, y + rowHeight - 11, x0 + tableWidth, y + rowHeight - 11);
+    doc.line(x0, y + dynamicHeight - 11, x0 + tableWidth, y + dynamicHeight - 11);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(fontSize);
     doc.setTextColor(...PDF_COLORS.text);
 
-    x = x0 + 6;
+    let x = x0 + 6;
     row.forEach((cell, cellIndex) => {
       const col = columns[cellIndex];
+      const lines = splitCellLines(doc, cell, col.width, fontSize);
       const textX =
         col.align === "right"
           ? x + col.width - 8
           : col.align === "center"
             ? x + col.width / 2
             : x;
-      doc.text(cell, textX, y, { align: col.align ?? "left", maxWidth: col.width - 10 });
+
+      lines.forEach((line, lineIndex) => {
+        doc.text(line, textX, y + lineIndex * lineHeight(fontSize), {
+          align: col.align ?? "left",
+        });
+      });
+
       x += col.width;
     });
 
-    y += rowHeight;
+    y += dynamicHeight;
   });
 
   doc.setDrawColor(...PDF_COLORS.border);
-  doc.rect(x0, startY - 10, tableWidth, y - startY + 10);
+  doc.rect(x0, tableTop, tableWidth, y - tableTop + 6);
 
-  return y + 8;
+  return y + 10;
 }
 
 export function drawKeyValueTable(
   doc: jsPDF,
   startY: number,
   rows: [string, string][],
+  labels: Pick<PdfLabels, "field" | "details">,
 ) {
-  const labelWidth = 130;
+  const labelWidth = 128;
   const valueWidth = contentWidth() - labelWidth;
-  const tableRows = rows.map(([label, value]) => [label, value]);
   return drawTable(
     doc,
     startY,
     [
-      { header: "Field", width: labelWidth },
-      { header: "Details", width: valueWidth },
+      { header: labels.field, width: labelWidth },
+      { header: labels.details, width: valueWidth },
     ],
-    tableRows,
-    { rowHeight: 18, fontSize: 9 },
+    rows.map(([label, value]) => [label, value]),
+    { rowHeight: 18, fontSize: 8.5 },
   );
 }
 
@@ -299,15 +344,20 @@ export function drawNorthIndianChart(
     return signNum > 12 ? signNum - 12 : signNum;
   };
 
+  const boxHeight = size + 28;
+
   doc.setFillColor(...PDF_COLORS.white);
   doc.setDrawColor(...PDF_COLORS.primary);
   doc.setLineWidth(1);
-  doc.roundedRect(x - 4, y - 18, size + 8, size + 26, 6, 6, "FD");
+  doc.roundedRect(x - 4, y - 18, size + 8, boxHeight, 6, 6, "FD");
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(...PDF_COLORS.primary);
-  doc.text(title, x + size / 2, y - 6, { align: "center" });
+  const titleLines = doc.splitTextToSize(title, size);
+  titleLines.forEach((line: string, index: number) => {
+    doc.text(line, x + size / 2, y - 6 + index * 10, { align: "center" });
+  });
 
   doc.setDrawColor(...PDF_COLORS.accent);
   doc.setLineWidth(0.8);
@@ -326,6 +376,9 @@ export function drawNorthIndianChart(
     grouped.set(entry.house, list);
   });
 
+  const maxHouseWidth = size * 0.19;
+  const lineStep = 8.5;
+
   for (let house = 1; house <= 12; house += 1) {
     const center = HOUSE_CENTERS[house];
     const cx = x + center.x * size;
@@ -333,40 +386,83 @@ export function drawNorthIndianChart(
     const signNum = getSignForHouse(house);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(7);
+    doc.setFontSize(6.5);
     doc.setTextColor(...PDF_COLORS.gold);
-    doc.text(String(signNum), cx, cy - 14, { align: "center" });
+    doc.text(String(signNum), cx, cy - 16, { align: "center" });
 
     const planets = grouped.get(house) ?? [];
-    const labels: string[] = [];
-    if (showAsc && house === 1) labels.push("Asc");
+    const lines: string[] = [];
+    if (showAsc && house === 1) lines.push("Asc");
     planets.forEach((p) => {
-      labels.push(`${p.label}${p.retro ? "*" : ""}${p.degree !== undefined ? p.degree : ""}`);
+      const deg = p.degree !== undefined ? `${p.degree}°` : "";
+      lines.push(`${p.label}${deg}${p.retro ? "*" : ""}`);
     });
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(8);
+    doc.setFontSize(6.5);
     doc.setTextColor(...PDF_COLORS.primary);
-    doc.text(labels.join(", "), cx, cy + 2, {
-      align: "center",
-      maxWidth: size * 0.22,
+
+    const maxLines = 4;
+    const visible = lines.slice(0, maxLines);
+    if (lines.length > maxLines) {
+      visible[maxLines - 1] = `+${lines.length - maxLines + 1}`;
+    }
+
+    const blockHeight = visible.length * lineStep;
+    let lineY = cy - blockHeight / 2 + 4;
+
+    visible.forEach((line) => {
+      const wrapped = doc.splitTextToSize(line, maxHouseWidth);
+      doc.text(wrapped[0] ?? line, cx, lineY, { align: "center" });
+      lineY += lineStep;
     });
   }
+
+  return y + boxHeight;
 }
 
-export function flattenDashas(
+export function parseDashaDate(value: string): Date {
+  return new Date(value.replace(/(\d+) (\w+) (\d+)/, "$2 $1, $3"));
+}
+
+export function findDashaContaining(
+  dashas: Dasha[],
+  reference = new Date(),
+): Dasha | null {
+  const today = new Date(reference);
+  today.setHours(12, 0, 0, 0);
+
+  for (const dasha of dashas) {
+    const start = parseDashaDate(dasha.start_date);
+    const end = parseDashaDate(dasha.end_date);
+    if (today >= start && today < end) return dasha;
+  }
+
+  return dashas[0] ?? null;
+}
+
+export function getCurrentDashaRows(
   dashas: ChartData["vimshottari_dashas"],
-  depth = 0,
-  maxDepth = 3,
+  labels: Pick<PdfLabels, "mahaDasha" | "antarDasha">,
 ): [string, string, string, string][] {
-  const rows: [string, string, string, string][] = [];
-  dashas.forEach((dasha) => {
-    const level =
-      depth === 0 ? "Maha" : depth === 1 ? "Antar" : depth === 2 ? "Pratyantar" : "Sookshma";
-    rows.push([level, dasha.lord, dasha.start_date, dasha.end_date]);
-    if (dasha.sub_dashas && depth < maxDepth) {
-      rows.push(...flattenDashas(dasha.sub_dashas, depth + 1, maxDepth));
+  const currentMaha = findDashaContaining(dashas);
+  if (!currentMaha) return [];
+
+  const rows: [string, string, string, string][] = [
+    [labels.mahaDasha, currentMaha.lord, currentMaha.start_date, currentMaha.end_date],
+  ];
+
+  if (currentMaha.sub_dashas?.length) {
+    const currentAntar = findDashaContaining(currentMaha.sub_dashas);
+    if (currentAntar) {
+      rows.push([
+        labels.antarDasha,
+        currentAntar.lord,
+        currentAntar.start_date,
+        currentAntar.end_date,
+      ]);
     }
-  });
+  }
+
   return rows;
 }

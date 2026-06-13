@@ -56,7 +56,7 @@ const translations: Record<LanguageCode, any> = {
     dashaTimeline: "Vimshottari Timeline", dashaSub: "Maha • Antar • Pratyantar • Sookshma", lagnaBase: "Lagna Base", chandraBase: "Chandra Base", watermark: "vaibhav shukla",
     errNoLoc: "Please select a location.", errCalc: "Calculation Failed.",
     personName: "Person's Name", personNamePlaceholder: "Full name", errNoName: "Please enter the person's name.",
-    saveChart: "Save Chart", savedChart: "Saved", downloadPdf: "Download PDF",
+    saveChart: "Save Chart", savedChart: "Saved", downloadPdfEn: "Download PDF (English)", downloadPdfJa: "Download PDF (日本語)",
     tabs: { D1: "Lagna", D9: "Navmansha", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
     tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
     planets: { Sun: "Sun", Moon: "Moon", Mars: "Mars", Mercury: "Mercury", Jupiter: "Jupiter", Venus: "Venus", Saturn: "Saturn", Rahu: "Rahu", Ketu: "Ketu", Ascendant: "Ascendant" },
@@ -349,7 +349,7 @@ function ChartWorkspaceInner({
     }
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = (pdfLang: 'en' | 'ja') => {
     if (!chartData || !isAuthLoaded) return;
     if (!isSignedIn) {
       const returnUrl = searchParams.toString()
@@ -363,6 +363,7 @@ function ChartWorkspaceInner({
       locationName: selectedLocationName,
       formData,
       chartData,
+      lang: pdfLang,
     });
   };
 
@@ -690,14 +691,22 @@ function ChartWorkspaceInner({
                     <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subject</div>
                     <div className="font-serif text-lg text-indigo-950">{personName.trim() || '—'}</div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
                     <button
                       type="button"
-                      onClick={handleDownloadPdf}
-                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800 transition-colors"
+                      onClick={() => handleDownloadPdf('en')}
+                      className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800 transition-colors"
                     >
                       <Download size={14} />
-                      {t.downloadPdf || 'Download PDF'}
+                      {t.downloadPdfEn || 'Download PDF (English)'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadPdf('ja')}
+                      className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800 transition-colors"
+                    >
+                      <Download size={14} />
+                      {t.downloadPdfJa || 'Download PDF (日本語)'}
                     </button>
                     {enablePersistence && currentChartId && (
                       <button

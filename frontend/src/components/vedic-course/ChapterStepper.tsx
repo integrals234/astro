@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import type { CourseChapter, CourseLanguage } from "@/lib/vedic-course/types";
+import { uiString } from "@/lib/vedic-course/i18n/ui";
 import { t } from "@/lib/vedic-course/utils";
 
 interface ChapterStepperProps {
@@ -20,7 +21,7 @@ export default function ChapterStepper({
   onSelectChapter,
 }: ChapterStepperProps) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-2 sm:gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {chapters.map((chapter, index) => {
         const Icon = chapter.icon;
         const isActive = index === currentChapter;
@@ -39,7 +40,7 @@ export default function ChapterStepper({
             type="button"
             disabled={isLocked}
             onClick={() => !isLocked && onSelectChapter(index)}
-            className={`relative rounded-2xl border p-4 text-left transition-all duration-300 ${
+            className={`relative rounded-2xl border p-3 sm:p-4 text-left transition-all duration-300 ${
               isActive
                 ? "border-shell-accent/40 bg-shell-accent-soft shadow-[0_0_24px_rgba(212,165,116,0.15)]"
                 : isComplete
@@ -49,9 +50,9 @@ export default function ChapterStepper({
                     : "border-shell-border bg-shell-elevated/40 hover:border-shell-accent/20"
             }`}
           >
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-2 sm:gap-3">
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
+                className={`flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl border ${
                   isActive
                     ? "border-shell-accent/30 bg-shell-accent/20"
                     : isComplete
@@ -69,10 +70,10 @@ export default function ChapterStepper({
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-shell-muted">
-                  {lang === "ja" ? `第${chapter.number}章` : `Chapter ${chapter.number}`}
+                <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-shell-muted">
+                  {uiString("chapter", lang, chapter.number)}
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-shell-warm truncate">
+                <p className="mt-0.5 text-xs sm:text-sm font-medium text-shell-warm line-clamp-2 leading-snug">
                   {t(chapter.title, lang)}
                 </p>
               </div>

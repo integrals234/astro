@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, PartyPopper } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import type { CourseLanguage, CourseQuiz } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+
+import GameShell from "./GameShell";
+import GameFeedback from "./GameFeedback";
 
 interface ChapterQuizProps {
   quiz: CourseQuiz;
@@ -32,16 +34,7 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
-      className="rounded-3xl border border-shell-border bg-gradient-to-br from-shell-elevated/90 to-shell-bg/60 p-8 md:p-10"
-    >
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-shell-accent/25 bg-shell-accent-soft px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-shell-accent">
-        {lang === "ja" ? "章末クイズ" : "Chapter Quiz"}
-      </div>
-
+    <GameShell kind="quiz" lang={lang}>
       <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
         {t(quiz.question, lang)}
       </h3>
@@ -110,50 +103,12 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
         })}
       </div>
 
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: "auto", marginTop: 24 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            className="overflow-hidden"
-          >
-            <div
-              className={`rounded-2xl border px-5 py-4 ${
-                isCorrect
-                  ? "border-emerald-500/30 bg-emerald-500/10"
-                  : "border-shell-border bg-shell-bg/60"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                {isCorrect ? (
-                  <PartyPopper size={20} className="shrink-0 text-emerald-300 mt-0.5" />
-                ) : (
-                  <XCircle size={20} className="shrink-0 text-shell-muted mt-0.5" />
-                )}
-                <div>
-                  <p
-                    className={`text-sm font-medium ${
-                      isCorrect ? "text-emerald-200" : "text-shell-warm"
-                    }`}
-                  >
-                    {isCorrect
-                      ? lang === "ja"
-                        ? "正解！よくできました ✨"
-                        : "Correct! Well done ✨"
-                      : lang === "ja"
-                        ? "もう一度挑戦してみましょう"
-                        : "Try again — you've got this"}
-                  </p>
-                  <p className="mt-1.5 text-sm text-shell-muted leading-relaxed">
-                    {t(quiz.explanation, lang)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.article>
+      <GameFeedback
+        show={showFeedback}
+        isCorrect={isCorrect}
+        lang={lang}
+        explanation={showFeedback ? t(quiz.explanation, lang) : undefined}
+      />
+    </GameShell>
   );
 }

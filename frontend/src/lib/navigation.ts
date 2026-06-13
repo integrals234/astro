@@ -44,7 +44,7 @@ export const mainNavItems: NavItem[] = [
     href: "/test-beta",
     label: "Vedic Course",
     icon: Sparkles,
-    description: "インド占星術ミニコース (EN / 日本語)",
+    description: "インド占星術ミニコース (EN / हिन्दी / 日本語 / 한국어)",
   },
   {
     href: "/settings",

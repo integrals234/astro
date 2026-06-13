@@ -40,6 +40,20 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
         {t(slide.body, lang)}
       </p>
 
+      {slide.bullets && slide.bullets.length > 0 && (
+        <ul className="mt-5 space-y-2.5 max-w-2xl">
+          {slide.bullets.map((bullet) => (
+            <li
+              key={bullet.en}
+              className="flex gap-3 text-sm text-shell-muted leading-relaxed"
+            >
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-shell-accent" />
+              {t(bullet, lang)}
+            </li>
+          ))}
+        </ul>
+      )}
+
       {slide.highlight && (
         <div className="mt-6 rounded-2xl border border-shell-accent/20 bg-shell-accent-soft/60 px-5 py-4">
           <p className="text-sm text-shell-warm/90 leading-relaxed">

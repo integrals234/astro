@@ -45,18 +45,28 @@ function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
 }
 
-/** Full-width planet infographic — white bg blends in, slight scale crops edge borders. */
-function PlanetInfographic({ src, alt }: { src: string; alt: string }) {
+/** Borderless infographic — off-white bg + slight scale crops black edges. */
+function InfographicImage({
+  src,
+  alt,
+  className = "",
+  sizes = "(max-width: 768px) 100vw, 400px",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  sizes?: string;
+}) {
   return (
-    <div className="overflow-hidden rounded-t-2xl bg-[#fafaf8]">
+    <div className={`overflow-hidden bg-[#fafaf8] ${className}`}>
       <div className="scale-[1.03] origin-center">
         <Image
           src={src}
           alt={alt}
-          width={960}
-          height={720}
+          width={750}
+          height={500}
           className="w-full h-auto block"
-          sizes="(max-width: 768px) 100vw, 900px"
+          sizes={sizes}
         />
       </div>
     </div>
@@ -214,32 +224,41 @@ function PlanetsSection({ lang }: { lang: EducationLang }) {
             key={planet.id}
             className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
           >
-            <PlanetInfographic src={planet.image} alt={t(planet.name, lang)} />
-            <div className="p-6 md:p-8 border-t border-shell-border/60">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
-                <h3 className="font-serif text-2xl text-shell-warm">
-                  {t(planet.name, lang)}
-                </h3>
-                <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
+                <InfographicImage
+                  src={planet.image}
+                  alt={t(planet.name, lang)}
+                  className="rounded-t-2xl md:rounded-t-none md:rounded-l-2xl"
+                  sizes="(max-width: 768px) 100vw, 320px"
+                />
               </div>
-              <p className="text-sm leading-relaxed text-shell-muted mb-5">
-                {t(planet.description, lang)}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
-                {planet.attributes.map((attr, i) => (
-                  <div key={i} className="text-xs">
-                    <span className="text-shell-accent">{t(attr.label, lang)}: </span>
-                    <span className="text-shell-warm/90">{t(attr.value, lang)}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
-                <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
-                  {lang === "ja" ? "象意" : "Significations"}
+              <div className="flex-1 min-w-0 p-6 md:p-8">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
+                  <h3 className="font-serif text-2xl text-shell-warm">
+                    {t(planet.name, lang)}
+                  </h3>
+                  <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
+                </div>
+                <p className="text-sm leading-relaxed text-shell-muted mb-5">
+                  {t(planet.description, lang)}
                 </p>
-                <p className="text-sm text-shell-warm/90 leading-relaxed">
-                  {t(planet.significations, lang)}
-                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
+                  {planet.attributes.map((attr, i) => (
+                    <div key={i} className="text-xs">
+                      <span className="text-shell-accent">{t(attr.label, lang)}: </span>
+                      <span className="text-shell-warm/90">{t(attr.value, lang)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
+                  <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
+                    {lang === "ja" ? "象意" : "Significations"}
+                  </p>
+                  <p className="text-sm text-shell-warm/90 leading-relaxed">
+                    {t(planet.significations, lang)}
+                  </p>
+                </div>
               </div>
             </div>
           </article>
@@ -264,29 +283,28 @@ function NakshatrasSection({ lang }: { lang: EducationLang }) {
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {nakshatras.map((nak) => (
           <article
             key={nak.id}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-5 flex gap-4"
+            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden flex flex-col"
           >
-            <div className="relative h-16 w-16 shrink-0 rounded-xl bg-shell-sidebar flex items-center justify-center overflow-hidden">
-              {nak.image ? (
-                <Image
-                  src={nak.image}
-                  alt={t(nak.name, lang)}
-                  width={48}
-                  height={48}
-                  className="object-contain"
-                />
-              ) : (
-                <Star size={22} className="text-shell-accent/70" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
+            {nak.image ? (
+              <InfographicImage
+                src={nak.image}
+                alt={t(nak.name, lang)}
+                className="rounded-t-2xl"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            ) : (
+              <div className="flex h-28 items-center justify-center rounded-t-2xl bg-[#fafaf8]">
+                <Star size={28} className="text-shell-accent/50" />
+              </div>
+            )}
+            <div className="p-5 flex-1">
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="text-[10px] text-shell-muted">#{nak.number}</span>
-                <h3 className="font-serif text-lg text-shell-warm truncate">
+                <h3 className="font-serif text-lg text-shell-warm">
                   {t(nak.name, lang)}
                 </h3>
               </div>
@@ -294,7 +312,7 @@ function NakshatrasSection({ lang }: { lang: EducationLang }) {
               <p className="text-xs leading-relaxed text-shell-muted mb-3">
                 {t(nak.description, lang)}
               </p>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-shell-muted/90">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-shell-muted/90">
                 <span>
                   <span className="text-shell-accent">{lang === "ja" ? "神" : "Deity"}: </span>
                   {t(nak.deity, lang)}

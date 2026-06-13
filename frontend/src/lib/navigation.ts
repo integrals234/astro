@@ -2,6 +2,7 @@ import {
   Home,
   Sparkles,
   FlaskConical,
+  MoonStar,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -29,10 +30,10 @@ export const mainNavItems: NavItem[] = [
     description: "Generate and explore charts",
   },
   {
-    href: "/test-alpha",
-    label: "Test Tab Alpha",
-    icon: FlaskConical,
-    description: "Experimental workspace",
+    href: "/personal-appraisals",
+    label: "Personal Appraisals",
+    icon: MoonStar,
+    description: "Private Vedic Astrology consultations",
   },
   {
     href: "/test-beta",

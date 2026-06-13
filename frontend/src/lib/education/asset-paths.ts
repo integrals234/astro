@@ -50,8 +50,8 @@ export const aspectImages = {
   rahuKetu: "/assets/rahu.png",
 } as const;
 
-/** Zodiac sign art available in assets (for future use). */
-export const signImages = {
+/** Zodiac sign (Rashi) art in `frontend/public/assets/`. */
+export const rashiImages = {
   aries: "/assets/aires.png",
   taurus: "/assets/taurus.png",
   gemini: "/assets/gemini.png",
@@ -65,3 +65,6 @@ export const signImages = {
   aquarius: "/assets/aquaris.png",
   pisces: "/assets/pices.png",
 } as const;
+
+/** @deprecated Use rashiImages */
+export const signImages = rashiImages;

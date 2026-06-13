@@ -13,6 +13,7 @@ import {
   Languages,
   Sparkles,
   ArrowRight,
+  Circle,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import {
@@ -20,7 +21,9 @@ import {
   introHero,
   introSubtitle,
   introBlocks,
-  signBodyMappings,
+  rashisIntro,
+  rashisOverviewBlocks,
+  rashis,
   planetsIntro,
   planets,
   nakshatrasIntro,
@@ -32,10 +35,12 @@ import {
   type EducationLang,
   type EducationSectionId,
   type BilingualText,
+  type RashiEntry,
 } from "@/lib/education";
 
 const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   introduction: BookOpen,
+  rashis: Circle,
   planets: Orbit,
   nakshatras: Star,
   aspects: Eye,
@@ -164,34 +169,6 @@ function IntroductionSection({ lang }: { lang: EducationLang }) {
         </article>
       ))}
 
-      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
-        <h3 className="font-serif text-xl text-shell-warm mb-4">
-          {lang === "ja" ? "星座と人体の対応" : "Zodiac & Body Correspondences"}
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-shell-border text-left">
-                <th className="py-2 pr-4 text-shell-accent font-medium">
-                  {lang === "ja" ? "星座" : "Sign"}
-                </th>
-                <th className="py-2 text-shell-accent font-medium">
-                  {lang === "ja" ? "身体部位" : "Body Part"}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {signBodyMappings.map((row, i) => (
-                <tr key={i} className="border-b border-shell-border/50">
-                  <td className="py-2.5 pr-4 text-shell-warm">{t(row.sign, lang)}</td>
-                  <td className="py-2.5 text-shell-muted">{t(row.bodyPart, lang)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </article>
-
       <Link
         href="/chart"
         className="inline-flex items-center gap-2 rounded-xl bg-shell-accent-soft border border-shell-accent/30 px-5 py-3 text-sm font-medium text-shell-warm hover:bg-shell-accent/20 transition-colors"
@@ -199,6 +176,131 @@ function IntroductionSection({ lang }: { lang: EducationLang }) {
         {lang === "ja" ? "あなたのクンダリーを作成する" : "Generate your Kundli"}
         <ArrowRight size={16} className="text-shell-accent" />
       </Link>
+    </div>
+  );
+}
+
+const rashiSectionLabels: Record<keyof RashiEntry["sections"], BilingualText> = {
+  nature: { en: "Nature", ja: "性質" },
+  career: { en: "Career", ja: "キャリア" },
+  relationships: { en: "Relationships", ja: "人間関係" },
+  romance: { en: "Romance", ja: "恋愛" },
+  health: { en: "Health", ja: "健康" },
+  decans: { en: "Decans", ja: "デカン" },
+};
+
+function RashisSection({ lang }: { lang: EducationLang }) {
+  return (
+    <div className="space-y-8">
+      <div className="max-w-3xl">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+          {lang === "ja" ? "12のラーシ" : "Twelve Rashis"}
+        </p>
+        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+          {lang === "ja" ? "ラーシ（星座）" : "Rashis (Zodiac Signs)"}
+        </h2>
+        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
+          {rashisIntro[lang]}
+        </p>
+      </div>
+
+      {rashisOverviewBlocks.map((block, i) => (
+        <article
+          key={i}
+          className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8"
+        >
+          {block.title && (
+            <h3 className="font-serif text-xl text-shell-warm mb-4">
+              {t(block.title, lang)}
+            </h3>
+          )}
+          <div className="space-y-4">
+            {block.paragraphs.map((p, j) => (
+              <p key={j} className="text-sm leading-relaxed text-shell-muted">
+                {t(p, lang)}
+              </p>
+            ))}
+          </div>
+        </article>
+      ))}
+
+      <div className="space-y-8">
+        {rashis.map((sign) => (
+          <article
+            key={sign.id}
+            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
+          >
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
+                <InfographicImage
+                  src={sign.image}
+                  alt={t(sign.name, lang)}
+                  className="rounded-t-2xl md:rounded-t-none md:rounded-l-2xl"
+                  sizes="(max-width: 768px) 100vw, 320px"
+                />
+              </div>
+              <div className="flex-1 min-w-0 p-6 md:p-8">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
+                  <span className="text-[10px] text-shell-muted">#{sign.number}</span>
+                  <h3 className="font-serif text-2xl text-shell-warm">
+                    {t(sign.name, lang)}
+                  </h3>
+                  <span className="text-sm text-shell-accent">{t(sign.sanskrit, lang)}</span>
+                </div>
+                <p className="text-xs text-shell-muted mb-4">{t(sign.dates, lang)}</p>
+                <p className="text-sm leading-relaxed text-shell-muted mb-5">
+                  {t(sign.description, lang)}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5 text-xs">
+                  <div>
+                    <span className="text-shell-accent">{lang === "ja" ? "元素" : "Element"}: </span>
+                    <span className="text-shell-warm/90">{t(sign.element, lang)}</span>
+                  </div>
+                  <div>
+                    <span className="text-shell-accent">{lang === "ja" ? "支配星" : "Ruler"}: </span>
+                    <span className="text-shell-warm/90">{t(sign.ruler, lang)}</span>
+                  </div>
+                  <div>
+                    <span className="text-shell-accent">{lang === "ja" ? "象徴" : "Symbol"}: </span>
+                    <span className="text-shell-warm/90">{t(sign.symbol, lang)}</span>
+                  </div>
+                  <div>
+                    <span className="text-shell-accent">{lang === "ja" ? "身体" : "Body"}: </span>
+                    <span className="text-shell-warm/90">{t(sign.bodyPart, lang)}</span>
+                  </div>
+                </div>
+                <ul className="flex flex-wrap gap-2 mb-5">
+                  {sign.traits.map((trait, i) => (
+                    <li
+                      key={i}
+                      className="rounded-full border border-shell-border/60 bg-shell-sidebar/40 px-3 py-1 text-[11px] text-shell-warm/90"
+                    >
+                      {t(trait, lang)}
+                    </li>
+                  ))}
+                </ul>
+                <div className="space-y-4">
+                  {(Object.keys(sign.sections) as Array<keyof typeof sign.sections>).map(
+                    (key) => (
+                      <div
+                        key={key}
+                        className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
+                      >
+                        <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
+                          {t(rashiSectionLabels[key], lang)}
+                        </p>
+                        <p className="text-sm text-shell-warm/90 leading-relaxed">
+                          {t(sign.sections[key], lang)}
+                        </p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
@@ -446,6 +548,7 @@ function EducationContent({
   return (
     <SectionFade sectionKey={`${section}-${lang}`}>
       {section === "introduction" && <IntroductionSection lang={lang} />}
+      {section === "rashis" && <RashisSection lang={lang} />}
       {section === "planets" && <PlanetsSection lang={lang} />}
       {section === "nakshatras" && <NakshatrasSection lang={lang} />}
       {section === "aspects" && <AspectsSection lang={lang} />}

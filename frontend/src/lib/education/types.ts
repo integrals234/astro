@@ -2,6 +2,7 @@ export type EducationLang = "en" | "ja";
 
 export type EducationSectionId =
   | "introduction"
+  | "rashis"
   | "planets"
   | "nakshatras"
   | "aspects";
@@ -15,11 +16,6 @@ export interface ContentBlock {
   title?: BilingualText;
   paragraphs: BilingualText[];
   bullets?: BilingualText[];
-}
-
-export interface SignBodyMapping {
-  sign: BilingualText;
-  bodyPart: BilingualText;
 }
 
 export interface PlanetAttribute {
@@ -58,4 +54,27 @@ export interface AspectRule {
   houses: string;
   description: BilingualText;
   image?: string;
+}
+
+export interface RashiEntry {
+  id: string;
+  image: string;
+  number: number;
+  name: BilingualText;
+  sanskrit: BilingualText;
+  dates: BilingualText;
+  element: BilingualText;
+  ruler: BilingualText;
+  symbol: BilingualText;
+  bodyPart: BilingualText;
+  description: BilingualText;
+  traits: BilingualText[];
+  sections: {
+    nature: BilingualText;
+    career: BilingualText;
+    relationships: BilingualText;
+    romance: BilingualText;
+    health: BilingualText;
+    decans: BilingualText;
+  };
 }

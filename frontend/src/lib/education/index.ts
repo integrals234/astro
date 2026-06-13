@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./intro-content";
+export * from "./rashi-content";
 export * from "./planets-content";
 export * from "./aspects-content";
 export * from "./asset-paths";
@@ -20,6 +21,7 @@ export const educationSections: {
   label: { en: string; ja: string };
 }[] = [
   { id: "introduction", label: { en: "Introduction", ja: "入門" } },
+  { id: "rashis", label: { en: "Rashis (Signs)", ja: "ラーシ（星座）" } },
   { id: "planets", label: { en: "Planets (Grahas)", ja: "惑星（グラハ）" } },
   { id: "nakshatras", label: { en: "Nakshatras", ja: "ナクシャトラ" } },
   { id: "aspects", label: { en: "Aspects (Drishti)", ja: "アスペクト（ドリシュティ）" } },

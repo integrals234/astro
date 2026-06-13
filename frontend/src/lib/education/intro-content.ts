@@ -1,4 +1,4 @@
-import type { BilingualText, ContentBlock, SignBodyMapping } from "./types";
+import type { BilingualText, ContentBlock } from "./types";
 
 export const introHero: BilingualText = {
   en: "Jyotish — The Science of Light",
@@ -109,17 +109,3 @@ export const introBlocks: ContentBlock[] = [
   },
 ];
 
-export const signBodyMappings: SignBodyMapping[] = [
-  { sign: { en: "Aries / Mesha", ja: "牡羊座／メーシャ" }, bodyPart: { en: "Head", ja: "頭" } },
-  { sign: { en: "Taurus / Vrishabha", ja: "牡牛座／ヴリシャヴ" }, bodyPart: { en: "Face", ja: "顔" } },
-  { sign: { en: "Gemini / Mithuna", ja: "双子座／ミトゥン" }, bodyPart: { en: "Neck, shoulders, arms", ja: "首・肩・腕" } },
-  { sign: { en: "Cancer / Karka", ja: "蟹座／カルカ" }, bodyPart: { en: "Chest", ja: "胸" } },
-  { sign: { en: "Leo / Simha", ja: "獅子座／シンハ" }, bodyPart: { en: "Upper abdomen", ja: "上腹部" } },
-  { sign: { en: "Virgo / Kanya", ja: "乙女座／カンニャ" }, bodyPart: { en: "Mid abdomen", ja: "中腹部" } },
-  { sign: { en: "Libra / Tula", ja: "天秤座／トゥラー" }, bodyPart: { en: "Lower abdomen", ja: "下腹部" } },
-  { sign: { en: "Scorpio / Vrishchika", ja: "蠍座／ヴリシュチカ" }, bodyPart: { en: "Reproductive organs", ja: "生殖器" } },
-  { sign: { en: "Sagittarius / Dhanu", ja: "射手座／ダヌ" }, bodyPart: { en: "Thighs", ja: "太もも" } },
-  { sign: { en: "Capricorn / Makara", ja: "山羊座／マカラ" }, bodyPart: { en: "Knees", ja: "膝" } },
-  { sign: { en: "Aquarius / Kumbha", ja: "水瓶座／クンバ" }, bodyPart: { en: "Calves", ja: "脛" } },
-  { sign: { en: "Pisces / Meena", ja: "魚座／ミーナ" }, bodyPart: { en: "Feet", ja: "足" } },
-];

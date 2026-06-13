@@ -36,7 +36,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
       <button
         type="button"
         onClick={() => onOpenChange(true)}
-        className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-shell-border bg-shell-elevated/70 text-shell-warm hover:border-shell-accent/30 hover:text-shell-accent transition-colors"
+        className="mobile-only items-center justify-center h-10 w-10 rounded-xl border border-shell-border bg-shell-elevated/70 text-shell-warm hover:border-shell-accent/30 hover:text-shell-accent transition-colors"
         aria-label="Open navigation menu"
       >
         <Menu size={18} />
@@ -52,7 +52,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+              className="mobile-drawer fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
               onClick={() => onOpenChange(false)}
             />
 
@@ -61,7 +61,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="fixed inset-y-0 left-0 z-50 w-[min(88vw,20rem)] flex flex-col border-r border-shell-border bg-shell-sidebar shadow-2xl md:hidden"
+              className="mobile-drawer fixed inset-y-0 left-0 z-50 w-[min(88vw,20rem)] flex flex-col border-r border-shell-border bg-shell-sidebar shadow-2xl"
             >
               <div className="flex items-center justify-between px-5 py-5 border-b border-shell-border">
                 <div>

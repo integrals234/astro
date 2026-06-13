@@ -49,6 +49,41 @@ body {
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
+/* Desktop sidebar — explicit media queries (reliable across Tailwind builds) */
+.desktop-sidebar {
+  display: none;
+  height: 100%;
+  width: 16rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-right: 1px solid var(--shell-border);
+  background-color: var(--shell-sidebar);
+}
+
+.mobile-only {
+  display: inline-flex;
+}
+
+@media (min-width: 768px) {
+  .desktop-sidebar {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: none !important;
+  }
+
+  .mobile-drawer {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+}
+
 /* Embedded chart workspace — blend with shell, no white box */
 .chart-workspace-embedded {
   background: transparent;

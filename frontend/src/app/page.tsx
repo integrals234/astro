@@ -1,5 +1,5 @@
-import ChartWorkspace from "@/components/ChartWorkspace";
+import HomePageClient from "@/components/home/HomePageClient";
 
 export default function HomePage() {
-  return <ChartWorkspace showAuthNav />;
+  return <HomePageClient />;
 }

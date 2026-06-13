@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Providers } from "./providers";
 
 // Inter for clean data, numbers, and UI elements
 const inter = Inter({ 
@@ -31,9 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans bg-gray-50 text-gray-900 selection:bg-indigo-200" suppressHydrationWarning>
-        {children}
-        <Analytics />
-        <SpeedInsights />
+        <Providers>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </Providers>
       </body>
     </html>
   );

@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
-import { mainNavItems, SITE_NAME } from "@/lib/navigation";
+import { mainNavItems } from "@/lib/navigation";
+import SiteBrand from "@/components/layout/SiteBrand";
 
 interface MobileNavProps {
   open: boolean;
@@ -68,12 +69,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               className="mobile-drawer fixed inset-y-0 left-0 z-50 w-[min(88vw,20rem)] flex flex-col border-r border-shell-border bg-shell-sidebar shadow-2xl"
             >
               <div className="flex items-center justify-between px-5 py-5 border-b border-shell-border">
-                <div>
-                  <p className="font-serif text-lg text-shell-warm">{SITE_NAME}</p>
-                  <p className="text-[10px] uppercase tracking-[0.24em] text-shell-muted">
-                    Navigation
-                  </p>
-                </div>
+                <SiteBrand size="sm" />
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}

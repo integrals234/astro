@@ -17,7 +17,7 @@ import {
   CalendarRange,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
-import { SITE_NAME } from "@/lib/navigation";
+import SiteBrand from "@/components/layout/SiteBrand";
 import {
   educationSections,
   introHero,
@@ -134,13 +134,10 @@ function SectionFade({
 function PublicHeader({ lang }: { lang: EducationLang }) {
   return (
     <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
-        <Link href="/" className="group">
-          <span className="font-serif text-xl tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">
-            {SITE_NAME}
-          </span>
-        </Link>
-        <nav className="flex items-center gap-2 md:gap-4">
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
+        <SiteBrand className="hidden md:inline-flex" size="md" />
+        <SiteBrand className="absolute left-1/2 -translate-x-1/2 md:hidden" size="sm" />
+        <nav className="relative z-10 ml-auto flex items-center gap-2 md:gap-4">
           <Link
             href="/chart"
             className="inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 px-3 py-2 text-xs font-medium text-shell-warm hover:border-shell-accent/40 hover:text-shell-accent transition-all"

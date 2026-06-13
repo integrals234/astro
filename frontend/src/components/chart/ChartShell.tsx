@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
-import { SITE_NAME } from "@/lib/navigation";
+import SiteBrand from "@/components/layout/SiteBrand";
 import ChartSectionNav from "@/components/chart/ChartSectionNav";
 
 interface ChartShellProps {
@@ -16,11 +16,7 @@ function PublicChartAuthBar() {
   return (
     <header className="mb-6 border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md -mx-4 px-4 py-3 md:-mx-8 md:px-8">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-        <Link href="/" className="group">
-          <span className="font-serif text-lg tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">
-            {SITE_NAME}
-          </span>
-        </Link>
+        <SiteBrand size="md" />
         <div className="flex items-center gap-3">
           <Link
             href="/sign-in"

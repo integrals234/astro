@@ -135,15 +135,15 @@ function PublicHeader({ lang }: { lang: EducationLang }) {
   return (
     <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
       {/* Desktop */}
-      <div className="mx-auto hidden max-w-7xl items-center justify-between gap-4 px-8 py-4 md:flex">
-        <SiteBrand size="md" className="shrink-0" />
-        <nav className="flex items-center gap-4">
+      <div className="shell-header-desktop mx-auto w-full max-w-7xl items-center justify-between gap-6 px-8 py-4">
+        <SiteBrand size="lg" className="shrink-0" />
+        <nav className="flex shrink-0 items-center gap-4">
           <PublicHeaderActions lang={lang} />
         </nav>
       </div>
 
       {/* Mobile */}
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-4 md:hidden">
+      <div className="shell-header-mobile mx-auto w-full max-w-7xl items-center gap-2 px-4 py-4">
         <div className="h-10 w-10 shrink-0" aria-hidden />
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
           <SiteBrand size="sm" className="shrink-0" />

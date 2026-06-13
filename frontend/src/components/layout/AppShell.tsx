@@ -15,14 +15,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-shell-bg text-shell-warm">
       <header className="z-30 shrink-0 border-b border-shell-border bg-shell-sidebar supports-[padding:max(0px)]:pt-[max(0.75rem,env(safe-area-inset-top))]">
-        {/* Desktop */}
-        <div className="hidden md:flex items-center justify-between gap-6 px-6 py-3">
-          <SiteBrand size="md" className="shrink-0" />
+        <div className="shell-header-desktop w-full items-center justify-between gap-8 px-6 py-3.5">
+          <SiteBrand size="lg" className="shrink-0" />
           <TopNav />
         </div>
 
-        {/* Mobile */}
-        <div className="flex md:hidden items-center gap-2 px-4 py-3">
+        <div className="shell-header-mobile w-full items-center gap-2 px-4 py-3">
           <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
           <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-center">
             <SiteBrand size="sm" className="shrink-0 max-w-full" />

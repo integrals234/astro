@@ -3,8 +3,8 @@ import { SITE_NAME } from "@/lib/navigation";
 
 const sizeClasses = {
   sm: "text-base",
-  md: "text-lg md:text-xl",
-  lg: "text-2xl md:text-3xl",
+  md: "text-xl",
+  lg: "text-2xl",
 } as const;
 
 interface SiteBrandProps {

@@ -17,7 +17,7 @@ export default function TopNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="desktop-topnav items-center justify-end gap-0.5 max-w-[min(100%,72vw)] overflow-x-auto">
+    <nav className="desktop-topnav min-w-0 flex-1 items-center justify-end gap-0.5 overflow-x-auto">
       {mainNavItems.map((item) => {
         const active = isActive(pathname, item.href);
         const Icon = item.icon;

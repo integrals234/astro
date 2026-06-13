@@ -63,14 +63,26 @@ body {
   line-height: 1.2;
 }
 
-.desktop-topnav {
+.shell-header-desktop {
   display: none;
 }
 
+.shell-header-mobile {
+  display: flex;
+}
+
+.desktop-topnav {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
 @media (min-width: 768px) {
-  .desktop-topnav {
+  .shell-header-desktop {
     display: flex;
-    flex-wrap: nowrap;
+  }
+
+  .shell-header-mobile {
+    display: none !important;
   }
 
   .mobile-only,

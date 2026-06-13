@@ -7,12 +7,16 @@ import {
   sendInquiry,
   type InquiryFormState,
 } from "@/app/actions/send-inquiry";
+import type { AppraisalPageContent } from "@/lib/personal-appraisals/i18n/content";
+import type { AppraisalLanguage } from "@/lib/personal-appraisals/types";
 import { COUNTRY_DIAL_CODES } from "@/lib/phone/country-codes";
 
 const initialState: InquiryFormState = { status: "idle" };
 
 interface InquiryFormProps {
   defaultDialCode: string;
+  lang: AppraisalLanguage;
+  copy: AppraisalPageContent["form"];
 }
 
 const inputClassName =
@@ -26,7 +30,11 @@ function FieldError({ message }: { message?: string }) {
   return <p className="mt-1.5 text-xs text-red-400/90">{message}</p>;
 }
 
-export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
+export default function InquiryForm({
+  defaultDialCode,
+  lang,
+  copy,
+}: InquiryFormProps) {
   const [state, formAction, isPending] = useActionState(
     sendInquiry,
     initialState,
@@ -48,15 +56,13 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
     >
       <div className="mb-8 max-w-xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-semibold mb-3">
-          Begin your inquiry
+          {copy.sectionLabel}
         </p>
         <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
-          Request a personal consultation
+          {copy.title}
         </h3>
         <p className="mt-3 text-sm text-shell-muted leading-relaxed">
-          Share a few details below. We respond personally — usually within one
-          business day — and coordinate your session over WhatsApp at a time
-          that suits you.
+          {copy.description}
         </p>
       </div>
 
@@ -94,7 +100,8 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
       </div>
 
       <form ref={formRef} action={formAction} className="space-y-5" noValidate>
-        {/* Honeypot — hidden from users, catches bots */}
+        <input type="hidden" name="locale" value={lang} />
+
         <input
           type="text"
           name="website"
@@ -107,7 +114,7 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
         <div className="grid gap-5 md:grid-cols-2">
           <div>
             <label htmlFor="fullName" className={labelClassName}>
-              Full name <span className="text-shell-accent">*</span>
+              {copy.fullName} <span className="text-shell-accent">*</span>
             </label>
             <input
               id="fullName"
@@ -116,19 +123,16 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
               required
               autoComplete="name"
               disabled={isPending}
-              placeholder="Your name as you'd like us to address you"
+              placeholder={copy.fullNamePlaceholder}
               className={inputClassName}
               aria-invalid={Boolean(state.fieldErrors?.fullName)}
-              aria-describedby={
-                state.fieldErrors?.fullName ? "fullName-error" : undefined
-              }
             />
             <FieldError message={state.fieldErrors?.fullName} />
           </div>
 
           <div>
             <label htmlFor="email" className={labelClassName}>
-              Email address <span className="text-shell-accent">*</span>
+              {copy.email} <span className="text-shell-accent">*</span>
             </label>
             <input
               id="email"
@@ -137,7 +141,7 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
               required
               autoComplete="email"
               disabled={isPending}
-              placeholder="you@example.com"
+              placeholder={copy.emailPlaceholder}
               className={inputClassName}
               aria-invalid={Boolean(state.fieldErrors?.email)}
             />
@@ -147,7 +151,7 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
 
         <div>
           <label htmlFor="phoneLocal" className={labelClassName}>
-            WhatsApp number <span className="text-shell-accent">*</span>
+            {copy.whatsApp} <span className="text-shell-accent">*</span>
           </label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <select
@@ -156,7 +160,7 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
               defaultValue={defaultDialCode}
               disabled={isPending}
               className={`${inputClassName} sm:max-w-[11rem] sm:shrink-0`}
-              aria-label="Country calling code"
+              aria-label={copy.dialCodeLabel}
             >
               {COUNTRY_DIAL_CODES.map((country) => (
                 <option key={`${country.iso}-${country.dial}`} value={country.dial}>
@@ -172,23 +176,20 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
               inputMode="tel"
               autoComplete="tel-national"
               disabled={isPending}
-              placeholder="Local number without leading zero"
+              placeholder={copy.phonePlaceholder}
               className={inputClassName}
               aria-invalid={Boolean(state.fieldErrors?.phone)}
             />
           </div>
-          <p className="mt-2 text-xs text-shell-muted">
-            Include your country code — we&apos;ve pre-selected one based on your
-            region. WhatsApp is our preferred channel for scheduling.
-          </p>
+          <p className="mt-2 text-xs text-shell-muted">{copy.whatsAppHint}</p>
           <FieldError message={state.fieldErrors?.phone} />
         </div>
 
         <div>
           <label htmlFor="message" className={labelClassName}>
-            Area of concern{" "}
+            {copy.message}{" "}
             <span className="normal-case tracking-normal text-shell-muted/80">
-              (optional)
+              {copy.messageOptional}
             </span>
           </label>
           <textarea
@@ -196,7 +197,7 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
             name="message"
             rows={4}
             disabled={isPending}
-            placeholder="Career transition, relationship clarity, timing for an important decision, birth time uncertainty…"
+            placeholder={copy.messagePlaceholder}
             className={`${inputClassName} resize-y min-h-[120px]`}
             aria-invalid={Boolean(state.fieldErrors?.message)}
           />
@@ -218,12 +219,12 @@ export default function InquiryForm({ defaultDialCode }: InquiryFormProps) {
             {isPending ? (
               <>
                 <Loader2 size={16} className="animate-spin" aria-hidden />
-                Sending inquiry…
+                {copy.submitting}
               </>
             ) : (
               <>
                 <Send size={15} aria-hidden />
-                Request consultation
+                {copy.submit}
               </>
             )}
           </motion.button>

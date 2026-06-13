@@ -1,7 +1,11 @@
 "use server";
 
+import {
+  inquiryMessages,
+  parseAppraisalLocale,
+} from "@/lib/personal-appraisals/i18n/messages";
+import type { AppraisalLanguage } from "@/lib/personal-appraisals/types";
 import { Resend } from "resend";
-
 const DEFAULT_INQUIRY_RECIPIENT = "alphamac64@gmail.com";
 
 function getInquiryRecipients(): string[] {
@@ -32,7 +36,10 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function validateInquiry(formData: FormData): {
+function validateInquiry(
+  formData: FormData,
+  locale: AppraisalLanguage,
+): {
   ok: true;
   data: {
     fullName: string;
@@ -54,30 +61,30 @@ function validateInquiry(formData: FormData): {
   const honeypot = String(formData.get("website") ?? "").trim();
 
   const fieldErrors: NonNullable<InquiryFormState["fieldErrors"]> = {};
+  const msg = inquiryMessages[locale];
 
   if (honeypot) {
     return {
       ok: false,
-      fieldErrors: { fullName: "Unable to submit this request." },
+      fieldErrors: { fullName: msg.spam },
     };
   }
 
   if (fullName.length < 2 || fullName.length > 100) {
-    fieldErrors.fullName = "Please enter your full name (2–100 characters).";
+    fieldErrors.fullName = msg.fullName;
   }
 
   if (!email || !EMAIL_PATTERN.test(email)) {
-    fieldErrors.email = "Please enter a valid email address.";
+    fieldErrors.email = msg.email;
   }
 
   const phone = `${dialCode}${phoneLocal.replace(/^0+/, "")}`;
   if (!PHONE_PATTERN.test(phone)) {
-    fieldErrors.phone =
-      "Please enter a valid WhatsApp number with your country code.";
+    fieldErrors.phone = msg.phone;
   }
 
   if (message.length > 2000) {
-    fieldErrors.message = "Message must be 2,000 characters or fewer.";
+    fieldErrors.message = msg.message;
   }
 
   if (Object.keys(fieldErrors).length > 0) {
@@ -94,12 +101,14 @@ export async function sendInquiry(
   _prevState: InquiryFormState,
   formData: FormData,
 ): Promise<InquiryFormState> {
-  const validated = validateInquiry(formData);
+  const locale = parseAppraisalLocale(formData.get("locale"));
+  const msg = inquiryMessages[locale];
+  const validated = validateInquiry(formData, locale);
 
   if (!validated.ok) {
     return {
       status: "error",
-      message: "Please review the highlighted fields and try again.",
+      message: msg.reviewFields,
       fieldErrors: validated.fieldErrors,
     };
   }
@@ -111,8 +120,7 @@ export async function sendInquiry(
     console.error("Missing RESEND_API_KEY or RESEND_FROM_EMAIL");
     return {
       status: "error",
-      message:
-        "Our inquiry system is temporarily unavailable. Please try again shortly.",
+      message: msg.unavailable,
     };
   }
 
@@ -175,22 +183,19 @@ export async function sendInquiry(
       console.error("Resend error:", error);
       return {
         status: "error",
-        message:
-          "We could not send your inquiry right now. Please try again in a moment.",
+        message: msg.sendFailed,
       };
     }
 
     return {
       status: "success",
-      message:
-        "Thank you. Our astrologers will contact you via WhatsApp shortly.",
+      message: msg.success,
     };
   } catch (error) {
     console.error("Failed to send inquiry email:", error);
     return {
       status: "error",
-      message:
-        "Something went wrong while sending your request. Please try again.",
+      message: msg.genericError,
     };
   }
 }

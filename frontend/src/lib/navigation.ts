@@ -3,6 +3,7 @@ import {
   Sparkles,
   FlaskConical,
   MoonStar,
+  BookOpen,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -40,6 +41,12 @@ export const mainNavItems: NavItem[] = [
     label: "Vedic Course",
     icon: FlaskConical,
     description: "インド占星術ミニコース (EN / हिन्दी / 日本語 / 한국어)",
+  },
+  {
+    href: "/blogs",
+    label: "Blogs",
+    icon: BookOpen,
+    description: "Articles and reflections",
   },
   {
     href: "/settings",

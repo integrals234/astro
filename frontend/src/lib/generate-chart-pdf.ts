@@ -35,7 +35,7 @@ export function downloadChartPdf({
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   doc.setTextColor(49, 46, 129);
-  doc.text(name || "Chart Report", margin, y);
+  doc.text(name ? `${name} — Vedic Chart Report` : "Vedic Chart Report", margin, y);
   y += 24;
 
   doc.setFont("helvetica", "normal");
@@ -58,6 +58,7 @@ export function downloadChartPdf({
   doc.setFontSize(10);
   doc.setTextColor(17, 24, 39);
   const details = [
+    `Name: ${name}`,
     `Date: ${natalDate}    Time: ${natalTime}`,
     `Location: ${locationName}`,
     `Transit Date: ${transitDate}`,

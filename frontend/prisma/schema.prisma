@@ -34,7 +34,7 @@ model SavedChart {
   id           String   @id @default(cuid())
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String
+  name         String   // person's name whose chart was generated
   locationName String
   formData     Json
   chartData    Json

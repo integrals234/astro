@@ -53,8 +53,8 @@ const translations: Record<LanguageCode, any> = {
     timezone: "Timezone", sunrise: "Sunrise", sunset: "Sunset", absoluteLagna: "Absolute Lagna", exactLongitudes: "Exact Planetary Longitudes", transitCoords: "Transit Coordinates",
     dashaTimeline: "Vimshottari Timeline", dashaSub: "Maha • Antar • Pratyantar • Sookshma", lagnaBase: "Lagna Base", chandraBase: "Chandra Base", watermark: "vaibhav shukla",
     errNoLoc: "Please select a location.", errCalc: "Calculation Failed.",
-    chartName: "Chart Name", chartNamePlaceholder: "e.g. My Natal Chart", saveChart: "Save Chart", savedChart: "Saved", downloadPdf: "Download PDF",
-    recentCharts: "Recent Charts", savedCharts: "Saved Charts",
+    personName: "Person's Name", personNamePlaceholder: "e.g. Vaibhav Shukla", errNoName: "Please enter the person's name.",
+    saveChart: "Save Chart", savedChart: "Saved", downloadPdf: "Download PDF",
     tabs: { D1: "Lagna", D9: "Navmansha", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
     tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
     planets: { Sun: "Sun", Moon: "Moon", Mars: "Mars", Mercury: "Mercury", Jupiter: "Jupiter", Venus: "Venus", Saturn: "Saturn", Rahu: "Rahu", Ketu: "Ketu", Ascendant: "Ascendant" },
@@ -70,6 +70,7 @@ const translations: Record<LanguageCode, any> = {
     timezone: "समय क्षेत्र", sunrise: "सूर्योदय", sunset: "सूर्यास्त", absoluteLagna: "स्पष्ट लग्न", exactLongitudes: "स्पष्ट ग्रह स्थिति", transitCoords: "गोचर निर्देशांक",
     dashaTimeline: "विंशोत्तरी दशा", dashaSub: "महा • अंतर • प्रत्यंतर • सूक्ष्म", lagnaBase: "लग्न आधार", chandraBase: "चन्द्र आधार", watermark: "वैभव शुक्ला",
     errNoLoc: "कृपया एक स्थान चुनें।", errCalc: "गणना विफल रही।",
+    personName: "व्यक्ति का नाम", personNamePlaceholder: "जैसे वैभव शुक्ला", errNoName: "कृपया व्यक्ति का नाम दर्ज करें।",
     tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Details: "विवरण", Aspects: "दृष्टि", Dasha: "दशा" },
     tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Details: "ग्रह विवरण", Aspects: "वैदिक दृष्टि (Drishti)", Dasha: "विंशोत्तरी दशा" },
     planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Ascendant: "लग्न" },
@@ -186,7 +187,7 @@ export default function ChartWorkspace({
   
   const [lang, setLang] = useState<LanguageCode>('hi');
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const [chartName, setChartName] = useState('');
+  const [personName, setPersonName] = useState('');
   const [formData, setFormData] = useState<ChartFormData>({ 
     year: 2004, month: 4, day: 23, hour: 10, minute: 0, 
     latitude: 25.4488, longitude: 78.5698, 
@@ -244,12 +245,12 @@ export default function ChartWorkspace({
   }, [enablePersistence, refreshLibrary]);
 
   const persistChart = async (data: ChartData, saved = false) => {
-    if (!enablePersistence || !chartName.trim()) return null;
+    if (!enablePersistence || !personName.trim()) return null;
     const response = await fetch('/api/charts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: chartName.trim(),
+        name: personName.trim(),
         locationName: selectedLocationName,
         formData,
         chartData: data,
@@ -265,7 +266,7 @@ export default function ChartWorkspace({
   };
 
   const loadChart = (chart: SavedChartRecord) => {
-    setChartName(chart.name);
+    setPersonName(chart.name);
     setFormData(chart.formData);
     setSelectedLocationName(chart.locationName);
     setChartData(chart.chartData);
@@ -315,7 +316,7 @@ export default function ChartWorkspace({
   const handleDownloadPdf = () => {
     if (!chartData) return;
     downloadChartPdf({
-      name: chartName.trim() || 'Chart Report',
+      name: personName.trim() || 'Chart Report',
       locationName: selectedLocationName,
       formData,
       chartData,
@@ -362,7 +363,7 @@ export default function ChartWorkspace({
   const generateCharts = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.latitude === 0 && formData.longitude === 0) return alert(t.errNoLoc || "Please select a location.");
-    if (enablePersistence && !chartName.trim()) return alert(t.chartNamePlaceholder || "Please enter a chart name.");
+    if (enablePersistence && !personName.trim()) return alert(t.errNoName || "Please enter the person's name.");
     setIsLoading(true);
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -524,20 +525,6 @@ export default function ChartWorkspace({
                 </AnimatePresence>
               </div>
             </div>
-            
-            <div className="mb-6">
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                {t.chartName || 'Chart Name'}
-                {enablePersistence && <span className="text-indigo-400"> *</span>}
-              </label>
-              <input
-                type="text"
-                value={chartName}
-                onChange={(e) => setChartName(e.target.value)}
-                placeholder={t.chartNamePlaceholder || 'e.g. My Natal Chart'}
-                className="w-full p-3.5 border border-gray-200 rounded-xl bg-gray-50/50 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all text-gray-700"
-              />
-            </div>
 
             {/* CMDK Autocomplete */}
             <div className="mb-8 relative">
@@ -597,6 +584,19 @@ export default function ChartWorkspace({
               {/* --- NATAL PARAMETERS --- */}
               <div>
                 <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 mb-4">{t.natalParams}</h3>
+                <div className="mb-4">
+                  <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">
+                    {t.personName || "Person's Name"}
+                    {enablePersistence && <span className="text-indigo-400"> *</span>}
+                  </label>
+                  <input
+                    type="text"
+                    value={personName}
+                    onChange={(e) => setPersonName(e.target.value)}
+                    placeholder={t.personNamePlaceholder || 'e.g. Vaibhav Shukla'}
+                    className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 text-gray-700"
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">{t.dob}</label>
@@ -618,7 +618,7 @@ export default function ChartWorkspace({
                 </div>
               </div>
 
-              <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !chartName.trim())} className="w-full py-4 bg-indigo-950 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-900/20 hover:bg-indigo-900 disabled:opacity-50 disabled:shadow-none transition-all">
+              <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="w-full py-4 bg-indigo-950 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-900/20 hover:bg-indigo-900 disabled:opacity-50 disabled:shadow-none transition-all">
                 {isLoading ? t.computingBtn : t.generateBtn}
               </motion.button>
             </form>
@@ -644,8 +644,8 @@ export default function ChartWorkspace({
                 
                 <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-gray-100 bg-gray-50/40">
                   <div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Chart</div>
-                    <div className="font-serif text-lg text-indigo-950">{chartName.trim() || 'Untitled Chart'}</div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subject</div>
+                    <div className="font-serif text-lg text-indigo-950">{personName.trim() || '—'}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     <button

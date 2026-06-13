@@ -75,7 +75,7 @@ export type ChartTab =
 
 export interface SavedChartRecord {
   id: string;
-  name: string;
+  name: string; // person's name whose chart was generated
   locationName: string;
   formData: ChartFormData;
   chartData: ChartData;

@@ -3,12 +3,12 @@ import { clerkAppearance } from "@/lib/clerk-appearance";
 
 export default function SignUpPage() {
   return (
-    <main className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-4">
+    <main className="min-h-screen bg-shell-bg flex flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-serif font-medium text-indigo-950 tracking-tight">
+        <h1 className="text-3xl font-serif font-medium text-shell-warm tracking-tight">
           Astro
         </h1>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-shell-muted">
           Create an account to save charts and unlock premium tools
         </p>
       </div>

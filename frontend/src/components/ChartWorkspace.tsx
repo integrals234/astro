@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
@@ -26,6 +27,7 @@ import type {
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
   showAuthNav?: boolean;
+  embedded?: boolean;
 }
 
 const signToNumber: Record<string, number> = {
@@ -178,10 +180,12 @@ const DignityBadge = ({ dignity, t }: { dignity: string, t: any }) => {
 }
 
 // --- MAIN DASHBOARD ---
-export default function ChartWorkspace({
+function ChartWorkspaceInner({
   enablePersistence = false,
   showAuthNav = false,
+  embedded = false,
 }: ChartWorkspaceProps) {
+  const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
   const today = new Date();
   
@@ -274,6 +278,24 @@ export default function ChartWorkspace({
     setIsCurrentSaved(chart.isSaved);
     setActiveTab('D1');
   };
+
+  useEffect(() => {
+    const chartId = searchParams.get('chart');
+    if (!chartId || !enablePersistence) return;
+
+    const loadChartFromUrl = async () => {
+      try {
+        const response = await fetch(`/api/charts/${chartId}`);
+        if (!response.ok) return;
+        const chart: SavedChartRecord = await response.json();
+        loadChart(chart);
+      } catch (error) {
+        console.error('Failed to load chart from URL:', error);
+      }
+    };
+
+    loadChartFromUrl();
+  }, [searchParams, enablePersistence]);
 
   const handleToggleSave = async (chart?: SavedChartRecord) => {
     const targetId = chart?.id ?? currentChartId;
@@ -463,8 +485,8 @@ export default function ChartWorkspace({
 
   if (!isClient) return null;
 
-  return (
-    <main className="min-h-screen bg-[#FAFAFA] p-4 md:p-8 text-gray-900 selection:bg-indigo-100 flex flex-col">
+  const shellContent = (
+    <>
       {showAuthNav && (
         <div className="max-w-7xl mx-auto w-full mb-6 flex justify-end items-center gap-3">
           <SignedOut>
@@ -919,6 +941,28 @@ export default function ChartWorkspace({
           {t.watermark}
         </span>
       </div>
+    </>
+  );
+
+  if (embedded) {
+    return (
+      <div className="rounded-[2rem] border border-shell-border/80 bg-[#f7f4ef] text-gray-900 selection:bg-indigo-100 shadow-[0_24px_80px_rgba(0,0,0,0.28)] overflow-hidden">
+        <div className="p-4 md:p-8 flex flex-col">{shellContent}</div>
+      </div>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#FAFAFA] p-4 md:p-8 text-gray-900 selection:bg-indigo-100 flex flex-col">
+      {shellContent}
     </main>
+  );
+}
+
+export default function ChartWorkspace(props: ChartWorkspaceProps) {
+  return (
+    <Suspense fallback={null}>
+      <ChartWorkspaceInner {...props} />
+    </Suspense>
   );
 }

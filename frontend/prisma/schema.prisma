@@ -20,14 +20,25 @@ enum UserRole {
 }
 
 model User {
-  id                 String             @id
-  email              String             @unique
-  name               String?
-  subscriptionStatus SubscriptionStatus @default(free)
-  role               UserRole           @default(user)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  charts             SavedChart[]
+  id                  String               @id
+  email               String               @unique
+  name                String?
+  subscriptionStatus  SubscriptionStatus   @default(free)
+  role                UserRole             @default(user)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  charts              SavedChart[]
+  vedicCourseProgress VedicCourseProgress?
+}
+
+model VedicCourseProgress {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentChapter  Int      @default(0)
+  completedSlides String[] @default([])
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
 }
 
 model SavedChart {

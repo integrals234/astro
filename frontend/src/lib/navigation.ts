@@ -42,9 +42,9 @@ export const mainNavItems: NavItem[] = [
   },
   {
     href: "/test-beta",
-    label: "Test Tab Beta",
+    label: "Vedic Course",
     icon: Sparkles,
-    description: "Preview features",
+    description: "インド占星術ミニコース (EN / 日本語)",
   },
   {
     href: "/settings",

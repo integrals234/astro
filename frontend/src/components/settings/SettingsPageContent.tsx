@@ -110,7 +110,7 @@ export default function SettingsPageContent() {
           <div>
             <h3 className="font-medium text-shell-warm">Subscription</h3>
             <p className="text-sm text-shell-muted mt-1">
-              You are on the <span className="text-shell-accent">Free</span> plan. Premium modules unlock in Test Tab Beta.
+              You are on the <span className="text-shell-accent">Free</span> plan. Premium modules unlock in the Vedic Course.
             </p>
           </div>
         </div>

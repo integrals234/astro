@@ -5,14 +5,8 @@ import {
   parseAppraisalLocale,
 } from "@/lib/personal-appraisals/i18n/messages";
 import type { AppraisalLanguage } from "@/lib/personal-appraisals/types";
+import { getResendConfig } from "@/lib/resend-config";
 import { Resend } from "resend";
-const DEFAULT_INQUIRY_RECIPIENT = "alphamac64@gmail.com";
-
-function getInquiryRecipients(): string[] {
-  const configured = process.env.INQUIRY_RECIPIENT_EMAIL?.trim();
-  return [configured || DEFAULT_INQUIRY_RECIPIENT];
-}
-
 export type InquiryFormState = {
   status: "idle" | "success" | "error";
   message?: string;
@@ -113,17 +107,20 @@ export async function sendInquiry(
     };
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL;
+  const resendConfig = getResendConfig();
 
-  if (!apiKey || !fromEmail) {
-    console.error("Missing RESEND_API_KEY or RESEND_FROM_EMAIL");
+  if (!resendConfig.ok) {
+    console.error(
+      "Missing inquiry email configuration:",
+      resendConfig.missing.join(", "),
+    );
     return {
       status: "error",
       message: msg.unavailable,
     };
   }
 
+  const { apiKey, fromEmail, recipientEmail } = resendConfig;
   const { fullName, email, phone, message } = validated.data;
   const submittedAt = new Date().toISOString();
 
@@ -172,8 +169,7 @@ export async function sendInquiry(
 
     const { error } = await resend.emails.send({
       from: fromEmail,
-      to: getInquiryRecipients(),
-      replyTo: email,
+      to: [recipientEmail],      replyTo: email,
       subject: `Personal Appraisal Inquiry — ${fullName}`,
       html,
       text,

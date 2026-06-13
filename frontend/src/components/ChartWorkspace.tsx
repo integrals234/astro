@@ -507,7 +507,7 @@ function ChartWorkspaceInner({
       <div className={`max-w-7xl mx-auto grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8 flex-grow w-full`}>
         
         {/* LEFT COLUMN: Form */}
-        <motion.div layout className={`${enablePersistence ? 'xl:col-span-3' : 'lg:col-span-4'} space-y-6`}>
+        <motion.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
           <div className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100">
             
             {/* Header & Lang Setup */}
@@ -619,14 +619,14 @@ function ChartWorkspaceInner({
                     className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 text-gray-700"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="min-w-0">
                     <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">{t.dob}</label>
-                    <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
+                    <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="w-full min-w-0 p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">{t.tob}</label>
-                    <input type="time" value={natalTimeString} onChange={handleTimeChange} className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
+                    <input type="time" value={natalTimeString} onChange={handleTimeChange} className="w-full min-w-0 p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
                   </div>
                 </div>
               </div>
@@ -659,7 +659,7 @@ function ChartWorkspaceInner({
         </motion.div>
 
         {/* RIGHT COLUMN: Output Dashboard */}
-        <div className={`${enablePersistence ? 'xl:col-span-9' : 'lg:col-span-8'}`}>
+        <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
           <AnimatePresence mode="wait">
             {chartData ? (
               <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="bg-white rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">

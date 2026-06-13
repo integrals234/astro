@@ -50,18 +50,35 @@ function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
 }
 
-/** Borderless infographic — off-white bg + slight scale crops black edges. */
+/** Infographic display — borderless crops black edges; transparent omits fill for PNG alpha. */
 function InfographicImage({
   src,
   alt,
   className = "",
   sizes = "(max-width: 768px) 100vw, 400px",
+  variant = "borderless",
 }: {
   src: string;
   alt: string;
   className?: string;
   sizes?: string;
+  variant?: "borderless" | "transparent";
 }) {
+  if (variant === "transparent") {
+    return (
+      <div className={`overflow-hidden bg-transparent ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          width={750}
+          height={500}
+          className="w-full h-auto block"
+          sizes={sizes}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`overflow-hidden bg-[#fafaf8] ${className}`}>
       <div className="scale-[1.03] origin-center">
@@ -235,6 +252,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
                 <InfographicImage
                   src={sign.image}
                   alt={t(sign.name, lang)}
+                  variant="transparent"
                   className="rounded-t-2xl md:rounded-t-none md:rounded-l-2xl"
                   sizes="(max-width: 768px) 100vw, 320px"
                 />

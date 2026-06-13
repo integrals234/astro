@@ -1,7 +1,37 @@
 @import "tailwindcss";
 
-/* Dark theme (default) */
-:root,
+/* System-aware defaults (before next-themes hydrates) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --shell-bg: #1c1b19;
+    --shell-sidebar: #141312;
+    --shell-elevated: #242220;
+    --shell-border: rgba(255, 255, 255, 0.06);
+    --shell-warm: #ece2d4;
+    --shell-muted: #9a928a;
+    --shell-accent: #d4a574;
+    --shell-accent-soft: rgba(212, 165, 116, 0.12);
+    --background: #1c1b19;
+    --foreground: #ece2d4;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --shell-bg: #f5f2ed;
+    --shell-sidebar: #ebe6de;
+    --shell-elevated: #ffffff;
+    --shell-border: rgba(28, 25, 23, 0.08);
+    --shell-warm: #2c2825;
+    --shell-muted: #6b6560;
+    --shell-accent: #b8844a;
+    --shell-accent-soft: rgba(184, 132, 74, 0.14);
+    --background: #f5f2ed;
+    --foreground: #2c2825;
+  }
+}
+
+/* Explicit theme overrides */
 .dark {
   --shell-bg: #1c1b19;
   --shell-sidebar: #141312;
@@ -15,7 +45,6 @@
   --foreground: #ece2d4;
 }
 
-/* Light theme */
 .light {
   --shell-bg: #f5f2ed;
   --shell-sidebar: #ebe6de;

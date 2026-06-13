@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
 import { Search, MapPin, Globe, ChevronDown, Sparkles, Eye, Download, Bookmark, BookmarkCheck, LayoutDashboard } from 'lucide-react';
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
 import KundliChart from '@/components/KundliChart';
 import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
@@ -186,6 +186,9 @@ function ChartWorkspaceInner({
   embedded = false,
 }: ChartWorkspaceProps) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const [isClient, setIsClient] = useState(false);
   const today = new Date();
   
@@ -336,7 +339,14 @@ function ChartWorkspaceInner({
   };
 
   const handleDownloadPdf = () => {
-    if (!chartData) return;
+    if (!chartData || !isAuthLoaded) return;
+    if (!isSignedIn) {
+      const returnUrl = searchParams.toString()
+        ? `${pathname}?${searchParams.toString()}`
+        : pathname;
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
+      return;
+    }
     downloadChartPdf({
       name: personName.trim() || 'Chart Report',
       locationName: selectedLocationName,

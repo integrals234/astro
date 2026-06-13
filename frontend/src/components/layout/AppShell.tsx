@@ -15,23 +15,22 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-shell-bg text-shell-warm">
       <header className="z-30 shrink-0 border-b border-shell-border bg-shell-sidebar supports-[padding:max(0px)]:pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="relative flex items-center justify-between gap-3 px-4 py-3 md:px-6">
-          <div className="z-10 flex min-w-0 items-center gap-3">
-            <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
-            <SiteBrand className="hidden md:inline-flex" size="md" />
+        {/* Desktop */}
+        <div className="hidden md:flex items-center justify-between gap-6 px-6 py-3">
+          <SiteBrand size="md" className="shrink-0" />
+          <TopNav />
+        </div>
+
+        {/* Mobile */}
+        <div className="flex md:hidden items-center gap-2 px-4 py-3">
+          <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
+          <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-center">
+            <SiteBrand size="sm" className="shrink-0 max-w-full" />
+            <p className="w-full truncate text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
+              {pageTitle}
+            </p>
           </div>
-
-          <SiteBrand
-            className="mobile-title absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            size="sm"
-          />
-
-          <span className="sr-only">{pageTitle}</span>
-
-          <div className="z-10 flex items-center justify-end">
-            <div className="mobile-only h-10 w-10 shrink-0" aria-hidden />
-            <TopNav />
-          </div>
+          <div className="h-10 w-10 shrink-0" aria-hidden />
         </div>
       </header>
 

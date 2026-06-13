@@ -134,31 +134,69 @@ function SectionFade({
 function PublicHeader({ lang }: { lang: EducationLang }) {
   return (
     <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
-      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
-        <SiteBrand className="hidden md:inline-flex" size="md" />
-        <SiteBrand className="absolute left-1/2 -translate-x-1/2 md:hidden" size="sm" />
-        <nav className="relative z-10 ml-auto flex items-center gap-2 md:gap-4">
-          <Link
-            href="/chart"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 px-3 py-2 text-xs font-medium text-shell-warm hover:border-shell-accent/40 hover:text-shell-accent transition-all"
-          >
-            <Sparkles size={14} />
-            {lang === "ja" ? "チャート作成" : "Generate Chart"}
-          </Link>
-          <SignedOut>
-            <Link
-              href="/sign-in"
-              className="text-xs font-medium text-shell-muted hover:text-shell-warm transition-colors"
-            >
-              {lang === "ja" ? "ログイン" : "Sign In"}
-            </Link>
-          </SignedOut>
-          <SignedIn>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+      {/* Desktop */}
+      <div className="mx-auto hidden max-w-7xl items-center justify-between gap-4 px-8 py-4 md:flex">
+        <SiteBrand size="md" className="shrink-0" />
+        <nav className="flex items-center gap-4">
+          <PublicHeaderActions lang={lang} />
+        </nav>
+      </div>
+
+      {/* Mobile */}
+      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-4 md:hidden">
+        <div className="h-10 w-10 shrink-0" aria-hidden />
+        <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
+          <SiteBrand size="sm" className="shrink-0" />
+          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
+            {lang === "ja" ? "ホーム" : "Home"}
+          </p>
+        </div>
+        <nav className="flex shrink-0 items-center gap-2">
+          <PublicHeaderActions lang={lang} compact />
         </nav>
       </div>
     </header>
+  );
+}
+
+function PublicHeaderActions({
+  lang,
+  compact = false,
+}: {
+  lang: EducationLang;
+  compact?: boolean;
+}) {
+  return (
+    <>
+      <Link
+        href="/chart"
+        className={`inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent ${
+          compact ? "px-2.5 py-2 text-[11px]" : "px-3 py-2 text-xs"
+        }`}
+      >
+        <Sparkles size={14} />
+        {compact
+          ? lang === "ja"
+            ? "チャート"
+            : "Chart"
+          : lang === "ja"
+            ? "チャート作成"
+            : "Generate Chart"}
+      </Link>
+      <SignedOut>
+        <Link
+          href="/sign-in"
+          className={`font-medium text-shell-muted transition-colors hover:text-shell-warm ${
+            compact ? "text-[11px]" : "text-xs"
+          }`}
+        >
+          {lang === "ja" ? "ログイン" : "Sign In"}
+        </Link>
+      </SignedOut>
+      <SignedIn>
+        <UserButton afterSignOutUrl="/" />
+      </SignedIn>
+    </>
   );
 }
 

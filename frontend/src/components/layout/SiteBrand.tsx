@@ -18,7 +18,7 @@ export default function SiteBrand({ className = "", size = "md" }: SiteBrandProp
   return (
     <Link
       href="/"
-      className={`group inline-flex items-baseline gap-1.5 ${sizeClasses[size]} ${className}`}
+      className={`group shrink-0 inline-flex items-baseline gap-1.5 whitespace-nowrap ${sizeClasses[size]} ${className}`}
     >
       <span className="font-brand font-medium tracking-[0.04em] text-shell-warm transition-colors group-hover:text-shell-accent">
         {first}

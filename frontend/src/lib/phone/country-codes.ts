@@ -64,8 +64,8 @@ const dialByIso = new Map(
 );
 
 export function dialCodeForCountry(iso: string | null | undefined): string {
-  if (!iso) return "+91";
-  return dialByIso.get(iso.toUpperCase()) ?? "+91";
+  if (!iso) return "+81";
+  return dialByIso.get(iso.toUpperCase()) ?? "+81";
 }
 
 export function findCountryByDial(dial: string): CountryDialCode | undefined {

@@ -55,7 +55,7 @@ const translations: Record<LanguageCode, any> = {
     timezone: "Timezone", sunrise: "Sunrise", sunset: "Sunset", absoluteLagna: "Absolute Lagna", exactLongitudes: "Exact Planetary Longitudes", transitCoords: "Transit Coordinates",
     dashaTimeline: "Vimshottari Timeline", dashaSub: "Maha • Antar • Pratyantar • Sookshma", lagnaBase: "Lagna Base", chandraBase: "Chandra Base", watermark: "vaibhav shukla",
     errNoLoc: "Please select a location.", errCalc: "Calculation Failed.",
-    personName: "Person's Name", personNamePlaceholder: "e.g. Vaibhav Shukla", errNoName: "Please enter the person's name.",
+    personName: "Person's Name", personNamePlaceholder: "Full name", errNoName: "Please enter the person's name.",
     saveChart: "Save Chart", savedChart: "Saved", downloadPdf: "Download PDF",
     tabs: { D1: "Lagna", D9: "Navmansha", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
     tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
@@ -72,7 +72,7 @@ const translations: Record<LanguageCode, any> = {
     timezone: "समय क्षेत्र", sunrise: "सूर्योदय", sunset: "सूर्यास्त", absoluteLagna: "स्पष्ट लग्न", exactLongitudes: "स्पष्ट ग्रह स्थिति", transitCoords: "गोचर निर्देशांक",
     dashaTimeline: "विंशोत्तरी दशा", dashaSub: "महा • अंतर • प्रत्यंतर • सूक्ष्म", lagnaBase: "लग्न आधार", chandraBase: "चन्द्र आधार", watermark: "वैभव शुक्ला",
     errNoLoc: "कृपया एक स्थान चुनें।", errCalc: "गणना विफल रही।",
-    personName: "व्यक्ति का नाम", personNamePlaceholder: "जैसे वैभव शुक्ला", errNoName: "कृपया व्यक्ति का नाम दर्ज करें।",
+    personName: "व्यक्ति का नाम", personNamePlaceholder: "पूरा नाम", errNoName: "कृपया व्यक्ति का नाम दर्ज करें।",
     tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Details: "विवरण", Aspects: "दृष्टि", Dasha: "दशा" },
     tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Details: "ग्रह विवरण", Aspects: "वैदिक दृष्टि (Drishti)", Dasha: "विंशोत्तरी दशा" },
     planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Ascendant: "लग्न" },
@@ -88,6 +88,7 @@ const translations: Record<LanguageCode, any> = {
     timezone: "タイムゾーン", sunrise: "日の出", sunset: "日の入り", absoluteLagna: "アセンダント", exactLongitudes: "惑星の正確な位置", transitCoords: "トランジット座標",
     dashaTimeline: "ヴィムショッタリ・ダシャー", dashaSub: "マハー • アンタル • プラティヤンタル • スークシュマ", lagnaBase: "ラグナ基準", chandraBase: "チャンドラ基準", watermark: "ヴァイバヴ・シュクラ",
     errNoLoc: "場所を選択してください。", errCalc: "計算に失敗しました。",
+    personName: "お名前", personNamePlaceholder: "お名前", errNoName: "お名前を入力してください。",
     tabs: { D1: "ラグナ", D9: "チャート", Chalit: "チャリット", Chandra: "チャンドラ", Gochar: "トランジット", Details: "詳細", Aspects: "アスペクト", Dasha: "ダシャー" },
     tabTitles: { D1: "ネイタルチャート (ラグナ)", D9: "D9 チャート", Chalit: "チャリットチャート", Chandra: "チャンドラチャート", Gochar: "トランジットチャート", Details: "惑星の詳細", Aspects: "ヴェーダのアスペクト (Drishti)", Dasha: "ヴィムショッタリ・ダシャー" },
     planets: { Sun: "太陽", Moon: "月", Mars: "火星", Mercury: "水星", Jupiter: "木星", Venus: "金星", Saturn: "土星", Rahu: "ラーフ", Ketu: "ケトゥ", Ascendant: "アセンダント" },
@@ -103,6 +104,7 @@ const translations: Record<LanguageCode, any> = {
     timezone: "시간대", sunrise: "일출", sunset: "일몰", absoluteLagna: "어센던트 (Lagna)", exactLongitudes: "정확한 행성 위치", transitCoords: "트랜짓 좌표",
     dashaTimeline: "빔쇼타리 다샤", dashaSub: "마하 • 안타르 • 프라티얀타르 • 수크슈마", lagnaBase: "라그나 기준", chandraBase: "찬드라 기준", watermark: "바이바브 슈클라",
     errNoLoc: "위치를 선택해 주세요.", errCalc: "계산에 실패했습니다.",
+    personName: "이름", personNamePlaceholder: "이름", errNoName: "이름을 입력해 주세요.",
     tabs: { D1: "네이탈 차트", D9: "차트", Chalit: "찰리트", Chandra: "찬드라", Gochar: "트랜짓", Details: "세부 정보", Aspects: "애스펙트", Dasha: "다샤" },
     tabTitles: { D1: "네이탈 차트 (Lagna)", D9: "D9 차트", Chalit: "찰리트 차트", Chandra: "찬드라 차트", Gochar: "트랜짓 차트", Details: "행성 세부 정보", Aspects: "베다 애스펙트 (Drishti)", Dasha: "빔쇼타리 다샤" },
     planets: { Sun: "태양", Moon: "달", Mars: "화성", Mercury: "수성", Jupiter: "목성", Venus: "금성", Saturn: "토성", Rahu: "라후", Ketu: "케투", Ascendant: "어센던트" },
@@ -190,15 +192,24 @@ function ChartWorkspaceInner({
   const router = useRouter();
   const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const [isClient, setIsClient] = useState(false);
-  const today = new Date();
-  
+
   const [lang, setLang] = useState<LanguageCode>('hi');
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [personName, setPersonName] = useState('');
-  const [formData, setFormData] = useState<ChartFormData>({ 
-    year: 2004, month: 4, day: 23, hour: 10, minute: 0, 
-    latitude: 25.4488, longitude: 78.5698, 
-    transit_year: today.getFullYear(), transit_month: today.getMonth() + 1, transit_day: today.getDate() 
+  const [formData, setFormData] = useState<ChartFormData>(() => {
+    const now = new Date();
+    return {
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      day: now.getDate(),
+      hour: now.getHours(),
+      minute: now.getMinutes(),
+      latitude: 25.4488,
+      longitude: 78.5698,
+      transit_year: now.getFullYear(),
+      transit_month: now.getMonth() + 1,
+      transit_day: now.getDate(),
+    };
   });
   
   const [locationQuery, setLocationQuery] = useState("");
@@ -625,7 +636,7 @@ function ChartWorkspaceInner({
                     type="text"
                     value={personName}
                     onChange={(e) => setPersonName(e.target.value)}
-                    placeholder={t.personNamePlaceholder || 'e.g. Vaibhav Shukla'}
+                    placeholder={t.personNamePlaceholder || ''}
                     className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 text-gray-700"
                   />
                 </div>

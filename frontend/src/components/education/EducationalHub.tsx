@@ -66,13 +66,15 @@ function InfographicImage({
 }) {
   if (variant === "transparent") {
     return (
-      <div className={`overflow-hidden bg-transparent ${className}`}>
+      <div className={`overflow-hidden bg-transparent leading-none ${className}`}>
         <Image
           src={src}
           alt={alt}
-          width={750}
-          height={500}
-          className="w-full h-auto block"
+          width={1008}
+          height={1055}
+          unoptimized
+          style={{ width: "100%", height: "auto" }}
+          className="block w-full h-auto"
           sizes={sizes}
         />
       </div>

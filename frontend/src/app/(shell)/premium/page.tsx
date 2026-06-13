@@ -47,7 +47,7 @@ export default function PremiumPage() {
       </div>
 
       <p className="text-sm text-shell-muted">
-        <Link href="/dashboard" className="text-shell-accent hover:text-shell-warm transition-colors">
+        <Link href="/chart" className="text-shell-accent hover:text-shell-warm transition-colors">
           ← Back to dashboard
         </Link>
       </p>

@@ -69,7 +69,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
                 : "No recent charts yet. Generate your first chart on the dashboard."}
             </p>
             <Link
-              href="/dashboard"
+              href="/chart"
               className="inline-flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm transition-colors"
             >
               Go to Dashboard
@@ -133,7 +133,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
 
               <div className="mt-5 flex items-center gap-2">
                 <Link
-                  href={`/dashboard?chart=${chart.id}`}
+                  href={`/chart?chart=${chart.id}`}
                   className="inline-flex items-center gap-2 rounded-xl bg-shell-accent-soft border border-shell-accent/20 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-shell-accent hover:text-shell-warm hover:border-shell-accent/40 transition-colors"
                 >
                   Open chart

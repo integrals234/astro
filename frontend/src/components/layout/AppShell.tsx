@@ -19,7 +19,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           {/* Left: mobile menu + brand (+ mobile page title) */}
           <div className="flex min-w-0 items-center gap-3">
             <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
-            <Link href="/dashboard" className="group shrink-0">
+            <Link href="/" className="group shrink-0">
               <span className="font-serif text-lg md:text-xl tracking-tight text-shell-warm group-hover:text-shell-accent transition-colors">
                 Astro
               </span>

@@ -1,9 +1,9 @@
 import {
-  LayoutDashboard,
+  Home,
+  Sparkles,
   Bookmark,
   Clock,
   FlaskConical,
-  Sparkles,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -17,9 +17,15 @@ export interface NavItem {
 
 export const mainNavItems: NavItem[] = [
   {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboard,
+    href: "/",
+    label: "Home",
+    icon: Home,
+    description: "Jyotish learning hub",
+  },
+  {
+    href: "/chart",
+    label: "Chart",
+    icon: Sparkles,
     description: "Generate and explore charts",
   },
   {
@@ -43,7 +49,7 @@ export const mainNavItems: NavItem[] = [
   {
     href: "/test-beta",
     label: "Vedic Course",
-    icon: Sparkles,
+    icon: FlaskConical,
     description: "インド占星術ミニコース (EN / हिन्दी / 日本語 / 한국어)",
   },
   {
@@ -55,8 +61,11 @@ export const mainNavItems: NavItem[] = [
 ];
 
 export function getNavLabel(pathname: string): string {
-  const match = mainNavItems.find(
-    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
-  );
+  if (pathname === "/") return "Home";
+  const match = mainNavItems
+    .filter((item) => item.href !== "/")
+    .find(
+      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
+    );
   return match?.label ?? "Astro";
 }

@@ -495,9 +495,9 @@ function ChartWorkspaceInner({
             </Link>
           </SignedOut>
           <SignedIn>
-            <Link href="/dashboard" className="flex items-center gap-2 text-sm font-medium text-indigo-700 hover:text-indigo-900 px-4 py-2 rounded-xl hover:bg-indigo-50 transition-colors">
+            <Link href="/chart" className="flex items-center gap-2 text-sm font-medium text-indigo-700 hover:text-indigo-900 px-4 py-2 rounded-xl hover:bg-indigo-50 transition-colors">
               <LayoutDashboard size={16} />
-              Dashboard
+              Chart
             </Link>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>

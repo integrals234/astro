@@ -191,7 +191,7 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
             {uiString("completeBody", lang)}
           </p>
           <Link
-            href="/dashboard"
+            href="/chart"
             className="mt-8 inline-flex items-center gap-2 rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-6 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent transition-all hover:bg-shell-accent/25 hover:text-shell-warm"
           >
             {uiString("goDashboard", lang)}

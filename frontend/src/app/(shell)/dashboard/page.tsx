@@ -1,5 +1,5 @@
-import ChartWorkspace from "@/components/ChartWorkspace";
+import { redirect } from "next/navigation";
 
 export default function DashboardPage() {
-  return <ChartWorkspace enablePersistence embedded />;
+  redirect("/chart");
 }

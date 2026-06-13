@@ -6,6 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 import { mainNavItems } from "@/lib/navigation";
 
 function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 

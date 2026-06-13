@@ -1,5 +1,5 @@
-import HomePageClient from "@/components/home/HomePageClient";
+import EducationalHub from "@/components/education/EducationalHub";
 
 export default function HomePage() {
-  return <HomePageClient />;
+  return <EducationalHub />;
 }

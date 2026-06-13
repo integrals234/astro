@@ -49,27 +49,27 @@ body {
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-/* Desktop sidebar — explicit media queries (reliable across Tailwind builds) */
-.desktop-sidebar {
-  display: none;
-  height: 100%;
-  width: 16rem;
-  flex-shrink: 0;
-  flex-direction: column;
-  border-right: 1px solid var(--shell-border);
-  background-color: var(--shell-sidebar);
-}
-
+/* Responsive nav: hamburger drawer on mobile, horizontal top tabs on desktop */
 .mobile-only {
   display: inline-flex;
 }
 
+.mobile-title {
+  display: block;
+}
+
+.desktop-topnav {
+  display: none;
+}
+
 @media (min-width: 768px) {
-  .desktop-sidebar {
+  .desktop-topnav {
     display: flex;
+    flex-wrap: nowrap;
   }
 
-  .mobile-only {
+  .mobile-only,
+  .mobile-title {
     display: none !important;
   }
 
@@ -79,7 +79,7 @@ body {
 }
 
 @media (max-width: 767px) {
-  .desktop-sidebar {
+  .desktop-topnav {
     display: none !important;
   }
 }

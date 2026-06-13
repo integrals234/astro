@@ -8,7 +8,7 @@ export const planetImages = {
   mars: "/assets/mars.png",
   jupiter: "/assets/jupiter.png",
   saturn: "/assets/saturn.png",
-  rahu: "/assets/Rahu.png",
+  rahu: "/assets/rahu.png",
   ketu: "/assets/ketu.png",
 } as const;
 
@@ -47,7 +47,7 @@ export const aspectImages = {
   mars: "/assets/mars.png",
   jupiter: "/assets/jupiter.png",
   saturn: "/assets/saturn.png",
-  rahuKetu: "/assets/Rahu.png",
+  rahuKetu: "/assets/rahu.png",
 } as const;
 
 /** Zodiac sign art available in assets (for future use). */

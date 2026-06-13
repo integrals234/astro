@@ -29,7 +29,6 @@ import {
   universalAspect,
   specialAspects,
   conjunctionBlock,
-  aspectSummaryImage,
   type EducationLang,
   type EducationSectionId,
   type BilingualText,
@@ -44,6 +43,24 @@ const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
 
 function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
+}
+
+/** Full-width planet infographic — white bg blends in, slight scale crops edge borders. */
+function PlanetInfographic({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="overflow-hidden rounded-t-2xl bg-[#fafaf8]">
+      <div className="scale-[1.03] origin-center">
+        <Image
+          src={src}
+          alt={alt}
+          width={960}
+          height={720}
+          className="w-full h-auto block"
+          sizes="(max-width: 768px) 100vw, 900px"
+        />
+      </div>
+    </div>
+  );
 }
 
 function SectionFade({
@@ -191,48 +208,38 @@ function PlanetsSection({ lang }: { lang: EducationLang }) {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {planets.map((planet) => (
           <article
             key={planet.id}
             className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
           >
-            <div className="flex flex-col md:flex-row">
-              <div className="relative h-48 md:h-auto md:w-48 shrink-0 bg-shell-sidebar flex items-center justify-center p-6">
-                <Image
-                  src={planet.image}
-                  alt={t(planet.name, lang)}
-                  width={160}
-                  height={160}
-                  className="object-contain drop-shadow-lg"
-                />
+            <PlanetInfographic src={planet.image} alt={t(planet.name, lang)} />
+            <div className="p-6 md:p-8 border-t border-shell-border/60">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
+                <h3 className="font-serif text-2xl text-shell-warm">
+                  {t(planet.name, lang)}
+                </h3>
+                <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
               </div>
-              <div className="flex-1 p-6 md:p-8">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
-                  <h3 className="font-serif text-2xl text-shell-warm">
-                    {t(planet.name, lang)}
-                  </h3>
-                  <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
-                </div>
-                <p className="text-sm leading-relaxed text-shell-muted mb-5">
-                  {t(planet.description, lang)}
+              <p className="text-sm leading-relaxed text-shell-muted mb-5">
+                {t(planet.description, lang)}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
+                {planet.attributes.map((attr, i) => (
+                  <div key={i} className="text-xs">
+                    <span className="text-shell-accent">{t(attr.label, lang)}: </span>
+                    <span className="text-shell-warm/90">{t(attr.value, lang)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
+                <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
+                  {lang === "ja" ? "象意" : "Significations"}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
-                  {planet.attributes.map((attr, i) => (
-                    <div key={i} className="text-xs">
-                      <span className="text-shell-accent">{t(attr.label, lang)}: </span>
-                      <span className="text-shell-warm/90">{t(attr.value, lang)}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
-                    {lang === "ja" ? "象意" : "Significations"}
-                  </p>
-                  <p className="text-sm text-shell-warm/90 leading-relaxed">
-                    {t(planet.significations, lang)}
-                  </p>
-                </div>
+                <p className="text-sm text-shell-warm/90 leading-relaxed">
+                  {t(planet.significations, lang)}
+                </p>
               </div>
             </div>
           </article>
@@ -332,15 +339,6 @@ function AspectsSection({ lang }: { lang: EducationLang }) {
         </h2>
       </div>
 
-      <div className="relative h-56 md:h-72 rounded-2xl border border-shell-border bg-shell-sidebar overflow-hidden">
-        <Image
-          src={aspectSummaryImage}
-          alt={lang === "ja" ? "ドリシュティ図" : "Drishti diagram"}
-          fill
-          className="object-contain p-6"
-        />
-      </div>
-
       <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
         {aspectsIntro.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
@@ -380,31 +378,17 @@ function AspectsSection({ lang }: { lang: EducationLang }) {
         {specialAspects.map((rule, i) => (
           <article
             key={i}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
+            className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8"
           >
-            <div className="flex flex-col md:flex-row">
-              {rule.image && (
-                <div className="relative h-40 md:h-auto md:w-56 shrink-0 bg-shell-sidebar">
-                  <Image
-                    src={rule.image}
-                    alt={t(rule.planet, lang)}
-                    fill
-                    className="object-contain p-4"
-                  />
-                </div>
-              )}
-              <div className="p-6 md:p-8">
-                <h3 className="font-serif text-xl text-shell-warm mb-1">
-                  {t(rule.planet, lang)}
-                </h3>
-                <p className="text-xs text-shell-accent mb-3">
-                  {lang === "ja" ? "アスペクト先" : "Aspects houses"}: {rule.houses}
-                </p>
-                <p className="text-sm leading-relaxed text-shell-muted">
-                  {t(rule.description, lang)}
-                </p>
-              </div>
-            </div>
+            <h3 className="font-serif text-xl text-shell-warm mb-1">
+              {t(rule.planet, lang)}
+            </h3>
+            <p className="text-xs text-shell-accent mb-3">
+              {lang === "ja" ? "アスペクト先" : "Aspects houses"}: {rule.houses}
+            </p>
+            <p className="text-sm leading-relaxed text-shell-muted">
+              {t(rule.description, lang)}
+            </p>
           </article>
         ))}
       </div>

@@ -5,8 +5,33 @@ export type EducationSectionId =
   | "rashis"
   | "planets"
   | "nakshatras"
+  | "houses"
   | "aspects"
+  | "mahadashas"
+  | "transits"
+  | "remedies"
   | "horoscope";
+
+export type WisdomBlockType = "heading" | "paragraph";
+
+export interface WisdomArticleBlock {
+  type: WisdomBlockType;
+  level?: 2 | 3;
+  text: BilingualText;
+}
+
+export interface WisdomArticle {
+  id: string;
+  section: EducationSectionId;
+  title: BilingualText;
+  blocks: WisdomArticleBlock[];
+  related: string[];
+}
+
+export interface EducationNavigateTarget {
+  section: EducationSectionId;
+  articleId?: string;
+}
 
 export interface BilingualText {
   en: string;

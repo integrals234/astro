@@ -3,6 +3,7 @@ export * from "./intro-content";
 export * from "./rashi-content";
 export * from "./planets-content";
 export * from "./aspects-content";
+export * from "./articles-content";
 export * from "./horoscope-periods";
 export * from "./horoscope-engine";
 export * from "./use-horoscope-periods";
@@ -39,6 +40,10 @@ export const educationSections: {
   { id: "rashis", label: { en: "Rashis (Signs)", ja: "ラーシ（星座）" } },
   { id: "planets", label: { en: "Planets (Grahas)", ja: "惑星（グラハ）" } },
   { id: "nakshatras", label: { en: "Nakshatras", ja: "ナクシャトラ" } },
+  { id: "houses", label: { en: "Houses (Bhavas)", ja: "ハウス（バーヴァ）" } },
   { id: "aspects", label: { en: "Aspects (Drishti)", ja: "アスペクト（ドリシュティ）" } },
+  { id: "mahadashas", label: { en: "Mahadashas", ja: "マハーダシャー" } },
+  { id: "transits", label: { en: "Transits", ja: "トランジット" } },
+  { id: "remedies", label: { en: "Remedies (Upaye)", ja: "救済（ウパーヤ）" } },
   { id: "horoscope", label: { en: "Horoscope", ja: "ホロスコープ" } },
 ];

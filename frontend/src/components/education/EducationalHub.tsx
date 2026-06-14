@@ -12,17 +12,18 @@ import {
   Eye,
   Languages,
   Sparkles,
-  ArrowRight,
   Circle,
   CalendarRange,
+  Home,
+  Clock,
+  OrbitIcon,
+  HeartHandshake,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
+import WisdomArticleView from "@/components/education/WisdomArticleView";
 import {
   educationSections,
-  introHero,
-  introSubtitle,
-  introBlocks,
   rashisIntro,
   rashisOverviewBlocks,
   rashis,
@@ -41,8 +42,10 @@ import {
   periodTypeLabel,
   getPeriodForType,
   useHoroscopePeriods,
+  getArticlesForSection,
   type EducationLang,
   type EducationSectionId,
+  type EducationNavigateTarget,
   type BilingualText,
   type RashiEntry,
   type HoroscopePeriodType,
@@ -54,9 +57,116 @@ const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   rashis: Circle,
   planets: Orbit,
   nakshatras: Star,
+  houses: Home,
   aspects: Eye,
+  mahadashas: Clock,
+  transits: OrbitIcon,
+  remedies: HeartHandshake,
   horoscope: CalendarRange,
 };
+
+function defaultArticleForSection(section: EducationSectionId): string | null {
+  const articles = getArticlesForSection(section);
+  return articles[0]?.id ?? null;
+}
+
+function SubTabBar({
+  tabs,
+  activeId,
+  onSelect,
+  lang,
+}: {
+  tabs: { id: string; label: BilingualText }[];
+  activeId: string | null;
+  onSelect: (id: string) => void;
+  lang: EducationLang;
+}) {
+  if (tabs.length <= 1) return null;
+
+  return (
+    <div className="mb-6 -mx-1 overflow-x-auto pb-1">
+      <div className="flex gap-1.5 min-w-max px-1">
+        {tabs.map((tab) => {
+          const active = activeId === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onSelect(tab.id)}
+              className={`rounded-lg px-3.5 py-2 text-xs font-medium whitespace-nowrap transition-all ${
+                active
+                  ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
+                  : "text-shell-muted border border-transparent hover:text-shell-warm hover:bg-white/[0.04]"
+              }`}
+            >
+              {t(tab.label, lang)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ArticleSectionPanel({
+  section,
+  articleId,
+  lang,
+  onNavigate,
+  visualTab,
+  visualLabel,
+}: {
+  section: EducationSectionId;
+  articleId: string | null;
+  lang: EducationLang;
+  onNavigate: (target: EducationNavigateTarget) => void;
+  visualTab?: { id: string; label: BilingualText; content: React.ReactNode };
+  visualLabel?: BilingualText;
+}) {
+  const articles = getArticlesForSection(section);
+  const tabs: { id: string; label: BilingualText; content: React.ReactNode }[] = [];
+
+  if (visualTab) {
+    tabs.push(visualTab);
+  }
+
+  for (const article of articles) {
+    tabs.push({
+      id: article.id,
+      label: article.title,
+      content: (
+        <WisdomArticleView
+          article={article}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      ),
+    });
+  }
+
+  const activeId = articleId ?? tabs[0]?.id ?? null;
+  const active = tabs.find((tab) => tab.id === activeId) ?? tabs[0];
+
+  return (
+    <div>
+      <SubTabBar
+        tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
+        activeId={activeId}
+        onSelect={(id) => onNavigate({ section, articleId: id })}
+        lang={lang}
+      />
+      {active ? (
+        <SectionFade sectionKey={`${section}-${active.id}-${lang}`}>
+          {active.content}
+        </SectionFade>
+      ) : (
+        <p className="text-sm text-shell-muted">
+          {lang === "ja" ? "コンテンツがありません。" : "No content available."}
+        </p>
+      )}
+    </div>
+  );
+}
 
 function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
@@ -200,52 +310,6 @@ function PublicHeaderActions({
   );
 }
 
-function IntroductionSection({ lang }: { lang: EducationLang }) {
-  return (
-    <div className="space-y-10">
-      <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {lang === "ja" ? "インド占星術の基礎" : "Indian Jyotish Basics"}
-        </p>
-        <h2 className="font-serif text-3xl md:text-4xl text-shell-warm tracking-tight">
-          {t(introHero, lang)}
-        </h2>
-        <p className="mt-4 text-sm md:text-base leading-relaxed text-shell-muted">
-          {t(introSubtitle, lang)}
-        </p>
-      </div>
-
-      {introBlocks.map((block, i) => (
-        <article
-          key={i}
-          className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8"
-        >
-          {block.title && (
-            <h3 className="font-serif text-xl text-shell-warm mb-4">
-              {t(block.title, lang)}
-            </h3>
-          )}
-          <div className="space-y-4">
-            {block.paragraphs.map((p, j) => (
-              <p key={j} className="text-sm leading-relaxed text-shell-muted">
-                {t(p, lang)}
-              </p>
-            ))}
-          </div>
-        </article>
-      ))}
-
-      <Link
-        href="/chart"
-        className="inline-flex items-center gap-2 rounded-xl bg-shell-accent-soft border border-shell-accent/30 px-5 py-3 text-sm font-medium text-shell-warm hover:bg-shell-accent/20 transition-colors"
-      >
-        {lang === "ja" ? "あなたのクンダリーを作成する" : "Generate your Kundli"}
-        <ArrowRight size={16} className="text-shell-accent" />
-      </Link>
-    </div>
-  );
-}
-
 const rashiSectionLabels: Record<keyof RashiEntry["sections"], BilingualText> = {
   nature: { en: "Nature", ja: "性質" },
   career: { en: "Career", ja: "キャリア" },
@@ -372,7 +436,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
   );
 }
 
-function PlanetsSection({ lang }: { lang: EducationLang }) {
+function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -437,7 +501,34 @@ function PlanetsSection({ lang }: { lang: EducationLang }) {
   );
 }
 
-function NakshatrasSection({ lang }: { lang: EducationLang }) {
+function PlanetsSection({
+  lang,
+  articleId,
+  onNavigate,
+}: {
+  lang: EducationLang;
+  articleId: string | null;
+  onNavigate: (target: EducationNavigateTarget) => void;
+}) {
+  return (
+    <ArticleSectionPanel
+      section="planets"
+      articleId={articleId}
+      lang={lang}
+      onNavigate={onNavigate}
+      visualTab={{
+        id: "navagraha-guide",
+        label: {
+          en: "Nine Grahas (Visual Guide)",
+          ja: "九惑星（ビジュアルガイド）",
+        },
+        content: <PlanetsVisualGuide lang={lang} />,
+      }}
+    />
+  );
+}
+
+function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -514,7 +605,34 @@ function NakshatrasSection({ lang }: { lang: EducationLang }) {
   );
 }
 
-function AspectsSection({ lang }: { lang: EducationLang }) {
+function NakshatrasSection({
+  lang,
+  articleId,
+  onNavigate,
+}: {
+  lang: EducationLang;
+  articleId: string | null;
+  onNavigate: (target: EducationNavigateTarget) => void;
+}) {
+  return (
+    <ArticleSectionPanel
+      section="nakshatras"
+      articleId={articleId}
+      lang={lang}
+      onNavigate={onNavigate}
+      visualTab={{
+        id: "nakshatra-guide",
+        label: {
+          en: "27 Lunar Mansions (Visual Guide)",
+          ja: "27ナクシャトラ（ビジュアルガイド）",
+        },
+        content: <NakshatrasVisualGuide lang={lang} />,
+      }}
+    />
+  );
+}
+
+function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -602,6 +720,33 @@ function AspectsSection({ lang }: { lang: EducationLang }) {
         )}
       </article>
     </div>
+  );
+}
+
+function AspectsSection({
+  lang,
+  articleId,
+  onNavigate,
+}: {
+  lang: EducationLang;
+  articleId: string | null;
+  onNavigate: (target: EducationNavigateTarget) => void;
+}) {
+  return (
+    <ArticleSectionPanel
+      section="aspects"
+      articleId={articleId}
+      lang={lang}
+      onNavigate={onNavigate}
+      visualTab={{
+        id: "aspects-guide",
+        label: {
+          en: "Drishti Guide (Visual)",
+          ja: "ドリシュティガイド",
+        },
+        content: <AspectsVisualGuide lang={lang} />,
+      }}
+    />
   );
 }
 
@@ -774,18 +919,67 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
 
 function EducationContent({
   section,
+  articleId,
   lang,
+  onNavigate,
 }: {
   section: EducationSectionId;
+  articleId: string | null;
   lang: EducationLang;
+  onNavigate: (target: EducationNavigateTarget) => void;
 }) {
   return (
-    <SectionFade sectionKey={`${section}-${lang}`}>
-      {section === "introduction" && <IntroductionSection lang={lang} />}
+    <SectionFade sectionKey={`${section}-${articleId ?? "default"}-${lang}`}>
+      {section === "introduction" && (
+        <ArticleSectionPanel
+          section="introduction"
+          articleId={articleId}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      )}
       {section === "rashis" && <RashisSection lang={lang} />}
-      {section === "planets" && <PlanetsSection lang={lang} />}
-      {section === "nakshatras" && <NakshatrasSection lang={lang} />}
-      {section === "aspects" && <AspectsSection lang={lang} />}
+      {section === "planets" && (
+        <PlanetsSection lang={lang} articleId={articleId} onNavigate={onNavigate} />
+      )}
+      {section === "nakshatras" && (
+        <NakshatrasSection lang={lang} articleId={articleId} onNavigate={onNavigate} />
+      )}
+      {section === "houses" && (
+        <ArticleSectionPanel
+          section="houses"
+          articleId={articleId}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      )}
+      {section === "aspects" && (
+        <AspectsSection lang={lang} articleId={articleId} onNavigate={onNavigate} />
+      )}
+      {section === "mahadashas" && (
+        <ArticleSectionPanel
+          section="mahadashas"
+          articleId={articleId}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      )}
+      {section === "transits" && (
+        <ArticleSectionPanel
+          section="transits"
+          articleId={articleId}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      )}
+      {section === "remedies" && (
+        <ArticleSectionPanel
+          section="remedies"
+          articleId={articleId}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      )}
       {section === "horoscope" && <HoroscopeSection lang={lang} />}
     </SectionFade>
   );
@@ -793,7 +987,22 @@ function EducationContent({
 
 function EducationHubInner({ embedded }: { embedded?: boolean }) {
   const [section, setSection] = useState<EducationSectionId>("introduction");
+  const [articleId, setArticleId] = useState<string | null>(
+    defaultArticleForSection("introduction")
+  );
   const [lang, setLang] = useState<EducationLang>("en");
+
+  const navigateTo = (target: EducationNavigateTarget) => {
+    setSection(target.section);
+    setArticleId(
+      target.articleId ?? defaultArticleForSection(target.section)
+    );
+  };
+
+  const selectSection = (next: EducationSectionId) => {
+    setSection(next);
+    setArticleId(defaultArticleForSection(next));
+  };
 
   const content = (
     <div className={`${embedded ? "" : "min-h-screen"} bg-shell-bg text-shell-warm`}>
@@ -826,7 +1035,7 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => setSection(item.id)}
+                    onClick={() => selectSection(item.id)}
                     className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-left text-sm whitespace-nowrap transition-all ${
                       active
                         ? "bg-shell-accent-soft text-shell-warm shadow-[inset_3px_0_0_0_var(--shell-accent)]"
@@ -843,7 +1052,12 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
 
           {/* Main content */}
           <main className="min-w-0 flex-1">
-            <EducationContent section={section} lang={lang} />
+            <EducationContent
+              section={section}
+              articleId={articleId}
+              lang={lang}
+              onNavigate={navigateTo}
+            />
           </main>
         </div>
       </div>

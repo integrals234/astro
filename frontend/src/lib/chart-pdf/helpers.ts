@@ -1,6 +1,7 @@
 import type { jsPDF } from "jspdf";
 import type { ChartData, Dasha, Planet, TransitPlanet } from "../chart-types";
 import type { PdfLabels } from "./i18n";
+import { applyPdfFont } from "./pdf-font";
 
 export const SIGN_TO_NUMBER: Record<string, number> = {
   Aries: 1,
@@ -142,6 +143,7 @@ function splitCellLines(
   maxWidth: number,
   fontSize: number,
 ): string[] {
+  applyPdfFont(doc, "normal");
   doc.setFontSize(fontSize);
   const lines = doc.splitTextToSize(text || "—", Math.max(20, maxWidth - 8));
   return lines.length > 0 ? lines : ["—"];
@@ -169,7 +171,7 @@ export function ensureSpace(doc: jsPDF, y: number, needed: number): number {
 }
 
 export function drawSectionTitle(doc: jsPDF, title: string, y: number) {
-  doc.setFont("helvetica", "bold");
+  applyPdfFont(doc, "bold");
   doc.setFontSize(11);
   doc.setTextColor(...PDF_COLORS.primary);
   doc.text(title.toUpperCase(), PAGE.margin, y);
@@ -195,7 +197,7 @@ function drawTableHeader(
   doc.setLineWidth(0.5);
   doc.rect(x0, y - 10, tableWidth, rowHeight + 2, "FD");
 
-  doc.setFont("helvetica", "bold");
+  applyPdfFont(doc, "bold");
   doc.setFontSize(fontSize);
   doc.setTextColor(...PDF_COLORS.muted);
 
@@ -260,7 +262,7 @@ export function drawTable(
     doc.setDrawColor(...PDF_COLORS.border);
     doc.line(x0, y + dynamicHeight - 11, x0 + tableWidth, y + dynamicHeight - 11);
 
-    doc.setFont("helvetica", "normal");
+    applyPdfFont(doc, "normal");
     doc.setFontSize(fontSize);
     doc.setTextColor(...PDF_COLORS.text);
 
@@ -351,7 +353,7 @@ export function drawNorthIndianChart(
   doc.setLineWidth(1);
   doc.roundedRect(x - 4, y - 18, size + 8, boxHeight, 6, 6, "FD");
 
-  doc.setFont("helvetica", "bold");
+  applyPdfFont(doc, "bold");
   doc.setFontSize(8.5);
   doc.setTextColor(...PDF_COLORS.primary);
   const titleLines = doc.splitTextToSize(title, size);
@@ -385,7 +387,7 @@ export function drawNorthIndianChart(
     const cy = y + center.y * size;
     const signNum = getSignForHouse(house);
 
-    doc.setFont("helvetica", "bold");
+    applyPdfFont(doc, "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...PDF_COLORS.gold);
     doc.text(String(signNum), cx, cy - 16, { align: "center" });
@@ -398,7 +400,7 @@ export function drawNorthIndianChart(
       lines.push(`${p.label}${deg}${p.retro ? "*" : ""}`);
     });
 
-    doc.setFont("helvetica", "bold");
+    applyPdfFont(doc, "bold");
     doc.setFontSize(6.5);
     doc.setTextColor(...PDF_COLORS.primary);
 

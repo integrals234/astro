@@ -349,7 +349,7 @@ function ChartWorkspaceInner({
     }
   };
 
-  const handleDownloadPdf = (pdfLang: 'en' | 'ja') => {
+  const handleDownloadPdf = async (pdfLang: 'en' | 'ja') => {
     if (!chartData || !isAuthLoaded) return;
     if (!isSignedIn) {
       const returnUrl = searchParams.toString()
@@ -358,13 +358,18 @@ function ChartWorkspaceInner({
       router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
       return;
     }
-    downloadChartPdf({
-      name: personName.trim() || 'Chart Report',
-      locationName: selectedLocationName,
-      formData,
-      chartData,
-      lang: pdfLang,
-    });
+    try {
+      await downloadChartPdf({
+        name: personName.trim() || 'Chart Report',
+        locationName: selectedLocationName,
+        formData,
+        chartData,
+        lang: pdfLang,
+      });
+    } catch (error) {
+      console.error('PDF download failed:', error);
+      alert('Could not generate the PDF. Please try again.');
+    }
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'natal' | 'transit') => {

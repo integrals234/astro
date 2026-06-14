@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import type { ChartData, ChartFormData } from "./chart-types";
+import { registerJapaneseFonts } from "./chart-pdf/font-loader";
 import {
   PAGE,
   PDF_COLORS,
@@ -27,6 +28,7 @@ import {
   translateSign,
   type PdfLanguage,
 } from "./chart-pdf/i18n";
+import { applyPdfFont, setActivePdfFont } from "./chart-pdf/pdf-font";
 
 interface PdfInput {
   name: string;
@@ -48,18 +50,18 @@ function drawPageHeader(
   doc.setFillColor(...PDF_COLORS.gold);
   doc.rect(0, 72, PAGE.width, 3, "F");
 
-  doc.setFont("helvetica", "bold");
+  applyPdfFont(doc, "bold");
   doc.setFontSize(langFontSize(labels, 18));
   doc.setTextColor(255, 255, 255);
   doc.text(labels.reportTitle, PAGE.margin, 32);
 
-  doc.setFont("helvetica", "normal");
+  applyPdfFont(doc, "normal");
   doc.setFontSize(10);
   doc.setTextColor(220, 220, 235);
   doc.text(name, PAGE.margin, 50);
   doc.text(subtitle, PAGE.margin, 62);
 
-  doc.setFont("helvetica", "normal");
+  applyPdfFont(doc, "normal");
   doc.setFontSize(8);
   doc.text(
     `${labels.generated} ${new Date().toLocaleString()}`,
@@ -84,7 +86,7 @@ function drawFooters(
     doc.setPage(page);
     doc.setDrawColor(...PDF_COLORS.border);
     doc.line(PAGE.margin, PAGE.footerY - 8, PAGE.width - PAGE.margin, PAGE.footerY - 8);
-    doc.setFont("helvetica", "normal");
+    applyPdfFont(doc, "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...PDF_COLORS.muted);
     doc.text(`${name} — ${labels.footer}`, PAGE.margin, PAGE.footerY);
@@ -97,7 +99,7 @@ function drawFooters(
   }
 }
 
-export function downloadChartPdf({
+export async function downloadChartPdf({
   name,
   locationName,
   formData,
@@ -106,6 +108,11 @@ export function downloadChartPdf({
 }: PdfInput) {
   const labels = getPdfLabels(lang);
   const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+  setActivePdfFont(lang);
+  if (lang === "ja") {
+    await registerJapaneseFonts(doc);
+  }
 
   const natalDate = `${formData.year}-${String(formData.month).padStart(2, "0")}-${String(formData.day).padStart(2, "0")}`;
   const natalTime = `${String(formData.hour).padStart(2, "0")}:${String(formData.minute).padStart(2, "0")}`;

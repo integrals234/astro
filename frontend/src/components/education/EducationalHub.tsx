@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -18,6 +18,8 @@ import {
   Clock,
   OrbitIcon,
   HeartHandshake,
+  ChevronDown,
+  ArrowUp,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
@@ -74,51 +76,281 @@ function educationTopicAnchor(section: EducationSectionId, id: string) {
   return `education-${section}-${id}`;
 }
 
-function TopicIndex({
-  tabs,
-  activeId,
-  onJump,
+function getScrollRoot(el: Element): Element | null {
+  let node = el.parentElement;
+  while (node) {
+    const { overflowY } = getComputedStyle(node);
+    if (/(auto|scroll|overlay)/.test(overflowY)) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return null;
+}
+
+function resolveScrollContainer(anchor: HTMLElement): HTMLElement | Window {
+  const marked = anchor.closest("[data-education-scroll-root]");
+  if (marked instanceof HTMLElement) {
+    return marked;
+  }
+  return window;
+}
+
+function getPinThreshold(
+  anchor: HTMLElement,
+  scrollContainer: HTMLElement | Window
+): number {
+  if (scrollContainer === window) {
+    return window.scrollY + anchor.getBoundingClientRect().top;
+  }
+
+  const container = scrollContainer as HTMLElement;
+  const containerRect = container.getBoundingClientRect();
+  const anchorRect = anchor.getBoundingClientRect();
+  return container.scrollTop + (anchorRect.top - containerRect.top);
+}
+
+function isPinnedAtThreshold(
+  threshold: number,
+  scrollContainer: HTMLElement | Window
+): boolean {
+  const scrollTop =
+    scrollContainer === window
+      ? window.scrollY
+      : (scrollContainer as HTMLElement).scrollTop;
+
+  return scrollTop > threshold + 2;
+}
+
+function BackToNavButton({
+  targetRef,
   lang,
+  onBeforeScroll,
+  watchKey,
+  label,
+  className = "",
 }: {
+  targetRef: React.RefObject<HTMLElement | null>;
+  lang: EducationLang;
+  onBeforeScroll?: () => void;
+  watchKey?: string;
+  label?: BilingualText;
+  className?: string;
+}) {
+  const [visible, setVisible] = useState(false);
+  const buttonLabel = label
+    ? t(label, lang)
+    : lang === "ja"
+      ? "トピック一覧へ戻る"
+      : "Back to topic list";
+
+  useEffect(() => {
+    const target = targetRef.current;
+    if (!target) return;
+
+    const root = getScrollRoot(target);
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(!entry.isIntersecting),
+      { root, threshold: 0, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [targetRef, watchKey]);
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.9 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+          onClick={() => {
+            onBeforeScroll?.();
+            requestAnimationFrame(() => {
+              targetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }}
+          aria-label={buttonLabel}
+          title={buttonLabel}
+          className={`fixed z-30 flex h-10 w-10 items-center justify-center rounded-full border border-shell-border/40 bg-shell-bg/70 text-shell-muted/90 shadow-[0_6px_24px_-10px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[color,background-color,border-color,opacity,transform] duration-200 hover:border-shell-accent/35 hover:bg-shell-accent-soft/70 hover:text-shell-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-accent/40 active:scale-95 bottom-5 right-5 supports-[padding:max(0px)]:bottom-[max(1.25rem,env(safe-area-inset-bottom))] supports-[padding:max(0px)]:right-[max(1.25rem,env(safe-area-inset-right))] md:bottom-8 md:right-8 ${className}`}
+        >
+          <ArrowUp size={17} strokeWidth={2.25} aria-hidden />
+        </motion.button>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+function TopicIndex(props: {
+  navRef: React.RefObject<HTMLElement | null>;
+  expanded: boolean;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   tabs: { id: string; label: BilingualText }[];
   activeId: string | null;
   onJump: (id: string) => void;
   lang: EducationLang;
 }) {
-  if (tabs.length <= 1) return null;
+  if (props.tabs.length <= 1) return null;
+  return <TopicIndexInner {...props} />;
+}
+
+function TopicIndexInner({
+  navRef,
+  expanded,
+  setExpanded,
+  tabs,
+  activeId,
+  onJump,
+  lang,
+}: {
+  navRef: React.RefObject<HTMLElement | null>;
+  expanded: boolean;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  tabs: { id: string; label: BilingualText }[];
+  activeId: string | null;
+  onJump: (id: string) => void;
+  lang: EducationLang;
+}) {
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const pinnedRef = useRef(false);
+  const [pinned, setPinned] = useState(false);
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+
+    const media = window.matchMedia("(min-width: 1024px)");
+    if (!media.matches) {
+      pinnedRef.current = false;
+      setPinned(false);
+      return;
+    }
+
+    const scrollContainer = resolveScrollContainer(anchor);
+    let pinThreshold = getPinThreshold(anchor, scrollContainer);
+    let rafId = 0;
+
+    const applyPinned = (nowPinned: boolean) => {
+      if (pinnedRef.current === nowPinned) return;
+      pinnedRef.current = nowPinned;
+      setPinned(nowPinned);
+      setExpanded(!nowPinned);
+    };
+
+    const updatePinned = () => {
+      applyPinned(isPinnedAtThreshold(pinThreshold, scrollContainer));
+    };
+
+    const remeasure = () => {
+      pinThreshold = getPinThreshold(anchor, scrollContainer);
+      updatePinned();
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updatePinned);
+    };
+
+    scrollContainer.addEventListener("scroll", onScroll, { passive: true });
+    if (scrollContainer !== window) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+    window.addEventListener("resize", remeasure, { passive: true });
+    remeasure();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      scrollContainer.removeEventListener("scroll", onScroll);
+      if (scrollContainer !== window) {
+        window.removeEventListener("scroll", onScroll);
+      }
+      window.removeEventListener("resize", remeasure);
+    };
+  }, [setExpanded, tabs.length]);
+
+  const handleToggle = () => {
+    setExpanded((open) => !open);
+  };
+
+  const handleJump = (id: string) => {
+    onJump(id);
+    setExpanded(false);
+  };
+
+  const topicLabel =
+    lang === "ja" ? "すべてのトピック" : "All topics — jump to read";
 
   return (
-    <nav
-      aria-label={lang === "ja" ? "トピック一覧" : "Topics in this section"}
-      className="sticky top-0 z-10 -mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-bg/95 px-3 py-3 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md"
-    >
-      <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
-        {lang === "ja" ? "すべてのトピック" : "All topics — jump to read"}
-      </p>
-      <div className="flex flex-wrap gap-1.5">
-        {tabs.map((tab, index) => {
-          const active = activeId === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => onJump(tab.id)}
-              aria-current={active ? "location" : undefined}
-              className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${
-                active
-                  ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
-                  : "text-shell-muted border border-shell-border/50 hover:text-shell-warm hover:bg-white/[0.04]"
-              }`}
-            >
-              <span className="mr-1.5 text-[10px] tabular-nums text-shell-accent/75">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              {t(tab.label, lang)}
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+    <>
+      <div
+        ref={anchorRef}
+        className="hidden lg:block h-px w-full shrink-0 pointer-events-none"
+        aria-hidden
+      />
+      <nav
+        ref={navRef}
+        aria-label={lang === "ja" ? "トピック一覧" : "Topics in this section"}
+        className={`-mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-sidebar/40 px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:bg-shell-bg/95 lg:backdrop-blur-md ${
+          pinned
+            ? "lg:border-shell-accent/25 lg:py-2.5 lg:shadow-[0_10px_30px_-14px_rgba(0,0,0,0.55)]"
+            : "lg:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)]"
+        }`}
+      >
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-3 text-left"
+          onClick={handleToggle}
+          aria-expanded={expanded}
+          aria-controls="topic-index-list"
+        >
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
+            {topicLabel}
+            <span className="ml-1.5 normal-case tracking-normal text-shell-muted">
+              ({tabs.length})
+            </span>
+          </span>
+          <ChevronDown
+            size={16}
+            className={`shrink-0 text-shell-muted transition-transform duration-200 ${
+              expanded ? "rotate-180" : ""
+            }`}
+            aria-hidden
+          />
+        </button>
+
+        {expanded ? (
+          <div
+            id="topic-index-list"
+            className="mt-3 flex max-h-[min(45vh,20rem)] flex-wrap gap-1.5 overflow-y-auto overscroll-contain pr-1 lg:mt-2.5 lg:max-h-[min(50vh,28rem)]"
+          >
+            {tabs.map((tab, index) => {
+              const active = activeId === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => handleJump(tab.id)}
+                  aria-current={active ? "location" : undefined}
+                  className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${
+                    active
+                      ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
+                      : "text-shell-muted border border-shell-border/50 hover:text-shell-warm hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <span className="mr-1.5 text-[10px] tabular-nums text-shell-accent/75">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {t(tab.label, lang)}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+      </nav>
+    </>
   );
 }
 
@@ -137,6 +369,10 @@ function ArticleSectionPanel({
   visualTab?: { id: string; label: BilingualText; content: React.ReactNode };
   visualLabel?: BilingualText;
 }) {
+  const navRef = useRef<HTMLElement>(null);
+  const [topicExpanded, setTopicExpanded] = useState(true);
+  const skipInitialScrollRef = useRef(true);
+
   const articles = getArticlesForSection(section);
   const tabs: { id: string; label: BilingualText; content: React.ReactNode }[] = [];
 
@@ -170,7 +406,15 @@ function ArticleSectionPanel({
   };
 
   useEffect(() => {
+    skipInitialScrollRef.current = true;
+  }, [section]);
+
+  useEffect(() => {
     if (!articleId || tabs.length <= 1) return;
+    if (skipInitialScrollRef.current) {
+      skipInitialScrollRef.current = false;
+      return;
+    }
     document
       .getElementById(educationTopicAnchor(section, articleId))
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -187,17 +431,29 @@ function ArticleSectionPanel({
   return (
     <div>
       <TopicIndex
+        navRef={navRef}
+        expanded={topicExpanded}
+        setExpanded={setTopicExpanded}
         tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
         activeId={activeId}
         onJump={jumpToTopic}
         lang={lang}
       />
+      {tabs.length > 1 ? (
+        <BackToNavButton
+          targetRef={navRef}
+          lang={lang}
+          watchKey={section}
+          className="lg:hidden"
+          onBeforeScroll={() => setTopicExpanded(true)}
+        />
+      ) : null}
       <div className="space-y-16">
         {tabs.map((tab, index) => (
           <section
             key={tab.id}
             id={educationTopicAnchor(section, tab.id)}
-            className="scroll-mt-28"
+            className="scroll-mt-4 lg:scroll-mt-28"
           >
             {index > 0 ? (
               <div
@@ -798,6 +1054,7 @@ function AspectsSection({
 const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearly"];
 
 function HoroscopeSection({ lang }: { lang: EducationLang }) {
+  const navRef = useRef<HTMLElement>(null);
   const { now, periods } = useHoroscopePeriods();
   const [periodType, setPeriodType] = useState<HoroscopePeriodType>("weekly");
 
@@ -867,6 +1124,7 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
       </div>
 
       <nav
+        ref={navRef}
         aria-label={lang === "ja" ? "全ラーシ" : "All signs"}
         className="rounded-2xl border border-shell-border/70 bg-shell-sidebar/30 px-3 py-3"
       >
@@ -886,6 +1144,13 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
           ))}
         </div>
       </nav>
+
+      <BackToNavButton
+        targetRef={navRef}
+        lang={lang}
+        watchKey={periodType}
+        label={{ en: "Back to sign list", ja: "ラーシ一覧へ戻る" }}
+      />
 
       <div className="space-y-8">
         {horoscopeSigns.map((sign, index) => {

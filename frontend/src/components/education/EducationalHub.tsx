@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -70,41 +70,55 @@ function defaultArticleForSection(section: EducationSectionId): string | null {
   return articles[0]?.id ?? null;
 }
 
-function SubTabBar({
+function educationTopicAnchor(section: EducationSectionId, id: string) {
+  return `education-${section}-${id}`;
+}
+
+function TopicIndex({
   tabs,
   activeId,
-  onSelect,
+  onJump,
   lang,
 }: {
   tabs: { id: string; label: BilingualText }[];
   activeId: string | null;
-  onSelect: (id: string) => void;
+  onJump: (id: string) => void;
   lang: EducationLang;
 }) {
   if (tabs.length <= 1) return null;
 
   return (
-    <div className="mb-6 -mx-1 overflow-x-auto pb-1">
-      <div className="flex gap-1.5 min-w-max px-1">
-        {tabs.map((tab) => {
+    <nav
+      aria-label={lang === "ja" ? "トピック一覧" : "Topics in this section"}
+      className="sticky top-0 z-10 -mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-bg/95 px-3 py-3 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md"
+    >
+      <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
+        {lang === "ja" ? "すべてのトピック" : "All topics — jump to read"}
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {tabs.map((tab, index) => {
           const active = activeId === tab.id;
           return (
             <button
               key={tab.id}
               type="button"
-              onClick={() => onSelect(tab.id)}
-              className={`rounded-lg px-3.5 py-2 text-xs font-medium whitespace-nowrap transition-all ${
+              onClick={() => onJump(tab.id)}
+              aria-current={active ? "location" : undefined}
+              className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${
                 active
                   ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
-                  : "text-shell-muted border border-transparent hover:text-shell-warm hover:bg-white/[0.04]"
+                  : "text-shell-muted border border-shell-border/50 hover:text-shell-warm hover:bg-white/[0.04]"
               }`}
             >
+              <span className="mr-1.5 text-[10px] tabular-nums text-shell-accent/75">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               {t(tab.label, lang)}
             </button>
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }
 
@@ -145,25 +159,56 @@ function ArticleSectionPanel({
   }
 
   const activeId = articleId ?? tabs[0]?.id ?? null;
-  const active = tabs.find((tab) => tab.id === activeId) ?? tabs[0];
+
+  const jumpToTopic = (id: string) => {
+    onNavigate({ section, articleId: id });
+    requestAnimationFrame(() => {
+      document
+        .getElementById(educationTopicAnchor(section, id))
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  useEffect(() => {
+    if (!articleId || tabs.length <= 1) return;
+    document
+      .getElementById(educationTopicAnchor(section, articleId))
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [articleId, section, tabs.length]);
+
+  if (tabs.length === 0) {
+    return (
+      <p className="text-sm text-shell-muted">
+        {lang === "ja" ? "コンテンツがありません。" : "No content available."}
+      </p>
+    );
+  }
 
   return (
     <div>
-      <SubTabBar
+      <TopicIndex
         tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label }))}
         activeId={activeId}
-        onSelect={(id) => onNavigate({ section, articleId: id })}
+        onJump={jumpToTopic}
         lang={lang}
       />
-      {active ? (
-        <SectionFade sectionKey={`${section}-${active.id}-${lang}`}>
-          {active.content}
-        </SectionFade>
-      ) : (
-        <p className="text-sm text-shell-muted">
-          {lang === "ja" ? "コンテンツがありません。" : "No content available."}
-        </p>
-      )}
+      <div className="space-y-16">
+        {tabs.map((tab, index) => (
+          <section
+            key={tab.id}
+            id={educationTopicAnchor(section, tab.id)}
+            className="scroll-mt-28"
+          >
+            {index > 0 ? (
+              <div
+                className="mb-12 border-t border-dashed border-shell-border/60 pt-12"
+                aria-hidden
+              />
+            ) : null}
+            {tab.content}
+          </section>
+        ))}
+      </div>
     </div>
   );
 }
@@ -755,10 +800,8 @@ const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearl
 function HoroscopeSection({ lang }: { lang: EducationLang }) {
   const { now, periods } = useHoroscopePeriods();
   const [periodType, setPeriodType] = useState<HoroscopePeriodType>("weekly");
-  const [selectedSign, setSelectedSign] = useState<HoroscopeSignId>("aries");
 
   const activePeriod = getPeriodForType(periods, periodType);
-  const selectedMeta = horoscopeSigns.find((sign) => sign.id === selectedSign) ?? horoscopeSigns[0];
 
   const readingsBySign = useMemo(() => {
     return Object.fromEntries(
@@ -769,14 +812,18 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
     ) as Record<HoroscopeSignId, ReturnType<typeof generateHoroscopeReading>>;
   }, [activePeriod.key, activePeriod.type]);
 
-  const reading = readingsBySign[selectedSign];
-
   const updatedLabel = now.toLocaleString(lang === "ja" ? "ja-JP" : "en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   });
+
+  const jumpToSign = (signId: HoroscopeSignId) => {
+    document
+      .getElementById(`horoscope-${signId}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="space-y-8">
@@ -819,99 +866,90 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
         })}
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-        {horoscopeSigns.map((sign) => {
-          const active = selectedSign === sign.id;
-          return (
+      <nav
+        aria-label={lang === "ja" ? "全ラーシ" : "All signs"}
+        className="rounded-2xl border border-shell-border/70 bg-shell-sidebar/30 px-3 py-3"
+      >
+        <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
+          {lang === "ja" ? "12ラーシすべて" : "All twelve signs — jump to read"}
+        </p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+          {horoscopeSigns.map((sign) => (
             <button
               key={sign.id}
               type="button"
-              onClick={() => setSelectedSign(sign.id)}
-              className={`rounded-xl border px-2 py-2 text-center transition-all ${
-                active
-                  ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
-                  : "border-shell-border/60 bg-shell-elevated/30 text-shell-muted hover:text-shell-warm"
-              }`}
+              onClick={() => jumpToSign(sign.id)}
+              className="rounded-xl border border-shell-border/60 bg-shell-elevated/30 px-2 py-2 text-center transition-all hover:border-shell-accent/40 hover:bg-shell-accent-soft/40 hover:text-shell-warm text-shell-muted"
             >
               <span className="block text-[11px] font-medium leading-tight">{t(sign.name, lang)}</span>
             </button>
+          ))}
+        </div>
+      </nav>
+
+      <div className="space-y-8">
+        {horoscopeSigns.map((sign, index) => {
+          const reading = readingsBySign[sign.id];
+          return (
+            <article
+              key={sign.id}
+              id={`horoscope-${sign.id}`}
+              className="scroll-mt-28 rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
+            >
+              {index > 0 ? (
+                <div className="border-t border-dashed border-shell-border/50" aria-hidden />
+              ) : null}
+              <div className="flex flex-col md:flex-row">
+                <div className="w-full md:w-52 lg:w-60 shrink-0 md:border-r border-shell-border/60 p-4 md:p-5 flex flex-col items-center text-center gap-3">
+                  <div className="w-full max-w-[200px]">
+                    <InfographicImage
+                      src={sign.image}
+                      alt={t(sign.name, lang)}
+                      variant="transparent"
+                      className="rounded-xl"
+                      sizes="200px"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-2xl text-shell-warm">{t(sign.name, lang)}</h3>
+                    <p className="text-sm text-shell-accent">{t(sign.sanskrit, lang)}</p>
+                    <p className="text-xs text-shell-muted mt-1">
+                      {t(sign.element, lang)} · {t(sign.ruler, lang)}
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-shell-accent/30 bg-shell-accent-soft px-3 py-1 text-[11px] text-shell-warm">
+                    {t(horoscopeSectionLabels.mood, lang)}: {t(reading.mood, lang)}
+                  </div>
+                </div>
+
+                <div className="flex-1 min-w-0 p-6 md:p-8 space-y-5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-2">
+                      {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
+                    </p>
+                    <p className="text-sm leading-relaxed text-shell-muted">{t(reading.overview, lang)}</p>
+                  </div>
+
+                  {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
+                    .filter((key) => key !== "mood")
+                    .map((key) => (
+                      <div
+                        key={key}
+                        className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
+                      >
+                        <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
+                          {t(horoscopeSectionLabels[key], lang)}
+                        </p>
+                        <p className="text-sm text-shell-warm/90 leading-relaxed">
+                          {t(reading[key], lang)}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </article>
           );
         })}
-      </div>
-
-      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden">
-        <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-52 lg:w-60 shrink-0 md:border-r border-shell-border/60 p-4 md:p-5 flex flex-col items-center text-center gap-3">
-            <div className="w-full max-w-[200px]">
-              <InfographicImage
-                src={selectedMeta.image}
-                alt={t(selectedMeta.name, lang)}
-                variant="transparent"
-                className="rounded-xl"
-                sizes="200px"
-              />
-            </div>
-            <div>
-              <h3 className="font-serif text-2xl text-shell-warm">{t(selectedMeta.name, lang)}</h3>
-              <p className="text-sm text-shell-accent">{t(selectedMeta.sanskrit, lang)}</p>
-              <p className="text-xs text-shell-muted mt-1">
-                {t(selectedMeta.element, lang)} · {t(selectedMeta.ruler, lang)}
-              </p>
-            </div>
-            <div className="rounded-full border border-shell-accent/30 bg-shell-accent-soft px-3 py-1 text-[11px] text-shell-warm">
-              {t(horoscopeSectionLabels.mood, lang)}: {t(reading.mood, lang)}
-            </div>
-          </div>
-
-          <div className="flex-1 min-w-0 p-6 md:p-8 space-y-5">
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-2">
-                {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
-              </p>
-              <p className="text-sm leading-relaxed text-shell-muted">{t(reading.overview, lang)}</p>
-            </div>
-
-            {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
-              .filter((key) => key !== "mood")
-              .map((key) => (
-                <div
-                  key={key}
-                  className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
-                >
-                  <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
-                    {t(horoscopeSectionLabels[key], lang)}
-                  </p>
-                  <p className="text-sm text-shell-warm/90 leading-relaxed">
-                    {t(reading[key], lang)}
-                  </p>
-                </div>
-              ))}
-          </div>
-        </div>
-      </article>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {horoscopeSigns
-          .filter((sign) => sign.id !== selectedSign)
-          .map((sign) => {
-            const preview = readingsBySign[sign.id];
-            return (
-              <button
-                key={sign.id}
-                type="button"
-                onClick={() => setSelectedSign(sign.id)}
-                className="rounded-2xl border border-shell-border bg-shell-elevated/30 p-4 text-left hover:border-shell-accent/30 transition-colors"
-              >
-                <div className="flex items-baseline justify-between gap-2 mb-2">
-                  <h4 className="font-serif text-lg text-shell-warm">{t(sign.name, lang)}</h4>
-                  <span className="text-[10px] text-shell-muted">{t(preview.mood, lang)}</span>
-                </div>
-                <p className="text-xs leading-relaxed text-shell-muted line-clamp-3">
-                  {t(preview.overview, lang)}
-                </p>
-              </button>
-            );
-          })}
       </div>
     </div>
   );
@@ -929,7 +967,7 @@ function EducationContent({
   onNavigate: (target: EducationNavigateTarget) => void;
 }) {
   return (
-    <SectionFade sectionKey={`${section}-${articleId ?? "default"}-${lang}`}>
+    <SectionFade sectionKey={`${section}-${lang}`}>
       {section === "introduction" && (
         <ArticleSectionPanel
           section="introduction"
@@ -1027,7 +1065,7 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Side navigation */}
           <nav className="lg:w-56 shrink-0">
-            <div className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 lg:sticky lg:top-4">
+            <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-1 lg:sticky lg:top-4">
               {educationSections.map((item) => {
                 const Icon = sectionIcons[item.id];
                 const active = section === item.id;
@@ -1036,14 +1074,14 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
                     key={item.id}
                     type="button"
                     onClick={() => selectSection(item.id)}
-                    className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-left text-sm whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs sm:text-sm transition-all lg:gap-2.5 lg:px-4 lg:py-3 ${
                       active
                         ? "bg-shell-accent-soft text-shell-warm shadow-[inset_3px_0_0_0_var(--shell-accent)]"
                         : "text-shell-muted hover:bg-white/[0.04] hover:text-shell-warm"
                     }`}
                   >
-                    <Icon size={16} className={active ? "text-shell-accent" : ""} />
-                    {item.label[lang]}
+                    <Icon size={16} className={`shrink-0 ${active ? "text-shell-accent" : ""}`} />
+                    <span className="min-w-0 leading-snug">{item.label[lang]}</span>
                   </button>
                 );
               })}

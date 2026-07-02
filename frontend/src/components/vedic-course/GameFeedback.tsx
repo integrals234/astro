@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PartyPopper, XCircle } from "lucide-react";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
+import { FormattedText } from "@/lib/format-inline-text";
 
 interface GameFeedbackProps {
   show: boolean;
@@ -52,7 +53,9 @@ export default function GameFeedback({
                     (isCorrect ? uiString("correct", lang) : uiString("incorrect", lang))}
                 </p>
                 {explanation && (
-                  <p className="mt-1.5 text-sm text-shell-muted leading-relaxed">{explanation}</p>
+                  <p className="mt-1.5 text-sm text-shell-muted leading-relaxed">
+                    <FormattedText text={explanation} />
+                  </p>
                 )}
               </div>
             </div>

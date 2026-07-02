@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { saveVedicCourseProgress } from "@/app/actions/vedic-course";
-import { ALL_STEP_IDS, VEDIC_COURSE_CHAPTERS } from "@/lib/vedic-course/content";
+import { ALL_STEP_IDS, VEDIC_COURSE_CHAPTERS, resolveChapterIndex } from "@/lib/vedic-course/content";
 import type { CourseLanguage, CourseProgress } from "@/lib/vedic-course/types";
 import { isInteractiveStep } from "@/lib/vedic-course/step-utils";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
@@ -24,7 +24,9 @@ interface VedicCourseModuleProps {
 
 export default function VedicCourseModule({ initialProgress }: VedicCourseModuleProps) {
   const [lang, setLang] = useState<CourseLanguage>("ja");
-  const [currentChapter, setCurrentChapter] = useState(initialProgress.currentChapter);
+  const [currentChapter, setCurrentChapter] = useState(() =>
+    resolveChapterIndex(initialProgress.completedSlides, initialProgress.currentChapter),
+  );
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSlides, setCompletedSlides] = useState<string[]>(
     initialProgress.completedSlides,

@@ -5,6 +5,7 @@ import { CheckCircle2, Link2 } from "lucide-react";
 import type { CourseLanguage, MatchGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import GameShell from "./GameShell";
 import GameFeedback from "./GameFeedback";
@@ -101,7 +102,9 @@ export default function MatchGameView({ game, lang, onComplete }: MatchGameProps
                 }`}
               >
                 <Icon size={16} className="shrink-0 text-shell-accent" />
-                <span className="flex-1">{t(pair.left, lang)}</span>
+                <span className="flex-1">
+                  <FormattedText text={t(pair.left, lang)} />
+                </span>
                 {isMatched && <CheckCircle2 size={16} className="text-emerald-300" />}
               </button>
             );
@@ -133,7 +136,9 @@ export default function MatchGameView({ game, lang, onComplete }: MatchGameProps
                 }`}
               >
                 <Link2 size={14} className="shrink-0 opacity-50" />
-                <span>{t(item.text, lang)}</span>
+                <span>
+                  <FormattedText text={t(item.text, lang)} />
+                </span>
               </button>
             );
           })}

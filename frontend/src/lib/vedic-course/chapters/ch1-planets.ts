@@ -17,12 +17,12 @@ export const chapter1Planets: CourseChapter = {
       icon: "sparkles",
       title: { en: "Welcome to Vedic Astrology", ja: "インド占星術へようこそ" },
       body: {
-        en: "Jyotish (ज्योतिष) means \"science of light.\" For thousands of years, Indian astrologers have used the sky as a mirror of karma — not fortune-telling, but a map of tendencies you can work with.",
-        ja: "ジョーティシュ（ज्योतिष）は「光の科学」の意味です。何千年もの間、インドの占星術師は空をカルマの鏡として使ってきました — 占いではなく、向き合える傾向の地図です。",
+        en: "Jyotish (ज्योतिष) means \"science of light.\" For over 5,000 years — cognized by Maharishi Parashara — it has illuminated returning karmas: both predictive (when) and preventive (how to soften challenges).",
+        ja: "ジョーティシュ（ज्योतिष）は「光の科学」の意味です。5000年以上 — マハーリシ・パーラシャラが認知 — 返ってくるカルマを照らしてきました：予測（いつ）も予防（困難を和らげる方法）も。",
       },
       highlight: {
-        en: "This course gives you a beginner's lens — enough to read your own chart superficially.",
-        ja: "このコースは初心者向けのレンズ — 自分のチャートをざっくり読むのに十分です。",
+        en: "22 chapters + 112+ games — Grahas, Yogakaraka, dignity, dashas, and Drishti mastery.",
+        ja: "22章＋112以上のゲーム — グラハ・ヨーガカーラカ・品位・ダシャー・ドリシュティマスター。",
       },
     },
     {

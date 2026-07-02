@@ -1,8 +1,10 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import { FormattedText } from "@/lib/format-inline-text";
 import {
   getArticleById,
+  uiText,
   type EducationLang,
   type EducationNavigateTarget,
   type EducationSectionId,
@@ -34,7 +36,7 @@ function ArticleTable({
                 key={i}
                 className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.18em] text-shell-accent"
               >
-                {t(header, lang)}
+                <FormattedText text={t(header, lang)} />
               </th>
             ))}
           </tr>
@@ -54,7 +56,7 @@ function ArticleTable({
                       : "text-shell-muted"
                   }`}
                 >
-                  {t(cell, lang)}
+                  <FormattedText text={t(cell, lang)} />
                 </td>
               ))}
             </tr>
@@ -82,13 +84,13 @@ function ArticleBlock({
     if (block.level === 2) {
       return (
         <h3 className="font-serif text-xl md:text-2xl text-shell-warm tracking-tight mt-8 mb-4 first:mt-0">
-          {t(block.text, lang)}
+          <FormattedText text={t(block.text, lang)} />
         </h3>
       );
     }
     return (
       <h4 className="font-serif text-lg text-shell-warm/95 mt-6 mb-3">
-        {t(block.text, lang)}
+        <FormattedText text={t(block.text, lang)} />
       </h4>
     );
   }
@@ -97,14 +99,14 @@ function ArticleBlock({
   if (text.startsWith("Q. ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-warm font-medium mt-5 mb-1">
-        {text}
+        <FormattedText text={text} />
       </p>
     );
   }
   if (text.startsWith("A. ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-muted mb-4 pl-3 border-l-2 border-shell-accent/30">
-        {text}
+        <FormattedText text={text} />
       </p>
     );
   }
@@ -112,14 +114,14 @@ function ArticleBlock({
   if (text.startsWith("• ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-warm/90 mb-2 pl-4 before:content-['·'] before:absolute before:-ml-4 before:text-shell-accent relative">
-        {text.slice(2)}
+        <FormattedText text={text.slice(2)} />
       </p>
     );
   }
 
   return (
     <p className="text-sm leading-relaxed text-shell-muted mb-4 last:mb-0">
-      {text}
+      <FormattedText text={text} />
     </p>
   );
 }
@@ -142,7 +144,7 @@ export function RelatedWisdom({
   return (
     <aside className="mt-10 rounded-2xl border border-shell-border/80 bg-shell-sidebar/40 p-5 md:p-6">
       <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-4">
-        {lang === "ja" ? "関連する智慧" : "Related Wisdom"}
+        {uiText("relatedWisdom", lang)}
       </p>
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {related.map((rel) => (
@@ -184,10 +186,10 @@ export default function WisdomArticleView({
     <article className="max-w-3xl">
       <header className="mb-8">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {lang === "ja" ? "ヴェーダの智慧" : "Vedic Wisdom"}
+          {uiText("vedicWisdom", lang)}
         </p>
         <h2 className="font-serif text-3xl md:text-4xl text-shell-warm tracking-tight leading-tight">
-          {t(article.title, lang)}
+          <FormattedText text={t(article.title, lang)} />
         </h2>
       </header>
 

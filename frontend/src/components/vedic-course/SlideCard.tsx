@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { FormattedText } from "@/lib/format-inline-text";
 import type { CourseLanguage, CourseSlide } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
@@ -34,10 +35,10 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
       </div>
 
       <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
-        {t(slide.title, lang)}
+        <FormattedText text={t(slide.title, lang)} />
       </h3>
       <p className="mt-5 text-sm md:text-base text-shell-muted leading-relaxed max-w-2xl">
-        {t(slide.body, lang)}
+        <FormattedText text={t(slide.body, lang)} />
       </p>
 
       {slide.bullets && slide.bullets.length > 0 && (
@@ -48,7 +49,7 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
               className="flex gap-3 text-sm text-shell-muted leading-relaxed"
             >
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-shell-accent" />
-              {t(bullet, lang)}
+              <FormattedText text={t(bullet, lang)} />
             </li>
           ))}
         </ul>
@@ -57,7 +58,7 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
       {slide.highlight && (
         <div className="mt-6 rounded-2xl border border-shell-accent/20 bg-shell-accent-soft/60 px-5 py-4">
           <p className="text-sm text-shell-warm/90 leading-relaxed">
-            {t(slide.highlight, lang)}
+            <FormattedText text={t(slide.highlight, lang)} />
           </p>
         </div>
       )}

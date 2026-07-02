@@ -24,6 +24,7 @@ import {
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
 import WisdomArticleView from "@/components/education/WisdomArticleView";
+import { FormattedText } from "@/lib/format-inline-text";
 import {
   educationSections,
   rashisIntro,
@@ -52,6 +53,9 @@ import {
   type RashiEntry,
   type HoroscopePeriodType,
   type HoroscopeSignId,
+  uiText,
+  useEducationLang,
+  educationUi,
 } from "@/lib/education";
 
 const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
@@ -122,6 +126,12 @@ function isPinnedAtThreshold(
   return scrollTop > threshold + 2;
 }
 
+function getScrollTop(scrollContainer: HTMLElement | Window): number {
+  return scrollContainer === window
+    ? window.scrollY
+    : (scrollContainer as HTMLElement).scrollTop;
+}
+
 function BackToNavButton({
   targetRef,
   lang,
@@ -140,9 +150,7 @@ function BackToNavButton({
   const [visible, setVisible] = useState(false);
   const buttonLabel = label
     ? t(label, lang)
-    : lang === "ja"
-      ? "トピック一覧へ戻る"
-      : "Back to topic list";
+    : uiText("backToTopicList", lang);
 
   useEffect(() => {
     const target = targetRef.current;
@@ -215,16 +223,17 @@ function TopicIndexInner({
   lang: EducationLang;
 }) {
   const anchorRef = useRef<HTMLDivElement | null>(null);
-  const pinnedRef = useRef(false);
+  const pinnedRef = useRef<boolean | null>(null);
   const [pinned, setPinned] = useState(false);
 
   useLayoutEffect(() => {
     const anchor = anchorRef.current;
     if (!anchor) return;
 
+    pinnedRef.current = null;
+
     const media = window.matchMedia("(min-width: 1024px)");
     if (!media.matches) {
-      pinnedRef.current = false;
       setPinned(false);
       return;
     }
@@ -241,7 +250,18 @@ function TopicIndexInner({
     };
 
     const updatePinned = () => {
-      applyPinned(isPinnedAtThreshold(pinThreshold, scrollContainer));
+      const nowPinned = isPinnedAtThreshold(pinThreshold, scrollContainer);
+
+      if (pinnedRef.current === null) {
+        pinnedRef.current = nowPinned;
+        setPinned(nowPinned);
+        if (getScrollTop(scrollContainer) > 2 && nowPinned) {
+          setExpanded(false);
+        }
+        return;
+      }
+
+      applyPinned(nowPinned);
     };
 
     const remeasure = () => {
@@ -281,7 +301,7 @@ function TopicIndexInner({
   };
 
   const topicLabel =
-    lang === "ja" ? "すべてのトピック" : "All topics — jump to read";
+    uiText("allTopicsJump", lang);
 
   return (
     <>
@@ -292,12 +312,11 @@ function TopicIndexInner({
       />
       <nav
         ref={navRef}
-        aria-label={lang === "ja" ? "トピック一覧" : "Topics in this section"}
-        className={`-mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-sidebar/40 px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:bg-shell-bg/95 lg:backdrop-blur-md ${
-          pinned
+        aria-label={uiText("topicsInSection", lang)}
+        className={`-mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-sidebar/40 px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:bg-shell-bg/95 lg:backdrop-blur-md ${pinned
             ? "lg:border-shell-accent/25 lg:py-2.5 lg:shadow-[0_10px_30px_-14px_rgba(0,0,0,0.55)]"
             : "lg:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)]"
-        }`}
+          }`}
       >
         <button
           type="button"
@@ -314,9 +333,8 @@ function TopicIndexInner({
           </span>
           <ChevronDown
             size={16}
-            className={`shrink-0 text-shell-muted transition-transform duration-200 ${
-              expanded ? "rotate-180" : ""
-            }`}
+            className={`shrink-0 text-shell-muted transition-transform duration-200 ${expanded ? "rotate-180" : ""
+              }`}
             aria-hidden
           />
         </button>
@@ -334,11 +352,10 @@ function TopicIndexInner({
                   type="button"
                   onClick={() => handleJump(tab.id)}
                   aria-current={active ? "location" : undefined}
-                  className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${
-                    active
+                  className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${active
                       ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
                       : "text-shell-muted border border-shell-border/50 hover:text-shell-warm hover:bg-white/[0.04]"
-                  }`}
+                    }`}
                 >
                   <span className="mr-1.5 text-[10px] tabular-nums text-shell-accent/75">
                     {String(index + 1).padStart(2, "0")}
@@ -361,6 +378,7 @@ function ArticleSectionPanel({
   onNavigate,
   visualTab,
   visualLabel,
+  singleArticleMode = false,
 }: {
   section: EducationSectionId;
   articleId: string | null;
@@ -368,6 +386,8 @@ function ArticleSectionPanel({
   onNavigate: (target: EducationNavigateTarget) => void;
   visualTab?: { id: string; label: BilingualText; content: React.ReactNode };
   visualLabel?: BilingualText;
+  /** When true, only the selected topic is shown (one page at a time). */
+  singleArticleMode?: boolean;
 }) {
   const navRef = useRef<HTMLElement>(null);
   const [topicExpanded, setTopicExpanded] = useState(true);
@@ -395,13 +415,18 @@ function ArticleSectionPanel({
   }
 
   const activeId = articleId ?? tabs[0]?.id ?? null;
+  const activeTab = tabs.find((tab) => tab.id === activeId) ?? tabs[0] ?? null;
 
   const jumpToTopic = (id: string) => {
     onNavigate({ section, articleId: id });
     requestAnimationFrame(() => {
-      document
-        .getElementById(educationTopicAnchor(section, id))
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (singleArticleMode) {
+        navRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        document
+          .getElementById(educationTopicAnchor(section, id))
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
   };
 
@@ -415,15 +440,19 @@ function ArticleSectionPanel({
       skipInitialScrollRef.current = false;
       return;
     }
+    if (singleArticleMode) {
+      navRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     document
       .getElementById(educationTopicAnchor(section, articleId))
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [articleId, section, tabs.length]);
+  }, [articleId, section, tabs.length, singleArticleMode]);
 
   if (tabs.length === 0) {
     return (
       <p className="text-sm text-shell-muted">
-        {lang === "ja" ? "コンテンツがありません。" : "No content available."}
+        {uiText("noContent", lang)}
       </p>
     );
   }
@@ -443,34 +472,56 @@ function ArticleSectionPanel({
         <BackToNavButton
           targetRef={navRef}
           lang={lang}
-          watchKey={section}
+          watchKey={singleArticleMode ? `${section}-${activeId}` : section}
           className="lg:hidden"
           onBeforeScroll={() => setTopicExpanded(true)}
         />
       ) : null}
-      <div className="space-y-16">
-        {tabs.map((tab, index) => (
-          <section
-            key={tab.id}
-            id={educationTopicAnchor(section, tab.id)}
-            className="scroll-mt-4 lg:scroll-mt-28"
-          >
-            {index > 0 ? (
-              <div
-                className="mb-12 border-t border-dashed border-shell-border/60 pt-12"
-                aria-hidden
-              />
-            ) : null}
-            {tab.content}
-          </section>
-        ))}
-      </div>
+      {singleArticleMode ? (
+        activeTab ? (
+          <AnimatePresence mode="wait">
+            <motion.section
+              key={activeTab.id}
+              id={educationTopicAnchor(section, activeTab.id)}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="scroll-mt-4 lg:scroll-mt-28"
+            >
+              {activeTab.content}
+            </motion.section>
+          </AnimatePresence>
+        ) : null
+      ) : (
+        <div className="space-y-16">
+          {tabs.map((tab, index) => (
+            <section
+              key={tab.id}
+              id={educationTopicAnchor(section, tab.id)}
+              className="scroll-mt-4 lg:scroll-mt-28"
+            >
+              {index > 0 ? (
+                <div
+                  className="mb-12 border-t border-dashed border-shell-border/60 pt-12"
+                  aria-hidden
+                />
+              ) : null}
+              {tab.content}
+            </section>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
+}
+
+function formatted(text: BilingualText, lang: EducationLang) {
+  return <FormattedText text={t(text, lang)} />;
 }
 
 /** Infographic display — borderless crops black edges; transparent omits fill for PNG alpha. */
@@ -559,7 +610,7 @@ function PublicHeader({ lang }: { lang: EducationLang }) {
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
           <SiteBrand size="sm" className="shrink-0" />
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
-            {lang === "ja" ? "ホーム" : "Home"}
+            {uiText("home", lang)}
           </p>
         </div>
         <nav className="flex shrink-0 items-center gap-2">
@@ -581,27 +632,21 @@ function PublicHeaderActions({
     <>
       <Link
         href="/chart"
-        className={`inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent ${
-          compact ? "px-2.5 py-2 text-[11px]" : "px-3 py-2 text-xs"
-        }`}
+        className={`inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent ${compact ? "px-2.5 py-2 text-[11px]" : "px-3 py-2 text-xs"
+          }`}
       >
         <Sparkles size={14} />
         {compact
-          ? lang === "ja"
-            ? "チャート"
-            : "Chart"
-          : lang === "ja"
-            ? "チャート作成"
-            : "Generate Chart"}
+          ? uiText("chart", lang)
+          : uiText("generateChart", lang)}
       </Link>
       <SignedOut>
         <Link
           href="/sign-in"
-          className={`font-medium text-shell-muted transition-colors hover:text-shell-warm ${
-            compact ? "text-[11px]" : "text-xs"
-          }`}
+          className={`font-medium text-shell-muted transition-colors hover:text-shell-warm ${compact ? "text-[11px]" : "text-xs"
+            }`}
         >
-          {lang === "ja" ? "ログイン" : "Sign In"}
+          {uiText("signIn", lang)}
         </Link>
       </SignedOut>
       <SignedIn>
@@ -625,10 +670,10 @@ function RashisSection({ lang }: { lang: EducationLang }) {
     <div className="space-y-8">
       <div className="max-w-3xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {lang === "ja" ? "12のラーシ" : "Twelve Rashis"}
+          {uiText("twelveRashis", lang)}
         </p>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {lang === "ja" ? "ラーシ（星座）" : "Rashis (Zodiac Signs)"}
+          {uiText("rashisTitle", lang)}
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-shell-muted">
           {rashisIntro[lang]}
@@ -642,13 +687,13 @@ function RashisSection({ lang }: { lang: EducationLang }) {
         >
           {block.title && (
             <h3 className="font-serif text-xl text-shell-warm mb-4">
-              {t(block.title, lang)}
+              {formatted(block.title, lang)}
             </h3>
           )}
           <div className="space-y-4">
             {block.paragraphs.map((p, j) => (
               <p key={j} className="text-sm leading-relaxed text-shell-muted">
-                {t(p, lang)}
+                {formatted(p, lang)}
               </p>
             ))}
           </div>
@@ -681,23 +726,23 @@ function RashisSection({ lang }: { lang: EducationLang }) {
                 </div>
                 <p className="text-xs text-shell-muted mb-4">{t(sign.dates, lang)}</p>
                 <p className="text-sm leading-relaxed text-shell-muted mb-5">
-                  {t(sign.description, lang)}
+                  {formatted(sign.description, lang)}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5 text-xs">
                   <div>
-                    <span className="text-shell-accent">{lang === "ja" ? "元素" : "Element"}: </span>
+                    <span className="text-shell-accent">{uiText("element", lang)}: </span>
                     <span className="text-shell-warm/90">{t(sign.element, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{lang === "ja" ? "支配星" : "Ruler"}: </span>
+                    <span className="text-shell-accent">{uiText("ruler", lang)}: </span>
                     <span className="text-shell-warm/90">{t(sign.ruler, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{lang === "ja" ? "象徴" : "Symbol"}: </span>
+                    <span className="text-shell-accent">{uiText("symbol", lang)}: </span>
                     <span className="text-shell-warm/90">{t(sign.symbol, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{lang === "ja" ? "身体" : "Body"}: </span>
+                    <span className="text-shell-accent">{uiText("body", lang)}: </span>
                     <span className="text-shell-warm/90">{t(sign.bodyPart, lang)}</span>
                   </div>
                 </div>
@@ -722,7 +767,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
                           {t(rashiSectionLabels[key], lang)}
                         </p>
                         <p className="text-sm text-shell-warm/90 leading-relaxed">
-                          {t(sign.sections[key], lang)}
+                          {formatted(sign.sections[key], lang)}
                         </p>
                       </div>
                     )
@@ -742,10 +787,10 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
     <div className="space-y-8">
       <div className="max-w-3xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          Navagraha
+          {uiText("navagraha", lang)}
         </p>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {lang === "ja" ? "9つの惑星（グラハ）" : "The Nine Grahas"}
+          {uiText("nineGrahas", lang)}
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-shell-muted">
           {planetsIntro[lang]}
@@ -775,7 +820,7 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
                   <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
                 </div>
                 <p className="text-sm leading-relaxed text-shell-muted mb-5">
-                  {t(planet.description, lang)}
+                  {formatted(planet.description, lang)}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
                   {planet.attributes.map((attr, i) => (
@@ -787,10 +832,10 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
                 </div>
                 <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
                   <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
-                    {lang === "ja" ? "象意" : "Significations"}
+                    {uiText("significations", lang)}
                   </p>
                   <p className="text-sm text-shell-warm/90 leading-relaxed">
-                    {t(planet.significations, lang)}
+                    {formatted(planet.significations, lang)}
                   </p>
                 </div>
               </div>
@@ -834,10 +879,10 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
     <div className="space-y-8">
       <div className="max-w-3xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {lang === "ja" ? "月の27宿" : "27 Lunar Mansions"}
+          {uiText("lunarMansions", lang)}
         </p>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {lang === "ja" ? "ナクシャトラ" : "Nakshatras"}
+          {uiText("nakshatras", lang)}
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-shell-muted">
           {nakshatrasIntro[lang]}
@@ -871,30 +916,30 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
               </div>
               <p className="text-xs text-shell-accent mb-2">{t(nak.sanskrit, lang)}</p>
               <p className="text-xs leading-relaxed text-shell-muted mb-3">
-                {t(nak.description, lang)}
+                {formatted(nak.description, lang)}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-shell-muted/90">
                 <span>
-                  <span className="text-shell-accent">{lang === "ja" ? "神" : "Deity"}: </span>
+                  <span className="text-shell-accent">{uiText("deity", lang)}: </span>
                   {t(nak.deity, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{lang === "ja" ? "支配星" : "Ruler"}: </span>
+                  <span className="text-shell-accent">{uiText("ruler", lang)}: </span>
                   {t(nak.ruler, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{lang === "ja" ? "象徴" : "Symbol"}: </span>
+                  <span className="text-shell-accent">{uiText("symbol", lang)}: </span>
                   {t(nak.symbol, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{lang === "ja" ? "範囲" : "Range"}: </span>
+                  <span className="text-shell-accent">{uiText("range", lang)}: </span>
                   {t(nak.range, lang)}
                 </span>
               </div>
               <ul className="mt-2 space-y-0.5">
                 {nak.qualities.map((q, i) => (
                   <li key={i} className="text-[11px] text-shell-warm/80 before:content-['·'] before:mr-1.5 before:text-shell-accent">
-                    {t(q, lang)}
+                    {formatted(q, lang)}
                   </li>
                 ))}
               </ul>
@@ -938,22 +983,22 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
     <div className="space-y-8">
       <div className="max-w-3xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          Drishti
+          {uiText("drishti", lang)}
         </p>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {lang === "ja" ? "アスペクト（ドリシュティ）" : "Aspects (Drishti)"}
+          {uiText("aspectsTitle", lang)}
         </h2>
       </div>
 
       <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
         {aspectsIntro.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
-            {t(aspectsIntro.title, lang)}
+            {formatted(aspectsIntro.title, lang)}
           </h3>
         )}
         {aspectsIntro.paragraphs.map((p, i) => (
           <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3 last:mb-0">
-            {t(p, lang)}
+            {formatted(p, lang)}
           </p>
         ))}
       </article>
@@ -961,19 +1006,19 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
       <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
         {universalAspect.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
-            {t(universalAspect.title, lang)}
+            {formatted(universalAspect.title!, lang)}
           </h3>
         )}
         {universalAspect.paragraphs.map((p, i) => (
           <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3">
-            {t(p, lang)}
+            {formatted(p, lang)}
           </p>
         ))}
         {universalAspect.bullets && (
           <ul className="space-y-2">
             {universalAspect.bullets.map((b, i) => (
               <li key={i} className="text-sm text-shell-warm/90 before:content-['·'] before:mr-2 before:text-shell-accent">
-                {t(b, lang)}
+                {formatted(b, lang)}
               </li>
             ))}
           </ul>
@@ -990,10 +1035,10 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
               {t(rule.planet, lang)}
             </h3>
             <p className="text-xs text-shell-accent mb-3">
-              {lang === "ja" ? "アスペクト先" : "Aspects houses"}: {rule.houses}
+              {uiText("aspectsHouses", lang)}: {rule.houses}
             </p>
             <p className="text-sm leading-relaxed text-shell-muted">
-              {t(rule.description, lang)}
+              {formatted(rule.description, lang)}
             </p>
           </article>
         ))}
@@ -1002,19 +1047,19 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
       <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
         {conjunctionBlock.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
-            {t(conjunctionBlock.title, lang)}
+            {formatted(conjunctionBlock.title!, lang)}
           </h3>
         )}
         {conjunctionBlock.paragraphs.map((p, i) => (
           <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3">
-            {t(p, lang)}
+            {formatted(p, lang)}
           </p>
         ))}
         {conjunctionBlock.bullets && (
           <ul className="space-y-2">
             {conjunctionBlock.bullets.map((b, i) => (
               <li key={i} className="text-sm text-shell-warm/90 before:content-['·'] before:mr-2 before:text-shell-accent">
-                {t(b, lang)}
+                {formatted(b, lang)}
               </li>
             ))}
           </ul>
@@ -1086,16 +1131,16 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
     <div className="space-y-8">
       <div className="max-w-3xl">
         <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {lang === "ja" ? "自動更新" : "Live Forecasts"}
+          {uiText("liveForecasts", lang)}
         </p>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {lang === "ja" ? "ホロスコープ" : "Horoscope"}
+          {uiText("horoscope", lang)}
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-shell-muted">
           {horoscopeIntro[lang]}
         </p>
         <p className="mt-3 text-xs text-shell-muted/80">
-          {lang === "ja" ? "最終更新" : "Updated"}: {updatedLabel}
+          {uiText("updated", lang)}: {updatedLabel}
           <span className="mx-2">·</span>
           {activePeriod.rangeLabel[lang]}
         </p>
@@ -1110,11 +1155,10 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
               key={type}
               type="button"
               onClick={() => setPeriodType(type)}
-              className={`rounded-xl border px-4 py-2.5 text-left transition-all ${
-                active
+              className={`rounded-xl border px-4 py-2.5 text-left transition-all ${active
                   ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
                   : "border-shell-border bg-shell-elevated/40 text-shell-muted hover:text-shell-warm"
-              }`}
+                }`}
             >
               <span className="block text-sm font-medium">{periodTypeLabel(type, lang)}</span>
               <span className="block text-[11px] mt-0.5 opacity-80">{period.label[lang]}</span>
@@ -1125,11 +1169,11 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
 
       <nav
         ref={navRef}
-        aria-label={lang === "ja" ? "全ラーシ" : "All signs"}
+        aria-label={uiText("allSigns", lang)}
         className="rounded-2xl border border-shell-border/70 bg-shell-sidebar/30 px-3 py-3"
       >
         <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
-          {lang === "ja" ? "12ラーシすべて" : "All twelve signs — jump to read"}
+          {uiText("allTwelveSigns", lang)}
         </p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
           {horoscopeSigns.map((sign) => (
@@ -1149,7 +1193,7 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
         targetRef={navRef}
         lang={lang}
         watchKey={periodType}
-        label={{ en: "Back to sign list", ja: "ラーシ一覧へ戻る" }}
+        label={educationUi.backToSignList}
       />
 
       <div className="space-y-8">
@@ -1192,7 +1236,7 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
                     <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-2">
                       {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
                     </p>
-                    <p className="text-sm leading-relaxed text-shell-muted">{t(reading.overview, lang)}</p>
+                    <p className="text-sm leading-relaxed text-shell-muted">{formatted(reading.overview, lang)}</p>
                   </div>
 
                   {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
@@ -1206,7 +1250,7 @@ function HoroscopeSection({ lang }: { lang: EducationLang }) {
                           {t(horoscopeSectionLabels[key], lang)}
                         </p>
                         <p className="text-sm text-shell-warm/90 leading-relaxed">
-                          {t(reading[key], lang)}
+                          {formatted(reading[key], lang)}
                         </p>
                       </div>
                     ))}
@@ -1239,6 +1283,7 @@ function EducationContent({
           articleId={articleId}
           lang={lang}
           onNavigate={onNavigate}
+          singleArticleMode
         />
       )}
       {section === "rashis" && <RashisSection lang={lang} />}
@@ -1293,7 +1338,7 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
   const [articleId, setArticleId] = useState<string | null>(
     defaultArticleForSection("introduction")
   );
-  const [lang, setLang] = useState<EducationLang>("en");
+  const { lang, toggleLang } = useEducationLang();
 
   const navigateTo = (target: EducationNavigateTarget) => {
     setSection(target.section);
@@ -1315,15 +1360,15 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
         {/* Hero strip */}
         <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-serif text-2xl tracking-tight text-shell-warm md:text-3xl">
-            {lang === "ja" ? "ヴェーダ占星術" : "Vedic Astrology"}
+            {uiText("heroTitle", lang)}
           </h1>
           <button
             type="button"
-            onClick={() => setLang(lang === "en" ? "ja" : "en")}
+            onClick={toggleLang}
             className="inline-flex items-center gap-2 self-start rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40 sm:self-auto"
           >
             <Languages size={14} className="text-shell-accent" />
-            {lang === "en" ? "日本語" : "English"}
+            {lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
           </button>
         </div>
 
@@ -1339,11 +1384,10 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
                     key={item.id}
                     type="button"
                     onClick={() => selectSection(item.id)}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs sm:text-sm transition-all lg:gap-2.5 lg:px-4 lg:py-3 ${
-                      active
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs sm:text-sm transition-all lg:gap-2.5 lg:px-4 lg:py-3 ${active
                         ? "bg-shell-accent-soft text-shell-warm shadow-[inset_3px_0_0_0_var(--shell-accent)]"
                         : "text-shell-muted hover:bg-white/[0.04] hover:text-shell-warm"
-                    }`}
+                      }`}
                   >
                     <Icon size={16} className={`shrink-0 ${active ? "text-shell-accent" : ""}`} />
                     <span className="min-w-0 leading-snug">{item.label[lang]}</span>

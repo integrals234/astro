@@ -5,6 +5,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import type { CourseLanguage, CourseQuiz } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 
 import GameShell from "./GameShell";
 import GameFeedback from "./GameFeedback";
@@ -36,7 +37,7 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
   return (
     <GameShell kind="quiz" lang={lang}>
       <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
-        {t(quiz.question, lang)}
+        <FormattedText text={t(quiz.question, lang)} />
       </h3>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -84,7 +85,7 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
                 />
               </div>
               <span className="text-sm font-medium text-shell-warm">
-                {t(option.label, lang)}
+                <FormattedText text={t(option.label, lang)} />
               </span>
               {showCorrect && (
                 <CheckCircle2

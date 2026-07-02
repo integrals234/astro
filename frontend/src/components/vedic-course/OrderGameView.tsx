@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, CheckCircle2 } from "lucide-react";
 import type { CourseLanguage, OrderGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import GameShell from "./GameShell";
 import GameFeedback from "./GameFeedback";
@@ -76,7 +77,9 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
                 {idx + 1}
               </span>
               <Icon size={16} className="text-shell-accent shrink-0" />
-              <span className="flex-1 text-sm text-shell-warm">{t(item.label, lang)}</span>
+              <span className="flex-1 text-sm text-shell-warm">
+                <FormattedText text={t(item.label, lang)} />
+              </span>
               <div className="flex gap-1">
                 <button
                   type="button"

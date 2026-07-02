@@ -5,6 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 import type { CourseLanguage, MultiSelectGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import GameShell from "./GameShell";
 import GameFeedback from "./GameFeedback";
@@ -42,7 +43,9 @@ export default function MultiSelectGameView({ game, lang, onComplete }: MultiSel
 
   return (
     <GameShell kind="multi-select" lang={lang} title={game.title}>
-      <h4 className="font-serif text-xl text-shell-warm">{t(game.question, lang)}</h4>
+      <h4 className="font-serif text-xl text-shell-warm">
+        <FormattedText text={t(game.question, lang)} />
+      </h4>
       <p className="mt-2 text-xs text-shell-muted">{uiString("selectAll", lang)}</p>
 
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
@@ -70,7 +73,9 @@ export default function MultiSelectGameView({ game, lang, onComplete }: MultiSel
               }`}
             >
               <Icon size={16} className="text-shell-accent shrink-0" />
-              <span className="flex-1 text-shell-warm">{t(option.label, lang)}</span>
+              <span className="flex-1 text-shell-warm">
+                <FormattedText text={t(option.label, lang)} />
+              </span>
               {showCorrect && <CheckCircle2 size={16} className="text-emerald-300" />}
             </button>
           );

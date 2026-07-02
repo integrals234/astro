@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import type { CourseLanguage, FlashcardGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import GameShell from "./GameShell";
 
@@ -76,7 +77,9 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-shell-accent/25 bg-shell-elevated/80">
                 <Icon size={28} className="text-shell-accent" />
               </div>
-              <p className="font-serif text-xl text-shell-warm">{t(card.front, lang)}</p>
+              <p className="font-serif text-xl text-shell-warm">
+                <FormattedText text={t(card.front, lang)} />
+              </p>
               <p className="mt-4 text-[10px] uppercase tracking-[0.2em] text-shell-muted">
                 {uiString("tapToFlip", lang)}
               </p>
@@ -86,7 +89,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             >
               <p className="text-sm md:text-base text-shell-warm leading-relaxed">
-                {t(card.back, lang)}
+                <FormattedText text={t(card.back, lang)} />
               </p>
             </div>
           </motion.div>

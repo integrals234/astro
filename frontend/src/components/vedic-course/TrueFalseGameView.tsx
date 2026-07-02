@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, X } from "lucide-react";
 import type { CourseLanguage, TrueFalseGame } from "@/lib/vedic-course/types";
 import { t } from "@/lib/vedic-course/utils";
+import { FormattedText } from "@/lib/format-inline-text";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import GameShell from "./GameShell";
 import GameFeedback from "./GameFeedback";
@@ -59,7 +60,7 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
       {!finished ? (
         <>
           <p className="font-serif text-xl text-shell-warm leading-relaxed">
-            {t(statement.statement, lang)}
+            <FormattedText text={t(statement.statement, lang)} />
           </p>
 
           {!feedback && (

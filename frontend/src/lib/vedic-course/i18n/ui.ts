@@ -37,10 +37,10 @@ export const courseUi = {
     ko: "대시보드로",
   },
   completeBody: {
-    en: "You've finished all 7 chapters — from Grahas to Drishti (aspects). Clear your 24+ games, then open your chart on the Dashboard and run the 7-step formula with aspects included.",
-    hi: "आपने सभी 7 अध्याय पूरे कर लिए — ग्रहों से दृष्टि तक। 24+ खेल पूरे करें, फिर डैशबोर्ड पर चार्ट खोलकर 7-चरण सूत्र (दृष्टि सहित) आज़माएँ।",
-    ja: "7章・惑星からドリシュティ（アスペクト）まで完了しました。24以上のゲームをクリアし、ダッシュボードで7ステップ公式（アスペクト込み）を試しましょう。",
-    ko: "7개 장을 모두 마쳤습니다 — 그라하부터 드리슈티(각)까지. 24개 이상의 게임을 클리어한 뒤 대시보드에서 7단계 공식(각 포함)을 시도해 보세요.",
+    en: "You've finished all 22 chapters — from Grahas to Yogakaraka, natural benefics, and Drishti mastery. Clear your 112+ games, then read your chart with full dignity, function, and aspect wisdom.",
+    hi: "आपने सभी 22 अध्याय पूरे कर लिए — ग्रहों से योगकारक, प्राकृतिक शुभ/अशुभ और दृष्टि निपुणता तक। 112+ खेल पूरे करें, फिर पूर्ण गरिमा, कार्य और दृष्टि ज्ञान से चार्ट पढ़ें।",
+    ja: "22章完了 — グラハからヨーガカーラカ・天然吉星凶星・ドリシュティマスターまで。112以上のゲームをクリアし、品位・機能・アスペクトの知恵でチャートを読みましょう。",
+    ko: "22개 장을 모두 마쳤습니다 — 그라하부터 요가카라카, 천성 길흉성, 드리슈티 마스터까지. 112개 이상의 게임을 클리어한 뒤 품위, 기능, 각 지혜로 차트를 읽어 보세요.",
   },
   tapToFlip: {
     en: "Tap to flip",

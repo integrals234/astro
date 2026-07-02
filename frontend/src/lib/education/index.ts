@@ -1,4 +1,6 @@
 export * from "./types";
+export * from "./i18n/ui";
+export * from "./use-education-lang";
 export * from "./intro-content";
 export * from "./rashi-content";
 export * from "./planets-content";

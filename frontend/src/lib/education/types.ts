@@ -12,13 +12,29 @@ export type EducationSectionId =
   | "remedies"
   | "horoscope";
 
-export type WisdomBlockType = "heading" | "paragraph";
+export type WisdomBlockType = "heading" | "paragraph" | "table";
 
-export interface WisdomArticleBlock {
-  type: WisdomBlockType;
+export interface WisdomArticleBlockHeading {
+  type: "heading";
   level?: 2 | 3;
   text: BilingualText;
 }
+
+export interface WisdomArticleBlockParagraph {
+  type: "paragraph";
+  text: BilingualText;
+}
+
+export interface WisdomArticleBlockTable {
+  type: "table";
+  headers: BilingualText[];
+  rows: BilingualText[][];
+}
+
+export type WisdomArticleBlock =
+  | WisdomArticleBlockHeading
+  | WisdomArticleBlockParagraph
+  | WisdomArticleBlockTable;
 
 export interface WisdomArticle {
   id: string;

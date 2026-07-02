@@ -15,6 +15,56 @@ function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
 }
 
+function ArticleTable({
+  headers,
+  rows,
+  lang,
+}: {
+  headers: BilingualText[];
+  rows: BilingualText[][];
+  lang: EducationLang;
+}) {
+  return (
+    <div className="my-5 overflow-x-auto rounded-xl border border-shell-border/70">
+      <table className="w-full min-w-[28rem] text-left text-sm">
+        <thead>
+          <tr className="border-b border-shell-border/70 bg-shell-sidebar/60">
+            {headers.map((header, i) => (
+              <th
+                key={i}
+                className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.18em] text-shell-accent"
+              >
+                {t(header, lang)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, rowIndex) => (
+            <tr
+              key={rowIndex}
+              className="border-b border-shell-border/40 last:border-b-0 even:bg-shell-sidebar/20"
+            >
+              {row.map((cell, cellIndex) => (
+                <td
+                  key={cellIndex}
+                  className={`px-4 py-3 leading-relaxed ${
+                    cellIndex === 0
+                      ? "font-medium text-shell-warm"
+                      : "text-shell-muted"
+                  }`}
+                >
+                  {t(cell, lang)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function ArticleBlock({
   block,
   lang,
@@ -22,6 +72,12 @@ function ArticleBlock({
   block: WisdomArticleBlock;
   lang: EducationLang;
 }) {
+  if (block.type === "table") {
+    return (
+      <ArticleTable headers={block.headers} rows={block.rows} lang={lang} />
+    );
+  }
+
   if (block.type === "heading") {
     if (block.level === 2) {
       return (
@@ -49,6 +105,14 @@ function ArticleBlock({
     return (
       <p className="text-sm leading-relaxed text-shell-muted mb-4 pl-3 border-l-2 border-shell-accent/30">
         {text}
+      </p>
+    );
+  }
+
+  if (text.startsWith("• ")) {
+    return (
+      <p className="text-sm leading-relaxed text-shell-warm/90 mb-2 pl-4 before:content-['·'] before:absolute before:-ml-4 before:text-shell-accent relative">
+        {text.slice(2)}
       </p>
     );
   }

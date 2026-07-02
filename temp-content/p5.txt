@@ -1,0 +1,372 @@
+‘Good’ and ‘Bad’ Houses in Jyotish
+Summary: Covering the Equal House concept in Jyotish together with an analysis of ‘Good’ and ‘Bad’ houses, including discussions on Kendra, Trikona, Dusthana, and Upachaya houses.
+The Equal House Concept
+Jyotish divides the 360 degrees of the sky into twelve equal sections, each measuring 30 degrees. These divisions create the twelve houses used in Vedic Astrology. Jyotish always employs the Sidereal Zodiac.
+Each house governs specific areas of life. Further details regarding the primary significations of the houses can be found in the article The Twelve Houses. Most chart interpretations in Jyotish are based upon a house-by-house examination.
+In Jyotish, each of the twelve houses corresponds exactly to a particular sign. As a result, a house can never overlap two zodiac signs in Vedic Astrology.
+Western Astrology generally begins the first house at the exact degree of the Ascendant. Jyotish follows a different approach. In Vedic Astrology, the entire sign containing the Ascendant becomes the first house, regardless of the Ascendant's exact degree position.[1]
+Therefore, if the Ascendant is located at 1 degree Leo, 29 degrees Leo, or anywhere in between, the whole sign of Leo becomes the first house. The second house corresponds entirely with Virgo, the third with Libra, and so on. The house containing the Ascendant is indicated on the birth chart by a diagonal line.
+Equal House Diagram in Jyotish
+The South Indian chart format, which is often the easiest for beginners to learn, counts houses clockwise from the sign containing the Ascendant. In the example chart above, the Ascendant is marked by the diagonal line in Leo.
+The zodiac signs always remain in fixed positions within the chart. For example, Pisces will always appear in the upper-left corner.
+The meanings assigned to houses in Jyotish are not always identical to those used in Western Astrology.
+Errors in recorded birth times can sometimes create significant difficulties, especially when the Ascendant lies close to the boundary between two signs. However, there are methods available to overcome this problem.[2]
+‘Good’ and ‘Bad’ Houses
+The ruling planet of a particular house changes according to the Ascendant.
+For example, the Moon becomes the ruler of the 1st house for a Cancer Ascendant, while the Sun rules the 1st house for a Leo Ascendant (see the article on planetary rulership of signs).
+Regardless of which zodiac sign is associated with a house, favourable houses strengthen planets placed within them, whereas unfavourable houses tend to weaken them.
+Trikona or Trinal Houses
+According to Jyotish, the 5th and 9th houses—known as the Trinal or Trikona houses—are extremely auspicious. Planets placed in these houses generally perform well and gain additional strength.
+Many astrologers also regard the 1st house as a Trikona house.
+As a result, the natural positive qualities of planets occupying the 5th or 9th house become enhanced, allowing them to deliver their beneficial results more fully.
+Any houses governed by those planets also receive significant support and strengthening.
+The rulers of the 5th and 9th houses carry a naturally positive energy. They bring this favourable influence into whichever house they occupy.
+Likewise, they benefit planets they are conjunct with and those they aspect.
+Kendras or Angular Houses
+The Kendras, or Angular Houses—namely the 1st, 4th, 7th, and 10th houses—are also considered favourable houses. Planets positioned within them gain strength, and the houses themselves represent generally beneficial areas of life.
+A good house has two important effects. First, it strengthens planets placed within it and the matters associated with those planets. Second, its ruler carries a positive influence that benefits the house where it is placed.
+Dusthanas or Negative Houses
+The 6th, 8th, and 12th houses, known as Dusthanas, are regarded as negative houses.
+These houses do not represent anything inherently evil. They are classified as negative because they tend to weaken planets occupying them, reducing the ability of those planets to express their natural positive qualities.
+Furthermore, the houses ruled by planets placed in the 6th, 8th, or 12th are also weakened, causing difficulties in the affairs associated with those houses.
+The rulers of the 6th, 8th, and 12th houses are likewise considered to carry a challenging energy. This influence can disturb the house they occupy, the planets they conjoin, and the houses or planets they aspect.
+Among the three Dusthanas, the 8th house is generally regarded as the most difficult.
+Even though these houses are considered negative, it is important to understand their deeper meaning. A strong 6th house helps us overcome enemies and competitors. A strong 8th house can indicate longevity and vitality. A strong 12th house suggests limited losses and expenditures, while also supporting spiritual growth and progress toward enlightenment.
+Upachaya or Growing Houses
+The 3rd, 6th, 10th, and 11th houses are classified as Upachaya houses, often translated as "growing houses."
+Any difficulties indicated by these houses tend to improve with time, and malefic planets placed within them frequently produce beneficial results as life progresses.
+For this reason, malefic planets are often considered well placed when occupying either their Own Signs, Exalted Signs, or Upachaya houses.
+Footnotes
+[1] The Ascendant is the zodiac sign that appears to be rising on the eastern horizon at the moment of birth. For example, if the eastern horizon was at 20 degrees Capricorn at the time of birth, the individual would be said to have a Capricorn Ascendant. The Ascendant is marked on the chart by a diagonal line. Note that this refers to the Sidereal Zodiac used in Jyotish, rather than the Tropical Zodiac used in Western Astrology. An Ascendant can be checked using an online Rising Sign Calculator.
+[2] Highly skilled and experienced Vedic Astrologers can often work backwards from important life events to determine a person's correct birth time. This process is known as birth-time rectification.
+
+Natural Benefic and Malefic Planets
+Summary: An exploration of the natural benefic and malefic planets in Vedic Astrology, including the terminology used in Jyotish and the classification of all nine planets, including Rahu and Ketu.
+List of Natural Benefics and Malefics in Jyotish
+•	Venus, Jupiter, and the waxing Moon are natural benefics.
+•	Mars, Saturn, Rahu, and Ketu are natural malefics.
+•	Mercury's nature depends upon the planets it associates with.
+•	The Sun is regarded as ‘Cruel’ rather than strictly ‘malefic’.
+•	The waning Moon is considered mildly malefic.
+Benefics and Malefics – Terminology Explained
+From the viewpoint of higher states of consciousness, as described in Vedic literature and the philosophy of Vedanta, there is ultimately no division between ‘good’ and ‘bad’. Things simply exist as they are. The planets function as the ‘cosmic postman’, delivering the results of our past karmas at the appropriate time.
+For practical purposes, however, astrologers often describe planetary influences as ‘good’ when they bring happiness, enjoyment, fulfilment, and favourable outcomes, and as ‘bad’ when they result in disruption, obstacles, suffering, or significant life challenges.
+In Jyotish, planets that generally produce favourable results are known as benefics, while those that tend to create difficulties are called malefics.
+The Sanskrit term for a natural benefic is ‘shubha’, meaning auspicious, while a natural malefic is called ‘papa’, meaning sinful.
+Nine ‘Planets’ Used by Jyotish
+Before proceeding further, it is important to understand that Jyotish does not make use of the outer planets Neptune, Uranus, and Pluto, which are commonly employed in Western Astrology. Likewise, it does not rely on sub-planets or asteroids such as Chiron.
+The reason is simple: Jyotish does not require them. Vedic Astrology works with a field of information rather than physical forces emitted by celestial bodies. All the information necessary for accurate karmic prediction is contained within the positions of the nine planetary influences, known collectively as the Navagraha, distributed through the twelve zodiac signs and twenty-seven Nakshatras of the sidereal zodiac.
+The nine ‘planets’ of Vedic Astrology consist of seven physical celestial bodies—the Sun, Moon, Mercury, Venus, Mars, Jupiter, and Saturn—along with two non-physical points. These are the lunar nodes associated with eclipses, representing the locations where the Moon’s orbit intersects the plane of the Earth’s orbit around the Sun.
+The North Node is known as Rahu, and the South Node is called Ketu.
+Natural Benefic and Natural Malefic Planets
+The idea of a Natural Benefic or Natural Malefic is relatively straightforward.
+Some planets are regarded as inherently positive and are generally associated with beneficial outcomes, while others are considered inherently challenging and tend to bring difficulties.
+In Vedic Astrology, Jupiter and Venus are two well-known examples of natural benefic planets.
+Similarly, Mars and Saturn are considered natural malefics in Jyotish.
+These classifications are largely familiar to Western Astrologers. However, significant differences arise when considering the remaining planets and how they are interpreted in Jyotish compared with Western Astrology.
+What About Mercury?
+Mercury occupies a unique position. When Mercury is alone or associated with benefic planets—through conjunctions or benefic aspects—it behaves as a benefic. When it is associated with malefics, it tends to act as a malefic.
+In other words, Mercury adopts either a benefic or malefic role depending upon the company it keeps.
+What About the Sun, Moon, Rahu and Ketu?
+The remaining planetary influences—Sun, Moon, Rahu, and Ketu—require separate consideration.
+The Sun
+In Jyotish, the Sun is not classified as a natural benefic. This often surprises astrologers trained in the Western tradition.
+Because of its intense heat and powerful nature, the Sun is frequently described by Vedic Astrologers as ‘cruel’. In practical terms, planets situated very close to the Sun in a birth chart become combust or scorched.
+As a result, natural benefics such as Venus may be unable to deliver their usual positive effects when combust, while natural malefics such as Mars can sometimes become even more troublesome under combustion.
+The Moon
+The Moon’s benefic or malefic nature depends largely on whether it is increasing or decreasing in brightness.
+A Full Moon is considered highly auspicious. A waxing Moon is regarded as a natural benefic and is generally associated with favourable results.
+A waning Moon, on the other hand, is viewed as malefic, although only mildly so. Many astrologers prefer to describe it as ‘ashubha’, meaning not auspicious, rather than fully malefic.
+Rahu and Ketu
+Jyotish places considerable emphasis on Rahu and Ketu, the lunar nodes.
+Although they have no physical existence and are simply calculated points where the Moon’s orbit intersects the ecliptic, they signify powerful and very real karmic influences.
+In Vedic Astrology, both Rahu and Ketu are classified as natural malefics.
+Modifying Factors
+People who are new to Jyotish often ask what kinds of benefits a natural benefic such as Venus can actually provide. The answer depends greatly on its placement within an individual's birth chart.
+The following general principles apply:
+Planetary Strength Matters
+Strong planets are capable of producing stronger results than weak planets.
+A powerful natural benefic can bring substantial benefits, whereas a weak benefic may struggle to produce positive outcomes.
+Planetary strength depends significantly on zodiacal placement. Each planet has a specific sign in which it becomes exceptionally strong, known as its exaltation. The sign directly opposite its exaltation is where the planet becomes greatly weakened and is said to be debilitated or fallen.
+A natural benefic placed in its exaltation sign or its own sign is generally highly favourable for the native.
+For a more detailed discussion, see: Planetary Strengths or Powers.
+Strong Malefics and Weak Malefics
+A strong natural malefic—such as one placed in exaltation or its own sign—will often contribute positively to the affairs of the house it occupies. Strength tends to enhance the constructive qualities of a malefic planet.
+Conversely, a weak malefic is more likely to create significant difficulties.
+For example, a strong Mars can provide courage, initiative, determination, and healthy motivation.
+Saturn – A Special Case
+The above principle is generally applicable, but Saturn deserves special mention.
+A strong Saturn can bestow qualities such as humility, patience, discipline, and integrity. At the same time, during its period of operation (Mahadasha), it may also bring greater adversity, responsibility, or sorrow.
+Further Study
+The planetary indicators (Karakas) connected with various physiological, psychological, and sociological aspects of an individual are discussed separately in another article.
+
+
+
+
+
+
+
+
+	
+
+Functional Benefics and Malefics for All Ascendants
+Summary: A list of the functional benefic and functional malefic planets for each of the twelve ascendants in the Sidereal Zodiac used by Vedic Astrology. This is essential information for chart interpretation and the application of remedial measures.
+List of Functional Benefics and Malefics for all Ascendants
+Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra
+Scorpio | Sagittarius | Capricorn | Aquarius | Pisces
+This information is absolutely fundamental to Jyotish and forms an important part of chart interpretation.
+It is also crucial when prescribing suitable remedial measures to balance planetary energies for a particular ascendant. As a general rule, functional benefic planets may be strengthened through appropriate gemstones. Functional malefics, however, should generally not be strengthened in this way, and alternative remedies such as planetary mantras are often preferred.
+This guide to functional benefics and malefics for all twelve ascendants is intended for students of Jyotish who already possess a basic understanding of the subject. Please note the following:
+•	The numbers shown in brackets, for example (9 & 12), refer to the houses ruled or owned by the planet relative to the specific ascendant in the Sidereal Zodiac.
+•	Rahu and Ketu do not own any houses and are therefore not classified as functional benefics or malefics. They remain natural malefics.
+•	The notes provided below are derived mainly from the teachings of Parashara.
+•	Where available, the degree of positivity or negativity is indicated using a grading scale from 1 to 5.[1]
+•	A Grade 5 benefic is exceptionally auspicious and considerably more favourable than a Grade 1 benefic.
+•	A Grade 5 malefic is highly problematic and far more difficult than a Grade 1 malefic.
+•	The ruler of the Ascendant never harms the native.
+•	Not all Jyotish astrologers will agree completely on every point listed below. Jyotish contains many layers, subtleties, and exceptions, but the following serves as a useful general guide.
+________________________________________
+Aries Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Jupiter	(9 & 12)	Very auspicious – Grade 4
+Sun	(5)	Auspicious – Grade 2
+Mars	(1 & 8)	Helpful to auspicious planets
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Saturn	(10 & 11)	Inauspicious – Grade 3
+Mercury	(3 & 6)	Inauspicious – Grade 3
+Venus	(2 & 7)	Inauspicious – Grade 1
+Notes:
+•	Mars has its Moolatrikona sign in Aries (1) and is therefore predominantly favourable.
+•	Mars assists the Sun and Jupiter. Some astrologers also include the Moon in this category.
+•	Saturn associated with Venus is generally unfavourable.
+•	Associations between Jupiter–Sun, Jupiter–Mars, and Mars–Sun are considered beneficial.
+•	A conjunction between Saturn and Jupiter does not usually produce auspicious results.
+•	Jupiter operating under the influence of a malefic can produce inauspicious outcomes.
+^Back to Top
+________________________________________
+Taurus Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Saturn	(9 & 10)	Very auspicious (Yogakaraka)
+Mercury	(2 & 5)	Auspicious
+Sun	(4)	Beneficial
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Jupiter	(8 & 11)	Very adverse indeed
+Mars	(7 & 12)	Maraka
+Moon	(3)	Inauspicious
+Notes:
+•	The Moon, as ruler of the 3rd house, is not particularly auspicious, though not excessively harmful. The 3rd house is considered less troublesome than the 6th, which itself is generally less difficult than the 11th.
+•	Parashara classifies Venus as a malefic despite ruling the Ascendant. This is presumably because Libra, Venus' Moolatrikona sign, falls in the 6th house from Taurus.
+•	Other astrologers maintain that Venus remains benefic for Taurus Lagna because it rules the Ascendant, which functions as both a Trine and a Kendra. They argue that the Ascendant lord is always beneficial.
+•	Mercury acts more effectively when associated with Saturn or the Sun.
+^Back to Top
+________________________________________
+Gemini Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Venus	(5 & 12)	Auspicious – Grade 2
+Saturn	(8 & 9)	Auspicious – see notes
+Mercury	(1 & 4)	Auspicious
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Mars	(6 & 11)	Very adverse indeed – Grade 5
+Sun	(3)	Inauspicious – Grade 1
+Jupiter	(7 & 10)	Inauspicious
+Notes:
+•	Venus is highly favourable because the 5th house (Libra) is its Moolatrikona sign.
+•	Saturn's role as ruler of the 8th and 9th houses is not specifically discussed by Parashara. Since Aquarius, Saturn's Moolatrikona sign, is the 9th house, Saturn is generally considered favourable, though the overall chart should always be examined.
+•	The Sun's rulership of the 3rd house is not especially beneficial.
+^Back to Top
+________________________________________
+Cancer Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Mars	(5 & 10)	Auspicious – Grade 2 (Yogakaraka)
+Jupiter	(6 & 9)	Auspicious – Grade 2
+Moon	(1)	Beneficial
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Venus	(4 & 11)	Inauspicious – Grade 3
+Mercury	(3 & 12)	Inauspicious – Grade 3
+Saturn	(7 & 8)	Strong Maraka
+Notes:
+•	Mars associated with the Sun, Moon, or Jupiter is considered highly favourable.
+^Back to Top
+________________________________________
+Leo Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Mars	(4 & 9)	Extremely auspicious – Grade 5 (Yogakaraka)
+Jupiter	(5 & 8)	Auspicious – Grade 2
+Sun	(1)	Beneficial
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Mercury	(2 & 11)	Very inauspicious – Grade 4
+Saturn	(6 & 7)	Inauspicious – Grade 2
+Venus	(3 & 10)	Inauspicious – Grade 1
+Notes:
+•	Many astrologers regard Venus as somewhat unreliable for Leo Ascendant.
+•	A conjunction of Jupiter and Venus generally does not produce auspicious results.
+^Back to Top
+________________________________________
+Virgo Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Venus	(2 & 9)	Very auspicious (Yogakaraka)
+Mercury	(1 & 10)	Auspicious
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Mars	(3 & 8)	Very inauspicious – Grade 4
+Moon	(11)	Inauspicious – Grade 3
+Jupiter	(4 & 7)	Inauspicious – Grade 1
+Notes:
+•	The Sun's role as ruler of the 12th depends heavily upon its associations and is generally acceptable when joined with benefic planets in favourable houses.
+•	Saturn (5th and 6th lord) is not specifically mentioned by Parashara. It is generally favourable due to its rulership of the 5th and relationship with Mercury, although some doshas arise because of its 6th house ownership.
+•	Jupiter, ruling the 4th and 7th houses, becomes a Maraka.
+^Back to Top
+________________________________________
+Libra Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Mercury	(9 & 12)	Very auspicious – Grade 4
+Saturn	(4 & 5)	Auspicious – Grade 3 (Yogakaraka)
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Jupiter	(3 & 6)	Inauspicious – Grade 3
+Sun	(11)	Inauspicious – Grade 3
+Mars	(2 & 7)	Inauspicious – Grade 1
+Notes:
+•	Venus rules the 1st and 8th houses. Parashara describes Venus as neutral. However, many astrologers argue that Venus should be regarded as auspicious because it rules the Lagna. An interesting debate.
+•	The Moon (10th lord) associated with Mercury (9th and 12th lord) can create Rajayoga.
+•	Mars functions as a Maraka.
+^Back to Top
+________________________________________
+Scorpio Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Moon	(9)	Very auspicious – Grade 4
+Jupiter	(2 & 5)	Auspicious – Grade 2
+Sun	(10)	Auspicious – Grade 1
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Mercury	(8 & 11)	Very adverse indeed – Grade 5
+Venus	(7 & 12)	Inauspicious – Grade 2
+Saturn	(3 & 4)	Inauspicious – Grade 1
+Notes:
+•	Mars (1 & 6) is classified as neutral. However, many astrologers would regard Mars as auspicious because it rules the Lagna.
+•	Venus functions as a Maraka.
+•	The Sun and Moon together can produce Yogakaraka effects.
+^Back to Top
+________________________________________
+Sagittarius Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Sun	(9)	Very auspicious – Grade 4
+Mars	(5 & 12)	Auspicious – Grade 2
+Mercury	(7 & 10)	Auspicious
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Venus	(6 & 11)	Very adverse indeed – Grade 5
+Saturn	(2 & 3)	Inauspicious – Grade 2
+Notes:
+•	The Moon, as ruler of the 8th house, is not specifically listed as inauspicious. It is generally considered favourable when associated with Mercury, the Sun, or Mars.
+•	Mercury is auspicious because its Moolatrikona sign governs the 10th house.
+•	A mutual association between the Sun and Mercury creates Yoga.
+•	An association between the Moon and Jupiter forms a favourable Yoga.
+•	Jupiter is regarded as neutral.
+^Back to Top
+________________________________________
+Capricorn Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Venus	(5 & 10)	Very auspicious (Yogakaraka)
+Mercury	(6 & 9)	Auspicious
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Mars	(4 & 11)	Inauspicious – Grade 3
+Jupiter	(3 & 12)	Inauspicious
+Moon	(7)	See notes
+Notes:
+•	Saturn (1 & 2) is classified as neutral. However, many astrologers regard Saturn as auspicious because it rules the Ascendant.
+•	The Sun (8th lord) is generally considered neutral.
+•	The Moon functions as a Maraka.
+^Back to Top
+________________________________________
+Aquarius Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Venus	(4 & 9)	Extremely auspicious – Grade 5 (Yogakaraka)
+Saturn	(1 & 12)	Auspicious
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Jupiter	(2 & 11)	Very adverse indeed – Grade 5
+Moon	(6)	Inauspicious – Grade 2
+Mars	(3 & 10)	Inauspicious – Grade 1
+Sun	(7)	Maraka tendencies
+Notes:
+•	Venus produces Rajayoga.
+•	Saturn is considered auspicious because Aquarius is its Moolatrikona sign.
+•	Mercury (5 & 8) should generally be favourable but can produce mixed results depending upon its associations.
+^Back to Top
+________________________________________
+Pisces Ascendant
+Functional Benefics:
+Planet	Houses Ruled	Notes
+Mars	(2 & 9)	Very auspicious – Grade 4
+Moon	(5)	Auspicious – Grade 2
+Jupiter	(1 & 10)	Auspicious – Grade 1
+Functional Malefics:
+Planet	Houses Ruled	Notes
+Saturn	(11 & 12)	Very adverse indeed – Grade 5
+Venus	(3 & 8)	Very inauspicious – Grade 4
+Sun	(6)	Inauspicious – Grade 2
+Mercury	(4 & 7)	Inauspicious – Grade 1
+Notes:
+•	Pandit Ojha states that a Sambandha between Mars and Jupiter creates Rajayoga.
+^Back to Top
+
+
+Planetary Aspects
+Summary: Explaining the concept of Planetary Aspects in Jyotish and examining the rules required to apply these principles. Also highlighting the major differences between aspects in Vedic Astrology and Western Astrology.
+Planetary aspects are an important part of chart interpretation, and the rules used in Jyotish differ significantly from those employed in Western Astrology.
+Planets occupying a house project their field of influence across the birth chart and affect, either positively or negatively, other houses and any planets positioned within them. This influence is known as an aspect.
+•	In Jyotish, aspects are directed from one house to another house (unlike Western Astrology).
+•	Aspects are therefore not based upon one planet's "orb of influence" (for example, a 10-degree sector) interacting with another planet's orb of influence.
+•	Consequently, a planetary aspect can affect a house even when that house contains no planets. This is a very important distinction.
+•	Both occupied and empty houses can receive planetary influences through aspects cast from elsewhere in the birth chart.
+•	Aspects occur from planets located anywhere within one house (for example, the Sun at 2 degrees in the 1st house) and can influence planets located anywhere within the aspected house (for example, Saturn at 29 degrees in the 7th house).
+A Simple Example of an Aspect
+In the example diagram, the Sun projects its field of influence onto the 7th house counted clockwise from its position. In this particular chart, that house corresponds with the sign of Libra.
+What effect does this have? The answer depends upon several interconnected factors involved in chart interpretation.
+The first step is to determine the Ascendant. This establishes whether the Sun functions as a benefic or malefic influence within the chart. We must then examine the house occupied by the Sun in order to assess its strength and condition. Once this is done, we can identify which house corresponds with Libra.
+Suppose the chart has a Sagittarius Ascendant. In that case, the Sun becomes the ruler of the auspicious 9th house (Leo in this chart) and is placed in its sign of exaltation, Aries. The Sun would then cast a highly positive influence through its aspect into Libra. Since Libra corresponds with the 11th house in this example, we would expect the affairs of the 11th house to be strengthened and enhanced.
+As a result, matters relating to gains, profits, opportunities, and the fulfilment of desires would likely benefit from this aspect.
+Aspect Principle in Jyotish Astrology
+Sun Aspects Only the 7th House
+Aspect Rules
+•	Rahu and Ketu do not cast any aspects, but all the other planets do.
+•	All planets aspect the 7th house from their position.
+•	Mars additionally aspects the 4th and 8th houses from itself.
+•	Saturn additionally aspects the 3rd and 10th houses from itself.
+•	Jupiter additionally aspects the 5th and 9th houses from itself.
+When interpreting planetary aspects, both the natural characteristics and the functional characteristics of the aspecting planet must be taken into consideration.
+Aspect Diagram for Mars
+Mars Aspects the 4th, 7th and 8th Houses in Jyotish
+Mars casts aspects onto the 4th, 7th, and 8th houses counted from its own position in the birth chart.
+Aspect Diagram for Jupiter
+Jupiter Aspects the 5th, 7th and 9th Houses in Jyotish
+Jupiter casts aspects onto the 5th, 7th, and 9th houses counted from itself.
+Aspect Diagram for Saturn
+Saturn Aspects the 3rd, 7th and 10th Houses in Jyotish
+Saturn casts aspects onto the 3rd, 7th, and 10th houses counted from its own position.
+Conjunction and Combustion
+In Vedic Astrology, the term conjunction is used when two or more planets occupy the same sign or house, even if they are located near opposite ends of that house.
+For example, if the Sun is positioned at 1 degree Taurus and Saturn at 28 degrees Taurus, they would still be considered conjunct in Jyotish.
+Unlike Western Astrology, Jyotish does not place the same emphasis on distinctions such as oppositions, trines, sextiles, and similar aspect patterns.
+When planets move too close to the Sun, they become weakened and are said to be combust. The exact distance required for combustion varies according to the planet involved.
+As a general guideline, if a planet lies within 10 degrees of the Sun, the possibility of combustion should be considered and the exact combustion limits for that particular planet researched.
+Combustion can create a variety of difficulties, including weakening the planet itself, reducing the strength of its natural significations, and negatively affecting the houses it rules.
+The principle of combustion does not apply to Rahu or Ketu.

@@ -98,7 +98,12 @@ function PublicWelcomeHeader({
       </div>
 
       <div className="shell-header-mobile mx-auto w-full max-w-6xl items-center gap-2 px-4 py-4">
-        <div className="h-10 w-10 shrink-0" aria-hidden />
+        <Link
+          href="/sign-in"
+          className="inline-flex h-10 shrink-0 items-center justify-center rounded-xl border border-shell-border bg-shell-elevated/60 px-3 text-[11px] font-medium text-shell-warm transition-colors hover:border-shell-accent/40 hover:text-shell-accent"
+        >
+          {uiText("signIn", lang)}
+        </Link>
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
           <SiteBrand size="sm" className="shrink-0" />
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">

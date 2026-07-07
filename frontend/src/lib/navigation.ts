@@ -4,6 +4,8 @@ import {
   FlaskConical,
   MoonStar,
   BookOpen,
+  GraduationCap,
+  CalendarRange,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -22,7 +24,19 @@ export const mainNavItems: NavItem[] = [
     href: "/",
     label: "Home",
     icon: Home,
-    description: "Jyotish learning hub",
+    description: "Welcome to Jyotish Life",
+  },
+  {
+    href: "/learn-jyotish",
+    label: "Learn Jyotish",
+    icon: GraduationCap,
+    description: "Vedic astrology learning hub",
+  },
+  {
+    href: "/horoscope",
+    label: "Horoscope",
+    icon: CalendarRange,
+    description: "Live Vedic horoscope forecasts",
   },
   {
     href: "/chart",
@@ -58,6 +72,12 @@ export const mainNavItems: NavItem[] = [
 
 export function getNavLabel(pathname: string): string {
   if (pathname === "/") return "Home";
+  if (pathname === "/learn-jyotish" || pathname.startsWith("/learn-jyotish/")) {
+    return "Learn Jyotish";
+  }
+  if (pathname === "/horoscope" || pathname.startsWith("/horoscope/")) {
+    return "Horoscope";
+  }
   if (pathname === "/chart" || pathname.startsWith("/chart/")) return "Chart";
 
   const match = mainNavItems

@@ -23,6 +23,7 @@ import type {
   ChartTab,
   SavedChartRecord,
 } from '@/lib/chart-types';
+import { getChartUi, persistChartLang, readChartLang } from '@/lib/chart-i18n';
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
@@ -49,7 +50,7 @@ const getIntegerDegree = (raw: number) => Math.floor(raw % 30);
 // --- TRANSLATION DICTIONARY ---
 const translations: Record<LanguageCode, any> = {
   en: {
-    appTitle: "Astro", birthCity: "Birth City", searchPlaceholder: "Search global cities...", searching: "Searching coordinates...", noLocations: "No locations found.",
+    birthCity: "Birth City", searchPlaceholder: "Search global cities...", searching: "Searching coordinates...", noLocations: "No locations found.",
     natalParams: "Natal Parameters", dob: "Date of Birth", tob: "Time of Birth", gocharOverlay: "Gochar Overlay (Transit)", transitDate: "Transit Date",
     generateBtn: "Generate Analysis", computingBtn: "Computing Ephemeris...", awaitingTitle: "Awaiting Parameters", awaitingDesc: "Search for a location using the command menu and generate to view your professional workspace.",
     timezone: "Timezone", sunrise: "Sunrise", sunset: "Sunset", absoluteLagna: "Absolute Lagna", exactLongitudes: "Exact Planetary Longitudes", transitCoords: "Transit Coordinates",
@@ -66,7 +67,7 @@ const translations: Record<LanguageCode, any> = {
   },
   
   hi: {
-    appTitle: "ज्योतिष", birthCity: "जन्म स्थान", searchPlaceholder: "शहर खोजें...", searching: "निर्देशांक खोजे जा रहे हैं...", noLocations: "कोई स्थान नहीं मिला।",
+    birthCity: "जन्म स्थान", searchPlaceholder: "शहर खोजें...", searching: "निर्देशांक खोजे जा रहे हैं...", noLocations: "कोई स्थान नहीं मिला।",
     natalParams: "जन्म विवरण", dob: "जन्म तिथि", tob: "जन्म समय", gocharOverlay: "गोचर (Transit)", transitDate: "गोचर तिथि",
     generateBtn: "कुण्डली बनाएं", computingBtn: "गणना हो रही है...", awaitingTitle: "जानकारी की प्रतीक्षा", awaitingDesc: "अपना जन्म स्थान खोजें और कुण्डली बनाएं।",
     timezone: "समय क्षेत्र", sunrise: "सूर्योदय", sunset: "सूर्यास्त", absoluteLagna: "स्पष्ट लग्न", exactLongitudes: "स्पष्ट ग्रह स्थिति", transitCoords: "गोचर निर्देशांक",
@@ -82,7 +83,7 @@ const translations: Record<LanguageCode, any> = {
   },
 
   ja: {
-    appTitle: "アストロ", birthCity: "出生地", searchPlaceholder: "都市を検索...", searching: "座標を検索中...", noLocations: "見つかりません。",
+    birthCity: "出生地", searchPlaceholder: "都市を検索...", searching: "座標を検索中...", noLocations: "見つかりません。",
     natalParams: "出生データ", dob: "生年月日", tob: "出生時刻", gocharOverlay: "トランジット (Gochar)", transitDate: "トランジット日付",
     generateBtn: "チャートを作成", computingBtn: "計算中...", awaitingTitle: "パラメータ待機中", awaitingDesc: "場所を検索し、生成してプロフェッショナルワークスペースを表示します。",
     timezone: "タイムゾーン", sunrise: "日の出", sunset: "日の入り", absoluteLagna: "アセンダント", exactLongitudes: "惑星の正確な位置", transitCoords: "トランジット座標",
@@ -98,7 +99,7 @@ const translations: Record<LanguageCode, any> = {
   },
 
   ko: {
-    appTitle: "아스트로", birthCity: "출생지", searchPlaceholder: "도시 검색...", searching: "좌표 검색 중...", noLocations: "위치를 찾을 수 없습니다.",
+    birthCity: "출생지", searchPlaceholder: "도시 검색...", searching: "좌표 검색 중...", noLocations: "위치를 찾을 수 없습니다.",
     natalParams: "출생 데이터", dob: "생년월일", tob: "태어난 시간", gocharOverlay: "트랜짓 (Gochar)", transitDate: "트랜짓 날짜",
     generateBtn: "차트 생성", computingBtn: "계산 중...", awaitingTitle: "매개변수 대기 중", awaitingDesc: "위치를 검색하고 생성하여 전문 작업 공간을 확인하세요.",
     timezone: "시간대", sunrise: "일출", sunset: "일몰", absoluteLagna: "어센던트 (Lagna)", exactLongitudes: "정확한 행성 위치", transitCoords: "트랜짓 좌표",
@@ -193,7 +194,16 @@ function ChartWorkspaceInner({
   const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
-  const [lang, setLang] = useState<LanguageCode>('ja');
+  const [lang, setLang] = useState<LanguageCode>(() => readChartLang());
+  useEffect(() => {
+    const onLangChange = (event: Event) => {
+      const detail = (event as CustomEvent<LanguageCode>).detail;
+      if (detail) setLang(detail);
+    };
+    window.addEventListener("chart-lang-change", onLangChange);
+    return () => window.removeEventListener("chart-lang-change", onLangChange);
+  }, []);
+
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [personName, setPersonName] = useState('');
   const [formData, setFormData] = useState<ChartFormData>(() => {
@@ -238,7 +248,8 @@ function ChartWorkspaceInner({
   const [isSavingChart, setIsSavingChart] = useState(false);
 
   // Safe fallback to english if language dictionary is partially empty
-  const t = translations[lang]?.appTitle ? translations[lang] : translations.en;
+  const t = translations[lang] ?? translations.en;
+  const chartCopy = getChartUi(lang);
 
   const refreshLibrary = useCallback(async () => {
     if (!enablePersistence) return;
@@ -539,7 +550,7 @@ function ChartWorkspaceInner({
             
             {/* Header & Lang Setup */}
             <div className="flex justify-between items-center mb-8 relative">
-              <h1 className="text-3xl font-serif font-medium text-indigo-950 tracking-tight">{t.appTitle}</h1>
+              <h1 className="text-3xl font-serif font-medium text-indigo-950 tracking-tight">{chartCopy.appTitle}</h1>
               
               <div className="relative">
                 <button 
@@ -562,7 +573,7 @@ function ChartWorkspaceInner({
                         {languages.map((l) => (
                           <button
                             key={l.code}
-                            onClick={() => { setLang(l.code as LanguageCode); setIsLangMenuOpen(false); }}
+                            onClick={() => { setLang(l.code as LanguageCode); persistChartLang(l.code as LanguageCode); setIsLangMenuOpen(false); }}
                             className={`w-full text-left px-4 py-2 text-sm transition-colors ${lang === l.code ? 'bg-indigo-50 text-indigo-900 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
                           >
                             {l.native}

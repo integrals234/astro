@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 export const INSTAGRAM_PROFILE_URL =
   "https://www.instagram.com/jyotishlife.jp?igsh=cG44cTYzZjhyazM2";
 
-function InstagramIcon({ className }: { className?: string }) {
+export function InstagramIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"

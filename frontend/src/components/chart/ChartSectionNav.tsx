@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { chartNavItems, isChartNavActive } from "@/lib/chart-navigation";
+import { getChartNavItems, isChartNavActive } from "@/lib/chart-navigation";
+import { useChartLang } from "@/lib/use-chart-lang";
 
 export default function ChartSectionNav() {
   const pathname = usePathname();
+  const lang = useChartLang();
+  const chartNavItems = getChartNavItems(lang);
 
   return (
     <nav

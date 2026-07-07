@@ -2,6 +2,8 @@
 
 import { Clock, Bookmark, Trash2 } from "lucide-react";
 import type { SavedChartRecord } from "@/lib/chart-types";
+import { getChartUi } from "@/lib/chart-i18n";
+import { useChartLang } from "@/lib/use-chart-lang";
 
 interface ChartLibraryPanelProps {
   recentCharts: SavedChartRecord[];
@@ -22,6 +24,9 @@ function ChartList({
   onToggleSave,
   onDeleteChart,
   showSaveToggle,
+  saveLabel,
+  savedLabel,
+  deleteAria,
 }: {
   title: string;
   icon: typeof Clock;
@@ -32,6 +37,9 @@ function ChartList({
   onToggleSave: (chart: SavedChartRecord) => void;
   onDeleteChart: (chartId: string) => void;
   showSaveToggle: boolean;
+  saveLabel: string;
+  savedLabel: string;
+  deleteAria: string;
 }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-5">
@@ -82,14 +90,14 @@ function ChartList({
                         : "bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-700"
                     }`}
                   >
-                    {chart.isSaved ? "Saved" : "Save"}
+                    {chart.isSaved ? savedLabel : saveLabel}
                   </button>
                 )}
                 <button
                   type="button"
                   onClick={() => onDeleteChart(chart.id)}
                   className="p-1 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50"
-                  aria-label="Delete chart"
+                  aria-label={deleteAria}
                 >
                   <Trash2 size={12} />
                 </button>
@@ -110,29 +118,38 @@ export default function ChartLibraryPanel({
   onToggleSave,
   onDeleteChart,
 }: ChartLibraryPanelProps) {
+  const lang = useChartLang();
+  const copy = getChartUi(lang).libraryPanel;
+
   return (
     <div className="space-y-4">
       <ChartList
-        title="Recent Charts"
+        title={copy.recentTitle}
         icon={Clock}
         charts={recentCharts}
-        emptyLabel="Generate a chart to see your last 5 here."
+        emptyLabel={copy.recentEmpty}
         activeChartId={activeChartId}
         onLoadChart={onLoadChart}
         onToggleSave={onToggleSave}
         onDeleteChart={onDeleteChart}
         showSaveToggle
+        saveLabel={copy.save}
+        savedLabel={copy.saved}
+        deleteAria={copy.deleteAria}
       />
       <ChartList
-        title="Saved Charts"
+        title={copy.savedTitle}
         icon={Bookmark}
         charts={savedCharts}
-        emptyLabel="Save a chart to keep it in your library."
+        emptyLabel={copy.savedEmpty}
         activeChartId={activeChartId}
         onLoadChart={onLoadChart}
         onToggleSave={onToggleSave}
         onDeleteChart={onDeleteChart}
         showSaveToggle={false}
+        saveLabel={copy.save}
+        savedLabel={copy.saved}
+        deleteAria={copy.deleteAria}
       />
     </div>
   );

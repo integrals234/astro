@@ -4,12 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Bookmark, Clock, MapPin, Trash2, ArrowUpRight } from "lucide-react";
 import type { SavedChartRecord } from "@/lib/chart-types";
+import { getChartUi } from "@/lib/chart-i18n";
+import { useChartLang } from "@/lib/use-chart-lang";
 
 interface ChartCollectionPageProps {
   mode: "saved" | "recent";
 }
 
 export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) {
+  const lang = useChartLang();
+  const copy = getChartUi(lang).collection;
   const [charts, setCharts] = useState<SavedChartRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,24 +37,21 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
   }, [loadCharts]);
 
   const handleDelete = async (chartId: string) => {
-    if (!confirm("Delete this chart?")) return;
+    if (!confirm(copy.deleteConfirm)) return;
     await fetch(`/api/charts/${chartId}`, { method: "DELETE" });
     await loadCharts();
   };
 
   const Icon = mode === "saved" ? Bookmark : Clock;
-  const title = mode === "saved" ? "Saved Charts" : "Recent Charts";
-  const subtitle =
-    mode === "saved"
-      ? "Charts you have explicitly saved to your library."
-      : "Your last five generated charts, kept for quick access.";
+  const title = mode === "saved" ? copy.savedTitle : copy.recentTitle;
+  const subtitle = mode === "saved" ? copy.savedSubtitle : copy.recentSubtitle;
 
   return (
     <div className="max-w-5xl">
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-shell-border bg-shell-elevated/50 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-shell-muted mb-4">
           <Icon size={12} className="text-shell-accent" />
-          Library
+          {copy.libraryEyebrow}
         </div>
         <h2 className="font-serif text-3xl text-shell-warm tracking-tight">{title}</h2>
         <p className="mt-2 text-sm text-shell-muted max-w-2xl leading-relaxed">{subtitle}</p>
@@ -58,28 +59,26 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
 
       {loading ? (
         <div className="rounded-3xl border border-shell-border bg-shell-elevated/40 p-10 text-center text-shell-muted text-sm">
-          Loading charts…
+          {copy.loading}
         </div>
       ) : charts.length === 0 ? (
         <div className="space-y-6">
           <div className="rounded-3xl border border-dashed border-shell-border bg-shell-elevated/20 p-8 text-center">
             <p className="text-shell-muted text-sm mb-4">
-              {mode === "saved"
-                ? "No saved charts yet. Generate a chart and tap Save Chart."
-                : "No recent charts yet. Generate your first chart in the Chart tab."}
+              {mode === "saved" ? copy.emptySaved : copy.emptyRecent}
             </p>
             <Link
               href="/chart"
               className="inline-flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm transition-colors"
             >
-              Go to Chart Generator
+              {copy.goToGenerator}
               <ArrowUpRight size={14} />
             </Link>
           </div>
 
           <div>
             <p className="text-[10px] uppercase tracking-[0.24em] text-shell-muted mb-3">
-              Preview layout
+              {copy.previewLayout}
             </p>
             <ul className="grid gap-4 md:grid-cols-2 opacity-60">
               {[
@@ -125,7 +124,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
                   type="button"
                   onClick={() => handleDelete(chart.id)}
                   className="opacity-0 group-hover:opacity-100 p-2 rounded-xl text-shell-muted hover:text-red-300 hover:bg-red-500/10 transition-all"
-                  aria-label="Delete chart"
+                  aria-label={copy.deleteAria}
                 >
                   <Trash2 size={14} />
                 </button>
@@ -136,7 +135,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
                   href={`/chart?chart=${chart.id}`}
                   className="inline-flex items-center gap-2 rounded-xl bg-shell-accent-soft border border-shell-accent/20 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-shell-accent hover:text-shell-warm hover:border-shell-accent/40 transition-colors"
                 >
-                  Open chart
+                  {copy.openChart}
                   <ArrowUpRight size={12} />
                 </Link>
               </div>

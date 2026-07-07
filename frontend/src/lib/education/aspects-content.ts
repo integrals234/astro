@@ -1,6 +1,5 @@
 import type { ContentBlock, AspectRule } from "./types";
 import { aspectImages } from "./asset-paths";
-import { educationImages } from "./education-images";
 
 export const aspectsIntro: ContentBlock = {
   title: { en: "Drishti — Planetary Gaze", ja: "ドリシュティ — 惑星の視線" },
@@ -29,20 +28,12 @@ export const universalAspect: ContentBlock = {
     { en: "Moon in House 7 → aspects House 1 (self, body, personality)", ja: "第7ハウスの月 → 第1ハウス（自己、身体、人格）にアスペクト" },
     { en: "Mercury in House 10 → aspects House 4 (home, mother, peace)", ja: "第10ハウスの水星 → 第4ハウス（家庭、母、安らぎ）にアスペクト" },
   ],
-  image: {
-    src: educationImages.sunAspect7th,
-    alt: {
-      en: "Sun aspects only the 7th house in Jyotish",
-      ja: "ジョーティッシュにおける太陽の第7ハウスアスペクト",
-    },
-  },
 };
 
 export const specialAspects: AspectRule[] = [
   {
     planet: { en: "Mars (Mangal)", ja: "火星（マンガル）" },
     houses: "4th, 7th, 8th",
-    image: aspectImages.mars,
     description: {
       en: "Mars casts additional Drishti on the 4th, 7th, and 8th houses from its position. This triple gaze heats domestic peace (4th), partnership (7th), and transformation or shared resources (8th). Mars aspects energize — they can manifest as courage, surgery, property disputes, or marital friction depending on dignity and house topics.",
       ja: "火星は座る位置から第4・7・8ハウスに追加のドリシュティを持ちます。家庭（4）、パートナーシップ（7）、変容・共有資源（8）を熱せます。火星のアスペクトは活性化 — 品位とハウスのテーマにより、勇気、外科、不動産の争い、婚姻の摩擦として現れます。",
@@ -51,7 +42,6 @@ export const specialAspects: AspectRule[] = [
   {
     planet: { en: "Jupiter (Guru)", ja: "木星（グル）" },
     houses: "5th, 7th, 9th",
-    image: aspectImages.jupiter,
     description: {
       en: "Jupiter's special aspects fall on the 5th, 7th, and 9th houses — the trine houses of creativity, children, romance, partnership, and higher wisdom. Guru's gaze expands, protects, and often delivers teachers or grace in those domains. Jupiter aspects are among the most welcomed in chart judgment.",
       ja: "木星の特別なアスペクトは第5・7・9ハウス — 創造性、子供、恋愛、パートナーシップ、高次の智慧のトライン領域です。グル の視線は拡大・守護し、師や恵みをもたらすことが多く、チャート判断で最も歓迎されるアスペクトのひとつです。",
@@ -60,7 +50,6 @@ export const specialAspects: AspectRule[] = [
   {
     planet: { en: "Saturn (Shani)", ja: "土星（シャニ）" },
     houses: "3rd, 7th, 10th",
-    image: aspectImages.saturn,
     description: {
       en: "Saturn additionally aspects the 3rd, 7th, and 10th houses — courage and siblings (3rd), marriage and contracts (7th), career and public status (10th). Shani's gaze demands responsibility and endurance. It is not merely \"bad\"; Saturn aspects build structures that last when met with patience.",
       ja: "土星は第3・7・10ハウスに追加でアスペクト — 勇気と兄弟（3）、結婚と契約（7）、キャリアと社会的地位（10）です。シャニの視線は責任と忍耐を求めます。「悪い」だけではなく、土星のアスペクトは忍耐と向き合えば長く続く構造を築きます。",

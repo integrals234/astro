@@ -1,7 +1,8 @@
 import type { EducationLang } from "../types";
 
 export const educationUi = {
-  heroTitle: { en: "Vedic Astrology", ja: "ヴェーダ占星術" },
+  heroTitle: { en: "Learn Jyotish", ja: "占星術を学ぶ" },
+  learnJyotish: { en: "Learn Jyotish", ja: "占星術を学ぶ" },
   switchToJa: { en: "日本語", ja: "日本語" },
   switchToEn: { en: "English", ja: "English" },
   home: { en: "Home", ja: "ホーム" },

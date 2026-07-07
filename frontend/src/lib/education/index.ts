@@ -47,5 +47,4 @@ export const educationSections: {
   { id: "mahadashas", label: { en: "Mahadashas", ja: "マハーダシャー" } },
   { id: "transits", label: { en: "Transits", ja: "トランジット" } },
   { id: "remedies", label: { en: "Remedies (Upaye)", ja: "救済（ウパーヤ）" } },
-  { id: "horoscope", label: { en: "Horoscope", ja: "ホロスコープ" } },
 ];

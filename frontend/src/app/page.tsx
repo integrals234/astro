@@ -1,5 +1,5 @@
-import EducationalHub from "@/components/education/EducationalHub";
+import WelcomeHomePage from "@/components/home/WelcomeHomePage";
 
 export default function HomePage() {
-  return <EducationalHub />;
+  return <WelcomeHomePage />;
 }

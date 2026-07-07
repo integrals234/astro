@@ -1,4 +1,6 @@
 import { Sparkles, Bookmark, Clock, type LucideIcon } from "lucide-react";
+import type { LanguageCode } from "./chart-types";
+import { chartUi } from "./chart-i18n";
 
 export interface ChartNavItem {
   href: string;
@@ -7,26 +9,46 @@ export interface ChartNavItem {
   description?: string;
 }
 
-export const chartNavItems: ChartNavItem[] = [
+const chartNavMeta = [
   {
     href: "/chart",
-    label: "Generate",
     icon: Sparkles,
-    description: "Create and explore charts",
+    keys: {
+      label: "generate" as const,
+      description: "generateDescription" as const,
+    },
   },
   {
     href: "/chart/saved",
-    label: "Saved",
     icon: Bookmark,
-    description: "Your bookmarked charts",
+    keys: {
+      label: "saved" as const,
+      description: "savedDescription" as const,
+    },
   },
   {
     href: "/chart/recent",
-    label: "Recent",
     icon: Clock,
-    description: "Last five generated charts",
+    keys: {
+      label: "recent" as const,
+      description: "recentDescription" as const,
+    },
   },
-];
+] as const;
+
+export function getChartNavItems(lang: LanguageCode): ChartNavItem[] {
+  const copy = chartUi[lang]?.nav ?? chartUi.en.nav;
+
+  return chartNavMeta.map((item) => ({
+    href: item.href,
+    icon: item.icon,
+    label: copy[item.keys.label],
+    description: copy[item.keys.description],
+  }));
+}
+
+/** @deprecated Use getChartNavItems(lang) for localized labels */
+export const chartNavItems: ChartNavItem[] = getChartNavItems("en");
 
 export function isChartNavActive(pathname: string, href: string): boolean {
   if (href === "/chart") return pathname === "/chart";

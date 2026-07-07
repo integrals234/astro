@@ -9,8 +9,7 @@ export type EducationSectionId =
   | "aspects"
   | "mahadashas"
   | "transits"
-  | "remedies"
-  | "horoscope";
+  | "remedies";
 
 export type WisdomBlockType = "heading" | "paragraph" | "table" | "image";
 

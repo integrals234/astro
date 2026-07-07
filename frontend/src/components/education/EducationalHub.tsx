@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -13,16 +13,15 @@ import {
   Languages,
   Sparkles,
   Circle,
-  CalendarRange,
   Home,
   Clock,
   OrbitIcon,
   HeartHandshake,
   ChevronDown,
-  ArrowUp,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
+import BackToNavButton from "@/components/education/BackToNavButton";
 import WisdomArticleView from "@/components/education/WisdomArticleView";
 import { FormattedText } from "@/lib/format-inline-text";
 import {
@@ -38,21 +37,12 @@ import {
   universalAspect,
   specialAspects,
   conjunctionBlock,
-  horoscopeIntro,
-  horoscopeSigns,
-  horoscopeSectionLabels,
-  generateHoroscopeReading,
-  periodTypeLabel,
-  getPeriodForType,
-  useHoroscopePeriods,
   getArticlesForSection,
   type EducationLang,
   type EducationSectionId,
   type EducationNavigateTarget,
   type BilingualText,
   type RashiEntry,
-  type HoroscopePeriodType,
-  type HoroscopeSignId,
   uiText,
   useEducationLang,
   educationUi,
@@ -68,7 +58,6 @@ const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   mahadashas: Clock,
   transits: OrbitIcon,
   remedies: HeartHandshake,
-  horoscope: CalendarRange,
 };
 
 function defaultArticleForSection(section: EducationSectionId): string | null {
@@ -78,18 +67,6 @@ function defaultArticleForSection(section: EducationSectionId): string | null {
 
 function educationTopicAnchor(section: EducationSectionId, id: string) {
   return `education-${section}-${id}`;
-}
-
-function getScrollRoot(el: Element): Element | null {
-  let node = el.parentElement;
-  while (node) {
-    const { overflowY } = getComputedStyle(node);
-    if (/(auto|scroll|overlay)/.test(overflowY)) {
-      return node;
-    }
-    node = node.parentElement;
-  }
-  return null;
 }
 
 function resolveScrollContainer(anchor: HTMLElement): HTMLElement | Window {
@@ -130,66 +107,6 @@ function getScrollTop(scrollContainer: HTMLElement | Window): number {
   return scrollContainer === window
     ? window.scrollY
     : (scrollContainer as HTMLElement).scrollTop;
-}
-
-function BackToNavButton({
-  targetRef,
-  lang,
-  onBeforeScroll,
-  watchKey,
-  label,
-  className = "",
-}: {
-  targetRef: React.RefObject<HTMLElement | null>;
-  lang: EducationLang;
-  onBeforeScroll?: () => void;
-  watchKey?: string;
-  label?: BilingualText;
-  className?: string;
-}) {
-  const [visible, setVisible] = useState(false);
-  const buttonLabel = label
-    ? t(label, lang)
-    : uiText("backToTopicList", lang);
-
-  useEffect(() => {
-    const target = targetRef.current;
-    if (!target) return;
-
-    const root = getScrollRoot(target);
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
-      { root, threshold: 0, rootMargin: "0px 0px -8% 0px" }
-    );
-
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [targetRef, watchKey]);
-
-  return (
-    <AnimatePresence>
-      {visible ? (
-        <motion.button
-          type="button"
-          initial={{ opacity: 0, y: 10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.9 }}
-          transition={{ duration: 0.22, ease: "easeOut" }}
-          onClick={() => {
-            onBeforeScroll?.();
-            requestAnimationFrame(() => {
-              targetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-            });
-          }}
-          aria-label={buttonLabel}
-          title={buttonLabel}
-          className={`fixed z-30 flex h-10 w-10 items-center justify-center rounded-full border border-shell-border/40 bg-shell-bg/70 text-shell-muted/90 shadow-[0_6px_24px_-10px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[color,background-color,border-color,opacity,transform] duration-200 hover:border-shell-accent/35 hover:bg-shell-accent-soft/70 hover:text-shell-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-accent/40 active:scale-95 bottom-5 right-5 supports-[padding:max(0px)]:bottom-[max(1.25rem,env(safe-area-inset-bottom))] supports-[padding:max(0px)]:right-[max(1.25rem,env(safe-area-inset-right))] md:bottom-8 md:right-8 ${className}`}
-        >
-          <ArrowUp size={17} strokeWidth={2.25} aria-hidden />
-        </motion.button>
-      ) : null}
-    </AnimatePresence>
-  );
 }
 
 function TopicIndex(props: {
@@ -380,6 +297,7 @@ function ArticleSectionPanel({
   visualLabel,
   singleArticleMode = false,
   topicOrder = "visual-first",
+  tabOrder,
 }: {
   section: EducationSectionId;
   articleId: string | null;
@@ -391,6 +309,8 @@ function ArticleSectionPanel({
   singleArticleMode?: boolean;
   /** Controls whether the visual guide tab precedes or follows wisdom articles. */
   topicOrder?: "visual-first" | "articles-first";
+  /** When set, overrides topicOrder and arranges tabs by this id list. */
+  tabOrder?: string[];
 }) {
   const navRef = useRef<HTMLElement>(null);
   const [topicExpanded, setTopicExpanded] = useState(true);
@@ -411,7 +331,16 @@ function ArticleSectionPanel({
     ),
   }));
 
-  if (topicOrder === "articles-first") {
+  if (tabOrder?.length) {
+    const ordered = new Map<string, { id: string; label: BilingualText; content: React.ReactNode }>();
+    if (visualTab) ordered.set(visualTab.id, visualTab);
+    for (const tab of articleTabs) ordered.set(tab.id, tab);
+
+    for (const id of tabOrder) {
+      const tab = ordered.get(id);
+      if (tab) tabs.push(tab);
+    }
+  } else if (topicOrder === "articles-first") {
     tabs.push(...articleTabs);
     if (visualTab) tabs.push(visualTab);
   } else {
@@ -615,7 +544,7 @@ function PublicHeader({ lang }: { lang: EducationLang }) {
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
           <SiteBrand size="sm" className="shrink-0" />
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
-            {uiText("home", lang)}
+            {uiText("learnJyotish", lang)}
           </p>
         </div>
         <nav className="flex shrink-0 items-center gap-2">
@@ -979,7 +908,11 @@ function NakshatrasSection({
       articleId={articleId}
       lang={lang}
       onNavigate={onNavigate}
-      topicOrder="articles-first"
+      tabOrder={[
+        "nakshatras-stellar-1",
+        "nakshatra-guide",
+        "nakshatras-human-physiology",
+      ]}
       visualTab={{
         id: "nakshatra-guide",
         label: {
@@ -1126,174 +1059,6 @@ function AspectsSection({
   );
 }
 
-const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearly"];
-
-function HoroscopeSection({ lang }: { lang: EducationLang }) {
-  const navRef = useRef<HTMLElement>(null);
-  const { now, periods } = useHoroscopePeriods();
-  const [periodType, setPeriodType] = useState<HoroscopePeriodType>("weekly");
-
-  const activePeriod = getPeriodForType(periods, periodType);
-
-  const readingsBySign = useMemo(() => {
-    return Object.fromEntries(
-      horoscopeSigns.map((sign) => [
-        sign.id,
-        generateHoroscopeReading(sign, activePeriod),
-      ])
-    ) as Record<HoroscopeSignId, ReturnType<typeof generateHoroscopeReading>>;
-  }, [activePeriod.key, activePeriod.type]);
-
-  const updatedLabel = now.toLocaleString(lang === "ja" ? "ja-JP" : "en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
-  const jumpToSign = (signId: HoroscopeSignId) => {
-    document
-      .getElementById(`horoscope-${signId}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  return (
-    <div className="space-y-8">
-      <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
-          {uiText("liveForecasts", lang)}
-        </p>
-        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
-          {uiText("horoscope", lang)}
-        </h2>
-        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
-          {horoscopeIntro[lang]}
-        </p>
-        <p className="mt-3 text-xs text-shell-muted/80">
-          {uiText("updated", lang)}: {updatedLabel}
-          <span className="mx-2">·</span>
-          {activePeriod.rangeLabel[lang]}
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {horoscopePeriodTypes.map((type) => {
-          const active = periodType === type;
-          const period = getPeriodForType(periods, type);
-          return (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setPeriodType(type)}
-              className={`rounded-xl border px-4 py-2.5 text-left transition-all ${active
-                  ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
-                  : "border-shell-border bg-shell-elevated/40 text-shell-muted hover:text-shell-warm"
-                }`}
-            >
-              <span className="block text-sm font-medium">{periodTypeLabel(type, lang)}</span>
-              <span className="block text-[11px] mt-0.5 opacity-80">{period.label[lang]}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <nav
-        ref={navRef}
-        aria-label={uiText("allSigns", lang)}
-        className="rounded-2xl border border-shell-border/70 bg-shell-sidebar/30 px-3 py-3"
-      >
-        <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
-          {uiText("allTwelveSigns", lang)}
-        </p>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-          {horoscopeSigns.map((sign) => (
-            <button
-              key={sign.id}
-              type="button"
-              onClick={() => jumpToSign(sign.id)}
-              className="rounded-xl border border-shell-border/60 bg-shell-elevated/30 px-2 py-2 text-center transition-all hover:border-shell-accent/40 hover:bg-shell-accent-soft/40 hover:text-shell-warm text-shell-muted"
-            >
-              <span className="block text-[11px] font-medium leading-tight">{t(sign.name, lang)}</span>
-            </button>
-          ))}
-        </div>
-      </nav>
-
-      <BackToNavButton
-        targetRef={navRef}
-        lang={lang}
-        watchKey={periodType}
-        label={educationUi.backToSignList}
-      />
-
-      <div className="space-y-8">
-        {horoscopeSigns.map((sign, index) => {
-          const reading = readingsBySign[sign.id];
-          return (
-            <article
-              key={sign.id}
-              id={`horoscope-${sign.id}`}
-              className="scroll-mt-28 rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
-            >
-              {index > 0 ? (
-                <div className="border-t border-dashed border-shell-border/50" aria-hidden />
-              ) : null}
-              <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-52 lg:w-60 shrink-0 md:border-r border-shell-border/60 p-4 md:p-5 flex flex-col items-center text-center gap-3">
-                  <div className="w-full max-w-[200px]">
-                    <InfographicImage
-                      src={sign.image}
-                      alt={t(sign.name, lang)}
-                      variant="transparent"
-                      className="rounded-xl"
-                      sizes="200px"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-2xl text-shell-warm">{t(sign.name, lang)}</h3>
-                    <p className="text-sm text-shell-accent">{t(sign.sanskrit, lang)}</p>
-                    <p className="text-xs text-shell-muted mt-1">
-                      {t(sign.element, lang)} · {t(sign.ruler, lang)}
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-shell-accent/30 bg-shell-accent-soft px-3 py-1 text-[11px] text-shell-warm">
-                    {t(horoscopeSectionLabels.mood, lang)}: {t(reading.mood, lang)}
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0 p-6 md:p-8 space-y-5">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-2">
-                      {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
-                    </p>
-                    <p className="text-sm leading-relaxed text-shell-muted">{formatted(reading.overview, lang)}</p>
-                  </div>
-
-                  {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
-                    .filter((key) => key !== "mood")
-                    .map((key) => (
-                      <div
-                        key={key}
-                        className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
-                      >
-                        <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
-                          {t(horoscopeSectionLabels[key], lang)}
-                        </p>
-                        <p className="text-sm text-shell-warm/90 leading-relaxed">
-                          {formatted(reading[key], lang)}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 function EducationContent({
   section,
   articleId,
@@ -1358,17 +1123,30 @@ function EducationContent({
           onNavigate={onNavigate}
         />
       )}
-      {section === "horoscope" && <HoroscopeSection lang={lang} />}
     </SectionFade>
   );
 }
 
-function EducationHubInner({ embedded }: { embedded?: boolean }) {
-  const [section, setSection] = useState<EducationSectionId>("introduction");
+function EducationHubInner({
+  embedded,
+  initialSection,
+}: {
+  embedded?: boolean;
+  initialSection?: EducationSectionId;
+}) {
+  const [section, setSection] = useState<EducationSectionId>(
+    initialSection ?? "introduction"
+  );
   const [articleId, setArticleId] = useState<string | null>(
-    defaultArticleForSection("introduction")
+    defaultArticleForSection(initialSection ?? "introduction")
   );
   const { lang, toggleLang } = useEducationLang();
+
+  useEffect(() => {
+    if (!initialSection) return;
+    setSection(initialSection);
+    setArticleId(defaultArticleForSection(initialSection));
+  }, [initialSection]);
 
   const navigateTo = (target: EducationNavigateTarget) => {
     setSection(target.section);
@@ -1444,16 +1222,20 @@ function EducationHubInner({ embedded }: { embedded?: boolean }) {
   return content;
 }
 
-export default function EducationalHub() {
+export default function EducationalHub({
+  initialSection,
+}: {
+  initialSection?: EducationSectionId;
+}) {
   return (
     <>
       <SignedIn>
         <AppShell>
-          <EducationHubInner embedded />
+          <EducationHubInner embedded initialSection={initialSection} />
         </AppShell>
       </SignedIn>
       <SignedOut>
-        <EducationHubInner />
+        <EducationHubInner initialSection={initialSection} />
       </SignedOut>
     </>
   );

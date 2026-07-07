@@ -80,6 +80,36 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+[data-allow-copy="true"],
+.cl-formFieldInput,
+.cl-input,
+.cl-otpCodeFieldInput {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+img,
+video,
+svg {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+@media print {
+  html,
+  body {
+    display: none !important;
+  }
 }
 
 /* Responsive nav: hamburger drawer on mobile, horizontal top tabs on desktop */

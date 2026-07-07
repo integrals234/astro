@@ -8,7 +8,7 @@ import { Settings, Bell, Globe, Shield, CreditCard } from "lucide-react";
 
 const preferenceRows = [
   { icon: Bell, label: "Transit alerts", description: "Email when Saturn changes house", enabled: true },
-  { icon: Globe, label: "Default language", description: "Hindi (हिन्दी)", enabled: false },
+  { icon: Globe, label: "Default language", description: "Japanese (日本語)", enabled: false },
   { icon: Shield, label: "Private charts", description: "Only you can open saved charts", enabled: true },
 ];
 

@@ -49,5 +49,5 @@ export const inquiryMessages: Record<
 };
 
 export function parseAppraisalLocale(value: FormDataEntryValue | null): AppraisalLanguage {
-  return value === "ja" ? "ja" : "en";
+  return value === "en" ? "en" : "ja";
 }

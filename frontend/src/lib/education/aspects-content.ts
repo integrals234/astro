@@ -1,5 +1,6 @@
 import type { ContentBlock, AspectRule } from "./types";
 import { aspectImages } from "./asset-paths";
+import { educationImages } from "./education-images";
 
 export const aspectsIntro: ContentBlock = {
   title: { en: "Drishti — Planetary Gaze", ja: "ドリシュティ — 惑星の視線" },
@@ -28,6 +29,13 @@ export const universalAspect: ContentBlock = {
     { en: "Moon in House 7 → aspects House 1 (self, body, personality)", ja: "第7ハウスの月 → 第1ハウス（自己、身体、人格）にアスペクト" },
     { en: "Mercury in House 10 → aspects House 4 (home, mother, peace)", ja: "第10ハウスの水星 → 第4ハウス（家庭、母、安らぎ）にアスペクト" },
   ],
+  image: {
+    src: educationImages.sunAspect7th,
+    alt: {
+      en: "Sun aspects only the 7th house in Jyotish",
+      ja: "ジョーティッシュにおける太陽の第7ハウスアスペクト",
+    },
+  },
 };
 
 export const specialAspects: AspectRule[] = [

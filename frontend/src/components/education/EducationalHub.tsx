@@ -379,6 +379,7 @@ function ArticleSectionPanel({
   visualTab,
   visualLabel,
   singleArticleMode = false,
+  topicOrder = "visual-first",
 }: {
   section: EducationSectionId;
   articleId: string | null;
@@ -388,6 +389,8 @@ function ArticleSectionPanel({
   visualLabel?: BilingualText;
   /** When true, only the selected topic is shown (one page at a time). */
   singleArticleMode?: boolean;
+  /** Controls whether the visual guide tab precedes or follows wisdom articles. */
+  topicOrder?: "visual-first" | "articles-first";
 }) {
   const navRef = useRef<HTMLElement>(null);
   const [topicExpanded, setTopicExpanded] = useState(true);
@@ -396,22 +399,24 @@ function ArticleSectionPanel({
   const articles = getArticlesForSection(section);
   const tabs: { id: string; label: BilingualText; content: React.ReactNode }[] = [];
 
-  if (visualTab) {
-    tabs.push(visualTab);
-  }
+  const articleTabs = articles.map((article) => ({
+    id: article.id,
+    label: article.title,
+    content: (
+      <WisdomArticleView
+        article={article}
+        lang={lang}
+        onNavigate={onNavigate}
+      />
+    ),
+  }));
 
-  for (const article of articles) {
-    tabs.push({
-      id: article.id,
-      label: article.title,
-      content: (
-        <WisdomArticleView
-          article={article}
-          lang={lang}
-          onNavigate={onNavigate}
-        />
-      ),
-    });
+  if (topicOrder === "articles-first") {
+    tabs.push(...articleTabs);
+    if (visualTab) tabs.push(visualTab);
+  } else {
+    if (visualTab) tabs.push(visualTab);
+    tabs.push(...articleTabs);
   }
 
   const activeId = articleId ?? tabs[0]?.id ?? null;
@@ -697,6 +702,14 @@ function RashisSection({ lang }: { lang: EducationLang }) {
               </p>
             ))}
           </div>
+          {block.image ? (
+            <InfographicImage
+              src={block.image.src}
+              alt={t(block.image.alt, lang)}
+              className="mt-5 rounded-xl"
+              sizes="(max-width: 768px) 100vw, 672px"
+            />
+          ) : null}
         </article>
       ))}
 
@@ -966,6 +979,7 @@ function NakshatrasSection({
       articleId={articleId}
       lang={lang}
       onNavigate={onNavigate}
+      topicOrder="articles-first"
       visualTab={{
         id: "nakshatra-guide",
         label: {
@@ -1023,6 +1037,14 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
             ))}
           </ul>
         )}
+        {universalAspect.image ? (
+          <InfographicImage
+            src={universalAspect.image.src}
+            alt={t(universalAspect.image.alt, lang)}
+            className="mt-5 rounded-xl"
+            sizes="(max-width: 768px) 100vw, 672px"
+          />
+        ) : null}
       </article>
 
       <div className="space-y-5">
@@ -1037,6 +1059,14 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
             <p className="text-xs text-shell-accent mb-3">
               {uiText("aspectsHouses", lang)}: {rule.houses}
             </p>
+            {rule.image ? (
+              <InfographicImage
+                src={rule.image}
+                alt={t(rule.planet, lang)}
+                className="mb-4 rounded-xl"
+                sizes="(max-width: 768px) 100vw, 672px"
+              />
+            ) : null}
             <p className="text-sm leading-relaxed text-shell-muted">
               {formatted(rule.description, lang)}
             </p>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { FormattedText } from "@/lib/format-inline-text";
 import {
@@ -77,6 +78,22 @@ function ArticleBlock({
   if (block.type === "table") {
     return (
       <ArticleTable headers={block.headers} rows={block.rows} lang={lang} />
+    );
+  }
+
+  if (block.type === "image") {
+    return (
+      <figure className="my-6 overflow-hidden rounded-xl border border-shell-border/70 bg-shell-sidebar/20">
+        <Image
+          src={block.src}
+          alt={t(block.alt, lang)}
+          width={800}
+          height={600}
+          unoptimized
+          className="block w-full h-auto"
+          sizes="(max-width: 768px) 100vw, 672px"
+        />
+      </figure>
     );
   }
 

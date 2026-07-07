@@ -32,7 +32,7 @@ interface PersonalAppraisalsPageClientProps {
 export default function PersonalAppraisalsPageClient({
   defaultDialCode,
 }: PersonalAppraisalsPageClientProps) {
-  const [lang, setLang] = useState<AppraisalLanguage>("en");
+  const [lang, setLang] = useState<AppraisalLanguage>("ja");
   const content = getAppraisalContent(lang);
 
   useEffect(() => {

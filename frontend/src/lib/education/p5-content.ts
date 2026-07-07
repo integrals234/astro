@@ -1,4 +1,5 @@
 import type { WisdomArticle } from "./types";
+import { educationImages, eduImage } from "./education-images";
 
 /** Articles sourced verbatim from temp-content/p5.txt (link-scrubbed, headings normalized) */
 export const p5Articles: WisdomArticle[] = [
@@ -17,6 +18,7 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `Western Astrology generally begins the first house at the exact degree of the Ascendant. Jyotish follows a different approach. In Vedic Astrology, the entire sign containing the Ascendant becomes the first house, regardless of the Ascendant's exact degree position.[1]`, ja: `西洋占星術では通常、アセンダントの正確な度数で最初のハウスが始まります。ジョーティッシュは別のアプローチを取ります。ヴェーダ占星術では、アセンダントの正確な度数の位置に関係なく、アセンダントを含むサイン全体が最初のハウスになります。[1]` } },
       { type: "paragraph", text: { en: `Therefore, if the Ascendant is located at 1 degree Leo, 29 degrees Leo, or anywhere in between, the whole sign of Leo becomes the first house. The second house corresponds entirely with Virgo, the third with Libra, and so on. The house containing the Ascendant is indicated on the birth chart by a diagonal line.`, ja: `したがって、アセンダントが獅子座 1 度、獅子座 29 度、またはその間のどこかに位置している場合、獅子座全体が第 1 ハウスになります。 2 番目の家は乙女座と完全に対応し、3 番目の家は天秤座と完全に対応します。アセンダントが属するハウスは、出生図では斜線で示されます。` } },
       { type: "paragraph", text: { en: `Equal House Diagram in Jyotish`, ja: `ジョーティッシュのイコールハウス図` } },
+      { type: "image", src: "/assets/003.jpeg", alt: { en: `Equal House diagram in Jyotish`, ja: `ジョーティッシュのイコールハウス図` } },
       { type: "paragraph", text: { en: `The South Indian chart format, which is often the easiest for beginners to learn, counts houses clockwise from the sign containing the Ascendant. In the example chart above, the Ascendant is marked by the diagonal line in Leo.`, ja: `南インドのチャート形式は、多くの場合、初心者にとって最も学びやすいもので、アセンダントを含むサインから時計回りにハウスを数えます。上のチャートの例では、アセンダントは獅子座の斜線でマークされています。` } },
       { type: "paragraph", text: { en: `The zodiac signs always remain in fixed positions within the chart. For example, Pisces will always appear in the upper-left corner.`, ja: `星座は常にチャート内の固定位置に残ります。たとえば、魚座は常に左上隅に表示されます。` } },
       { type: "paragraph", text: { en: `The meanings assigned to houses in Jyotish are not always identical to those used in Western Astrology.`, ja: `ジョーティッシュのハウスに割り当てられた意味は、西洋占星術で使用される意味と必ずしも同じではありません。` } },
@@ -26,6 +28,10 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `For example, the Moon becomes the ruler of the 1st house for a Cancer Ascendant, while the Sun rules the 1st house for a Leo Ascendant (see the article on planetary rulership of signs).`, ja: `たとえば、月は蟹座アセンダントの第 1 ハウスの支配星になりますが、太陽が獅子座アセンダントの第 1 ハウスの支配星になります (星座の惑星支配に関する記事を参照)。` } },
       { type: "paragraph", text: { en: `Regardless of which zodiac sign is associated with a house, favourable houses strengthen planets placed within them, whereas unfavourable houses tend to weaken them.`, ja: `どの星座がハウスに関連付けられているかに関係なく、有利なハウスはその中に配置された惑星を強化し、不利なハウスは惑星を弱める傾向があります。` } },
       { type: "heading", level: 3, text: { en: `Trikona or Trinal Houses`, ja: `トリコナまたはトリナルハウス` } },
+      eduImage(educationImages.trikonaHouses, {
+        en: "Trikona or trinal houses in Jyotish",
+        ja: "ジョーティッシュにおけるトリコナ（三角）ハウス",
+      }),
       { type: "paragraph", text: { en: `According to Jyotish, the 5th and 9th houses—known as the Trinal or Trikona houses—are extremely auspicious. Planets placed in these houses generally perform well and gain additional strength.`, ja: `ジョーティッシュによれば、トリナルまたはトリコナハウスとして知られる５室と９室は非常に縁起が良いとのこと。これらのハウスに配置された惑星は通常、良好なパフォーマンスを示し、さらなる強度を獲得します。` } },
       { type: "paragraph", text: { en: `Many astrologers also regard the 1st house as a Trikona house.`, ja: `多くの占星術師も、1 ハウスをトリコナ ハウスとみなしています。` } },
       { type: "paragraph", text: { en: `As a result, the natural positive qualities of planets occupying the 5th or 9th house become enhanced, allowing them to deliver their beneficial results more fully.`, ja: `その結果、5室または9室を占める惑星の本来のポジティブな性質が強化され、有益な結果をより完全に発揮できるようになります。` } },
@@ -33,9 +39,17 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `The rulers of the 5th and 9th houses carry a naturally positive energy. They bring this favourable influence into whichever house they occupy.`, ja: `5 室と 9 室の支配者は、自然にポジティブなエネルギーを持っています。彼らはどの家に住んでいても、この好ましい影響をもたらします。` } },
       { type: "paragraph", text: { en: `Likewise, they benefit planets they are conjunct with and those they aspect.`, ja: `同様に、それらは結合している惑星やアスペクトしている惑星にも利益をもたらします。` } },
       { type: "heading", level: 3, text: { en: `Kendras or Angular Houses`, ja: `ケンドラまたは角のある家` } },
+      eduImage(educationImages.kendrasHouses, {
+        en: "Kendras or angular houses in Jyotish",
+        ja: "ジョーティッシュにおけるケンドラ（角）ハウス",
+      }),
       { type: "paragraph", text: { en: `The Kendras, or Angular Houses—namely the 1st, 4th, 7th, and 10th houses—are also considered favourable houses. Planets positioned within them gain strength, and the houses themselves represent generally beneficial areas of life.`, ja: `ケンドラ、または角のあるハウス、つまり 1 室、4 室、7 室、および 10 室も、好ましいハウスとみなされます。それらの中に位置する惑星は力を増し、ハウス自体は一般的に人生に有益な領域を表します。` } },
       { type: "paragraph", text: { en: `A good house has two important effects. First, it strengthens planets placed within it and the matters associated with those planets. Second, its ruler carries a positive influence that benefits the house where it is placed.`, ja: `良い家には 2 つの重要な効果があります。まず、その中に配置された惑星とそれらの惑星に関連する事柄を強化します。第二に、その支配者は、それが置かれている家に利益をもたらすポジティブな影響をもたらします。` } },
       { type: "heading", level: 3, text: { en: `Dusthanas or Negative Houses`, ja: `ダスタナスまたはネガティブハウス` } },
+      eduImage(educationImages.dusthanasHouses, {
+        en: "Dusthanas or negative houses in Jyotish",
+        ja: "ジョーティッシュにおけるダスターナ（凶）ハウス",
+      }),
       { type: "paragraph", text: { en: `The 6th, 8th, and 12th houses, known as Dusthanas, are regarded as negative houses.`, ja: `ダスタナスとして知られる６、８、１２室はネガティブハウスとみなされます。` } },
       { type: "paragraph", text: { en: `These houses do not represent anything inherently evil. They are classified as negative because they tend to weaken planets occupying them, reducing the ability of those planets to express their natural positive qualities.`, ja: `これらの家は本質的に邪悪なものを表しているわけではありません。それらは、そこに住んでいる惑星を弱め、それらの惑星が本来持っているポジティブな性質を表現する能力を低下させる傾向があるため、ネガティブなものとして分類されます。` } },
       { type: "paragraph", text: { en: `Furthermore, the houses ruled by planets placed in the 6th, 8th, or 12th are also weakened, causing difficulties in the affairs associated with those houses.`, ja: `さらに、6、8、12に位置する惑星が支配するハウスも弱まり、それらのハウスに関連する事柄に困難が生じます。` } },
@@ -43,6 +57,10 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `Among the three Dusthanas, the 8th house is generally regarded as the most difficult.`, ja: `3 つのダスターナの中で、一般に 8 室が最も難しいと考えられています。` } },
       { type: "paragraph", text: { en: `Even though these houses are considered negative, it is important to understand their deeper meaning. A strong 6th house helps us overcome enemies and competitors. A strong 8th house can indicate longevity and vitality. A strong 12th house suggests limited losses and expenditures, while also supporting spiritual growth and progress toward enlightenment.`, ja: `これらの家はネガティブなものと考えられていますが、その深い意味を理解することが重要です。強い6ハウスは、敵や競争相手に打ち勝つのに役立ちます。強い8ハウスは長寿と活力を示します。強い12ハウスは、損失と出費が限定的であることを示唆すると同時に、精神的な成長と啓発への進歩をサポートします。` } },
       { type: "heading", level: 3, text: { en: `Upachaya or Growing Houses`, ja: `ウパチャヤまたは成長する家` } },
+      eduImage(educationImages.upachayaHouses, {
+        en: "Upachaya or growing houses in Jyotish",
+        ja: "ジョーティッシュにおけるウパチャヤ（成長）ハウス",
+      }),
       { type: "paragraph", text: { en: `The 3rd, 6th, 10th, and 11th houses are classified as Upachaya houses, often translated as "growing houses."`, ja: `3、6、10、11 ハウスはウパチャヤ ハウスに分類され、多くの場合「成長するハウス」と訳されます。` } },
       { type: "paragraph", text: { en: `Any difficulties indicated by these houses tend to improve with time, and malefic planets placed within them frequently produce beneficial results as life progresses.`, ja: `これらのハウスが示す困難は時間の経過とともに改善する傾向があり、それらのハウスに配置された凶星は、人生が進むにつれて有益な結果をもたらすことがよくあります。` } },
       { type: "paragraph", text: { en: `For this reason, malefic planets are often considered well placed when occupying either their Own Signs, Exalted Signs, or Upachaya houses.`, ja: `このため、凶星は、自身の星座、高貴な星座、またはウパチャヤハウスのいずれかを占有する場合、適切な位置にあるとみなされることがよくあります。` } },
@@ -365,6 +383,10 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `As a result, matters relating to gains, profits, opportunities, and the fulfilment of desires would likely benefit from this aspect.`, ja: `その結果、利得、利益、機会、欲望の実現に関連する事柄は、この側面から恩恵を受ける可能性があります。` } },
       { type: "heading", level: 3, text: { en: `Aspect Principle in Jyotish Astrology`, ja: `ジョーティッシュ占星術のアスペクト原理` } },
       { type: "heading", level: 3, text: { en: `Sun Aspects Only the 7th House`, ja: `太陽のアスペクトは7ハウスのみ` } },
+      eduImage(educationImages.sunAspect7th, {
+        en: "Sun aspects only the 7th house in Jyotish",
+        ja: "ジョーティッシュにおける太陽の第7ハウスアスペクト",
+      }),
       { type: "heading", level: 3, text: { en: `Aspect Rules`, ja: `アスペクトルール` } },
       { type: "paragraph", text: { en: `• Rahu and Ketu do not cast any aspects, but all the other planets do.`, ja: `• ラーフとケートゥはアスペクトをキャストしませんが、他のすべての惑星はアスペクトをキャストします。` } },
       { type: "paragraph", text: { en: `• All planets aspect the 7th house from their position.`, ja: `• すべての惑星は、その位置から 7 番目の家にアスペクトしています。` } },
@@ -373,12 +395,24 @@ export const p5Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `• Jupiter additionally aspects the 5th and 9th houses from itself.`, ja: `・木星はさらに、木星自体から５室と９室にアスペクトしている。` } },
       { type: "paragraph", text: { en: `When interpreting planetary aspects, both the natural characteristics and the functional characteristics of the aspecting planet must be taken into consideration.`, ja: `惑星のアスペクトを解釈するときは、アスペクトしている惑星の自然的特徴と機能的特徴の両方を考慮する必要があります。` } },
       { type: "heading", level: 3, text: { en: `Aspect Diagram for Mars`, ja: `火星のアスペクト ダイアグラム` } },
+      eduImage(educationImages.marsAspect, {
+        en: "Aspect diagram for Mars in Jyotish",
+        ja: "ジョーティッシュにおける火星のアスペクト図",
+      }),
       { type: "heading", level: 3, text: { en: `Mars Aspects the 4th, 7th and 8th Houses in Jyotish`, ja: `火星はジョーティッシュの4、7、8ハウスにアスペクトします` } },
       { type: "paragraph", text: { en: `Mars casts aspects onto the 4th, 7th, and 8th houses counted from its own position in the birth chart.`, ja: `火星は、出生図における自身の位置から数えて4、7、8室にアスペクトをキャストします。` } },
       { type: "heading", level: 3, text: { en: `Aspect Diagram for Jupiter`, ja: `木星のアスペクト ダイアグラム` } },
+      eduImage(educationImages.jupiterAspect, {
+        en: "Aspect diagram for Jupiter in Jyotish",
+        ja: "ジョーティッシュにおける木星のアスペクト図",
+      }),
       { type: "heading", level: 3, text: { en: `Jupiter Aspects the 5th, 7th and 9th Houses in Jyotish`, ja: `木星はジョーティシュの５、７、９室にアスペクトしている` } },
       { type: "paragraph", text: { en: `Jupiter casts aspects onto the 5th, 7th, and 9th houses counted from itself.`, ja: `木星は自身から数えて５、７、９室にアスペクトをキャストしている。` } },
       { type: "heading", level: 3, text: { en: `Aspect Diagram for Saturn`, ja: `土星のアスペクトダイアグラム` } },
+      eduImage(educationImages.saturnAspect, {
+        en: "Aspect diagram for Saturn in Jyotish",
+        ja: "ジョーティッシュにおける土星のアスペクト図",
+      }),
       { type: "heading", level: 3, text: { en: `Saturn Aspects the 3rd, 7th and 10th Houses in Jyotish`, ja: `土星はジョーティッシュの３、７、１０室にアスペクトしている` } },
       { type: "paragraph", text: { en: `Saturn casts aspects onto the 3rd, 7th, and 10th houses counted from its own position.`, ja: `土星は自身の位置から数えて３、７、１０室にアスペクトをキャストしています。` } },
       { type: "heading", level: 3, text: { en: `Conjunction and Combustion`, ja: `結合と燃焼` } },

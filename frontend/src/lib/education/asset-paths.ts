@@ -1,5 +1,7 @@
 /** Maps education content IDs to files in `frontend/public/assets/`. */
 
+import { educationImages } from "./education-images";
+
 export const planetImages = {
   sun: "/assets/sun.png",
   moon: "/assets/moon.png",
@@ -43,10 +45,10 @@ export const nakshatraImages: Record<string, string | undefined> = {
 };
 
 export const aspectImages = {
-  overview: "/assets/moon.png",
-  mars: "/assets/mars.png",
-  jupiter: "/assets/jupiter.png",
-  saturn: "/assets/saturn.png",
+  overview: educationImages.sunAspect7th,
+  mars: educationImages.marsAspect,
+  jupiter: educationImages.jupiterAspect,
+  saturn: educationImages.saturnAspect,
   rahuKetu: "/assets/rahu.png",
 } as const;
 

@@ -193,7 +193,7 @@ function ChartWorkspaceInner({
   const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
-  const [lang, setLang] = useState<LanguageCode>('hi');
+  const [lang, setLang] = useState<LanguageCode>('ja');
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [personName, setPersonName] = useState('');
   const [formData, setFormData] = useState<ChartFormData>(() => {

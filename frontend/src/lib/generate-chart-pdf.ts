@@ -104,7 +104,7 @@ export async function downloadChartPdf({
   locationName,
   formData,
   chartData,
-  lang = "en",
+  lang = "ja",
 }: PdfInput) {
   const labels = getPdfLabels(lang);
   const doc = new jsPDF({ unit: "pt", format: "a4" });

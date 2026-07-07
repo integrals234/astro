@@ -1,4 +1,5 @@
 import type { WisdomArticle } from "./types";
+import { educationImages, eduImage } from "./education-images";
 
 /** Articles sourced verbatim from temp-content/p4.txt (link-scrubbed, headings normalized) */
 export const p4Articles: WisdomArticle[] = [
@@ -168,7 +169,10 @@ export const p4Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `The diamond-shaped grid is predominantly used in North India, while the rectangular grid is more commonly used in South India. Both charts shown in the illustration below contain identical astrological data.`, ja: `ダイヤモンド型グリッドは主に北インドで使用され、長方形グリッドは南インドでより一般的に使用されます。以下の図に示されている両方のチャートには、同一の占星術データが含まれています。` } },
       { type: "paragraph", text: { en: `In the North Indian format, the Ascendant is always placed in the upper diamond-shaped section, and the zodiac signs are often numbered from 1 to 12, corresponding to Aries through Pisces. In the example horoscope shown, the Ascendant is in Pisces, the 12th sign, with both Jupiter and Venus positioned in the Ascendant. Rahu is located in Cancer, the 4th sign, which corresponds to the 5th house in this particular chart, and so on.`, ja: `北インドの形式では、アセンダントは常に上部のひし形のセクションに配置され、星座には多くの場合、牡羊座から魚座に対応する 1 から 12 までの番号が付けられます。示されているホロスコープの例では、アセンダントは 12 番目の星座である魚座にあり、木星と金星の両方がアセンダントに位置しています。ラーフは、この特定のチャートでは 5 番目の家に対応する 4 番目の星座である蟹座に位置しています。` } },
       { type: "heading", level: 3, text: { en: `Comparison between North and South Indian Jyotish Chart Formats`, ja: `北インドと南インドのジョーティッシュ チャート形式の比較` } },
-      { type: "heading", level: 3, text: { en: `Comparison between North and South Indian Jyotish Chart Formats`, ja: `北インドと南インドのジョーティッシュ チャート形式の比較` } },
+      eduImage(educationImages.chartFormatsComparison, {
+        en: "Comparison between North Indian and South Indian chart formats",
+        ja: "北インド式と南インド式チャート形式の比較",
+      }),
       { type: "paragraph", text: { en: `The zodiac signs used in Jyotish have the same names as those found in Western Astrology, such as Aries, Taurus, Gemini, and so forth. However, their actual positions in the sky differ from those used in Western astrology.`, ja: `ジョーティッシュで使用される星座は、牡羊座、おうし座、双子座など、西洋占星術で見られるものと同じ名前です。ただし、実際の空の位置は西洋占星術で使用されるものとは異なります。` } },
       { type: "paragraph", text: { en: `This difference arises because Vedic Astrology references the zodiac signs against the background of the fixed stars and therefore uses the Sidereal Zodiac, whereas Western Astrology generally uses the Tropical Zodiac.`, ja: `この違いは、ヴェーダ占星術では恒星を背景に星座を参照するため恒星黄道帯を使用するのに対し、西洋占星術では一般的に熱帯黄道帯を使用するために生じます。` } },
       { type: "paragraph", text: { en: `At present, there is approximately a 24-degree difference between these two systems. The Tropical Zodiac takes the Spring Equinox as the zero-degree reference point for Aries, but this reference gradually shifts against the fixed stars due to the phenomenon known as the precession of the equinoxes.`, ja: `現在、これら 2 つのシステムの間には約 24 度の差があります。熱帯黄道帯は、春分点を牡羊座の 0 度の基準点としますが、この基準点は、春分点の歳差運動として知られる現象により、恒星に対して徐々に移動します。` } },
@@ -179,7 +183,10 @@ export const p4Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `The Ascendant is indicated by a single diagonal line placed within the relevant sign. This remains the same regardless of the exact Ascendant degree. For example, an Ascendant at 1° Leo and an Ascendant at 29° Leo are both represented identically.`, ja: `アセンダントは、関連するサイン内に配置された単一の対角線によって示されます。これは、正確なアセンダントの度数に関係なく同じままです。たとえば、獅子座 1 度のアセンダントと獅子座 29 度のアセンダントはどちらも同じように表されます。` } },
       { type: "paragraph", text: { en: `In this system, houses correspond exactly to signs and are counted clockwise from the Ascendant. Thus, if the Ascendant is in Leo—whether at 1 degree or 29 degrees—the entire sign of Leo becomes the 1st house, the whole sign of Virgo becomes the 2nd house, Libra becomes the 3rd house, and so forth.`, ja: `このシステムでは、ハウスはサインに正確に対応し、アセンダントから時計回りに数えられます。したがって、アセンダントが獅子座にある場合、1度でも29度でも、獅子座全体が第1室となり、乙女座全体が第2室、天秤座が第3室、というようになります。` } },
       { type: "heading", level: 3, text: { en: `South Indian Vedic Astrology Chart Format`, ja: `南インドのヴェーダ占星術チャートの形式` } },
-      { type: "heading", level: 3, text: { en: `South Indian Vedic Astrology Chart Format`, ja: `南インドのヴェーダ占星術チャートの形式` } },
+      eduImage(educationImages.southIndianChart, {
+        en: "South Indian Vedic chart format",
+        ja: "南インド式ヴェーダチャート形式",
+      }),
     ],
   },
   {
@@ -191,6 +198,9 @@ export const p4Articles: WisdomArticle[] = [
       { type: "heading", level: 2, text: { en: `The Twelve Houses and Their Indications`, ja: `12ハウスとその暗示` } },
       { type: "paragraph", text: { en: `Summary: Covers the primary indications of each of the Twelve Houses in Vedic Astrology, together with explanatory notes and House Classifications.`, ja: `概要: ヴェーダ占星術の各 12 ハウスの主な兆候を、説明メモとハウス分類とともに取り上げます。` } },
       { type: "paragraph", text: { en: `This section is essential reading for students of Jyotish, as it outlines the principal areas of life governed by each of the twelve houses.`, ja: `このセクションは、12 ハウスのそれぞれが支配する生活の主な分野について概説しているため、ジョーティッシュの学生にとって必読の書です。` } },
+      { type: "paragraph", text: { en: `Jyotish divides the 360 degrees of the sky into twelve equal sections, each measuring 30 degrees. These divisions create the twelve houses used in Vedic Astrology. Jyotish always employs the Sidereal Zodiac.`, ja: `ジョーティッシュは、空の 360 度を 30 度ずつ 12 等分に分割します。これらの区分は、ヴェーダ占星術で使用される 12 ハウスを作成します。ジョーティッシュは常に恒星黄道帯を採用します。` } },
+      { type: "paragraph", text: { en: `Each house governs specific areas of life. Further details regarding the primary significations of the houses can be found in the article The Twelve Houses. Most chart interpretations in Jyotish are based upon a house-by-house examination.`, ja: `各ハウスは生活の特定の領域を統治します。ハウスの主な意味に関する詳細については、「The Twelve Houses」の記事を参照してください。ジョーティッシュにおけるほとんどのチャート解釈は、ハウスごとの検査に基づいています。` } },
+      { type: "image", src: "/assets/001.jpeg", alt: { en: `Equal House diagram in Jyotish`, ja: `ジョーティッシュのイコールハウス図` } },
       { type: "paragraph", text: { en: `Most chart interpretations are conducted on a house-by-house basis, making a sound understanding of the houses and their indications absolutely essential.`, ja: `チャートの解釈のほとんどはハウスごとに行われるため、ハウスとその指標をしっかりと理解することが不可欠です。` } },
       { type: "paragraph", text: { en: `Traditional Jyotish texts often provide extensive lists of matters associated with each house. However, in this article, I have attempted to remain concise and focus on the most important indications.`, ja: `伝統的なジョーティッシュのテキストには、各家に関連する事項の広範なリストが記載されていることがよくあります。ただし、この記事では簡潔さを保ち、最も重要な兆候に焦点を当てるように努めました。` } },
       { type: "heading", level: 3, text: { en: `First House – ‘House of Body’`, ja: `最初の家 – 「身体の家」` } },
@@ -332,19 +342,20 @@ export const p4Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `House Indicator: Saturn`, ja: `ハウスインジケーター: 土星` } },
       { type: "heading", level: 3, text: { en: `Parts of the Body Associated with Each House`, ja: `各家に関係する体の部位` } },
       { type: "paragraph", text: { en: `Each house corresponds to a particular part of the body. When a house is significantly weakened, it may indicate potential health issues affecting the related area of the physiology.`, ja: `各ハウスは体の特定の部分に対応します。家が著しく弱っている場合、生理機能の関連領域に影響を与える潜在的な健康上の問題を示している可能性があります。` } },
-      { type: "paragraph", text: { en: `House	Part of Body`, ja: `家の体の一部` } },
-      { type: "paragraph", text: { en: `1	Head`, ja: `1頭` } },
-      { type: "paragraph", text: { en: `2	Eyes, face, mouth, upper throat`, ja: `2 目、顔、口、喉の上部` } },
-      { type: "paragraph", text: { en: `3	Arms, shoulders, lower throat`, ja: `3 腕、肩、喉の下部` } },
-      { type: "paragraph", text: { en: `4	Chest, heart`, ja: `4 胸、ハート` } },
-      { type: "paragraph", text: { en: `5	Stomach`, ja: `5 胃` } },
-      { type: "paragraph", text: { en: `6	Region of the navel`, ja: `6 おへそ周辺` } },
-      { type: "paragraph", text: { en: `7	Body below the waist`, ja: `7 腰から下の胴体` } },
-      { type: "paragraph", text: { en: `8	Reproductive organs, anus`, ja: `8 生殖器、肛門` } },
-      { type: "paragraph", text: { en: `9	Hips, thighs`, ja: `9 ヒップ、太もも` } },
-      { type: "paragraph", text: { en: `10	Knees`, ja: `10 膝` } },
-      { type: "paragraph", text: { en: `11	Calves`, ja: `11 子牛` } },
-      { type: "paragraph", text: { en: `12	Feet`, ja: `12フィート` } },
+      { type: "table", headers: [{ en: `House`, ja: `ハウス` }, { en: `Part of Body`, ja: `身体部位` }], rows: [
+        [{ en: `1`, ja: `1` }, { en: `Head`, ja: `頭` }],
+        [{ en: `2`, ja: `2` }, { en: `Eyes, face, mouth, upper throat`, ja: `目、顔、口、喉上部` }],
+        [{ en: `3`, ja: `3` }, { en: `Arms, shoulders, lower throat`, ja: `腕、肩、喉下部` }],
+        [{ en: `4`, ja: `4` }, { en: `Chest, heart`, ja: `胸、心臓` }],
+        [{ en: `5`, ja: `5` }, { en: `Stomach`, ja: `胃` }],
+        [{ en: `6`, ja: `6` }, { en: `Region of the navel`, ja: `へそ周辺` }],
+        [{ en: `7`, ja: `7` }, { en: `Body below the waist`, ja: `腰から下の体` }],
+        [{ en: `8`, ja: `8` }, { en: `Reproductive organs, anus`, ja: `生殖器、肛門` }],
+        [{ en: `9`, ja: `9` }, { en: `Hips, thighs`, ja: `腰、太もも` }],
+        [{ en: `10`, ja: `10` }, { en: `Knees`, ja: `膝` }],
+        [{ en: `11`, ja: `11` }, { en: `Calves`, ja: `ふくらはぎ` }],
+        [{ en: `12`, ja: `12` }, { en: `Feet`, ja: `足` }],
+      ] },
       { type: "heading", level: 3, text: { en: `House Classification`, ja: `住宅の分類` } },
       { type: "paragraph", text: { en: `Houses 5 and 9 (Trikona) are regarded as exceptionally auspicious. Planets placed in these houses become strengthened, and the houses they rule also benefit from their placement in the 5th or 9th.`, ja: `ハウス 5 ​​と 9 (トリコナ) は、非常に縁起が良いと考えられています。これらのハウスに配置された惑星は強化され、それらが支配するハウスも5室または9室に配置されることで恩恵を受けます。` } },
       { type: "paragraph", text: { en: `In addition, the rulers of the 5th and 9th houses—even if naturally malefic planets such as Saturn—become functional benefics and carry a positive influence wherever they are placed.`, ja: `さらに、5 室と 9 室の支配星は、たとえ土星のような本来的に凶星であっても、機能的な恩恵をもたらし、どこに配置されてもポジティブな影響を及ぼします。` } },

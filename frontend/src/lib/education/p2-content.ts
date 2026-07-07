@@ -1,4 +1,5 @@
 import type { WisdomArticle } from "./types";
+import { educationImages, eduImage } from "./education-images";
 
 /** Articles sourced verbatim from temp-content/p2.txt (link-scrubbed, headings normalized) */
 export const p2Articles: WisdomArticle[] = [
@@ -22,6 +23,10 @@ export const p2Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `In the current Dark Age of Kali Yuga [2], direct cognition is considered unavailable. As a result, we rely upon the cognized wisdom passed down by enlightened sages from previous ages.`, ja: `現在のカリユガの暗黒時代 [2] では、直接認識は不可能であると考えられています。その結果、私たちは前の時代から啓発された賢者たちによって伝えられた認識された知恵に依存しています。` } },
       { type: "heading", level: 3, text: { en: `Maharishi Parashara – ‘Father’ of Vedic Astrology`, ja: `マハリシ・パラシャラ – ヴェーダ占星術の「父」` } },
       { type: "paragraph", text: { en: `The Vedic Sage, or Seer, most widely regarded as the “father of Jyotish Astrology” is Maharishi Parashara (Maha meaning “great” and Rishi meaning “seer”) [3]. His Sanskrit work, the Brihat Parasara Hora Shastra [4], remains one of the most important and influential texts in Vedic Astrology.`, ja: `「ジョーティッシュ占星術の父」として最も広くみなされているヴェーダの賢者、または先見者は、マハリシ・パラシャラ（マハは「偉大な」を意味し、リシは「先見者」を意味する）です[3]。彼のサンスクリット語の著作である『ブリハット パラサラ ホラ シャストラ』 [4] は、依然としてヴェーダ占星術において最も重要かつ影響力のあるテキストの 1 つです。` } },
+      eduImage(educationImages.parashara, {
+        en: "Maharishi Parashara, father of Vedic astrology",
+        ja: "ヴェーダ占星術の父、マハリシ・パラシャラ",
+      }),
       { type: "paragraph", text: { en: `From the Vedic perspective, exactly when or where Parashara lived is of secondary importance. Even if his teachings had been lost over the course of time, it would not fundamentally matter because the knowledge was never considered to be personally his. The wisdom itself existed independently and was simply cognized through him. Future Rishis born in other ages could once again re-cognize the complete body of Jyotish Shastra and make it available for the benefit of humanity.`, ja: `ヴェーダの観点からは、パラシャラが正確にいつ、どこに住んでいたかは二番目に重要です。たとえ彼の教えが時間の経過とともに失われていたとしても、その知識は彼の個人的なものとは決して考えられなかったので、それは基本的に問題ではありません。知恵自体は独立して存在し、彼を通して認識されただけです。他の時代に生まれた将来の聖者は、ジョーティッシュ・シャストラの完全な体を再び認識し、それを人類の利益のために利用できるようにするかもしれません。` } },
       { type: "heading", level: 3, text: { en: `Footnotes`, ja: `脚注` } },
       { type: "paragraph", text: { en: `[1] The Vedic concept of God differs significantly from the idea of a distant, judgemental deity often associated with the Abrahamic traditions. In the Vedic understanding, the all-pervading “GOD” may be viewed as a three-letter acronym representing fundamental principles of nature: G – Generator (personified as Brahma), O – Operator (personified as Vishnu), and D – Destroyer (personified as Maheshwara or Shiva). This divine reality is not something separate from us; rather, we exist within it, just as a fish exists within the ocean. Some describe it as the “field of creative intelligence.” There are also many interesting parallels between this Vedic Model of Reality and modern scientific models.`, ja: `[1] ヴェーダの神の概念は、アブラハムの伝統によく関連付けられている遠く離れた裁きの神という概念とは大きく異なります。ヴェーダの理解では、すべてに浸透している「GOD」は、自然の基本原理を表す 3 文字の頭字語と見なされます。G – 生成者 (ブラフマーとして擬人化)、O – 操作者 (ヴィシュヌとして擬人化)、D – 破壊者 (マヘシュワラまたはシヴァとして擬人化)。この神聖な現実は私たちから切り離されたものではありません。むしろ、魚が海の中に存在するのと同じように、私たちはその中に存在します。それを「創造的知性の分野」と表現する人もいます。このヴェーダの現実モデルと現代の科学モデルの間には、興味深い類似点も数多くあります。` } },
@@ -116,12 +121,20 @@ export const p2Articles: WisdomArticle[] = [
     id: "nakshatras-stellar-1",
     section: "nakshatras",
     title: { en: `Nakshatras – Stellar Constellations`, ja: `ナクシャトラ – 恒星星座` },
-    related: ["sidereal-zodiac-p3","mahadashas","twelve-houses"],
+    related: ["nakshatras-human-physiology","sidereal-zodiac-p3","mahadashas"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Nakshatras – Stellar Constellations`, ja: `ナクシャトラ – 恒星星座` } },
       { type: "paragraph", text: { en: `Jyotish places considerable importance on the stellar constellations known as Nakshatras. They play a vital role in chart interpretation, compatibility analysis, and determining favourable timings for important activities through Muhurtha.`, ja: `ジョーティッシュは、ナクシャトラとして知られる恒星の星座を非常に重視しています。彼らは、チャートの解釈、互換性分析、およびムハルタを通じて重要な活動に有利なタイミングを決定する上で重要な役割を果たします。` } },
       { type: "paragraph", text: { en: `There are 27 Nakshatras, often referred to as Lunar Mansions, distributed evenly throughout the sky. Technically speaking, they are arranged as equal sectors along the ecliptic.`, ja: `しばしば月の邸宅と呼ばれる 27 のナクシャトラが空全体に均等に分布しています。技術的に言えば、それらは黄道に沿って等しいセクターとして配置されます。` } },
       { type: "paragraph", text: { en: `Given the significance of the Nakshatras within Vedic Astrology, it is hardly surprising that Jyotish employs a zodiac system that remains permanently anchored to the fixed stars and therefore remains aligned with the Nakshatras themselves.`, ja: `ヴェーダ占星術におけるナクシャトラの重要性を考えると、ジョーティッシュが永久に恒星に固定されたままであり、したがってナクシャトラ自体と一致し続ける黄道十二宮システムを採用していることは驚くべきことではありません。` } },
+      eduImage(educationImages.nakshatrasStellar, {
+        en: "Nakshatras — stellar constellations",
+        ja: "ナクシャトラ — 恒星星座",
+      }),
+      eduImage(educationImages.nakshatraWheel, {
+        en: "The 27 nakshatras and zodiac signs in Jyotish",
+        ja: "ジョーティッシュにおける27ナクシャトラと黄道十二宮",
+      }),
       { type: "heading", level: 3, text: { en: `Footnotes`, ja: `脚注` } },
       { type: "heading", level: 3, text: { en: `[1]`, ja: `[1]` } },
       { type: "paragraph", text: { en: `The "fixed stars" are located so far from Earth that their angular movement relative to our Sun is extremely small, even across many thousands of years. For practical purposes, it is therefore reasonable to describe them as fixed or immovable.`, ja: `「恒星」は地球から非常に遠くに位置しているため、太陽に対するそれらの角の動きは、何千年にわたっても非常に小さいです。したがって、実際的な目的では、それらを固定または不動として説明するのが合理的です。` } },
@@ -137,6 +150,20 @@ export const p2Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `By contrast, if the Sun is located at 28 degrees Virgo in the Tropical Zodiac, the calculation becomes:`, ja: `対照的に、太陽が熱帯黄道帯の乙女座 28 度に位置する場合、計算は次のようになります。` } },
       { type: "paragraph", text: { en: `28° – 24° = 4° Virgo`, ja: `28° – 24° = 4° 乙女座` } },
       { type: "paragraph", text: { en: `Although the Sun has still shifted backwards by the ayanamsa amount, it remains within Virgo and therefore does not change signs.`, ja: `太陽は依然としてアヤナムサ量だけ後方に移動していますが、乙女座内に留まっているため、星座は変わりません。` } },
+    ],
+  },
+  {
+    id: "nakshatras-human-physiology",
+    section: "nakshatras",
+    title: { en: `The 27 Nakshatras in Human Physiology`, ja: `人体における27ナクシャトラ` },
+    related: ["nakshatras-stellar-1","sidereal-zodiac-p3","twelve-houses"],
+    blocks: [
+      { type: "heading", level: 2, text: { en: `The 27 Nakshatras in Human Physiology`, ja: `人体における27ナクシャトラ` } },
+      { type: "heading", level: 3, text: { en: `Understanding the 27 Nakshatras and Their Correspondence in the Human Body`, ja: `27ナクシャトラと人体の対応を理解する` } },
+      { type: "paragraph", text: { en: `Think of the 27 Nakshatras (lunar constellations in Vedic astrology) as a network of specialized control centers in the brain — almost like a set of switches that manage how we stay alert, fall asleep, and dream. Each of these 27 groups helps regulate our body's automatic responses, like reflexes, breathing, heartbeat, and even how we experience and process pain. Interestingly, modern science shows there are also 27 corresponding groups of brain cells (neurons) that closely match the Nakshatras — not just in number, but also in their basic structure and the roles they play. This suggests a fascinating overlap between ancient astrological wisdom and modern neuroscience.`, ja: `27のナクシャトラ（ヴェーダ占星術における月の星座）を、脳内の専門的な制御中枢のネットワーク — 覚醒、睡眠、夢を司るスイッチの集合体のようなもの — と考えてみてください。これら27のグループはそれぞれ、反射、呼吸、心拍、さらには痛みの感じ方や処理の仕方など、身体の自動反応を調節する役割を担います。興味深いことに、現代科学でもナクシャトラと密接に対応する27の脳細胞（ニューロン）群が存在することが示されており、数だけでなく基本的な構造と機能の面でも一致しています。これは、古代の占星術的知恵と現代の神経科学との間に、魅力的な重なりがあることを示唆しています。` } },
+      { type: "paragraph", text: { en: `When a baby is born, everything changes instantly. Inside the womb, the baby didn't need to worry about breathing on its own, eating, or keeping its body warm — the mother's body took care of all of that. But the moment of birth flips a switch: suddenly, the newborn has to independently manage all these basic survival functions. This massive shift is guided largely by a part of the brain called the hypothalamus, which in Vedic astrology is symbolically linked to the Moon. The hypothalamus works together with brainstem centers (linked to the Nakshatras) to help the baby adapt to this brand-new environment outside the womb.`, ja: `赤ちゃんが生まれると、すべてが一瞬にして変わります。子宮の中では、自分で呼吸したり、食べたり、体温を保ったりする必要はありませんでした — すべて母親の身体が担っていたからです。しかし誕生の瞬間にスイッチが切り替わり、新生児はこれらの基本的な生存機能を自ら管理しなければなりません。この大きな転換は、主に視床下部と呼ばれる脳の部位によって導かれます。ヴェーダ占星術では、視床下部は象徴的に月と結びつけられています。視床下部は、脳幹の中枢（ナクシャトラと結びつく）と協働し、赤ちゃんが子宮外という全く新しい環境に適応するのを助けます。` } },
+      { type: "paragraph", text: { en: `Before birth, though, the baby isn't operating on its own internal clock. Instead, its bodily rhythms — such as sleep patterns or internal cycles — are borrowed from the mother. The baby's nervous system develops in sync with her rhythms, almost like following her lead, while also slowly building its own independent rhythm in the background.`, ja: `しかし出生前、赤ちゃんは自分自身の体内時計で動いているわけではありません。むしろ、睡眠パターンや体内サイクルなどの身体リズムは、母親から借りている状態です。赤ちゃんの神経系は母親のリズムと同期しながら発達し、まるで彼女の導きに従うかのようでありながら、背景ではゆっくりと独自の独立したリズムを築いていきます。` } },
+      { type: "paragraph", text: { en: `The exact moment a baby takes its first breath is significant. According to Jyotish (Vedic astrology), that specific moment captures a unique snapshot: a particular state of the Moon (representing hypothalamic activity) combined with a particular alignment of the Nakshatras (representing brainstem activity). This precise combination is believed to set the tone for the person's entire life journey — marking the beginning of their individual biological and astrological rhythm. From that point forward, life continues in structured cycles: the daily rhythm of day turning into night, the monthly rhythm of lunar phases, and many other natural patterns that shape our existence over time.`, ja: `赤ちゃんが最初の息を吸う正確な瞬間は、非常に重要です。ジョーティッシュ（ヴェーダ占星術）によれば、その特定の瞬間は唯一のスナップショットを捉えます — 月の特定の状態（視床下部の活動を表す）と、ナクシャトラの特定の配置（脳幹の活動を表す）の組み合わせです。この精密な組み合わせが、その人の生涯全体の基調を定めると信じられています — 個人の生物学的・占星術的リズムの始まりを刻むのです。その瞬間以降、人生は構造化されたサイクルの中で続きます — 昼が夜に変わる日々のリズム、月相の月次リズム、そして時間をかけて私たちの存在を形作るその他多くの自然のパターンです。` } },
     ],
   },
   {
@@ -266,6 +293,18 @@ export const p2Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `• Rahu – Gomed (Hessonite Garnet)`, ja: `• ラーフ – ゴメッド (ヘソナイト ガーネット)` } },
       { type: "paragraph", text: { en: `• Ketu – Cat's Eye (Chrysoberyl)`, ja: `• Ketu – キャッツアイ (クリソベリル)` } },
       { type: "paragraph", text: { en: `Note: Gomed is also known as Hessonite Garnet, while Cat's Eye generally refers to Chrysoberyl.`, ja: `注: ゴメッドはヘソナイト ガーネットとしても知られていますが、キャッツアイは一般的にクリソベリルを指します。` } },
+      eduImage(educationImages.gemstone1, {
+        en: "Planet and gemstone associations in Jyotish (1)",
+        ja: "ジョーティッシュにおける惑星と宝石の対応（1）",
+      }),
+      eduImage(educationImages.gemstone2, {
+        en: "Planet and gemstone associations in Jyotish (2)",
+        ja: "ジョーティッシュにおける惑星と宝石の対応（2）",
+      }),
+      eduImage(educationImages.gemstone3, {
+        en: "Planet and gemstone associations in Jyotish (3)",
+        ja: "ジョーティッシュにおける惑星と宝石の対応（3）",
+      }),
       { type: "paragraph", text: { en: `Jyotish is also very specific regarding the weight and quality of gemstones, the metal in which they should be set, and even the finger on which they should be worn [2]. For remedial purposes, gemstones should ideally be natural rather than synthetic or laboratory-created [3].`, ja: `ジョーティッシュはまた、宝石の重量と品質、宝石をはめ込む金属、さらには宝石を着用する指にさえも非常にこだわりがあります [2]。修復目的の場合、宝石は合成または実験室で作成されたものではなく、天然のものであることが理想的です [3]。` } },
       { type: "paragraph", text: { en: `To be effective, gemstones should remain in contact with the skin. This is typically achieved through specially designed ring settings or by wearing the stone as a pendant.`, ja: `効果を発揮するには、宝石が肌に触れたままにする必要があります。これは通常、特別にデザインされたリングのセッティング、または石をペンダントとして着用することによって実現されます。` } },
       { type: "paragraph", text: { en: `Some Jyotish experts even suggest that the gold itself—provided it is 22-carat quality—may reduce a significant proportion of planetary negativity when worn in a chain or ring. If correct, this is certainly an interesting observation.`, ja: `一部のジョーティッシュ専門家は、金自体が（22カラットの品質であれば）チェーンやリングに身に着けると、惑星のネガティブな要素のかなりの部分を軽減できる可能性があるとさえ示唆しています。もし正しければ、これは確かに興味深い観察です。` } },
@@ -347,6 +386,10 @@ export const p2Articles: WisdomArticle[] = [
     related: ["mantras","charity","planetary-antidotes"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Conducting Vedic Rituals to Remove Negativity`, ja: `否定的なものを取り除くためのヴェーダ儀式の実施` } },
+      eduImage(educationImages.vedicRituals, {
+        en: "Conducting Vedic rituals to remove negativity",
+        ja: "否定的なエネルギーを取り除くヴェーダ儀式",
+      }),
       { type: "paragraph", text: { en: `Since ancient times, Vedic rituals have been used to harmonise and manage the forces of nature. Traditional ceremonies known as Yagnas, Yajnas, or Yagyas were believed to bring timely rainfall, healthy crops, and prosperity.`, ja: `古代以来、ヴェーダの儀式は自然の力を調和させ、管理するために使用されてきました。ヤグナス、ヤグナ、またはヤギャとして知られる伝統的な儀式は、適時の降雨、健全な作物、繁栄をもたらすと信じられていました。` } },
       { type: "paragraph", text: { en: `In a similar way, difficulties caused by imbalanced planetary energies in a birth chart can be addressed through these sacred rituals.`, ja: `同様に、出生図における惑星エネルギーの不均衡によって引き起こされる困難も、これらの神聖な儀式を通じて対処することができます。` } },
       { type: "paragraph", text: { en: `Some may interpret these ceremonies as "planet worship," but their purpose is much more subtle and profound. They may be better understood as a form of karmic engineering designed to modify returning karmas and reduce suffering.`, ja: `これらの儀式を「惑星崇拝」と解釈する人もいるかもしれませんが、その目的はもっと微妙で奥深いものです。それらは、戻ってくるカルマを修正し、苦しみを軽減するために設計されたカルマ工学の一形態としてよりよく理解されるかもしれません。` } },

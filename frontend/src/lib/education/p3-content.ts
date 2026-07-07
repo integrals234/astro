@@ -1,4 +1,5 @@
 import type { WisdomArticle } from "./types";
+import { educationImages, eduImage } from "./education-images";
 
 /** Articles sourced verbatim from temp-content/p3.txt (link-scrubbed, headings normalized) */
 export const p3Articles: WisdomArticle[] = [
@@ -141,6 +142,11 @@ export const p3Articles: WisdomArticle[] = [
       { type: "heading", level: 3, text: { en: `Jyotish Uses the Fixed Sidereal Zodiac`, ja: `ジョーティッシュは固定恒星黄道帯を使用します` } },
       { type: "paragraph", text: { en: `Jyotish Astrology uses a different zodiac from the one employed in Western Astrology.`, ja: `ジョーティッシュ占星術では、西洋占星術で使用される星座とは異なる星座が使用されます。` } },
       { type: "paragraph", text: { en: `The zodiacs used by both Jyotish and Western Astrology are based upon an imaginary celestial sphere. In each system, this sphere is divided into twelve equal sections of 30 degrees each, much like the segments of an orange. Both systems also use the same zodiac sign names, such as Aries, Taurus, Gemini, and so forth. The Sun appears to move through each zodiac sign in approximately one month.`, ja: `ジョーティッシュ占星術と西洋占星術の両方で使用される黄道帯は、想像上の天球に基づいています。各システムでは、この球は、オレンジのセグメントとよく似た、それぞれ 30 度の 12 の等しいセクションに分割されます。どちらのシステムでも、牡羊座、おうし座、双子座などの同じ星座名が使用されます。太陽は約 1 か月かけて各星座を移動するように見えます。` } },
+      { type: "image", src: "/assets/002.jpeg", alt: { en: `The twelve zodiac signs on the celestial sphere`, ja: `天球上の12の黄道十二宮` } },
+      eduImage(educationImages.zodiacWheel, {
+        en: "Zodiac wheel with nakshatras in Jyotish",
+        ja: "ジョーティッシュにおけるナクシャトラ付き黄道帯",
+      }),
       { type: "paragraph", text: { en: `Jyotish uses the fixed Sidereal Zodiac. The term Sidereal means "with respect to the stars." The starting point of the Sidereal Zodiac is permanently anchored using the background of the fixed stars within our galaxy as its reference point.[1] As a result, the zodiac signs remain forever fixed relative to the stellar constellations.`, ja: `Jyotish は固定の Sidereal Zodiac を使用します。 Sidereal という用語は「星に関して」を意味します。恒星黄道帯の開始点は、銀河内の恒星の背景を基準点として使用して永続的に固定されています。[1]その結果、黄道十二宮は星座に対して永遠に固定されたままになります。` } },
       { type: "paragraph", text: { en: `Therefore, in Vedic Astrology, the beginning of the first sign, Aries, never changes position. Since Aries remains fixed, all of the remaining zodiac signs also stay permanently aligned with the distant background stars.`, ja: `したがって、ヴェーダ占星術では、最初の星座の始まりである牡羊座の位置が変わることはありません。牡羊座は固定されたままであるため、残りのすべての星座も遠くの背景の星と永久に整列したままになります。` } },
       { type: "paragraph", text: { en: `Western Astrology, by contrast, uses the movable Tropical Zodiac. The starting point of this zodiac gradually shifts relative to the background of the fixed stars because it is referenced to the equinox. This movement occurs due to the astronomical phenomenon known as the precession of the equinoxes.[2]`, ja: `Western Astrology, by contrast, uses the movable Tropical Zodiac. The starting point of this zodiac gradually shifts relative to the background of the fixed stars because it is referenced to the equinox.この動きは、春分点の歳差運動として知られる天文現象によって発生します [2]。` } },

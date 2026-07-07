@@ -1,5 +1,6 @@
 import type { ContentBlock, RashiEntry } from "./types";
 import { rashiImages } from "./asset-paths";
+import { educationImages } from "./education-images";
 
 export const rashisIntro = {
   en: "The twelve Rashis (zodiac signs) divide the 360° ecliptic into equal arcs of 30° each. Your birth date places the Sun in one Rashi, shaping temperament, strengths, and life themes — while the Moon sign, Ascendant (Lagna), and Nakshatra add further layers in Jyotish.",
@@ -19,6 +20,13 @@ export const rashisOverviewBlocks: ContentBlock[] = [
         ja: "各星座には支配星と元素があり、固有の強み・弱み・才能を持ちます。元素と支配星の違いが、グラハと同様に人を異なる形に育みます。",
       },
     ],
+    image: {
+      src: educationImages.howRashisDefined,
+      alt: {
+        en: "How rashis are defined in Jyotish",
+        ja: "ジョーティッシュにおけるラーシの定義",
+      },
+    },
   },
   {
     title: { en: "The Four Elements", ja: "四元素" },
@@ -37,6 +45,22 @@ export const rashisOverviewBlocks: ContentBlock[] = [
         ja: "火星は牡羊と蠍、金星は牡牛と天秤、水星は双子と乙女、月は蟹のみ、太陽は獅子、木星は射手と魚、土星は山羊と水瓶を支配します。自分の星座や高揚星座では惑星が強まり、敵対の星座では試されます。",
       },
     ],
+  },
+  {
+    title: { en: "Signs and Human Body Parts", ja: "星座と身体部位" },
+    paragraphs: [
+      {
+        en: "Each Rashi corresponds to a region of the human body — from the head (Aries) through the face, chest, abdomen, and down to the feet (Pisces). This mapping connects zodiac symbolism to physiology in traditional Jyotish.",
+        ja: "各ラーシは人体の特定の領域に対応します — 頭（牡羊座）から顔、胸、腹部を経て、足（魚座）まで。伝統的なジョーティッシュでは、この対応が星座の象徴と生理学を結びつけます。",
+      },
+    ],
+    image: {
+      src: educationImages.signsBodyParts,
+      alt: {
+        en: "Signs and human body parts in Jyotish",
+        ja: "ジョーティッシュにおける星座と身体部位",
+      },
+    },
   },
   {
     title: { en: "Decans & Finer Divisions", ja: "デカンと細分化" },

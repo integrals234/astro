@@ -12,7 +12,7 @@ export type EducationSectionId =
   | "remedies"
   | "horoscope";
 
-export type WisdomBlockType = "heading" | "paragraph" | "table";
+export type WisdomBlockType = "heading" | "paragraph" | "table" | "image";
 
 export interface WisdomArticleBlockHeading {
   type: "heading";
@@ -31,10 +31,17 @@ export interface WisdomArticleBlockTable {
   rows: BilingualText[][];
 }
 
+export interface WisdomArticleBlockImage {
+  type: "image";
+  src: string;
+  alt: BilingualText;
+}
+
 export type WisdomArticleBlock =
   | WisdomArticleBlockHeading
   | WisdomArticleBlockParagraph
-  | WisdomArticleBlockTable;
+  | WisdomArticleBlockTable
+  | WisdomArticleBlockImage;
 
 export interface WisdomArticle {
   id: string;
@@ -58,6 +65,7 @@ export interface ContentBlock {
   title?: BilingualText;
   paragraphs: BilingualText[];
   bullets?: BilingualText[];
+  image?: { src: string; alt: BilingualText };
 }
 
 export interface PlanetAttribute {

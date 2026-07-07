@@ -23,6 +23,8 @@ import {
 import { useWelcomeLang } from "@/lib/home/use-welcome-lang";
 import { uiText } from "@/lib/education/i18n/ui";
 
+const HOME_BANNER_SRC = "/assets/new/banner.jpeg";
+
 const startingPointIcons: Record<
   WelcomeStartingPointId,
   typeof BookOpen
@@ -32,6 +34,26 @@ const startingPointIcons: Record<
   "learn-practice": FlaskConical,
   "personal-reading": MoonStar,
 };
+
+function HomeBanner({ embedded }: { embedded?: boolean }) {
+  return (
+    <div
+      className={
+        embedded
+          ? "-mx-4 mb-8 md:-mx-8 md:mb-10"
+          : "mb-8 w-full md:mb-10"
+      }
+    >
+      <img
+        src={HOME_BANNER_SRC}
+        alt="Jyotish Life"
+        className="block h-auto w-full"
+        decoding="async"
+        fetchPriority="high"
+      />
+    </div>
+  );
+}
 
 function PublicWelcomeHeader({
   lang,
@@ -106,7 +128,9 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
     <div className={`${embedded ? "" : "min-h-screen"} bg-shell-bg text-shell-warm`}>
       {!embedded && <PublicWelcomeHeader lang={lang} toggleLang={toggleLang} />}
 
-      <div className={`relative mx-auto max-w-6xl ${embedded ? "" : "px-4 py-8 md:px-8 md:py-12"}`}>
+      <HomeBanner embedded={embedded} />
+
+      <div className={`relative mx-auto max-w-6xl ${embedded ? "" : "px-4 pb-8 md:px-8 md:pb-12"}`}>
         {/* Ambient background */}
         <div
           aria-hidden

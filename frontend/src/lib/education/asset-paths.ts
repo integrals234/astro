@@ -49,7 +49,6 @@ export const aspectImages = {
   mars: educationImages.marsAspect,
   jupiter: educationImages.jupiterAspect,
   saturn: educationImages.saturnAspect,
-  rahuKetu: "/assets/rahu.png",
 } as const;
 
 /** Zodiac sign (Rashi) art in `frontend/public/assets/`. */

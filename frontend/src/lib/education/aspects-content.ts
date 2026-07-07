@@ -69,7 +69,6 @@ export const specialAspects: AspectRule[] = [
   {
     planet: { en: "Rahu & Ketu", ja: "ラーフとケートゥ" },
     houses: "7th only",
-    image: aspectImages.rahuKetu,
     description: {
       en: "The shadow nodes aspect only the 7th house from their placement — a concentrated, obsessive opposition. Rahu's 7th aspect magnifies worldly craving in the aspected house; Ketu's 7th aspect spiritualizes or dissolves matters of that house, sometimes creating detachment in partnerships.",
       ja: "影の交点ラーフとケートゥは第7ハウスにのみアスペクト — 集中した執着的なオポジションです。ラーフの第7アスペクトはアスペクト先の世俗的欲求を増幅し、ケートゥはその領域を霊化または溶解させ、パートナーシップに距離を生むこともあります。",

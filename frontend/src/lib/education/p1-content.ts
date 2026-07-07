@@ -3,38 +3,6 @@ import type { WisdomArticle } from "./types";
 /** Introduction articles sourced verbatim from temp-content/p1.txt */
 export const p1IntroductionArticles: WisdomArticle[] = [
   {
-    id: "welcome",
-    section: "introduction",
-    title: { en: `Welcome to the World of Vedic Astrology – Jyotish`, ja: `ヴェーダ占星術の世界へようこそ – ジョーティッシュ` },
-    related: ["jyotish-explained","benefits-of-jyotish","faqs-1"],
-    blocks: [
-      { type: "heading", level: 2, text: { en: `Welcome to the World of Vedic Astrology – Jyotish`, ja: `ヴェーダ占星術の世界へようこそ – ジョーティッシュ` } },
-      { type: "paragraph", text: { en: `Our website offers a comprehensive collection of interconnected resources dedicated to the predictive and preventive science of Vedic Astrology, known as **Jyotish**. The articles have been written for readers from a wide range of backgrounds, whether they are complete beginners, experienced practitioners, or professional astrologers. Below are some suggested pathways that may help you explore the material more effectively.`, ja: `私たちの Web サイトでは、**ジョーティッシュ** として知られるヴェーダ占星術の予測および予防科学に特化した、相互接続されたリソースの包括的なコレクションを提供しています。記事は、まったくの初心者、経験豊富な占星術師、プロの占星術師など、幅広い背景を持つ読者を対象に書かれています。以下に、資料をより効果的に探索するのに役立ついくつかの推奨経路を示します。` } },
-      { type: "heading", level: 3, text: { en: `For Readers New to Vedic Astrology`, ja: `ヴェーダ占星術を初めて学ぶ読者向け` } },
-      { type: "paragraph", text: { en: `If you are completely new to Jyotish, we recommend continuing with this article and then exploring our **Introduction to Jyotish** and **Quick Facts** sections, which provide a solid foundation for understanding the principles of Vedic Astrology.`, ja: `ジョーティッシュをまったく初めて使用する場合は、この記事を読み進めてから、ヴェーダ占星術の原理を理解するための強固な基盤となる **ジョーティッシュの概要** と **クイック ファクト** セクションを参照することをお勧めします。` } },
-      { type: "heading", level: 3, text: { en: `For Practising Western Astrologers`, ja: `西洋占星術を実践する方へ` } },
-      { type: "paragraph", text: { en: `Several articles have been specifically prepared for Western Astrologers who wish to understand the Vedic approach. These resources can be found in the archives titled **Jyotish Key Concepts** and **For Western Astrologers**.`, ja: `ヴェーダのアプローチを理解したい西洋占星術師のために、いくつかの記事が特別に用意されています。これらのリソースは、**Jyotish Key Concepts** および **For Western Astrologers** というタイトルのアーカイブにあります。` } },
-      { type: "heading", level: 3, text: { en: `For Yoga Practitioners`, ja: `ヨガ実践者向け` } },
-      { type: "paragraph", text: { en: `Those who practice Yoga may find it helpful to begin with the article on Jyotish that we wrote for **Yoga Magazine**, and then continue with the material available in the **Links with Yoga** section below.`, ja: `ヨガを実践している人は、私たちが **Yoga Magazine** に書いたジョーティッシュに関する記事から始めて、その後、以下の **ヨガとのリンク** セクションにある資料を読み進めると役立つかもしれません。` } },
-      { type: "heading", level: 3, text: { en: `For Students of Vedic Astrology`, ja: `ヴェーダ占星術の学生向け` } },
-      { type: "paragraph", text: { en: `Individuals interested in learning Jyotish will find numerous articles designed especially for beginners. A useful starting point is the **Learn Jyotish Overview** article, which provides guidance on how to approach the study of Vedic Astrology.`, ja: `ジョーティッシュの学習に興味がある人は、特に初心者向けに設計された多数の記事を見つけることができます。出発点として役立つのは、ヴェーダ占星術の研究にどのようにアプローチするかについてのガイダンスを提供する **ジョーティッシュの概要を学ぶ** の記事です。` } },
-    ],
-  },
-  {
-    id: "vedic-western-relationship",
-    section: "introduction",
-    title: { en: `Vedic Astrology's Relationship with Western Astrology`, ja: `ヴェーダ占星術と西洋占星術の関係` },
-    related: ["key-differences-intro","faqs-1","paradigm-shift"],
-    blocks: [
-      { type: "heading", level: 2, text: { en: `Vedic Astrology's Relationship with Western Astrology`, ja: `ヴェーダ占星術と西洋占星術の関係` } },
-      { type: "paragraph", text: { en: `When comparing Vedic Astrology and Western Astrology, it becomes clear that both systems possess unique strengths and valuable perspectives.`, ja: `ヴェーダ占星術と西洋占星術を比較すると、両方のシステムが独自の強みと貴重な視点を持っていることが明らかになります。` } },
-      { type: "paragraph", text: { en: `Western Astrology generally places greater emphasis on psychology and the workings of the mind. Because of this, a Western birth chart can serve as an excellent tool for counselling and self-understanding. For those seeking insight into their thoughts, emotions, personality, and inner psychological patterns, Western Astrology offers significant value.`, ja: `西洋占星術は一般的に心理学や心の働きに重点を置きます。このため、西洋の出生図はカウンセリングと自己理解のための優れたツールとして役立ちます。自分の思考、感情、性格、内なる心理パターンについての洞察を求める人にとって、西洋占星術は大きな価値をもたらします。` } },
-      { type: "paragraph", text: { en: `Vedic Astrology, by contrast, places greater emphasis on **karma** and the timing of karmic results. Its primary focus is to identify which karmas are likely to manifest during an individual's lifetime and when those effects are most likely to occur.`, ja: `対照的に、ヴェーダ占星術は**カルマ**とカルマの結果のタイミングをより重視します。その主な焦点は、個人の一生の間にどのカルマが現れる可能性があり、それらの影響がいつ発生する可能性が最も高いかを特定することです。` } },
-      { type: "paragraph", text: { en: `One of the distinctive features of Jyotish is that it not only predicts karmic outcomes but also prescribes **remedial measures** that can help reduce or soften the impact of challenging karmas.`, ja: `ジョーティッシュの特徴の 1 つは、カルマの結果を予測するだけでなく、困難なカルマの影響を軽減または和らげるのに役立つ**是正措置**を処方することです。` } },
-      { type: "paragraph", text: { en: `For this reason, Vedic Astrology is both **predictive and preventive**, offering practical solutions to many of life's challenges.`, ja: `このため、ヴェーダ占星術は**予測的かつ予防的**であり、人生の多くの課題に対する実用的な解決策を提供します。` } },
-    ],
-  },
-  {
     id: "predictive-capabilities",
     section: "introduction",
     title: { en: `Vedic Astrology's Predictive Capabilities`, ja: `ヴェーダ占星術の予測能力` },
@@ -71,31 +39,6 @@ export const p1IntroductionArticles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `Vedic Astrology also reveals the specific periods in life when the “cosmic postman” delivers our karmic results and experiences.`, ja: `ヴェーダ占星術はまた、「宇宙の郵便配達人」が私たちのカルマの結果と経験を届ける人生の特定の時期を明らかにします。` } },
       { type: "paragraph", text: { en: `In addition to being predictive, Vedic Astrology is also preventive in nature. Jyotish offers a wide range of remedial measures designed to lessen the impact of returning negative karmas, helping to make life smoother and more comfortable.`, ja: `ヴェーダ占星術は予測的であることに加えて、本質的に予防的でもあります。ジョーティッシュは、ネガティブなカルマを返すことによる影響を軽減し、生活をよりスムーズで快適にすることを目的とした幅広い是正措置を提供します。` } },
       { type: "paragraph", text: { en: `Jyotish can also be applied to determine the most favourable timing for important actions, reflecting the principle that “there is a time for every purpose under heaven.” It can therefore indicate the best time to marry, launch a business, begin constructing a house, and undertake other significant ventures. As the saying goes, “well begun is half done.”`, ja: `ジョーティッシュは、「天の下ではあらゆる目的に時がある」という原則を反映して、重要な行動に最も有利なタイミングを決定するためにも適用できます。したがって、結婚、事業の立ち上げ、家の建設の開始、その他の重要な事業に着手するのに最適な時期を示す可能性があります。ことわざにあるように、「よく始めたものは半分終わったもの」です。` } },
-    ],
-  },
-  {
-    id: "key-differences-intro",
-    section: "introduction",
-    title: { en: `Key Differences Between Vedic and Western Astrology`, ja: `ヴェーダ占星術と西洋占星術の主な違い` },
-    related: ["vedic-western-relationship","sidereal-zodiac-p3","faqs-2"],
-    blocks: [
-      { type: "heading", level: 2, text: { en: `Key Differences Between Vedic and Western Astrology`, ja: `ヴェーダ占星術と西洋占星術の主な違い` } },
-      { type: "paragraph", text: { en: `Jyotish places greater emphasis on predicting returning karmas, whereas Western Astrology tends to focus more on psychological understanding and personal analysis. As a result, Jyotish is particularly effective for addressing practical life situations, while Western Astrology often serves as a useful foundation for counselling and self-reflection.`, ja: `ジョーティッシュは戻ってくるカルマを予測することに重点を置いていますが、西洋占星術は心理的理解と個人分析に重点を置く傾向があります。その結果、ジョーティッシュは実際の生活状況に対処するのに特に効果的であり、一方、西洋占星術はカウンセリングや内省のための有用な基盤として機能することがよくあります。` } },
-      { type: "paragraph", text: { en: `Vedic Astrology arises from a tradition that sees the cosmos and all living beings as parts of a unified whole. Accordingly, the planetary arrangement at the moment of birth is viewed as a highly concentrated and coded source of information. A skilled Vedic Astrologer can interpret and decode this information to provide time-sensitive, high-probability predictions.`, ja: `ヴェーダ占星術は、宇宙とすべての生き物を統一された全体の一部とみなす伝統から生まれました。したがって、誕生の瞬間の惑星配置は、高度に集中し暗号化された情報源とみなされます。熟練したヴェーダ占星術師は、この情報を解釈および解読して、時間に敏感で確率の高い予測を提供できます。` } },
-      { type: "paragraph", text: { en: `Jyotish works exclusively with 9 celestial bodies or “planets.” The placement of these 9 planets within the 12 signs, Houses, and 27 Nakshatras (constellations or lunar mansions) contains all the information required for accurate prediction. Because of this, Jyotish does not rely on planets beyond Saturn, such as Neptune, Uranus, or Pluto, which play a role in Western Astrology.`, ja: `Jyotish は 9 つの天体または「惑星」のみを扱います。 12 のサイン、ハウス、27 のナクシャトラ (星座または月の邸宅) 内でのこれら 9 つの惑星の配置には、正確な予測に必要なすべての情報が含まれています。このため、ジョーティッシュは西洋占星術で役割を果たす海王星、天王星、冥王星などの土星を超えた惑星には依存しません。` } },
-      { type: "paragraph", text: { en: `Therefore, Jyotish deals directly with an underlying field of information rather than with “planetary forces,” which is a more common perspective in Western Astrology. As astronomers discover additional planets and planet-like objects, Western Astrology continues to evolve. Vedic Astrology, however, remains unchanged in this regard.`, ja: `したがって、ジョーティッシュは、西洋占星術でより一般的な視点である「惑星の力」ではなく、根底にある情報分野を直接扱います。天文学者がさらなる惑星や惑星に似た天体を発見するにつれて、西洋占星術は進化し続けています。しかし、ヴェーダ占星術はこの点では変わりません。` } },
-      { type: "paragraph", text: { en: `Unlike modern Western Astrology, which uses the movable Tropical Zodiac, Vedic Astrology is based on the fixed Sidereal Zodiac, which has maintained its position for thousands of years. While Western astrological rules have gradually evolved over time, the principles of Jyotish have remained remarkably consistent.`, ja: `移動可能な熱帯黄道帯を使用する現代の西洋占星術とは異なり、ヴェーダ占星術は、数千年にわたってその位置を維持してきた固定の恒星黄道帯に基づいています。西洋占星術の規則は時間の経過とともに徐々に進化してきましたが、ジョーティッシュの原則は驚くほど一貫したままです。` } },
-    ],
-  },
-  {
-    id: "origins-intro",
-    section: "introduction",
-    title: { en: `Origins of Vedic Astrology`, ja: `ヴェーダ占星術の起源` },
-    related: ["origins-of-jyotish","jyotish-explained","faqs-2"],
-    blocks: [
-      { type: "heading", level: 2, text: { en: `Origins of Vedic Astrology`, ja: `ヴェーダ占星術の起源` } },
-      { type: "paragraph", text: { en: `Jyotish is one of the ancient sciences associated with yoga, all of which originate from the same Vedic tradition. Rather than being gradually developed or discovered over time, Jyotish was cognised by ancient seers in a distant age.`, ja: `ジョーティッシュはヨガに関連する古代科学の 1 つであり、それらはすべて同じヴェーダの伝統に由来しています。ジョーティッシュは、時間をかけて徐々に開発されたり発見されたりしたのではなく、遠い時代に古代の予言者によって認識されました。` } },
-      { type: "paragraph", text: { en: `It has successfully stood the test of time, providing guidance and benefits to countless people over many thousands of years.`, ja: `それは時の試練に耐え、何千年にもわたって数え切れないほどの人々に導きと利益を提供してきました。` } },
     ],
   },
   {
@@ -182,7 +125,7 @@ export const p1IntroductionArticles: WisdomArticle[] = [
     id: "faqs-2",
     section: "introduction",
     title: { en: `Vedic Astrology FAQs 2`, ja: `ヴェーダ占星術に関するよくある質問 2` },
-    related: ["faqs-1","faqs-3","key-differences-intro"],
+    related: ["faqs-1","faqs-3","sidereal-zodiac-p3"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Vedic Astrology FAQs 2`, ja: `ヴェーダ占星術に関するよくある質問 2` } },
       { type: "paragraph", text: { en: `Summary: Vedic Astrology (Jyotish) basic FAQs, including questions about its origins, its relationship with Hindu beliefs, Jyotish as an “applied” Vedic science, its use of the sidereal zodiac, and why it works with only the nine ‘planets’ up to and including Saturn.`, ja: `概要: ヴェーダ占星術 (ジョーティッシュ) の基本的な FAQ。その起源、ヒンドゥー教の信仰との関係、「応用」ヴェーダ科学としてのジョーティッシュ、恒星黄道帯の使用法、土星までの 9 つの「惑星」のみで機能する理由などに関する質問が含まれます。` } },

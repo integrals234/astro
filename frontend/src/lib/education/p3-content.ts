@@ -7,7 +7,7 @@ export const p3Articles: WisdomArticle[] = [
     id: "western-differences",
     section: "introduction",
     title: { en: `Vedic and Western Astrology: Key Differences`, ja: `ヴェーダ占星術と西洋占星術: 主な違い` },
-    related: ["paradigm-shift","sidereal-zodiac-p3","key-differences-intro"],
+    related: ["paradigm-shift","sidereal-zodiac-p3","faqs-2"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Vedic and Western Astrology: Key Differences`, ja: `ヴェーダ占星術と西洋占星術: 主な違い` } },
       { type: "paragraph", text: { en: `Summary: This article explores the major differences between Vedic Astrology and Western Astrology. The Vedic system differs significantly from the Western approach in its origins (through Vedic cognition), underlying paradigms (predictive, preventive, karmic, and based on coded information rather than planetary forces), and methodology (including the use of only nine planets, the sidereal zodiac, functional benefics, Mahadasha timing systems, and more).`, ja: `概要: この記事では、ヴェーダ占星術と西洋占星術の主な違いについて説明します。ヴェーダのシステムは、その起源（ヴェーダの認識による）、基礎となるパラダイム（予測、予防、カルマ、惑星の力ではなくコード化された情報に基づく）、および方法論（わずか9つの惑星の使用、恒星黄道帯、機能的恩恵、マハダシャータイミングシステムなどを含む）において、西洋のアプローチとは大きく異なります。` } },
@@ -135,7 +135,7 @@ export const p3Articles: WisdomArticle[] = [
     id: "sidereal-zodiac-p3",
     section: "introduction",
     title: { en: `Jyotish – Sidereal Zodiac`, ja: `ジョーティッシュ – 恒星黄道帯` },
-    related: ["nakshatras-stellar-1","western-differences","key-differences-intro"],
+    related: ["nakshatras-stellar-1","western-differences","paradigm-shift"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Jyotish – Sidereal Zodiac`, ja: `ジョーティッシュ – 恒星黄道帯` } },
       { type: "paragraph", text: { en: `Summary: This article explores the differences between the zodiacs used in Vedic Astrology and Western Astrology. It explains why Jyotish relies on the fixed Sidereal Zodiac rather than the movable Tropical Zodiac. In doing so, it addresses one of the primary objections astronomers raise against astrology. The article also demonstrates how Sun signs, Ascendants, and all planetary positions can appear in different signs when calculated using the two systems.`, ja: `概要: この記事では、ヴェーダ占星術と西洋占星術で使用される黄道帯の違いについて説明します。これは、Jyotish が移動可能な Tropical Zodiac ではなく、固定された Sidereal Zodiac に依存している理由を説明しています。そうすることで、それは天文学者が占星術に対して提起する主な反対の 1 つに対処します。この記事では、2 つのシステムを使用して計算した場合に、太陽星座、アセンダント、およびすべての惑星の位置が異なる星座にどのように表示されるかについても説明します。` } },

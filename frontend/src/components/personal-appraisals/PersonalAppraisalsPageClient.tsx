@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
+import InstagramFollowBanner from "@/components/personal-appraisals/InstagramFollowBanner";
 import InquiryForm from "@/components/personal-appraisals/InquiryForm";
 import PersonalAppraisalsLanguageSwitcher from "@/components/personal-appraisals/PersonalAppraisalsLanguageSwitcher";
 import { getAppraisalContent } from "@/lib/personal-appraisals/i18n/content";
@@ -49,19 +50,20 @@ export default function PersonalAppraisalsPageClient({
 
   return (
     <div className="max-w-4xl space-y-12 pb-8">
-      <div className="flex justify-end -mb-4">
-        <PersonalAppraisalsLanguageSwitcher
-          lang={lang}
-          onChange={handleLangChange}
-          ariaLabel={content.languageLabel}
-        />
-      </div>
+      <InstagramFollowBanner copy={content.instagram} />
 
       <ShellPageHeader
         icon={MoonStar}
         eyebrow={content.header.eyebrow}
         title={content.header.title}
         description={content.header.description}
+        trailing={
+          <PersonalAppraisalsLanguageSwitcher
+            lang={lang}
+            onChange={handleLangChange}
+            ariaLabel={content.languageLabel}
+          />
+        }
       />
 
       <section className="rounded-3xl border border-shell-accent/20 bg-gradient-to-br from-shell-elevated/80 via-shell-elevated/50 to-shell-bg/60 p-7 md:p-9 backdrop-blur-sm">

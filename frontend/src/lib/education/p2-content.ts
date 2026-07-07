@@ -7,7 +7,7 @@ export const p2Articles: WisdomArticle[] = [
     id: "origins-of-jyotish",
     section: "introduction",
     title: { en: `Jyotish – Origins of Vedic Astrology`, ja: `ジョーティッシュ – ヴェーダ占星術の起源` },
-    related: ["origins-intro","jyotish-and-karma","paradigm-shift"],
+    related: ["jyotish-explained","jyotish-and-karma","paradigm-shift"],
     blocks: [
       { type: "heading", level: 2, text: { en: `Jyotish – Origins of Vedic Astrology`, ja: `ジョーティッシュ – ヴェーダ占星術の起源` } },
       { type: "paragraph", text: { en: `Summary: This article explores the origins of Vedic Astrology (Jyotish) and the process of Vedic cognition. It identifies the great Vedic Seer Maharishi Parashara as the ‘father of Jyotish Astrology’ and discusses his classical Jyotish text, the Brihat Parasara Hora Shastra.`, ja: `概要: この記事では、ヴェーダ占星術 (ジョーティッシュ) の起源とヴェーダ認識のプロセスを探ります。この論文では、偉大なヴェーダの聖見者マハリシ・パラシャラを「ジョーティッシュ占星術の父」と特定し、彼の古典的なジョーティッシュのテキストであるブリハット・パラサラ・ホラ・シャストラについて論じています。` } },

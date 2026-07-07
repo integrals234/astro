@@ -48,6 +48,14 @@ export interface AppraisalPageContent {
     sectionLabel: string;
     steps: string[];
   };
+  instagram: {
+    badge: string;
+    title: string;
+    handle: string;
+    body: string;
+    cta: string;
+    perks: string[];
+  };
   form: {
     sectionLabel: string;
     title: string;
@@ -202,6 +210,15 @@ const en: AppraisalPageContent = {
       "Your session is scheduled at a time that respects your timezone and privacy.",
       "After your reading, optional follow-up notes or a brief check-in can be arranged.",
     ],
+  },
+  instagram: {
+    badge: "Free daily wisdom",
+    title: "Follow us on Instagram",
+    handle: "@jyotishlife.jp",
+    body:
+      "Get daily Jyotish insights, chart tips, transit alerts, and remedies between consultations — join our growing community before you book a session.",
+    cta: "Follow on Instagram",
+    perks: ["Daily chart tips", "Transits & muhurta", "Remedies & Q&A"],
   },
   form: {
     sectionLabel: "Begin your inquiry",
@@ -361,6 +378,15 @@ const ja: AppraisalPageContent = {
       "タイムゾーンとプライバシーに配慮した日時でセッションを調整します。",
       "鑑定後、必要に応じてフォローアップメモや簡単なチェックインも可能です。",
     ],
+  },
+  instagram: {
+    badge: "毎日更新 · 無料",
+    title: "Instagramをフォロー",
+    handle: "@jyotishlife.jp",
+    body:
+      "鑑定の前後も学べる — 毎日のジョーティッシュ、チャートの読み方、トランジット、リメディのヒントを無料でお届け。まずはフォローして、私たちのコミュニティに参加してください。",
+    cta: "Instagramでフォロー",
+    perks: ["毎日のチャート解説", "トランジット・ムフルタ", "リメディ・Q&A"],
   },
   form: {
     sectionLabel: "お問い合わせ",

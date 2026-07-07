@@ -1,10 +1,12 @@
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 interface ShellPageHeaderProps {
   icon: LucideIcon;
   eyebrow: string;
   title: string;
   description: string;
+  trailing?: ReactNode;
 }
 
 export default function ShellPageHeader({
@@ -12,12 +14,16 @@ export default function ShellPageHeader({
   eyebrow,
   title,
   description,
+  trailing,
 }: ShellPageHeaderProps) {
   return (
     <div className="mb-8">
-      <div className="inline-flex items-center gap-2 rounded-full border border-shell-border bg-shell-elevated/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-shell-muted mb-4">
-        <Icon size={12} className="text-shell-accent" />
-        {eyebrow}
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-shell-border bg-shell-elevated/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-shell-muted">
+          <Icon size={12} className="text-shell-accent" />
+          {eyebrow}
+        </div>
+        {trailing}
       </div>
       <h2 className="font-serif text-3xl md:text-4xl text-shell-warm tracking-tight">
         {title}

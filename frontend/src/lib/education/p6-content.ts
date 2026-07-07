@@ -1,4 +1,5 @@
 import type { WisdomArticle } from "./types";
+import { educationImages, eduImage } from "./education-images";
 
 /** Articles sourced verbatim from temp-content/p6.txt (link-scrubbed, headings normalized) */
 export const p6Articles: WisdomArticle[] = [
@@ -116,13 +117,10 @@ export const p6Articles: WisdomArticle[] = [
           ja: "ジョーティッシュ占星術における惑星マハダシャーの期間"
         }
       },
-      {
-        type: "paragraph",
-        text: {
-          en: "(Duration chart or diagram appears here.)",
-          ja: "(期間のグラフまたは図がここに表示されます。)"
-        }
-      },
+      eduImage(educationImages.mahadashaPeriodYears, {
+        en: "Mahadasha period — duration in years for each planet",
+        ja: "マハダシャー期間 — 各惑星の年数",
+      }),
       {
         type: "heading",
         level: 3,

@@ -11,7 +11,6 @@ import {
   Languages,
   MoonStar,
   Sparkles,
-  Star,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
@@ -126,22 +125,18 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-12 md:mb-16"
           >
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="inline-flex items-center gap-2 rounded-full border border-shell-accent/25 bg-shell-accent-soft px-3.5 py-1.5 text-[10px] uppercase tracking-[0.28em] text-shell-accent">
-                <Star size={11} aria-hidden />
-                {welcomeText(welcomeContent.eyebrow, lang)}
-              </div>
-              {embedded && (
+            {embedded && (
+              <div className="mb-6 flex justify-end sm:mb-8">
                 <button
                   type="button"
                   onClick={toggleLang}
-                  className="inline-flex items-center gap-2 self-start rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40"
+                  className="inline-flex items-center gap-2 rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40"
                 >
                   <Languages size={14} className="text-shell-accent" />
                   {lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
             <h1 className="font-brand max-w-3xl text-4xl leading-[1.12] tracking-tight text-shell-warm md:text-5xl lg:text-[3.25rem]">
               {welcomeText(welcomeContent.title, lang)}

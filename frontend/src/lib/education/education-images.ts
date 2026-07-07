@@ -29,6 +29,9 @@ export const educationImages = {
   gemstone2: newEduAsset("Planet and Gemstone Associations in Jyotish 2.jpeg"),
   gemstone3: newEduAsset("Planet and Gemstone Associations in Jyotish 3.jpeg"),
   vedicRituals: newEduAsset("Conducting Vedic Rituals to Remove Negativity.jpeg"),
+  mahadashaPeriodYears: newEduAsset(
+    "Mahadasha period - a period of time measured in years.jpeg",
+  ),
 } as const;
 
 export function eduImage(

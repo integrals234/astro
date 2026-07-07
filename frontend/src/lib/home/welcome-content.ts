@@ -19,10 +19,6 @@ export interface WelcomeStartingPoint {
 }
 
 export const welcomeContent = {
-  eyebrow: {
-    en: "Vedic astrology for Japanese readers",
-    ja: "日本語読者のためのヴェーダ占星術",
-  },
   title: {
     en: "Welcome to Jyotish Life",
     ja: "ジョーティッシュ・ライフへようこそ",
@@ -98,14 +94,6 @@ export const welcomeContent = {
           href: "/chart",
           label: { en: "Chart generator", ja: "チャート作成" },
         },
-        {
-          href: "/learn-jyotish?section=introduction",
-          label: { en: "Introduction", ja: "入門" },
-        },
-        {
-          href: "/learn-jyotish?section=houses",
-          label: { en: "Houses (Bhavas)", ja: "ハウス（バーヴァ）" },
-        },
       ],
     },
     {
@@ -132,8 +120,8 @@ export const welcomeContent = {
         ja: "個人鑑定をご希望の方へ",
       },
       body: {
-        en: "Those who wish to go beyond self-study can request a personal appraisal, prepared directly by Om Shukla, a Vedic Brahmin astrologer trained in a family tradition of Jyotish, with additional training under Jyotishacharya Dr. Usha Shukla (gold medalist, PhD in Vedic Astrology) and senior astrologer Shravan Kumar Shukla.",
-        ja: "独学を超えて個別のご相談をご希望の方は、家系のジョーティッシュを継承するヴェーダ・ブラーミン占星術師オム・シュクラによる個人鑑定をご依頼いただけます。ジョーティシャーチャarya ウシャ・シュクラ博士（ヴェーダ占星術博士、金メダリスト）および上級占星術師シュラヴァン・クマール・シュクラのもとでも研鑽を積んでいます。",
+        en: "Those who wish to go beyond self-study can request a personal appraisal, prepared directly by Om Shukla, a Vedic Brahmin astrologer trained in a family tradition of Jyotish, with additional training under Jyotishacharya Dr. Usha Shukla (gold medalist, PhD in Vedic Astrology).",
+        ja: "独学を超えて個別のご相談をご希望の方は、家系のジョーティッシュを継承するヴェーダ・ブラーミン占星術師オム・シュクラによる個人鑑定をご依頼いただけます。ジョーティシャーチャarya ウシャ・シュクラ博士（ヴェーダ占星術博士、金メダリスト）のもとでも研鑽を積んでいます。",
       },
       links: [
         {

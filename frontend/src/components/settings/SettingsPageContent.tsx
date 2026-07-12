@@ -7,26 +7,12 @@ import AppearanceSetting from "@/components/settings/AppearanceSetting";
 import LanguageSetting from "@/components/settings/LanguageSetting";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { settingsCopy } from "@/lib/i18n/settings";
-import { Settings, Bell, Shield, CreditCard } from "lucide-react";
+import { Settings, CreditCard } from "lucide-react";
 
 export default function SettingsPageContent() {
   const { user, isLoaded } = useUser();
   const { language } = useLanguage();
   const copy = settingsCopy[language];
-  const preferenceRows = [
-    {
-      icon: Bell,
-      label: copy.workspace.transitAlerts,
-      description: copy.workspace.transitDescription,
-      enabled: true,
-    },
-    {
-      icon: Shield,
-      label: copy.workspace.privateCharts,
-      description: copy.workspace.privateDescription,
-      enabled: true,
-    },
-  ];
 
   return (
     <div className="max-w-4xl space-y-8">
@@ -86,48 +72,6 @@ export default function SettingsPageContent() {
       <LanguageSetting />
 
       <AppearanceSetting />
-
-      <section className="rounded-3xl border border-shell-border bg-shell-elevated/60 overflow-hidden">
-        <div className="px-6 py-4 border-b border-shell-border">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted">
-            {copy.workspace.title}
-          </h3>
-        </div>
-        <ul className="divide-y divide-shell-border">
-          {preferenceRows.map((row) => {
-            const Icon = row.icon;
-            return (
-              <li
-                key={row.label}
-                className="flex items-center justify-between gap-4 px-6 py-4"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-9 w-9 rounded-xl bg-shell-accent-soft border border-shell-accent/15 flex items-center justify-center shrink-0">
-                    <Icon size={16} className="text-shell-accent" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-shell-warm">{row.label}</p>
-                    <p className="text-xs text-shell-muted truncate">{row.description}</p>
-                  </div>
-                </div>
-                <div
-                  className={`h-6 w-11 rounded-full border transition-colors relative shrink-0 ${
-                    row.enabled
-                      ? "bg-shell-accent/30 border-shell-accent/40"
-                      : "bg-shell-bg border-shell-border"
-                  }`}
-                >
-                  <span
-                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-shell-warm transition-all ${
-                      row.enabled ? "left-[1.35rem]" : "left-0.5"
-                    }`}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
 
       <section className="rounded-3xl border border-shell-accent/20 bg-shell-accent-soft/20 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-start gap-3">

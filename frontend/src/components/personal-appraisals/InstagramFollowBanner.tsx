@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowUpRight } from "lucide-react";
+import { useHaptic } from "@/hooks/useHaptic";
 
 export const INSTAGRAM_PROFILE_URL =
   "https://www.instagram.com/jyotishlife.jp?igsh=cG44cTYzZjhyazM2";
@@ -30,15 +33,19 @@ export default function InstagramFollowBanner({
 }: {
   copy: InstagramFollowCopy;
 }) {
+  const { success } = useHaptic();
+
   return (
     <section
       aria-labelledby="instagram-follow-heading"
-      className="washi-card overflow-hidden px-6 py-8 md:px-10 md:py-11"
+      className="ig-banner washi-card overflow-hidden px-6 py-8 md:px-10 md:py-11"
     >
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 flex-1 space-y-4">
-          <p className="inline-flex items-center gap-2 border border-border px-3 py-1 text-[10px] font-body font-medium uppercase tracking-[0.22em] text-terracotta">
-            <InstagramIcon className="h-3.5 w-3.5" />
+          <p className="ig-badge inline-flex items-center gap-2 border px-3 py-1 text-[10px] font-body font-medium uppercase tracking-[0.22em]">
+            <span className="ig-icon-chip inline-flex h-5 w-5 items-center justify-center rounded-[4px]">
+              <InstagramIcon className="h-3 w-3" />
+            </span>
             {copy.badge}
           </p>
 
@@ -49,7 +56,7 @@ export default function InstagramFollowBanner({
             >
               {copy.title}
             </h2>
-            <p className="font-body text-lg md:text-xl font-medium tracking-tight text-terracotta">
+            <p className="ig-handle font-body text-lg md:text-xl font-semibold tracking-tight">
               {copy.handle}
             </p>
           </div>
@@ -62,7 +69,7 @@ export default function InstagramFollowBanner({
             {copy.perks.map((perk) => (
               <li
                 key={perk}
-                className="rounded border border-border bg-washi px-3 py-1 text-xs text-text"
+                className="ig-perk rounded border px-3 py-1 text-xs text-text"
               >
                 {perk}
               </li>
@@ -75,14 +82,15 @@ export default function InstagramFollowBanner({
             href={INSTAGRAM_PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="washi-btn-secondary group inline-flex w-full items-center justify-center gap-2.5 px-8 py-4 text-base transition-colors hover:bg-terracotta/10 md:w-auto"
+            onClick={() => success()}
+            className="ig-cta group inline-flex w-full items-center justify-center gap-2.5 rounded-[var(--radius-button)] px-8 py-4 text-base font-semibold transition-[transform,box-shadow,filter] md:w-auto"
           >
             <InstagramIcon className="h-5 w-5 shrink-0" />
             {copy.cta}
             <ArrowUpRight
               size={18}
               aria-hidden
-              className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 group-hover:-translate-y-1"
             />
           </a>
         </div>

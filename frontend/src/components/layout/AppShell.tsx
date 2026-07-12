@@ -16,7 +16,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-washi text-text">
-      <header className="z-30 shrink-0 border-b border-border bg-washi supports-[padding:max(0px)]:pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <header className="z-30 shrink-0 border-b border-border bg-washi/95 backdrop-blur-md supports-[padding:max(0px)]:pt-[max(0.75rem,env(safe-area-inset-top))] transition-shadow duration-300 shadow-[0_1px_0_transparent]">
         <div className="shell-header-desktop w-full items-center justify-between gap-8 px-6 py-3.5">
           <SiteBrand size="lg" className="shrink-0" />
           <TopNav />
@@ -36,7 +36,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       <main
         data-education-scroll-root
-        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-washi"
+        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-washi [scrollbar-gutter:stable]"
       >
         <div className="w-full px-4 py-4 md:px-8 md:py-8">{children}</div>
       </main>

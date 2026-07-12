@@ -1,6 +1,7 @@
 "use client";
 
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
+import ScrollReveal from "@/components/motion/ScrollReveal";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import InstagramFollowBanner from "@/components/personal-appraisals/InstagramFollowBanner";
 import InquiryForm from "@/components/personal-appraisals/InquiryForm";
@@ -34,16 +35,21 @@ export default function PersonalAppraisalsPageClient({
 
   return (
     <div className="max-w-4xl space-y-12 pb-8">
-      <InstagramFollowBanner copy={content.instagram} />
+      <ScrollReveal y={18}>
+        <InstagramFollowBanner copy={content.instagram} />
+      </ScrollReveal>
 
-      <ShellPageHeader
-        icon={MoonStar}
-        eyebrow={content.header.eyebrow}
-        title={content.header.title}
-        description={content.header.description}
-      />
+      <ScrollReveal y={16} delay={0.05}>
+        <ShellPageHeader
+          icon={MoonStar}
+          eyebrow={content.header.eyebrow}
+          title={content.header.title}
+          description={content.header.description}
+        />
+      </ScrollReveal>
 
-      <section className="washi-card p-7 md:p-9">
+      <ScrollReveal y={18} delay={0.04}>
+      <section className="washi-card washi-card-interactive p-7 md:p-9">
         <div className="flex items-start gap-3 mb-5">
           <Sparkles size={18} className="text-terracotta shrink-0 mt-1" />
           <div>
@@ -71,58 +77,60 @@ export default function PersonalAppraisalsPageClient({
           ))}
         </ul>
       </section>
+      </ScrollReveal>
 
       <section className="space-y-6">
-        <div>
-          <p className="washi-eyebrow mb-2">
-            {content.offerings.sectionLabel}
-          </p>
-          <h3 className="font-body text-2xl text-ink">
-            {content.offerings.sectionTitle}
-          </h3>
-        </div>
+        <ScrollReveal y={12}>
+          <div>
+            <p className="washi-eyebrow mb-2">
+              {content.offerings.sectionLabel}
+            </p>
+            <h3 className="font-body text-2xl text-ink">
+              {content.offerings.sectionTitle}
+            </h3>
+          </div>
+        </ScrollReveal>
 
         <div className="grid gap-5">
-          {content.offerings.items.map((offering) => {
+          {content.offerings.items.map((offering, index) => {
             const Icon =
               offeringIcons[offering.id as keyof typeof offeringIcons] ??
               ScrollText;
 
             return (
-              <article
-                key={offering.id}
-                className="washi-card p-6 md:p-7"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="washi-icon-chip h-9 w-9 shrink-0">
-                    <Icon size={17} className="text-moss" />
-                  </span>
-                  <h4 className="font-body font-medium text-ink">{offering.title}</h4>
-                </div>
-                <p className="text-sm text-text-muted leading-relaxed">
-                  {offering.description}
-                </p>
-                <ul className="mt-4 space-y-2">
-                  {offering.includes.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-2 text-sm text-text-muted"
-                    >
-                      <span className="mt-2 h-1 w-1 rounded-full bg-moss shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-xs text-text-muted italic">
-                  {offering.note}
-                </p>
-              </article>
+              <ScrollReveal key={offering.id} delay={0.05 * index} y={18}>
+                <article className="washi-card washi-card-interactive group p-6 md:p-7">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="washi-icon-chip h-9 w-9 shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110 group-hover:-rotate-3">
+                      <Icon size={17} className="text-moss" />
+                    </span>
+                    <h4 className="font-body font-medium text-ink">{offering.title}</h4>
+                  </div>
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    {offering.description}
+                  </p>
+                  <ul className="mt-4 space-y-2">
+                    {offering.includes.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-2 text-sm text-text-muted"
+                      >
+                        <span className="mt-2 h-1 w-1 rounded-full bg-moss shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 text-xs text-text-muted italic">
+                    {offering.note}
+                  </p>
+                </article>
+              </ScrollReveal>
             );
           })}
         </div>
       </section>
 
-      <section className="space-y-6">
+      <ScrollReveal y={16} as="section" className="space-y-6">
         <div>
           <p className="washi-eyebrow mb-2">
             {content.pricing.sectionLabel}
@@ -135,7 +143,7 @@ export default function PersonalAppraisalsPageClient({
           </p>
         </div>
 
-        <div className="washi-card overflow-hidden">
+        <div className="washi-card overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-lift)]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[540px] text-left text-sm">
               <thead>
@@ -155,7 +163,7 @@ export default function PersonalAppraisalsPageClient({
                 {content.pricing.plans.map((plan) => (
                   <tr
                     key={plan.id}
-                    className={`border-b border-border last:border-0 ${
+                    className={`border-b border-border last:border-0 transition-colors duration-200 hover:bg-neutral-tag/30 ${
                       plan.featured ? "bg-neutral-tag/40" : ""
                     }`}
                   >
@@ -192,31 +200,35 @@ export default function PersonalAppraisalsPageClient({
         <p className="text-xs text-text-muted leading-relaxed">
           {content.pricing.footnote}
         </p>
-      </section>
+      </ScrollReveal>
 
-      <section className="washi-card p-6 md:p-7">
-        <p className="washi-eyebrow mb-4">
-          {content.process.sectionLabel}
-        </p>
-        <ol className="space-y-4">
-          {content.process.steps.map((step, index) => (
-            <li key={step} className="flex gap-4">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-neutral-tag text-xs font-body font-semibold text-text">
-                {index + 1}
-              </span>
-              <p className="text-sm text-text-muted leading-relaxed pt-0.5">
-                {step}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <ScrollReveal y={14}>
+        <section className="washi-card washi-card-interactive p-6 md:p-7">
+          <p className="washi-eyebrow mb-4">
+            {content.process.sectionLabel}
+          </p>
+          <ol className="space-y-4">
+            {content.process.steps.map((step, index) => (
+              <li key={step} className="flex gap-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-neutral-tag text-xs font-body font-semibold text-text shadow-[var(--shadow-elevated)] transition-transform duration-300 hover:scale-110 hover:border-terracotta/40">
+                  {index + 1}
+                </span>
+                <p className="text-sm text-text-muted leading-relaxed pt-0.5">
+                  {step}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </ScrollReveal>
 
-      <InquiryForm
-        defaultDialCode={defaultDialCode}
-        lang={lang}
-        copy={content.form}
-      />
+      <ScrollReveal y={16}>
+        <InquiryForm
+          defaultDialCode={defaultDialCode}
+          lang={lang}
+          copy={content.form}
+        />
+      </ScrollReveal>
     </div>
   );
 }

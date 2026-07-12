@@ -16,6 +16,9 @@ import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import HomeInstagramStrip from "@/components/home/HomeInstagramStrip";
+import ScrollReveal from "@/components/motion/ScrollReveal";
+import { useHaptic } from "@/hooks/useHaptic";
+import { easeOutExpo } from "@/lib/motion/tokens";
 import {
   welcomeContent,
   welcomeText,
@@ -120,6 +123,7 @@ function PublicWelcomeHeader({ lang }: {
 function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
   const { lang } = useWelcomeLang();
   const instagramCopy = welcomeContent.instagram[lang];
+  const { selection } = useHaptic();
 
   const content = (
     <div className={`${embedded ? "" : "min-h-screen"} bg-washi text-text`}>
@@ -134,9 +138,9 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
         <div className="relative">
           {/* Hero */}
           <motion.section
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.65, ease: easeOutExpo }}
             className="mb-12 md:mb-16"
           >
             <h1 className="font-header max-w-3xl text-4xl leading-[1.12] tracking-tight text-ink md:text-5xl lg:text-[3.25rem]">
@@ -150,77 +154,77 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
                     {welcomeText(paragraph, lang)}
                   </p>
                   {index === 0 && (
-                    <Image
-                      src={HOME_INTRO_IMAGE_SRC}
-                      alt={welcomeText(welcomeContent.introImageAlt, lang)}
-                      width={1200}
-                      height={900}
-                      className="block h-auto w-full"
-                      sizes="(max-width: 768px) 100vw, 48rem"
-                    />
+                    <ScrollReveal y={24} delay={0.05}>
+                      <Image
+                        src={HOME_INTRO_IMAGE_SRC}
+                        alt={welcomeText(welcomeContent.introImageAlt, lang)}
+                        width={1200}
+                        height={900}
+                        className="block h-auto w-full shadow-[var(--shadow-soft)] transition-shadow duration-500 hover:shadow-[var(--shadow-lift)]"
+                        sizes="(max-width: 768px) 100vw, 48rem"
+                      />
+                    </ScrollReveal>
                   )}
                 </div>
               ))}
             </div>
           </motion.section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.08, ease: "easeOut" }}
-            className="mb-10 max-w-2xl"
-          >
+          <ScrollReveal className="mb-10 max-w-2xl" y={16} delay={0.04}>
             <HomeInstagramStrip copy={instagramCopy} />
-          </motion.div>
+          </ScrollReveal>
 
           {/* Starting points */}
           <section className="space-y-8">
-            <div className="max-w-2xl">
-              <p className="font-body text-sm leading-[1.9] text-text md:text-base">
-                {welcomeText(welcomeContent.startingPointsLead, lang)}
-              </p>
-            </div>
+            <ScrollReveal y={14}>
+              <div className="max-w-2xl">
+                <p className="font-body text-sm leading-[1.9] text-text md:text-base">
+                  {welcomeText(welcomeContent.startingPointsLead, lang)}
+                </p>
+              </div>
+            </ScrollReveal>
 
             <div className="grid gap-5 md:grid-cols-2">
               {welcomeContent.startingPoints.map((point, index) => {
                 const Icon = startingPointIcons[point.id];
 
                 return (
-                  <motion.article
-                    key={point.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.45, delay: 0.08 * index, ease: "easeOut" }}
-                    className="washi-card group relative p-6 md:p-7"
-                  >
-                    <div className="relative">
-                      <div className="mb-4 flex items-start gap-3">
-                        <div className="washi-icon-chip h-10 w-10 shrink-0">
-                          <Icon size={18} aria-hidden />
+                  <ScrollReveal key={point.id} delay={0.06 * index} y={22}>
+                    <article className="washi-card washi-card-interactive group relative h-full p-6 md:p-7">
+                      <div className="relative">
+                        <div className="mb-4 flex items-start gap-3">
+                          <div className="washi-icon-chip h-10 w-10 shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110 group-hover:-rotate-3">
+                            <Icon size={18} aria-hidden />
+                          </div>
+                          <h2 className="font-body text-lg font-medium leading-snug text-text md:text-xl">
+                            {welcomeText(point.title, lang)}
+                          </h2>
                         </div>
-                        <h2 className="font-body text-lg font-medium leading-snug text-text md:text-xl">
-                          {welcomeText(point.title, lang)}
-                        </h2>
-                      </div>
 
-                      <p className="font-body mb-6 text-sm leading-[1.9] text-text-muted">
-                        {welcomeText(point.body, lang)}
-                      </p>
+                        <p className="font-body mb-6 text-sm leading-[1.9] text-text-muted">
+                          {welcomeText(point.body, lang)}
+                        </p>
 
-                      <div className="flex flex-wrap gap-2">
-                        {point.links.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            className="font-body inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-2 text-xs font-medium text-text transition-colors hover:border-terracotta hover:text-terracotta"
-                          >
-                            {welcomeText(link.label, lang)}
-                            <ArrowRight size={12} className="opacity-60" aria-hidden />
-                          </Link>
-                        ))}
+                        <div className="flex flex-wrap gap-2">
+                          {point.links.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              onClick={() => selection()}
+                              className="tactile font-body inline-flex items-center gap-1.5 rounded-full border border-border bg-washi px-3.5 py-2 text-xs font-medium text-text shadow-[var(--shadow-elevated)] hover:border-terracotta hover:text-terracotta hover:shadow-[var(--shadow-soft)]"
+                            >
+                              {welcomeText(link.label, lang)}
+                              <ArrowRight
+                                size={12}
+                                className="opacity-60 transition-transform duration-300 group-hover:translate-x-0.5"
+                                aria-hidden
+                              />
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </motion.article>
+                    </article>
+                  </ScrollReveal>
                 );
               })}
             </div>

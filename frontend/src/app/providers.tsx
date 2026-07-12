@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { getClerkAppearance } from "@/lib/clerk-appearance";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ContentProtection from "@/components/layout/ContentProtection";
+import MotionProvider from "@/components/motion/MotionProvider";
 import {
   LanguageAccountSync,
   LanguageProvider,
@@ -26,7 +27,7 @@ function LocalizedClerkProvider({ children }: { children: React.ReactNode }) {
     >
       <LanguageAccountSync />
       <ContentProtection />
-      {children}
+      <MotionProvider>{children}</MotionProvider>
     </ClerkProvider>
   );
 }

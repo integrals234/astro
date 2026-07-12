@@ -1,9 +1,13 @@
 import type { jsPDF } from "jspdf";
+import type { PdfLanguage } from "./i18n";
+import { initializePdfTypography } from "./pdf-text";
 
-const FONT_PATH = "/fonts/NotoSansJP.ttf";
-
-let fontBase64: string | null = null;
-let registrationPromise: Promise<void> | null = null;
+const FONTS = {
+  ja: { path: "/fonts/NotoSansJP.ttf", file: "NotoSansJP.ttf", family: "NotoSansJP" },
+  ko: { path: "/fonts/NotoSansKR.ttf", file: "NotoSansKR.ttf", family: "NotoSansKR" },
+} as const;
+const fontBase64 = new Map<string, string>();
+const loadingFonts = new Map<string, Promise<string>>();
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
@@ -23,18 +27,21 @@ async function fetchFontBase64(path: string): Promise<string> {
   return arrayBufferToBase64(await response.arrayBuffer());
 }
 
-export async function registerJapaneseFonts(doc: jsPDF): Promise<void> {
-  if (!registrationPromise) {
-    registrationPromise = (async () => {
-      if (!fontBase64) {
-        fontBase64 = await fetchFontBase64(FONT_PATH);
-      }
-    })();
+export async function registerLocaleFont(doc: jsPDF, lang: PdfLanguage): Promise<void> {
+  await initializePdfTypography(lang);
+  if (lang === "en") return;
+  if (lang === "hi") return;
+  const font = FONTS[lang];
+  let data = fontBase64.get(font.path);
+  if (!data) {
+    let pending = loadingFonts.get(font.path);
+    if (!pending) {
+      pending = fetchFontBase64(font.path);
+      loadingFonts.set(font.path, pending);
+    }
+    data = await pending;
+    fontBase64.set(font.path, data);
   }
-
-  await registrationPromise;
-
-  doc.addFileToVFS("NotoSansJP.ttf", fontBase64!);
-  doc.addFont("NotoSansJP.ttf", "NotoSansJP", "normal");
-  doc.addFont("NotoSansJP.ttf", "NotoSansJP", "bold");
+  doc.addFileToVFS(font.file, data);
+  doc.addFont(font.file, font.family, "normal");
 }

@@ -1,16 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
-import { Search, MapPin, Globe, ChevronDown, Sparkles, Eye, Download, Bookmark, BookmarkCheck, LayoutDashboard } from 'lucide-react';
+import { Search, MapPin, Sparkles, Eye, Download, Bookmark, BookmarkCheck, LayoutDashboard } from 'lucide-react';
 import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
 import KundliChart from '@/components/KundliChart';
 import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
+import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { downloadChartPdf } from '@/lib/generate-chart-pdf';
 import type {
   Planet,
@@ -19,11 +20,11 @@ import type {
   ChartData,
   ChartFormData,
   LocationResult,
-  LanguageCode,
   ChartTab,
   SavedChartRecord,
 } from '@/lib/chart-types';
-import { getChartUi, persistChartLang, readChartLang } from '@/lib/chart-i18n';
+import { getChartUi } from '@/lib/chart-i18n';
+import type { AppLanguage } from '@/lib/i18n/language';
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
@@ -48,7 +49,7 @@ const formatDMS = (raw: number) => {
 const getIntegerDegree = (raw: number) => Math.floor(raw % 30);
 
 // --- TRANSLATION DICTIONARY ---
-const translations: Record<LanguageCode, any> = {
+const translations = {
   en: {
     birthCity: "Birth City", searchPlaceholder: "Search global cities...", searching: "Searching coordinates...", noLocations: "No locations found.",
     natalParams: "Natal Parameters", dob: "Date of Birth", tob: "Time of Birth", gocharOverlay: "Gochar Overlay (Transit)", transitDate: "Transit Date",
@@ -57,7 +58,9 @@ const translations: Record<LanguageCode, any> = {
     dashaTimeline: "Vimshottari Timeline", dashaSub: "Maha • Antar • Pratyantar • Sookshma", lagnaBase: "Lagna Base", chandraBase: "Chandra Base", watermark: "vaibhav shukla",
     errNoLoc: "Please select a location.", errCalc: "Calculation Failed.",
     personName: "Person's Name", personNamePlaceholder: "Full name", errNoName: "Please enter the person's name.",
-    saveChart: "Save Chart", savedChart: "Saved", downloadPdfEn: "Download PDF (English)", downloadPdfJa: "Download PDF (日本語)",
+    saveChart: "Save Chart", savedChart: "Saved", savingChart: "Saving…", downloadPdf: "Download PDF", subject: "Subject", signIn: "Sign in", chart: "Chart",
+    saveError: "Could not update saved status.", deleteConfirm: "Delete this chart?", deleteError: "Could not delete chart.", pdfError: "Could not generate the PDF. Please try again.",
+    inHouse: "in", locationDialog: "Location search", closeDialog: "Close location search", planetAt: "at", transitPlanet: "Transit", retrogradeLong: "Retrograde",
     tabs: { D1: "Lagna", D9: "Navmansha", Chalit: "Chalit", Chandra: "Chandra", Gochar: "Gochar", Details: "Details", Aspects: "Aspects", Dasha: "Dasha" },
     tabTitles: { D1: "Natal Chart (Lagna)", D9: "Navamasha Chart(D9)", Chalit: "Bhava Chalit", Chandra: "Moon Chart", Gochar: "Transit Overlay", Details: "Planetary Details", Aspects: "Vedic Aspects (Drishti)", Dasha: "Vimshottari Dasha" },
     planets: { Sun: "Sun", Moon: "Moon", Mars: "Mars", Mercury: "Mercury", Jupiter: "Jupiter", Venus: "Venus", Saturn: "Saturn", Rahu: "Rahu", Ketu: "Ketu", Ascendant: "Ascendant" },
@@ -74,6 +77,9 @@ const translations: Record<LanguageCode, any> = {
     dashaTimeline: "विंशोत्तरी दशा", dashaSub: "महा • अंतर • प्रत्यंतर • सूक्ष्म", lagnaBase: "लग्न आधार", chandraBase: "चन्द्र आधार", watermark: "वैभव शुक्ला",
     errNoLoc: "कृपया एक स्थान चुनें।", errCalc: "गणना विफल रही।",
     personName: "व्यक्ति का नाम", personNamePlaceholder: "पूरा नाम", errNoName: "कृपया व्यक्ति का नाम दर्ज करें।",
+    saveChart: "चार्ट सहेजें", savedChart: "सहेजा गया", savingChart: "सहेजा जा रहा है…", downloadPdf: "PDF डाउनलोड करें", subject: "व्यक्ति", signIn: "साइन इन करें", chart: "चार्ट",
+    saveError: "सहेजने की स्थिति बदली नहीं जा सकी।", deleteConfirm: "क्या यह चार्ट हटाना है?", deleteError: "चार्ट हटाया नहीं जा सका।", pdfError: "PDF नहीं बन सका। कृपया फिर प्रयास करें।",
+    inHouse: "भाव", locationDialog: "स्थान खोज", closeDialog: "स्थान खोज बंद करें", planetAt: "स्थिति", transitPlanet: "गोचर", retrogradeLong: "वक्री",
     tabs: { D1: "लग्न", D9: "नवमांश", Chalit: "चलित", Chandra: "चंद्र", Gochar: "गोचर", Details: "विवरण", Aspects: "दृष्टि", Dasha: "दशा" },
     tabTitles: { D1: "जन्म कुण्डली (लग्न)", D9: "नवमांश कुण्डली", Chalit: "चलित कुण्डली", Chandra: "चंद्र कुण्डली", Gochar: "गोचर कुण्डली", Details: "ग्रह विवरण", Aspects: "वैदिक दृष्टि (Drishti)", Dasha: "विंशोत्तरी दशा" },
     planets: { Sun: "सूर्य", Moon: "चंद्र", Mars: "मंगल", Mercury: "बुध", Jupiter: "गुरु", Venus: "शुक्र", Saturn: " शनि", Rahu: "राहु", Ketu: "केतु", Ascendant: "लग्न" },
@@ -83,13 +89,16 @@ const translations: Record<LanguageCode, any> = {
   },
 
   ja: {
-    birthCity: "出生地", searchPlaceholder: "都市を検索...", searching: "座標を検索中...", noLocations: "見つかりません。",
-    natalParams: "出生データ", dob: "生年月日", tob: "出生時刻", gocharOverlay: "トランジット (Gochar)", transitDate: "トランジット日付",
-    generateBtn: "チャートを作成", computingBtn: "計算中...", awaitingTitle: "パラメータ待機中", awaitingDesc: "場所を検索し、生成してプロフェッショナルワークスペースを表示します。",
+    birthCity: "出生地", searchPlaceholder: "世界の都市を検索…", searching: "位置情報を検索中…", noLocations: "該当する場所が見つかりません。",
+    natalParams: "出生情報", dob: "生年月日", tob: "出生時刻", gocharOverlay: "ゴーチャラ（トランジット）", transitDate: "トランジット基準日",
+    generateBtn: "チャートを作成", computingBtn: "天体位置を計算中…", awaitingTitle: "出生情報を入力してください", awaitingDesc: "出生地を検索し、出生情報を入力してチャートを作成してください。",
     timezone: "タイムゾーン", sunrise: "日の出", sunset: "日の入り", absoluteLagna: "アセンダント", exactLongitudes: "惑星の正確な位置", transitCoords: "トランジット座標",
     dashaTimeline: "ヴィムショッタリ・ダシャー", dashaSub: "マハー • アンタル • プラティヤンタル • スークシュマ", lagnaBase: "ラグナ基準", chandraBase: "チャンドラ基準", watermark: "ヴァイバヴ・シュクラ",
     errNoLoc: "場所を選択してください。", errCalc: "計算に失敗しました。",
     personName: "お名前", personNamePlaceholder: "お名前", errNoName: "お名前を入力してください。",
+    saveChart: "チャートを保存", savedChart: "保存済み", savingChart: "保存中…", downloadPdf: "PDFをダウンロード", subject: "対象者", signIn: "ログイン", chart: "チャート",
+    saveError: "保存状態を更新できませんでした。", deleteConfirm: "このチャートを削除しますか？", deleteError: "チャートを削除できませんでした。", pdfError: "PDFを作成できませんでした。もう一度お試しください。",
+    inHouse: "在室", locationDialog: "出生地を検索", closeDialog: "出生地検索を閉じる", planetAt: "位置", transitPlanet: "トランジット", retrogradeLong: "逆行",
     tabs: { D1: "ラグナ", D9: "チャート", Chalit: "チャリット", Chandra: "チャンドラ", Gochar: "トランジット", Details: "詳細", Aspects: "アスペクト", Dasha: "ダシャー" },
     tabTitles: { D1: "ネイタルチャート (ラグナ)", D9: "D9 チャート", Chalit: "チャリットチャート", Chandra: "チャンドラチャート", Gochar: "トランジットチャート", Details: "惑星の詳細", Aspects: "ヴェーダのアスペクト (Drishti)", Dasha: "ヴィムショッタリ・ダシャー" },
     planets: { Sun: "太陽", Moon: "月", Mars: "火星", Mercury: "水星", Jupiter: "木星", Venus: "金星", Saturn: "土星", Rahu: "ラーフ", Ketu: "ケトゥ", Ascendant: "アセンダント" },
@@ -106,6 +115,9 @@ const translations: Record<LanguageCode, any> = {
     dashaTimeline: "빔쇼타리 다샤", dashaSub: "마하 • 안타르 • 프라티얀타르 • 수크슈마", lagnaBase: "라그나 기준", chandraBase: "찬드라 기준", watermark: "바이바브 슈클라",
     errNoLoc: "위치를 선택해 주세요.", errCalc: "계산에 실패했습니다.",
     personName: "이름", personNamePlaceholder: "이름", errNoName: "이름을 입력해 주세요.",
+    saveChart: "차트 저장", savedChart: "저장됨", savingChart: "저장 중…", downloadPdf: "PDF 다운로드", subject: "대상자", signIn: "로그인", chart: "차트",
+    saveError: "저장 상태를 변경하지 못했습니다.", deleteConfirm: "이 차트를 삭제할까요?", deleteError: "차트를 삭제하지 못했습니다.", pdfError: "PDF를 만들지 못했습니다. 다시 시도해 주세요.",
+    inHouse: "하우스", locationDialog: "출생지 검색", closeDialog: "출생지 검색 닫기", planetAt: "위치", transitPlanet: "트랜짓", retrogradeLong: "역행",
     tabs: { D1: "네이탈 차트", D9: "차트", Chalit: "찰리트", Chandra: "찬드라", Gochar: "트랜짓", Details: "세부 정보", Aspects: "애스펙트", Dasha: "다샤" },
     tabTitles: { D1: "네이탈 차트 (Lagna)", D9: "D9 차트", Chalit: "찰리트 차트", Chandra: "찬드라 차트", Gochar: "트랜짓 차트", Details: "행성 세부 정보", Aspects: "베다 애스펙트 (Drishti)", Dasha: "빔쇼타리 다샤" },
     planets: { Sun: "태양", Moon: "달", Mars: "화성", Mercury: "수성", Jupiter: "목성", Venus: "금성", Saturn: "토성", Rahu: "라후", Ketu: "케투", Ascendant: "어센던트" },
@@ -113,14 +125,17 @@ const translations: Record<LanguageCode, any> = {
     ui: { textToggle: "텍스트", symbolToggle: "기호", transitBadge: "트랜짓 오버레이", northStyle: "북인도 방식", southStyle: "남인도 방식", asc: "ASC", nakshatraLabel: "낙샤트라", house: "하우스", retrograde: "역행", pada: "파다", lord: "지배성", aspects: "애스펙트 하우스", dignity: { Exalted: "고양", Debilitated: "쇠약", "Own Sign": "자신의 별자리", Neutral: "중립" } },
     nakshatras: { Ashwini: "아슈비니", Bharani: "바라니", Krittika: "크리티카", Rohini: "로히니", Mrigashira: "므리가시라", Ardra: "아르드라", Punarvasu: "푸나르바수", Pushya: "푸샤", Ashlesha: "아슐레샤", Magha: "마가", "Purva Phalguni": "푸르바 팔구니", "Uttara Phalguni": "우타라 팔구니", Hasta: "하스타", Chitra: "치트라", Swati: "스와티", Vishakha: "비샤카", Anuradha: "아누라다", Jyeshtha: "제슈타", Mula: "물라", "Purva Ashadha": "푸르바 아샤다", "Uttara Ashadha": "우타라 아샤다", Shravana: "슈라바나", Dhanishta: "다니슈타", Shatabhisha: "샤타비샤", "Purva Bhadrapada": "푸르바 바드라파다", "Uttara Bhadrapada": "우타라 바드라파다", Revati: "레바티" }
   }
-};
+} satisfies Record<AppLanguage, object>;
 
-const languages = [
-  { code: 'en', native: 'English' },
-  { code: 'hi', native: 'हिन्दी' },
-  { code: 'ja', native: '日本語' },
-  { code: 'ko', native: '한국어' },
-];
+type WidenTranslation<T> =
+  T extends string
+    ? string
+    : T extends Record<string, string>
+      ? Record<string, string>
+      : { [K in keyof T]: WidenTranslation<T[K]> };
+type ChartTranslations = WidenTranslation<(typeof translations)["en"]>;
+const CHART_TABS: ChartTab[] = ['D1', 'D9', 'Chalit', 'Chandra', 'Gochar', 'Details', 'Aspects', 'Dasha'];
+const subscribeToClient = () => () => {};
 
 const planetSymbols: Record<string, string> = {
   Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
@@ -128,15 +143,22 @@ const planetSymbols: Record<string, string> = {
 };
 
 // --- FLUID ACCORDION COMPONENT ---
-const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: any }) => {
+const formatDashaDisplayDate = (value: string, lang: AppLanguage) => {
+  const parsed = new Date(value.replace(/(\d+) (\w+) (\d+)/, "$2 $1, $3"));
+  return Number.isNaN(parsed.getTime())
+    ? value
+    : new Intl.DateTimeFormat(lang, { year: "numeric", month: "short", day: "numeric" }).format(parsed);
+};
+
+const DashaNode = ({ dasha, level = 1, t, lang }: { dasha: Dasha, level?: number, t: ChartTranslations, lang: AppLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasSubs = dasha.sub_dashas && dasha.sub_dashas.length > 0;
   
   const levelStyles: Record<number, string> = {
-    1: "bg-indigo-50/50 border-indigo-200 text-indigo-950 font-bold text-lg p-4 hover:bg-indigo-50",
-    2: "bg-white border-blue-100 text-blue-900 font-semibold text-md p-3 ml-4 hover:bg-blue-50/50",
-    3: "bg-gray-50/50 border-gray-100 text-gray-800 font-medium text-sm p-2 ml-8 hover:bg-gray-100",
-    4: "bg-transparent border-transparent text-gray-500 font-normal text-xs p-1.5 ml-12",
+    1: "bg-shell-accent-soft border-shell-accent/30 text-shell-warm font-bold text-lg p-4 hover:bg-shell-accent-soft/80",
+    2: "bg-shell-elevated border-shell-border text-shell-warm font-semibold text-md p-3 ml-4 hover:bg-shell-accent-soft",
+    3: "bg-shell-bg/60 border-shell-border text-shell-warm font-medium text-sm p-2 ml-8 hover:bg-shell-elevated",
+    4: "bg-transparent border-transparent text-shell-muted font-normal text-xs p-1.5 ml-12 hover:text-shell-warm",
   };
 
   return (
@@ -146,20 +168,20 @@ const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: a
           {hasSubs && <motion.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] opacity-40">▶</motion.span>}
           {!hasSubs && <span className="w-3"></span>} 
           <span>
-            <span className="mr-2 text-indigo-500 font-sans">{planetSymbols[dasha.lord]}</span>
-            {t.planets?.[dasha.lord] || dasha.lord}
+            <span className="mr-2 text-shell-accent font-sans">{planetSymbols[dasha.lord]}</span>
+            {t.planets[dasha.lord]}
           </span>
         </div>
         <div className="text-right flex gap-4 opacity-80 font-mono text-xs">
-          <span>{dasha.start_date}</span>
-          <span className="text-gray-300">|</span>
-          <span>{dasha.end_date}</span>
+          <span>{formatDashaDisplayDate(dasha.start_date, lang)}</span>
+          <span className="text-shell-muted/50">|</span>
+          <span>{formatDashaDisplayDate(dasha.end_date, lang)}</span>
         </div>
       </div>
       <AnimatePresence>
         {isOpen && hasSubs && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }} className="overflow-hidden border-l-2 border-indigo-100 ml-4 pl-2">
-            {dasha.sub_dashas!.map((sub, i) => <DashaNode key={i} dasha={sub} level={level + 1} t={t} />)}
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }} className="overflow-hidden border-l-2 border-shell-accent/25 ml-4 pl-2">
+            {dasha.sub_dashas!.map((sub, i) => <DashaNode key={i} dasha={sub} level={level + 1} t={t} lang={lang} />)}
           </motion.div>
         )}
       </AnimatePresence>
@@ -168,16 +190,16 @@ const DashaNode = ({ dasha, level = 1, t }: { dasha: Dasha, level?: number, t: a
 };
 
 // --- DIGNITY BADGE COMPONENT ---
-const DignityBadge = ({ dignity, t }: { dignity: string, t: any }) => {
+const DignityBadge = ({ dignity, t }: { dignity: string, t: ChartTranslations }) => {
   const styles: Record<string, string> = {
-    "Exalted": "bg-emerald-100 text-emerald-800 border-emerald-200",
-    "Debilitated": "bg-red-100 text-red-800 border-red-200",
-    "Own Sign": "bg-blue-100 text-blue-800 border-blue-200",
-    "Neutral": "bg-gray-100 text-gray-600 border-gray-200"
+    "Exalted": "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-200 dark:border-emerald-700",
+    "Debilitated": "bg-red-100 text-red-800 border-red-300 dark:bg-red-950/60 dark:text-red-200 dark:border-red-700",
+    "Own Sign": "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950/60 dark:text-blue-200 dark:border-blue-700",
+    "Neutral": "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
   };
   return (
     <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${styles[dignity] || styles["Neutral"]}`}>
-      {t.ui?.dignity?.[dignity] || dignity}
+      {t.ui.dignity[dignity] ?? dignity}
     </span>
   );
 }
@@ -192,19 +214,9 @@ function ChartWorkspaceInner({
   const pathname = usePathname();
   const router = useRouter();
   const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useSyncExternalStore(subscribeToClient, () => true, () => false);
 
-  const [lang, setLang] = useState<LanguageCode>(() => readChartLang());
-  useEffect(() => {
-    const onLangChange = (event: Event) => {
-      const detail = (event as CustomEvent<LanguageCode>).detail;
-      if (detail) setLang(detail);
-    };
-    window.addEventListener("chart-lang-change", onLangChange);
-    return () => window.removeEventListener("chart-lang-change", onLangChange);
-  }, []);
-
-  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const { language: lang } = useLanguage();
   const [personName, setPersonName] = useState('');
   const [formData, setFormData] = useState<ChartFormData>(() => {
     const now = new Date();
@@ -247,8 +259,7 @@ function ChartWorkspaceInner({
   const [savedCharts, setSavedCharts] = useState<SavedChartRecord[]>([]);
   const [isSavingChart, setIsSavingChart] = useState(false);
 
-  // Safe fallback to english if language dictionary is partially empty
-  const t = translations[lang] ?? translations.en;
+  const t: ChartTranslations = translations[lang];
   const chartCopy = getChartUi(lang);
 
   const refreshLibrary = useCallback(async () => {
@@ -265,13 +276,26 @@ function ChartWorkspaceInner({
     }
   }, [enablePersistence]);
 
-  useEffect(() => { setIsClient(true); }, []);
-
   useEffect(() => {
-    if (enablePersistence) {
-      refreshLibrary();
-    }
-  }, [enablePersistence, refreshLibrary]);
+    if (!enablePersistence) return;
+    const controller = new AbortController();
+
+    void Promise.all([
+      fetch('/api/charts?type=recent', { signal: controller.signal }),
+      fetch('/api/charts?type=saved', { signal: controller.signal }),
+    ])
+      .then(async ([recentRes, savedRes]) => {
+        if (recentRes.ok) setRecentCharts(await recentRes.json());
+        if (savedRes.ok) setSavedCharts(await savedRes.json());
+      })
+      .catch((error) => {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          console.error('Failed to load chart library:', error);
+        }
+      });
+
+    return () => controller.abort();
+  }, [enablePersistence]);
 
   const persistChart = async (data: ChartData, saved = false) => {
     if (!enablePersistence || !personName.trim()) return null;
@@ -338,14 +362,14 @@ function ChartWorkspaceInner({
       await refreshLibrary();
     } catch (error) {
       console.error(error);
-      alert('Could not update saved status.');
+      alert(t.saveError);
     } finally {
       setIsSavingChart(false);
     }
   };
 
   const handleDeleteChart = async (chartId: string) => {
-    if (!confirm('Delete this chart?')) return;
+    if (!confirm(t.deleteConfirm)) return;
     try {
       const response = await fetch(`/api/charts/${chartId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete');
@@ -356,11 +380,11 @@ function ChartWorkspaceInner({
       await refreshLibrary();
     } catch (error) {
       console.error(error);
-      alert('Could not delete chart.');
+      alert(t.deleteError);
     }
   };
 
-  const handleDownloadPdf = async (pdfLang: 'en' | 'ja') => {
+  const handleDownloadPdf = async () => {
     if (!chartData || !isAuthLoaded) return;
     if (!isSignedIn) {
       const returnUrl = searchParams.toString()
@@ -371,15 +395,15 @@ function ChartWorkspaceInner({
     }
     try {
       await downloadChartPdf({
-        name: personName.trim() || 'Chart Report',
+        name: personName.trim() || t.chart,
         locationName: selectedLocationName,
         formData,
         chartData,
-        lang: pdfLang,
+        lang,
       });
     } catch (error) {
       console.error('PDF download failed:', error);
-      alert('Could not generate the PDF. Please try again.');
+      alert(t.pdfError);
     }
   };
 
@@ -405,13 +429,13 @@ function ChartWorkspaceInner({
       if (!debouncedQuery) { setLocationResults([]); setIsSearching(false); return; }
       setIsSearching(true);
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedQuery)}&limit=5`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedQuery)}&limit=5&accept-language=${encodeURIComponent(lang)}`);
         setLocationResults(await res.json());
       } catch (error) { console.error(error); } 
       finally { setIsSearching(false); }
     };
     fetchLocations();
-  }, [debouncedQuery]);
+  }, [debouncedQuery, lang]);
 
   const selectLocation = (loc: LocationResult) => {
     setFormData(prev => ({ ...prev, latitude: parseFloat(loc.lat), longitude: parseFloat(loc.lon) }));
@@ -422,15 +446,15 @@ function ChartWorkspaceInner({
 
   const generateCharts = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.latitude === 0 && formData.longitude === 0) return alert(t.errNoLoc || "Please select a location.");
-    if (enablePersistence && !personName.trim()) return alert(t.errNoName || "Please enter the person's name.");
+    if (formData.latitude === 0 && formData.longitude === 0) return alert(t.errNoLoc);
+    if (enablePersistence && !personName.trim()) return alert(t.errNoName);
     setIsLoading(true);
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       const response = await fetch(`${API_URL}/api/v1/compute-charts`, { 
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) 
       });
-      if (!response.ok) throw new Error(t.errCalc || "Calculation Failed.");
+      if (!response.ok) throw new Error(t.errCalc);
       const data: ChartData = await response.json();
       setChartData(data);
       setCurrentChartId(null);
@@ -438,7 +462,9 @@ function ChartWorkspaceInner({
       if (enablePersistence) {
         await persistChart(data, false);
       }
-    } catch (err: any) { alert(err.message); } 
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : t.errCalc);
+    }
     finally { setIsLoading(false); }
   };
 
@@ -447,7 +473,7 @@ function ChartWorkspaceInner({
     
     // NEW: We added `customSign` so we can override the D1 sign for D9 and Chalit charts
     const mappedPlanets = (p: Planet, house: number, customSign?: string) => ({ 
-      name: t.planets?.[p.name] || p.name, 
+      name: t.planets[p.name],
       enName: p.name,
       house, 
       degree: getIntegerDegree(p.longitude),
@@ -456,7 +482,7 @@ function ChartWorkspaceInner({
     });
     
     const mappedTransits = (p: TransitPlanet, house: number, customSign?: string) => ({ 
-      name: t.planets?.[p.name] || p.name, 
+      name: t.planets[p.name],
       enName: p.name,
       house, 
       degree: getIntegerDegree(p.longitude),
@@ -528,14 +554,14 @@ function ChartWorkspaceInner({
       {showAuthNav && (
         <div className="max-w-7xl mx-auto w-full mb-6 flex justify-end items-center gap-3">
           <SignedOut>
-            <Link href="/sign-in" className="text-sm font-medium text-indigo-700 hover:text-indigo-900 px-4 py-2 rounded-xl hover:bg-indigo-50 transition-colors">
-              Sign in
+            <Link href="/sign-in" className="text-sm font-medium text-shell-accent hover:text-shell-warm px-4 py-2 rounded-xl hover:bg-shell-accent-soft transition-colors">
+              {t.signIn}
             </Link>
           </SignedOut>
           <SignedIn>
-            <Link href="/chart" className="flex items-center gap-2 text-sm font-medium text-indigo-700 hover:text-indigo-900 px-4 py-2 rounded-xl hover:bg-indigo-50 transition-colors">
+            <Link href="/chart" className="flex items-center gap-2 text-sm font-medium text-shell-accent hover:text-shell-warm px-4 py-2 rounded-xl hover:bg-shell-accent-soft transition-colors">
               <LayoutDashboard size={16} />
-              Chart
+              {t.chart}
             </Link>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
@@ -546,55 +572,21 @@ function ChartWorkspaceInner({
         
         {/* LEFT COLUMN: Form */}
         <motion.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
-          <div className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100">
+          <div className="bg-shell-elevated/70 p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-shell-border">
             
-            {/* Header & Lang Setup */}
-            <div className="flex justify-between items-center mb-8 relative">
-              <h1 className="text-3xl font-serif font-medium text-indigo-950 tracking-tight">{chartCopy.appTitle}</h1>
-              
-              <div className="relative">
-                <button 
-                  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 text-sm font-medium text-gray-600"
-                >
-                  <Globe size={14} className="text-gray-400" />
-                  <span>{languages.find(l => l.code === lang)?.native}</span>
-                  <ChevronDown size={14} className="text-gray-400" />
-                </button>
-
-                <AnimatePresence>
-                  {isLangMenuOpen && (
-                    <>
-                      <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)} />
-                      <motion.div 
-                        initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50 py-1"
-                      >
-                        {languages.map((l) => (
-                          <button
-                            key={l.code}
-                            onClick={() => { setLang(l.code as LanguageCode); persistChartLang(l.code as LanguageCode); setIsLangMenuOpen(false); }}
-                            className={`w-full text-left px-4 py-2 text-sm transition-colors ${lang === l.code ? 'bg-indigo-50 text-indigo-900 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}
-                          >
-                            {l.native}
-                          </button>
-                        ))}
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-              </div>
+            <div className="mb-8">
+              <h1 className="text-3xl font-serif font-medium text-shell-warm tracking-tight">{chartCopy.appTitle}</h1>
             </div>
 
             {/* CMDK Autocomplete */}
             <div className="mb-8 relative">
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">{t.birthCity}</label>
+              <label className="block text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-2">{t.birthCity}</label>
               <div 
                 onClick={() => setIsCommandOpen(true)}
-                className="flex items-center gap-3 w-full p-3.5 border border-gray-200 rounded-xl bg-gray-50/50 text-sm cursor-text hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 w-full p-3.5 border border-shell-border rounded-xl bg-shell-bg/60 text-sm cursor-text hover:bg-shell-accent-soft transition-colors"
               >
-                <Search size={16} className="text-gray-400" />
-                <span className={selectedLocationName ? "text-gray-900" : "text-gray-400"}>
+                <Search size={16} className="text-shell-muted" />
+                <span className={selectedLocationName ? "text-shell-warm" : "text-shell-muted"}>
                   {selectedLocationName || t.searchPlaceholder}
                 </span>
               </div>
@@ -602,33 +594,35 @@ function ChartWorkspaceInner({
               <AnimatePresence>
                 {isCommandOpen && (
                   <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsCommandOpen(false)} />
+                    <button type="button" aria-label={t.closeDialog} className="fixed inset-0 z-40 cursor-default" onClick={() => setIsCommandOpen(false)} />
                     <motion.div 
+                      role="dialog"
+                      aria-label={t.locationDialog}
                       initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }}
-                      className="absolute top-0 left-0 w-full z-50 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden"
+                      className="absolute top-0 left-0 w-full z-50 bg-shell-elevated text-shell-warm rounded-xl shadow-2xl border border-shell-border overflow-hidden"
                     >
                       <Command className="w-full" shouldFilter={false}>
-                        <div className="flex items-center px-3 border-b border-gray-100">
-                          <Search size={16} className="text-indigo-400 mr-2" />
+                        <div className="flex items-center px-3 border-b border-shell-border">
+                          <Search size={16} className="text-shell-accent mr-2" />
                           <Command.Input 
                             autoFocus
                             value={locationQuery} 
                             onValueChange={setLocationQuery} 
                             placeholder={t.searchPlaceholder} 
-                            className="w-full py-4 text-sm outline-none bg-transparent placeholder:text-gray-300"
+                            className="w-full py-4 text-sm outline-none bg-transparent text-shell-warm placeholder:text-shell-muted"
                           />
                         </div>
                         <Command.List className="max-h-60 overflow-y-auto p-2 relative z-50">
-                          {isSearching && <div className="p-4 text-sm text-center text-gray-400">{t.searching}</div>}
-                          {!isSearching && locationResults.length === 0 && locationQuery && <div className="p-4 text-sm text-center text-gray-400">{t.noLocations}</div>}
+                          {isSearching && <div className="p-4 text-sm text-center text-shell-muted">{t.searching}</div>}
+                          {!isSearching && locationResults.length === 0 && locationQuery && <div className="p-4 text-sm text-center text-shell-muted">{t.noLocations}</div>}
                           {!isSearching && locationResults.map((loc, i) => (
                             <Command.Item 
                               key={i} 
                               value={loc.display_name}
                               onSelect={() => selectLocation(loc)}
-                              className="flex items-center gap-2 p-3 text-sm rounded-lg hover:bg-indigo-50 cursor-pointer text-gray-700 data-[selected=true]:bg-indigo-50"
+                              className="flex items-center gap-2 p-3 text-sm rounded-lg hover:bg-shell-accent-soft cursor-pointer text-shell-warm data-[selected=true]:bg-shell-accent-soft"
                             >
-                              <MapPin size={14} className="text-indigo-300 shrink-0" />
+                              <MapPin size={14} className="text-shell-accent shrink-0" />
                               <span className="truncate">{loc.display_name}</span>
                             </Command.Item>
                           ))}
@@ -643,42 +637,42 @@ function ChartWorkspaceInner({
             <form onSubmit={generateCharts} className="space-y-6">
               {/* --- NATAL PARAMETERS --- */}
               <div>
-                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 mb-4">{t.natalParams}</h3>
+                <h3 className="text-[10px] font-bold text-shell-muted uppercase tracking-widest border-b border-shell-border pb-2 mb-4">{t.natalParams}</h3>
                 <div className="mb-4">
-                  <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">
-                    {t.personName || "Person's Name"}
-                    {enablePersistence && <span className="text-indigo-400"> *</span>}
+                  <label className="block text-[10px] text-shell-muted mb-1.5 ml-1">
+                    {t.personName}
+                    {enablePersistence && <span className="text-shell-accent"> *</span>}
                   </label>
                   <input
                     type="text"
                     value={personName}
                     onChange={(e) => setPersonName(e.target.value)}
                     placeholder={t.personNamePlaceholder || ''}
-                    className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 text-gray-700"
+                    className="w-full p-3 border border-shell-border rounded-xl text-sm focus:border-shell-accent focus:ring-1 focus:ring-shell-accent outline-none transition-all bg-shell-bg/60 text-shell-warm placeholder:text-shell-muted"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="min-w-0">
-                    <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">{t.dob}</label>
-                    <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="w-full min-w-0 p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
+                    <label className="block text-[10px] text-shell-muted mb-1.5 ml-1">{t.dob}</label>
+                    <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="w-full min-w-0 p-3 border border-shell-border rounded-xl text-sm focus:border-shell-accent focus:ring-1 focus:ring-shell-accent outline-none transition-all bg-shell-bg/60 cursor-pointer text-shell-warm" />
                   </div>
                   <div className="min-w-0">
-                    <label className="block text-[10px] text-gray-400 mb-1.5 ml-1">{t.tob}</label>
-                    <input type="time" value={natalTimeString} onChange={handleTimeChange} className="w-full min-w-0 p-3 border border-gray-200 rounded-xl text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-gray-50/50 cursor-pointer text-gray-700" />
+                    <label className="block text-[10px] text-shell-muted mb-1.5 ml-1">{t.tob}</label>
+                    <input type="time" value={natalTimeString} onChange={handleTimeChange} className="w-full min-w-0 p-3 border border-shell-border rounded-xl text-sm focus:border-shell-accent focus:ring-1 focus:ring-shell-accent outline-none transition-all bg-shell-bg/60 cursor-pointer text-shell-warm" />
                   </div>
                 </div>
               </div>
 
               {/* --- GOCHAR OVERLAY --- */}
               <div>
-                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 mb-4">{t.gocharOverlay}</h3>
+                <h3 className="text-[10px] font-bold text-shell-muted uppercase tracking-widest border-b border-shell-border pb-2 mb-4">{t.gocharOverlay}</h3>
                 <div className="w-full">
-                  <label className="block text-[10px] text-emerald-600/70 mb-1.5 ml-1">{t.transitDate}</label>
-                  <input type="date" value={transitDateString} onChange={(e) => handleDateChange(e, 'transit')} className="w-full p-3 border border-emerald-200 rounded-xl text-sm text-emerald-900 bg-emerald-50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all cursor-pointer" />
+                  <label className="block text-[10px] text-emerald-700 dark:text-emerald-300 mb-1.5 ml-1">{t.transitDate}</label>
+                  <input type="date" value={transitDateString} onChange={(e) => handleDateChange(e, 'transit')} className="w-full p-3 border border-emerald-300 dark:border-emerald-700 rounded-xl text-sm text-emerald-900 dark:text-emerald-100 bg-emerald-50 dark:bg-emerald-950/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all cursor-pointer" />
                 </div>
               </div>
 
-              <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="w-full py-4 bg-indigo-950 text-white font-medium text-sm rounded-xl shadow-lg shadow-indigo-900/20 hover:bg-indigo-900 disabled:opacity-50 disabled:shadow-none transition-all">
+              <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="w-full py-4 bg-shell-warm text-shell-bg font-medium text-sm rounded-xl shadow-lg hover:opacity-90 disabled:opacity-50 disabled:shadow-none transition-all">
                 {isLoading ? t.computingBtn : t.generateBtn}
               </motion.button>
             </form>
@@ -700,29 +694,21 @@ function ChartWorkspaceInner({
         <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
           <AnimatePresence mode="wait">
             {chartData ? (
-              <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="bg-white rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+              <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="bg-shell-elevated/70 text-shell-warm rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-shell-border overflow-hidden">
                 
-                <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-gray-100 bg-gray-50/40">
+                <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-shell-border bg-shell-bg/40">
                   <div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subject</div>
-                    <div className="font-serif text-lg text-indigo-950">{personName.trim() || '—'}</div>
+                    <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest">{t.subject}</div>
+                    <div className="font-serif text-lg text-shell-warm">{personName.trim() || '—'}</div>
                   </div>
                   <div className="flex flex-wrap items-center justify-end gap-2">
                     <button
                       type="button"
-                      onClick={() => handleDownloadPdf('en')}
-                      className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800 transition-colors"
+                      onClick={handleDownloadPdf}
+                      className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider rounded-xl border border-shell-border bg-shell-elevated text-shell-warm hover:border-shell-accent/50 hover:text-shell-accent transition-colors"
                     >
                       <Download size={14} />
-                      {t.downloadPdfEn || 'Download PDF (English)'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDownloadPdf('ja')}
-                      className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800 transition-colors"
-                    >
-                      <Download size={14} />
-                      {t.downloadPdfJa || 'Download PDF (日本語)'}
+                      {t.downloadPdf}
                     </button>
                     {enablePersistence && currentChartId && (
                       <button
@@ -731,22 +717,22 @@ function ChartWorkspaceInner({
                         disabled={isSavingChart}
                         className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border transition-colors ${
                           isCurrentSaved
-                            ? 'border-indigo-200 bg-indigo-50 text-indigo-800'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:text-indigo-800'
+                            ? 'border-shell-accent/40 bg-shell-accent-soft text-shell-accent'
+                            : 'border-shell-border bg-shell-elevated text-shell-warm hover:border-shell-accent/50 hover:text-shell-accent'
                         }`}
                       >
                         {isCurrentSaved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-                        {isCurrentSaved ? (t.savedChart || 'Saved') : (t.saveChart || 'Save Chart')}
+                        {isSavingChart ? t.savingChart : isCurrentSaved ? t.savedChart : t.saveChart}
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* NEW TABS NAVIGATION */}
-                <div className="flex border-b border-gray-100 overflow-x-auto no-scrollbar">
-                  {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar', 'Details', 'Aspects', 'Dasha'].map((tab) => (
-                    <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 py-5 text-xs tracking-widest uppercase font-bold border-b-2 transition-colors whitespace-nowrap px-6 ${activeTab === tab ? 'border-indigo-900 text-indigo-950 bg-white' : 'border-transparent text-gray-400 hover:text-gray-900 hover:bg-gray-50/50'}`}>
-                      {t.tabs?.[tab] || tab}
+                <div className="flex border-b border-shell-border overflow-x-auto no-scrollbar">
+                  {CHART_TABS.map((tab) => (
+                    <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-5 text-xs tracking-widest uppercase font-bold border-b-2 transition-colors whitespace-nowrap px-6 ${activeTab === tab ? 'border-shell-accent text-shell-warm bg-shell-accent-soft' : 'border-transparent text-shell-muted hover:text-shell-warm hover:bg-shell-bg/50'}`}>
+                      {t.tabs[tab]}
                     </button>
                   ))}
                 </div>
@@ -754,28 +740,28 @@ function ChartWorkspaceInner({
                 <div className="p-8 md:p-12 min-h-[600px]">
                   
                   {/* Top Grid Info */}
-                  <div className="flex justify-between items-start mb-10 pb-6 border-b border-gray-100">
+                  <div className="flex justify-between items-start mb-10 pb-6 border-b border-shell-border">
                     <div className="space-y-5">
                       <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.timezone}</div>
-                        <div className="font-mono text-sm text-gray-900">{chartData.timezone_detected}</div>
+                        <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-1">{t.timezone}</div>
+                        <div className="font-mono text-sm text-shell-warm">{chartData.timezone_detected}</div>
                       </div>
                       {chartData.sunrise && (
                         <div>
-                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.sunrise}</div>
-                          <div className="font-mono text-sm text-amber-600 font-medium">{chartData.sunrise}</div>
+                          <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-1">{t.sunrise}</div>
+                          <div className="font-mono text-sm text-amber-700 dark:text-amber-300 font-medium">{chartData.sunrise}</div>
                         </div>
                       )}
                     </div>
                     <div className="space-y-5 text-right">
                       <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.absoluteLagna}</div>
-                        <div className="font-mono text-sm text-indigo-600 font-bold">{formatDMS(chartData.ascendant_longitude)}</div>
+                        <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-1">{t.absoluteLagna}</div>
+                        <div className="font-mono text-sm text-shell-accent font-bold">{formatDMS(chartData.ascendant_longitude)}</div>
                       </div>
                       {chartData.sunset && (
                         <div>
-                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{t.sunset}</div>
-                          <div className="font-mono text-sm text-orange-600 font-medium">{chartData.sunset}</div>
+                          <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-1">{t.sunset}</div>
+                          <div className="font-mono text-sm text-orange-700 dark:text-orange-300 font-medium">{chartData.sunset}</div>
                         </div>
                       )}
                     </div>
@@ -787,15 +773,15 @@ function ChartWorkspaceInner({
                       {/* STANDARD CHARTS */}
                       {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
                         <div className="flex flex-col items-center">
-                          <h2 className={`font-serif text-indigo-950 mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
-                            {t.tabTitles?.[activeTab] || activeTab}
+                          <h2 className={`font-serif text-shell-warm mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
+                            {t.tabTitles[activeTab]}
                           </h2>
                           
                           {activeTab === 'Gochar' && (
                             <div className="flex justify-center mb-8">
-                              <div className="bg-gray-100/80 p-1 rounded-xl inline-flex">
-                                <button onClick={() => setGocharBase('Lagna')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Lagna' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.lagnaBase}</button>
-                                <button onClick={() => setGocharBase('Chandra')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Chandra' ? 'bg-white text-indigo-950 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.chandraBase}</button>
+                              <div className="bg-shell-bg/80 border border-shell-border p-1 rounded-xl inline-flex">
+                                <button onClick={() => setGocharBase('Lagna')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Lagna' ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.lagnaBase}</button>
+                                <button onClick={() => setGocharBase('Chandra')} className={`px-5 py-2 font-bold uppercase tracking-wider rounded-lg transition-all ${gocharBase === 'Chandra' ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.chandraBase}</button>
                               </div>
                             </div>
                           )}
@@ -806,9 +792,10 @@ function ChartWorkspaceInner({
                               planets={renderData.planets} 
                               transitPlanets={renderData.transitPlanets} 
                               ascendantSign={renderData.asc}
-                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
+                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? t.ui.asc : undefined}
                               ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
                               transitLabel={t.ui?.transitBadge}
+                              accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
                               useSymbols={useSymbols}
                             />
                           ) : (
@@ -816,9 +803,10 @@ function ChartWorkspaceInner({
                               planets={renderData.planets} 
                               transitPlanets={renderData.transitPlanets} 
                               ascendantSign={renderData.asc}
-                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? (t.ui?.asc || 'Asc') : undefined}
+                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? t.ui.asc : undefined}
                               ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
                               transitLabel={t.ui?.transitBadge}
+                              accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
                               useSymbols={useSymbols}
                             />
                           )}
@@ -829,7 +817,7 @@ function ChartWorkspaceInner({
                       {/* NEW: PLANETARY DETAILS TAB */}
                       {activeTab === 'Details' && (
                         <div className="space-y-6">
-                            <h2 className={`font-serif text-indigo-950 mb-8 flex items-center gap-2 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
+                            <h2 className={`font-serif text-shell-warm mb-8 flex items-center gap-2 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
                               <Sparkles className="text-amber-500" size={24} /> {t.tabTitles?.Details}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -838,42 +826,42 @@ function ChartWorkspaceInner({
                                 const isRetro = p.name === 'Rahu' || p.name === 'Ketu' ? true : p.is_retrograde;
                                 
                                 return (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-md transition-shadow">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="p-5 rounded-2xl bg-shell-bg/55 border border-shell-border hover:shadow-md transition-shadow">
                                   <div className="flex justify-between items-start mb-3">
                                     <div className="flex items-center gap-2">
-                                      <h3 className={`font-bold text-indigo-950 ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
-                                        <span className="mr-2 text-indigo-500">{planetSymbols[p.name]}</span>
-                                        {t.planets?.[p.name] || p.name}
+                                      <h3 className={`font-bold text-shell-warm ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
+                                        <span className="mr-2 text-shell-accent">{planetSymbols[p.name]}</span>
+                                        {t.planets[p.name]}
                                       </h3>
                                       {isRetro && (
-                                        <span className={`font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded uppercase tracking-wider ${lang === 'hi' ? 'text-xs' : 'text-[10px]'}`}>
-                                          {t.ui?.retrograde || 'Retrograde'}
+                                        <span className={`font-bold bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-200 px-2 py-0.5 rounded uppercase tracking-wider ${lang === 'hi' ? 'text-xs' : 'text-[10px]'}`}>
+                                          {t.ui.retrograde}
                                         </span>
                                       )}
                                     </div>
                                     <DignityBadge dignity={p.dignity} t={t} />
                                   </div>
-                                  <div className="space-y-2 text-sm text-gray-600">
+                                  <div className="space-y-2 text-sm text-shell-muted">
                                     <div className="flex justify-between">
-                                      <span className={`text-gray-400 ${lang === 'hi' ? 'text-base' : ''}`}>{t.ui?.house} {p.d1_house}</span> 
-                                      <span className="font-mono text-gray-900">{t.signs?.[p.sign] || p.sign} {formatDMS(p.longitude)}</span>
+                                      <span className={lang === 'hi' ? 'text-base' : ''}>{t.ui?.house} {p.d1_house}</span> 
+                                      <span className="font-mono text-shell-warm">{t.signs[p.sign]} {formatDMS(p.longitude)}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                      <span className={`text-gray-400 ${lang === 'hi' ? 'text-base' : ''}`}>{t.ui?.lord}</span> 
-                                      <span className={`font-medium text-gray-900 ${lang === 'hi' ? 'text-base' : ''}`}>{t.planets?.[p.sign_lord] || p.sign_lord}</span>
+                                      <span className={lang === 'hi' ? 'text-base' : ''}>{t.ui?.lord}</span> 
+                                      <span className={`font-medium text-shell-warm ${lang === 'hi' ? 'text-base' : ''}`}>{t.planets[p.sign_lord]}</span>
                                     </div>
-                                    <div className="pt-2 mt-2 border-t border-gray-200/60">
+                                    <div className="pt-2 mt-2 border-t border-shell-border">
                                       <div className="flex justify-between items-center">
-                                        <span className={`font-bold text-indigo-400 uppercase tracking-widest ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>
-                                        {t.ui?.nakshatraLabel || 'Nakshatra'}
+                                        <span className={`font-bold text-shell-accent uppercase tracking-widest ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>
+                                        {t.ui.nakshatraLabel}
                                         </span> 
-                                        <span className={`font-semibold text-indigo-900 ${lang === 'hi' ? 'text-base' : 'text-sm'}`}>
-                                          {t.nakshatras?.[p.nakshatra] || p.nakshatra}
+                                        <span className={`font-semibold text-shell-warm ${lang === 'hi' ? 'text-base' : 'text-sm'}`}>
+                                          {t.nakshatras[p.nakshatra]}
                                         </span>
                                       </div>
                                       <div className="flex justify-between items-center mt-1">
-                                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">{t.ui?.pada}</span> 
-                                        <span className="font-mono text-xs text-gray-500">{p.nakshatra_pada}</span>
+                                        <span className="text-[10px] text-shell-muted uppercase tracking-widest">{t.ui?.pada}</span> 
+                                        <span className="font-mono text-xs text-shell-muted">{p.nakshatra_pada}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -886,20 +874,20 @@ function ChartWorkspaceInner({
                       {/* NEW: VEDIC ASPECTS TAB */}
                       {activeTab === 'Aspects' && (
                         <div className="space-y-6">
-                           <h2 className="text-2xl font-serif text-indigo-950 mb-8 flex items-center gap-2"><Eye className="text-indigo-500" size={24} /> {t.tabTitles?.Aspects}</h2>
+                           <h2 className="text-2xl font-serif text-shell-warm mb-8 flex items-center gap-2"><Eye className="text-shell-accent" size={24} /> {t.tabTitles?.Aspects}</h2>
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                              {chartData.planets.filter(p => p.aspects_houses.length > 0).map((p, idx) => (
-                               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="flex flex-col p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
+                               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="flex flex-col p-5 rounded-2xl bg-shell-accent-soft border border-shell-accent/20">
                                   <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold text-base">{planetSymbols[p.name]}</div>
-                                    <span className="font-bold text-indigo-950">{t.planets?.[p.name] || p.name}</span>
-                                    <span className="text-xs text-indigo-400">in {t.ui?.house} {p.d1_house}</span>
+                                    <div className="w-8 h-8 rounded-full bg-shell-elevated flex items-center justify-center text-shell-accent font-bold text-base">{planetSymbols[p.name]}</div>
+                                    <span className="font-bold text-shell-warm">{t.planets[p.name]}</span>
+                                    <span className="text-xs text-shell-muted">{t.inHouse} {p.d1_house}</span>
                                   </div>
                                   <div>
-                                    <div className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">{t.ui?.aspects}</div>
+                                    <div className="text-[10px] font-bold text-shell-muted uppercase tracking-widest mb-2">{t.ui?.aspects}</div>
                                     <div className="flex flex-wrap gap-2">
                                       {p.aspects_houses.map(h => (
-                                        <div key={h} className="bg-white border border-indigo-200 px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-900 shadow-sm">
+                                        <div key={h} className="bg-shell-elevated border border-shell-accent/30 px-3 py-1.5 rounded-lg text-sm font-medium text-shell-warm shadow-sm">
                                           {t.ui?.house} {h}
                                         </div>
                                       ))}
@@ -914,10 +902,10 @@ function ChartWorkspaceInner({
                       {/* DASHA TAB */}
                       {activeTab === 'Dasha' && (
                         <div className="max-w-3xl mx-auto">
-                          <h2 className="text-2xl font-serif text-indigo-950 mb-2 text-center">{t.dashaTimeline}</h2>
-                          <p className="text-center text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-10">{t.dashaSub}</p>
+                          <h2 className="text-2xl font-serif text-shell-warm mb-2 text-center">{t.dashaTimeline}</h2>
+                          <p className="text-center text-[10px] text-shell-muted uppercase tracking-widest font-bold mb-10">{t.dashaSub}</p>
                           <div className="space-y-1">
-                            {chartData.vimshottari_dashas.map((dasha, i) => <DashaNode key={i} dasha={dasha} t={t} />)}
+                            {chartData.vimshottari_dashas.map((dasha, i) => <DashaNode key={i} dasha={dasha} t={t} lang={lang} />)}
                           </div>
                         </div>
                       )}
@@ -930,36 +918,36 @@ function ChartWorkspaceInner({
                     
                     {/* 1. Symbol Switcher (Visible on all tabs EXCEPT Aspects) */}
                     {!['Aspects', 'Details', 'Dasha'].includes(activeTab) && (
-                      <div className="bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
+                      <div className="bg-shell-bg/60 p-1 rounded-full inline-flex border border-shell-border">
                         <button 
                           onClick={() => setUseSymbols(false)} 
-                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${!useSymbols ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${!useSymbols ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-xs' : ''}`}
                         >
-                          {t.ui?.textToggle || 'Text'}
+                          {t.ui.textToggle}
                         </button>
                         <button 
                           onClick={() => setUseSymbols(true)} 
-                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${useSymbols ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-400 hover:text-gray-700'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                          className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${useSymbols ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-xs' : ''}`}
                         >
-                          {t.ui?.symbolToggle || 'Symbols'}
+                          {t.ui.symbolToggle}
                         </button>
                       </div>
                     )}
 
                     {/* 2. Chart Style Switcher (Only visible when viewing a Chart tab) */}
                     {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
-                      <div className="bg-gray-50 p-1 rounded-full inline-flex border border-gray-200">
+                      <div className="bg-shell-bg/60 p-1 rounded-full inline-flex border border-shell-border">
                         <button 
                           onClick={() => setChartStyle('North')} 
-                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'North' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'North' ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
                         >
-                          {t.ui?.northStyle || 'North Indian'}
+                          {t.ui.northStyle}
                         </button>
                         <button 
                           onClick={() => setChartStyle('South')} 
-                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'South' ? 'bg-white text-indigo-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                          className={`px-6 py-2 font-bold uppercase tracking-widest rounded-full transition-all ${chartStyle === 'South' ? 'bg-shell-accent-soft text-shell-warm shadow-sm' : 'text-shell-muted hover:text-shell-warm'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
                         >
-                          {t.ui?.southStyle || 'South Indian'}
+                          {t.ui.southStyle}
                         </button>
                       </div>
                     )}
@@ -967,12 +955,12 @@ function ChartWorkspaceInner({
               </motion.div>
             ) : (
               // Empty State
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center border border-dashed border-gray-200 rounded-3xl bg-white/50 min-h-[600px]">
-                <div className="text-center text-gray-400 p-8 max-w-sm">
-                  <div className="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <MapPin className="text-gray-300" size={24} />
+              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center border border-dashed border-shell-border rounded-3xl bg-shell-elevated/35 min-h-[600px]">
+                <div className="text-center text-shell-muted p-8 max-w-sm">
+                  <div className="bg-shell-accent-soft w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <MapPin className="text-shell-accent" size={24} />
                   </div>
-                  <h3 className="text-lg font-serif text-gray-900 mb-2">{t.awaitingTitle}</h3>
+                  <h3 className="text-lg font-serif text-shell-warm mb-2">{t.awaitingTitle}</h3>
                   <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
               </motion.div>
@@ -983,7 +971,7 @@ function ChartWorkspaceInner({
       
       {/* Footer Watermark */}
       <div className="w-full mt-12 pb-4 text-center opacity-30 pointer-events-none">
-        <span className="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase">
+        <span className="text-[10px] text-shell-muted font-bold tracking-[0.3em] uppercase">
           {t.watermark}
         </span>
       </div>

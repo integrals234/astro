@@ -84,6 +84,7 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
                 <button
                   type="button"
                   onClick={() => move(idx, -1)}
+                  aria-label={`${uiString("moveUp", lang)}: ${t(item.label, lang)}`}
                   disabled={idx === 0 || (checked && isCorrect)}
                   className="rounded-lg border border-shell-border p-1.5 text-shell-muted hover:text-shell-warm disabled:opacity-30"
                 >
@@ -92,6 +93,7 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
                 <button
                   type="button"
                   onClick={() => move(idx, 1)}
+                  aria-label={`${uiString("moveDown", lang)}: ${t(item.label, lang)}`}
                   disabled={idx === order.length - 1 || (checked && isCorrect)}
                   className="rounded-lg border border-shell-border p-1.5 text-shell-muted hover:text-shell-warm disabled:opacity-30"
                 >

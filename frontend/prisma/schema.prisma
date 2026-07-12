@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -19,12 +19,20 @@ enum UserRole {
   admin
 }
 
+enum AppLanguage {
+  en
+  hi
+  ja
+  ko
+}
+
 model User {
   id                  String               @id
   email               String               @unique
   name                String?
   subscriptionStatus  SubscriptionStatus   @default(free)
   role                UserRole             @default(user)
+  appLanguage         AppLanguage?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   charts              SavedChart[]
@@ -45,7 +53,7 @@ model SavedChart {
   id           String   @id @default(cuid())
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String   // person's name whose chart was generated
+  name         String // person's name whose chart was generated
   locationName String
   formData     Json
   chartData    Json

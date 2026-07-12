@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
@@ -8,12 +9,12 @@ import {
   BookOpen,
   Compass,
   FlaskConical,
-  Languages,
   MoonStar,
   Sparkles,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SiteBrand from "@/components/layout/SiteBrand";
+import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import HomeInstagramStrip from "@/components/home/HomeInstagramStrip";
 import {
   welcomeContent,
@@ -35,7 +36,13 @@ const startingPointIcons: Record<
   "personal-reading": MoonStar,
 };
 
-function HomeBanner({ embedded }: { embedded?: boolean }) {
+function HomeBanner({
+  embedded,
+  alt,
+}: {
+  embedded?: boolean;
+  alt: string;
+}) {
   return (
     <div
       className={
@@ -44,38 +51,28 @@ function HomeBanner({ embedded }: { embedded?: boolean }) {
           : "mb-8 w-full md:mb-10"
       }
     >
-      <img
+      <Image
         src={HOME_BANNER_SRC}
-        alt="Jyotish Life"
+        alt={alt}
+        width={1600}
+        height={707}
         className="block h-auto w-full"
-        decoding="async"
-        fetchPriority="high"
+        priority
+        sizes="100vw"
       />
     </div>
   );
 }
 
-function PublicWelcomeHeader({
-  lang,
-  toggleLang,
-}: {
+function PublicWelcomeHeader({ lang }: {
   lang: ReturnType<typeof useWelcomeLang>["lang"];
-  toggleLang: ReturnType<typeof useWelcomeLang>["toggleLang"];
 }) {
-
   return (
     <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
       <div className="shell-header-desktop mx-auto w-full max-w-6xl items-center justify-between gap-6 px-8 py-4">
         <SiteBrand size="lg" className="shrink-0" />
         <nav className="flex shrink-0 items-center gap-3">
-          <button
-            type="button"
-            onClick={toggleLang}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 px-3 py-2 text-xs font-medium text-shell-warm transition-all hover:border-shell-accent/40"
-          >
-            <Languages size={14} className="text-shell-accent" />
-            {lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
-          </button>
+          <PublicLanguageLink className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-shell-muted transition-colors hover:bg-shell-elevated/60 hover:text-shell-warm" />
           <Link
             href="/chart"
             className="inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 px-3 py-2 text-xs font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent"
@@ -110,30 +107,27 @@ function PublicWelcomeHeader({
             {uiText("home", lang)}
           </p>
         </div>
-        <nav className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleLang}
-            aria-label={lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-shell-border bg-shell-elevated/60 text-shell-warm"
-          >
-            <Languages size={16} className="text-shell-accent" />
-          </button>
-        </nav>
+        <PublicLanguageLink
+          iconOnly
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-shell-border bg-shell-elevated/60 text-shell-warm transition-colors hover:border-shell-accent/40 hover:text-shell-accent"
+        />
       </div>
     </header>
   );
 }
 
 function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
-  const { lang, toggleLang } = useWelcomeLang();
+  const { lang } = useWelcomeLang();
   const instagramCopy = welcomeContent.instagram[lang];
 
   const content = (
     <div className={`${embedded ? "" : "min-h-screen"} bg-shell-bg text-shell-warm`}>
-      {!embedded && <PublicWelcomeHeader lang={lang} toggleLang={toggleLang} />}
+      {!embedded && <PublicWelcomeHeader lang={lang} />}
 
-      <HomeBanner embedded={embedded} />
+      <HomeBanner
+        embedded={embedded}
+        alt={welcomeText(welcomeContent.bannerAlt, lang)}
+      />
 
       <div className={`relative mx-auto max-w-6xl ${embedded ? "" : "px-4 pb-8 md:px-8 md:pb-12"}`}>
         {/* Ambient background */}
@@ -154,19 +148,6 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-12 md:mb-16"
           >
-            {embedded && (
-              <div className="mb-6 flex justify-end sm:mb-8">
-                <button
-                  type="button"
-                  onClick={toggleLang}
-                  className="inline-flex items-center gap-2 rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40"
-                >
-                  <Languages size={14} className="text-shell-accent" />
-                  {lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
-                </button>
-              </div>
-            )}
-
             <h1 className="font-brand max-w-3xl text-4xl leading-[1.12] tracking-tight text-shell-warm md:text-5xl lg:text-[3.25rem]">
               {welcomeText(welcomeContent.title, lang)}
             </h1>

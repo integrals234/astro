@@ -113,14 +113,15 @@ function ArticleBlock({
   }
 
   const text = t(block.text, lang);
-  if (text.startsWith("Q. ")) {
+  const sourceText = block.text.en;
+  if (sourceText.startsWith("Q. ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-warm font-medium mt-5 mb-1">
         <FormattedText text={text} />
       </p>
     );
   }
-  if (text.startsWith("A. ")) {
+  if (sourceText.startsWith("A. ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-muted mb-4 pl-3 border-l-2 border-shell-accent/30">
         <FormattedText text={text} />
@@ -128,10 +129,10 @@ function ArticleBlock({
     );
   }
 
-  if (text.startsWith("• ")) {
+  if (sourceText.startsWith("• ")) {
     return (
       <p className="text-sm leading-relaxed text-shell-warm/90 mb-2 pl-4 before:content-['·'] before:absolute before:-ml-4 before:text-shell-accent relative">
-        <FormattedText text={text.slice(2)} />
+        <FormattedText text={text.replace(/^•\s*/, "")} />
       </p>
     );
   }

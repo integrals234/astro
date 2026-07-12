@@ -16,7 +16,14 @@ export default function CourseProgressBar({ percent, lang }: CourseProgressBarPr
         <span className="text-shell-muted">{uiString("progressLabel", lang)}</span>
         <span className="text-shell-accent tabular-nums">{percent}%</span>
       </div>
-      <div className="relative h-2 overflow-hidden rounded-full bg-shell-bg border border-shell-border">
+      <div
+        className="relative h-2 overflow-hidden rounded-full bg-shell-bg border border-shell-border"
+        role="progressbar"
+        aria-label={uiString("progressLabel", lang)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percent}
+      >
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-shell-accent/70 via-amber-400/80 to-shell-accent"
           initial={{ width: 0 }}

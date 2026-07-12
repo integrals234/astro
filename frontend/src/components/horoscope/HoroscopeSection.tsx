@@ -56,6 +56,12 @@ function InfographicImage({
 }
 
 const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearly"];
+const dateLocales: Record<EducationLang, string> = {
+  en: "en-US",
+  hi: "hi-IN",
+  ja: "ja-JP",
+  ko: "ko-KR",
+};
 
 export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
   const navRef = useRef<HTMLElement>(null);
@@ -71,9 +77,9 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
         generateHoroscopeReading(sign, activePeriod),
       ])
     ) as Record<HoroscopeSignId, ReturnType<typeof generateHoroscopeReading>>;
-  }, [activePeriod.key, activePeriod.type]);
+  }, [activePeriod]);
 
-  const updatedLabel = now.toLocaleString(lang === "ja" ? "ja-JP" : "en-US", {
+  const updatedLabel = now.toLocaleString(dateLocales[lang], {
     month: "short",
     day: "numeric",
     hour: "numeric",

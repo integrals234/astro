@@ -21,8 +21,8 @@ export const chapter1Planets: CourseChapter = {
         ja: "ジョーティシュ（ज्योतिष）は「光の科学」の意味です。5000年以上 — マハーリシ・パーラシャラが認知 — 返ってくるカルマを照らしてきました：予測（いつ）も予防（困難を和らげる方法）も。",
       },
       highlight: {
-        en: "22 chapters + 112+ games — Grahas, Yogakaraka, dignity, dashas, and Drishti mastery.",
-        ja: "22章＋112以上のゲーム — グラハ・ヨーガカーラカ・品位・ダシャー・ドリシュティマスター。",
+        en: "25 source chapters, 19 learning modules, and 143 games — from Grahas and Yogakaraka to dignity, dashas, and Drishti.",
+        ja: "25の原典章を19の学習モジュールに編成し、143のゲームを収録。グラハやヨーガカーラカから、品位・ダシャー・ドリシュティまで学びます。",
       },
     },
     {

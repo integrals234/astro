@@ -1,49 +1,52 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { saveVedicCourseProgress } from "@/app/actions/vedic-course";
-import { ALL_STEP_IDS, VEDIC_COURSE_CHAPTERS, resolveChapterIndex } from "@/lib/vedic-course/content";
-import type { CourseLanguage, CourseProgress } from "@/lib/vedic-course/types";
+import { ALL_STEP_IDS, VEDIC_COURSE_CHAPTERS } from "@/lib/vedic-course/content";
+import type { CourseProgress } from "@/lib/vedic-course/types";
 import { isInteractiveStep } from "@/lib/vedic-course/step-utils";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import { computeProgressPercent, t } from "@/lib/vedic-course/utils";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 import CourseProgressBar from "./CourseProgressBar";
 import ChapterStepper from "./ChapterStepper";
 import StepRenderer from "./StepRenderer";
-import LanguageSwitcher from "./LanguageSwitcher";
-
-const LANG_STORAGE_KEY = "vedic-course-lang";
 
 interface VedicCourseModuleProps {
   initialProgress: CourseProgress;
 }
 
-export default function VedicCourseModule({ initialProgress }: VedicCourseModuleProps) {
-  const [lang, setLang] = useState<CourseLanguage>("ja");
-  const [currentChapter, setCurrentChapter] = useState(() =>
-    resolveChapterIndex(initialProgress.completedSlides, initialProgress.currentChapter),
+function resolveInitialLocation(progress: CourseProgress) {
+  const chapterIndex = Math.min(
+    Math.max(0, progress.currentChapter),
+    VEDIC_COURSE_CHAPTERS.length - 1,
   );
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const chapter = VEDIC_COURSE_CHAPTERS[chapterIndex];
+  const firstIncomplete = chapter.steps.findIndex(
+    (step) => !progress.completedSlides.includes(step.id),
+  );
+  return {
+    chapterIndex,
+    stepIndex: firstIncomplete >= 0 ? firstIncomplete : chapter.steps.length - 1,
+  };
+}
+
+export default function VedicCourseModule({ initialProgress }: VedicCourseModuleProps) {
+  const { language: lang } = useLanguage();
+  const initialLocation = useMemo(
+    () => resolveInitialLocation(initialProgress),
+    [initialProgress],
+  );
+  const [currentChapter, setCurrentChapter] = useState(initialLocation.chapterIndex);
+  const [currentStepIndex, setCurrentStepIndex] = useState(initialLocation.stepIndex);
   const [completedSlides, setCompletedSlides] = useState<string[]>(
     initialProgress.completedSlides,
   );
-  const [interactivePassed, setInteractivePassed] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(LANG_STORAGE_KEY) as CourseLanguage | null;
-    if (saved && ["en", "hi", "ja", "ko"].includes(saved)) {
-      setLang(saved);
-    }
-  }, []);
-
-  const handleLangChange = (next: CourseLanguage) => {
-    setLang(next);
-    localStorage.setItem(LANG_STORAGE_KEY, next);
-  };
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const chapter = VEDIC_COURSE_CHAPTERS[currentChapter];
   const step = chapter?.steps[currentStepIndex];
@@ -65,8 +68,9 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
   );
 
   const debouncedSave = useDebouncedCallback(
-    (progress: CourseProgress) => {
-      void saveVedicCourseProgress(progress);
+    async (progress: CourseProgress) => {
+      const result = await saveVedicCourseProgress(progress, lang);
+      setSaveError(result.ok ? null : result.error);
     },
     400,
   );
@@ -90,33 +94,7 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
     [currentChapter, persistProgress],
   );
 
-  useEffect(() => {
-    if (!step) return;
-    if (isInteractive) {
-      setInteractivePassed(completedSlides.includes(step.id));
-    } else {
-      setInteractivePassed(true);
-    }
-  }, [step, completedSlides, isInteractive]);
-
-  const resumeFromProgress = useCallback(() => {
-    const savedChapter = Math.min(
-      initialProgress.currentChapter,
-      VEDIC_COURSE_CHAPTERS.length - 1,
-    );
-    const ch = VEDIC_COURSE_CHAPTERS[savedChapter];
-    const firstIncomplete = ch.steps.findIndex(
-      (s) => !initialProgress.completedSlides.includes(s.id),
-    );
-    setCurrentChapter(savedChapter);
-    setCurrentStepIndex(firstIncomplete >= 0 ? firstIncomplete : ch.steps.length - 1);
-  }, [initialProgress]);
-
-  useEffect(() => {
-    resumeFromProgress();
-  }, [resumeFromProgress]);
-
-  const canGoNext = isInteractive ? interactivePassed : true;
+  const canGoNext = !isInteractive || (step ? completedSlides.includes(step.id) : false);
   const isLastStepInChapter = currentStepIndex >= (chapter?.steps.length ?? 1) - 1;
   const isLastChapter = currentChapter >= VEDIC_COURSE_CHAPTERS.length - 1;
 
@@ -150,7 +128,6 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
   const handleInteractiveComplete = () => {
     if (step) {
       markStepComplete(step.id);
-      setInteractivePassed(true);
     }
   };
 
@@ -164,14 +141,16 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
 
   return (
     <div className="relative space-y-5 sm:space-y-6">
-      {/* Compact lang switch — top-right, minimal footprint on mobile */}
-      <div className="absolute -top-1 right-0 z-30 sm:top-0">
-        <LanguageSwitcher lang={lang} onChange={handleLangChange} />
-      </div>
+      <CourseProgressBar percent={progressPercent} lang={lang} />
 
-      <div className="pr-9 sm:pr-0">
-        <CourseProgressBar percent={progressPercent} lang={lang} />
-      </div>
+      {saveError && (
+        <p
+          role="alert"
+          className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+        >
+          {saveError}
+        </p>
+      )}
 
       <ChapterStepper
         chapters={VEDIC_COURSE_CHAPTERS}

@@ -254,7 +254,6 @@ const articleOpenLine = restStart - 1;
 const footerStart = articlesLines.findIndex((line) => line.trim() === "];");
 if (footerStart < 0) throw new Error("Could not find wisdomArticles array end");
 
-const importLine = articlesLines.findIndex((l) => l.includes('from "./p1-content"'));
 const hasP2Import = articlesLines.some((l) => l.includes('from "./p2-content"'));
 const hasP3Import = articlesLines.some((l) => l.includes('from "./p3-content"'));
 const hasP3Spread = articlesLines.some((l) => l.includes("...p3Articles"));

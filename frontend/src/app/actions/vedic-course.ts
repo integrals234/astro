@@ -3,6 +3,14 @@
 import prisma from "@/lib/prisma";
 import { requireUserId } from "@/lib/auth";
 import type { CourseProgress } from "@/lib/vedic-course/types";
+import type { AppLanguage } from "@/lib/i18n/language";
+
+const saveErrors: Record<AppLanguage, string> = {
+  en: "Failed to save progress",
+  hi: "प्रगति सहेजी नहीं जा सकी",
+  ja: "進捗を保存できませんでした",
+  ko: "진행 상황을 저장하지 못했습니다",
+};
 
 const DEFAULT_PROGRESS: CourseProgress = {
   currentChapter: 0,
@@ -27,6 +35,7 @@ export async function getVedicCourseProgress(): Promise<CourseProgress> {
 
 export async function saveVedicCourseProgress(
   progress: CourseProgress,
+  language: AppLanguage = "en",
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
     const userId = await requireUserId();
@@ -47,6 +56,6 @@ export async function saveVedicCourseProgress(
     return { ok: true };
   } catch (error) {
     console.error("Failed to save vedic course progress:", error);
-    return { ok: false, error: "Failed to save progress" };
+    return { ok: false, error: saveErrors[language] };
   }
 }

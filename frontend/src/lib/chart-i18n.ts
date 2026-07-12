@@ -1,6 +1,4 @@
-import type { LanguageCode } from "./chart-types";
-
-export const CHART_LANG_STORAGE_KEY = "chart-lang";
+import type { AppLanguage } from "./i18n/language";
 
 export interface ChartNavCopy {
   generate: string;
@@ -9,6 +7,7 @@ export interface ChartNavCopy {
   generateDescription: string;
   savedDescription: string;
   recentDescription: string;
+  sectionsAria: string;
 }
 
 export interface ChartCollectionCopy {
@@ -25,6 +24,10 @@ export interface ChartCollectionCopy {
   openChart: string;
   deleteConfirm: string;
   deleteAria: string;
+  sampleEntry: string;
+  exampleChart: string;
+  gwaliorIndia: string;
+  delhiIndia: string;
 }
 
 export interface ChartLibraryPanelCopy {
@@ -44,7 +47,7 @@ export interface ChartUiCopy {
   libraryPanel: ChartLibraryPanelCopy;
 }
 
-export const chartUi: Record<LanguageCode, ChartUiCopy> = {
+export const chartUi: Record<AppLanguage, ChartUiCopy> = {
   en: {
     appTitle: "Generate Charts",
     nav: {
@@ -54,6 +57,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       generateDescription: "Create and explore charts",
       savedDescription: "Your bookmarked charts",
       recentDescription: "Last five generated charts",
+      sectionsAria: "Chart sections",
     },
     collection: {
       libraryEyebrow: "Library",
@@ -69,6 +73,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       openChart: "Open chart",
       deleteConfirm: "Delete this chart?",
       deleteAria: "Delete chart",
+      sampleEntry: "Sample entry", exampleChart: "Example Chart", gwaliorIndia: "Gwalior, India", delhiIndia: "Delhi, India",
     },
     libraryPanel: {
       recentTitle: "Recent Charts",
@@ -89,6 +94,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       generateDescription: "चार्ट बनाएं और देखें",
       savedDescription: "आपके सहेजे गए चार्ट",
       recentDescription: "पिछले पाँच जनित चार्ट",
+      sectionsAria: "कुण्डली अनुभाग",
     },
     collection: {
       libraryEyebrow: "लाइब्रेरी",
@@ -97,13 +103,14 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       savedSubtitle: "चार्ट जिन्हें आपने स्पष्ट रूप से सहेजा है।",
       recentSubtitle: "त्वरित पहुँच के लिए आपके अंतिम पाँच जनित चार्ट।",
       loading: "चार्ट लोड हो रहे हैं…",
-      emptySaved: "अभी कोई सहेजा चार्ट नहीं। चार्ट बनाएं और Save Chart दबाएं।",
+      emptySaved: "अभी कोई सहेजा चार्ट नहीं। चार्ट बनाएं और ‘चार्ट सहेजें’ दबाएं।",
       emptyRecent: "अभी कोई हाल का चार्ट नहीं। चार्ट टैब में अपना पहला चार्ट बनाएं।",
       goToGenerator: "चार्ट जनरेटर पर जाएं",
       previewLayout: "लेआउट पूर्वावलोकन",
       openChart: "चार्ट खोलें",
       deleteConfirm: "यह चार्ट हटाएं?",
       deleteAria: "चार्ट हटाएं",
+      sampleEntry: "नमूना प्रविष्टि", exampleChart: "उदाहरण कुण्डली", gwaliorIndia: "ग्वालियर, भारत", delhiIndia: "दिल्ली, भारत",
     },
     libraryPanel: {
       recentTitle: "हाल के चार्ट",
@@ -124,6 +131,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       generateDescription: "チャートを作成して閲覧",
       savedDescription: "保存したチャート",
       recentDescription: "最近作成した5件のチャート",
+      sectionsAria: "チャートのセクション",
     },
     collection: {
       libraryEyebrow: "ライブラリ",
@@ -139,6 +147,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       openChart: "チャートを開く",
       deleteConfirm: "このチャートを削除しますか？",
       deleteAria: "チャートを削除",
+      sampleEntry: "サンプル", exampleChart: "チャート例", gwaliorIndia: "グワーリヤル（インド）", delhiIndia: "デリー（インド）",
     },
     libraryPanel: {
       recentTitle: "最近のチャート",
@@ -159,6 +168,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       generateDescription: "차트 만들기 및 탐색",
       savedDescription: "저장한 차트",
       recentDescription: "최근 생성한 5개의 차트",
+      sectionsAria: "차트 섹션",
     },
     collection: {
       libraryEyebrow: "라이브러리",
@@ -174,6 +184,7 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
       openChart: "차트 열기",
       deleteConfirm: "이 차트를 삭제할까요?",
       deleteAria: "차트 삭제",
+      sampleEntry: "샘플 항목", exampleChart: "예시 차트", gwaliorIndia: "인도 괄리오르", delhiIndia: "인도 델리",
     },
     libraryPanel: {
       recentTitle: "최근 차트",
@@ -187,23 +198,13 @@ export const chartUi: Record<LanguageCode, ChartUiCopy> = {
   },
 };
 
-export function getChartUi(lang: LanguageCode): ChartUiCopy {
-  return chartUi[lang] ?? chartUi.en;
+export function getChartUi(lang: AppLanguage): ChartUiCopy {
+  return chartUi[lang];
 }
 
-export function parseChartLang(value: string | null): LanguageCode {
+export function parseChartLang(value: string | null): AppLanguage {
   if (value === "en" || value === "hi" || value === "ja" || value === "ko") {
     return value;
   }
   return "ja";
-}
-
-export function readChartLang(): LanguageCode {
-  if (typeof window === "undefined") return "ja";
-  return parseChartLang(localStorage.getItem(CHART_LANG_STORAGE_KEY));
-}
-
-export function persistChartLang(lang: LanguageCode) {
-  localStorage.setItem(CHART_LANG_STORAGE_KEY, lang);
-  window.dispatchEvent(new CustomEvent("chart-lang-change", { detail: lang }));
 }

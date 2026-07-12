@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
-import { mainNavItems } from "@/lib/navigation";
+import { getMainNavItems } from "@/lib/navigation";
 import SiteBrand from "@/components/layout/SiteBrand";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { getSharedCopy } from "@/lib/i18n/shared";
 
 interface MobileNavProps {
   open: boolean;
@@ -24,6 +26,9 @@ function isActive(pathname: string, href: string) {
 
 export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
   const pathname = usePathname();
+  const { language } = useLanguage();
+  const copy = getSharedCopy(language);
+  const mainNavItems = getMainNavItems(language);
 
   useEffect(() => {
     onOpenChange(false);
@@ -42,7 +47,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
         type="button"
         onClick={() => onOpenChange(true)}
         className="mobile-only items-center justify-center h-10 w-10 rounded-xl border border-shell-border bg-shell-elevated/70 text-shell-warm hover:border-shell-accent/30 hover:text-shell-accent transition-colors"
-        aria-label="Open navigation menu"
+        aria-label={copy.chrome.openNavigation}
       >
         <Menu size={18} />
       </button>
@@ -52,7 +57,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
           <>
             <motion.button
               type="button"
-              aria-label="Close navigation menu"
+              aria-label={copy.chrome.closeNavigation}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -74,7 +79,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
                   type="button"
                   onClick={() => onOpenChange(false)}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-shell-border text-shell-muted hover:text-shell-warm transition-colors"
-                  aria-label="Close menu"
+                  aria-label={copy.chrome.closeMenu}
                 >
                   <X size={18} />
                 </button>
@@ -106,15 +111,25 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               </nav>
 
               <div className="border-t border-shell-border px-4 py-4">
-                <div className="flex items-center gap-3 rounded-2xl border border-shell-border bg-shell-elevated/60 px-3 py-3">
-                  <UserButton afterSignOutUrl="/" />
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-shell-muted">
-                      Account
-                    </p>
-                    <p className="text-xs text-shell-warm/80">Signed in</p>
+                <SignedIn>
+                  <div className="flex items-center gap-3 rounded-2xl border border-shell-border bg-shell-elevated/60 px-3 py-3">
+                    <UserButton afterSignOutUrl="/" />
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-shell-muted">
+                        {copy.chrome.account}
+                      </p>
+                      <p className="text-xs text-shell-warm/80">{copy.chrome.signedIn}</p>
+                    </div>
                   </div>
-                </div>
+                </SignedIn>
+                <SignedOut>
+                  <Link
+                    href="/sign-in"
+                    className="flex justify-center rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-shell-accent"
+                  >
+                    {copy.chrome.signIn}
+                  </Link>
+                </SignedOut>
               </div>
             </motion.aside>
           </>

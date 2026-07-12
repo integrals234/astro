@@ -15,10 +15,10 @@ export const chapter21Yogakaraka: CourseChapter = {
       id: "ch21-s0",
       kind: "content",
       icon: "sparkles",
-      title: { en: "Beyond Natural Nature", ja: "天然性質を超えて" },
+      title: { en: "Beyond Natural Nature", ja: "生来的性質を超えて" },
       body: {
         en: "Functional benefics and malefics depend on which houses a planet rules from YOUR Ascendant. This is essential for chart reading AND gemstone prescriptions. The Ascendant lord never harms the native.",
-        ja: "功能的吉星と凶星はあなたのアセンダントからどのハウスを支配するか次第。チャートリーディングと宝石処方の両方に必須。アセンダント支配星はネイティブを害しない。",
+        ja: "機能的吉星と凶星はあなたのアセンダントからどのハウスを支配するか次第。チャートリーディングと宝石処方の両方に必須。アセンダント支配星はネイティブを害しない。",
       },
       highlight: {
         en: "Grade 5 benefic >> Grade 1 benefic. Grade 5 malefic >> Grade 1 malefic.",
@@ -74,9 +74,9 @@ export const chapter21Yogakaraka: CourseChapter = {
         ja: "魚：火星（G4吉星）、月（G2）、木星（G1）。凶星：土星（G5!）、金星（G4）、太陽（G2）、水星（G1）。水瓶：金星（G5ヨーガカーラカ!）、土星吉星。凶星：木星（G5!）、月（G2）、火星（G1）。",
       },
       bullets: [
-        { en: "Pisces: Venus is Grade 4 malefic — opposite of natural benefic status", ja: "魚：金星はグレード4凶星 — 天然吉星ステータスの反対" },
-        { en: "Gemstone rule: strengthen functional benefics only", ja: "宝石ルール：功能的吉星のみ強化" },
-        { en: "Rahu/Ketu: always natural malefics, never functional lords", ja: "ラーフ/ケートゥ：常に天然凶星、機能支配星にならない" },
+        { en: "Pisces: Venus is Grade 4 malefic — opposite of natural benefic status", ja: "魚：金星はグレード4凶星 — 生来的吉星ステータスの反対" },
+        { en: "Gemstone rule: strengthen functional benefics only", ja: "宝石ルール：機能的吉星のみ強化" },
+        { en: "Rahu/Ketu: always natural malefics, never functional lords", ja: "ラーフ/ケートゥ：常に生来的凶星、機能支配星にならない" },
       ],
     },
     {
@@ -128,13 +128,13 @@ export const chapter21Yogakaraka: CourseChapter = {
       title: { en: "Remedy Safety by Function", ja: "機能別レメディ安全性" },
       instruction: {
         en: "Order functional planet types from safest to most dangerous for gemstone remedy.",
-        ja: "宝石レメディで最も安全→最も危険な功能的惑星タイプを並べましょう。",
+        ja: "宝石レメディで最も安全→最も危険な機能的惑星タイプを並べましょう。",
       },
       items: [
         { id: "yog", label: { en: "Yogakaraka (safest gem candidate)", ja: "ヨーガカーラカ（最も安全な宝石候補）" }, icon: "sparkles" },
-        { id: "ben", label: { en: "Functional benefic (Grade 2–4)", ja: "功能的吉星（G2–4）" }, icon: "sparkles" },
+        { id: "ben", label: { en: "Functional benefic (Grade 2–4)", ja: "機能的吉星（G2–4）" }, icon: "sparkles" },
         { id: "lag", label: { en: "Ascendant lord (generally safe)", ja: "アセンダント支配星（一般に安全）" }, icon: "sun" },
-        { id: "mal", label: { en: "Functional malefic (mantras only!)", ja: "功能的凶星（マントラのみ！）" }, icon: "mountain" },
+        { id: "mal", label: { en: "Functional malefic (mantras only!)", ja: "機能的凶星（マントラのみ！）" }, icon: "mountain" },
       ],
     },
     {
@@ -151,9 +151,9 @@ export const chapter21Yogakaraka: CourseChapter = {
         },
         {
           id: "c21tf2",
-          statement: { en: "Rahu can be a functional benefic because it rules certain houses.", ja: "ラーフは特定ハウスを支配するので功能的吉星になれる。" },
+          statement: { en: "Rahu can be a functional benefic because it rules certain houses.", ja: "ラーフは特定ハウスを支配するので機能的吉星になれる。" },
           isTrue: false,
-          explanation: { en: "Rahu and Ketu own no signs — they remain natural malefics only.", ja: "ラーフとケートゥは星座を支配しない — 天然凶星のまま。" },
+          explanation: { en: "Rahu and Ketu own no signs — they remain natural malefics only.", ja: "ラーフとケートゥは星座を支配しない — 生来的凶星のまま。" },
         },
         {
           id: "c21tf3",
@@ -163,9 +163,9 @@ export const chapter21Yogakaraka: CourseChapter = {
         },
         {
           id: "c21tf4",
-          statement: { en: "You should wear a gemstone for a Grade 5 functional malefic.", ja: "グレード5功能的凶星の宝石を着けるべきだ。" },
+          statement: { en: "You should wear a gemstone for a Grade 5 functional malefic.", ja: "グレード5機能的凶星の宝石を着けるべきだ。" },
           isTrue: false,
-          explanation: { en: "Never strengthen functional malefics with gems — use mantras instead.", ja: "功能的凶星を宝石で強化してはいけない — 代わりにマントラ。" },
+          explanation: { en: "Never strengthen functional malefics with gems — use mantras instead.", ja: "機能的凶星を宝石で強化してはいけない — 代わりにマントラ。" },
         },
       ],
     },
@@ -196,7 +196,7 @@ export const chapter21Yogakaraka: CourseChapter = {
       kind: "quiz",
       question: {
         en: "Gemini Ascendant: which planet is the Grade 5 functional malefic?",
-        ja: "双子アセンダント：グレード5功能的凶星はどの惑星？",
+        ja: "双子アセンダント：グレード5機能的凶星はどの惑星？",
       },
       options: [
         { id: "ven", label: { en: "Venus (rules 5 & 12)", ja: "金星（第5・12支配）" }, icon: "droplets" },

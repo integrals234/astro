@@ -1,5 +1,5 @@
 import { Sparkles, Bookmark, Clock, type LucideIcon } from "lucide-react";
-import type { LanguageCode } from "./chart-types";
+import type { AppLanguage } from "./i18n/language";
 import { chartUi } from "./chart-i18n";
 
 export interface ChartNavItem {
@@ -36,7 +36,7 @@ const chartNavMeta = [
   },
 ] as const;
 
-export function getChartNavItems(lang: LanguageCode): ChartNavItem[] {
+export function getChartNavItems(lang: AppLanguage): ChartNavItem[] {
   const copy = chartUi[lang]?.nav ?? chartUi.en.nav;
 
   return chartNavMeta.map((item) => ({

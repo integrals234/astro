@@ -18,7 +18,7 @@ export const chapter7Practice: CourseChapter = {
       title: { en: "The Complete Beginner's Formula", ja: "完全版・初心者の読み方公式" },
       body: {
         en: "You now know foundations, Grahas, signs, Lagna, houses, Nakshatras, strength, functional planets, Drishti, dashas, and transits. Use this integrated checklist every time you open a chart.",
-        ja: "基礎、グラハ、星座、ラグナ、ハウス、ナクシャトラ、強度、功能的惑星、ドリシュティ、ダシャー、トランジットを学びました。この統合チェックリストを毎回使いましょう。",
+        ja: "基礎、グラハ、星座、ラグナ、ハウス、ナクシャトラ、強度、機能的惑星、ドリシュティ、ダシャー、トランジットを学びました。この統合チェックリストを毎回使いましょう。",
       },
       bullets: [
         { en: "Step 1: Confirm birth time → Lagna sign & chart framework", ja: "ステップ1：出生時刻を確認 → ラグナ星座とチャート枠組み" },

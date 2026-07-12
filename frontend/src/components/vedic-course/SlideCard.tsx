@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { createElement } from "react";
 import { FormattedText } from "@/lib/format-inline-text";
 import type { CourseLanguage, CourseSlide } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
@@ -14,8 +15,6 @@ interface SlideCardProps {
 }
 
 export default function SlideCard({ slide, lang, slideIndex, totalSlides }: SlideCardProps) {
-  const Icon = getCourseIcon(slide.icon);
-
   return (
     <motion.article
       key={slide.id}
@@ -27,7 +26,10 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
     >
       <div className="flex items-center justify-between gap-4 mb-8">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-shell-accent/25 bg-shell-accent-soft shadow-[0_0_30px_rgba(212,165,116,0.12)]">
-          <Icon size={26} className="text-shell-accent" />
+          {createElement(getCourseIcon(slide.icon), {
+            size: 26,
+            className: "text-shell-accent",
+          })}
         </div>
         <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted tabular-nums">
           {slideIndex + 1} / {totalSlides}

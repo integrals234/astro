@@ -1,7 +1,7 @@
 import type { jsPDF } from "jspdf";
 import type { ChartData, Dasha, Planet, TransitPlanet } from "../chart-types";
 import type { PdfLabels } from "./i18n";
-import { applyPdfFont } from "./pdf-font";
+import { drawPdfText, splitPdfText } from "./pdf-text";
 
 export const SIGN_TO_NUMBER: Record<string, number> = {
   Aries: 1,
@@ -56,7 +56,7 @@ export function formatDMS(raw: number) {
   const mF = (l - d) * 60;
   const m = Math.floor(mF);
   const s = Math.floor((mF - m) * 60);
-  return `${d}°${m.toString().padStart(2, "0")}'${s.toString().padStart(2, "0")}"`;
+  return `${d}°${m.toString().padStart(2, "0")}′${s.toString().padStart(2, "0")}″`;
 }
 
 export function formatLat(value: number) {
@@ -143,9 +143,12 @@ function splitCellLines(
   maxWidth: number,
   fontSize: number,
 ): string[] {
-  applyPdfFont(doc, "normal");
-  doc.setFontSize(fontSize);
-  const lines = doc.splitTextToSize(text || "—", Math.max(20, maxWidth - 8));
+  const lines = splitPdfText(
+    doc,
+    text || "—",
+    Math.max(20, maxWidth - 8),
+    fontSize,
+  );
   return lines.length > 0 ? lines : ["—"];
 }
 
@@ -171,10 +174,11 @@ export function ensureSpace(doc: jsPDF, y: number, needed: number): number {
 }
 
 export function drawSectionTitle(doc: jsPDF, title: string, y: number) {
-  applyPdfFont(doc, "bold");
-  doc.setFontSize(11);
-  doc.setTextColor(...PDF_COLORS.primary);
-  doc.text(title.toUpperCase(), PAGE.margin, y);
+  drawPdfText(doc, title.toUpperCase(), PAGE.margin, y, {
+    size: 11,
+    color: PDF_COLORS.primary,
+    bold: true,
+  });
 
   doc.setDrawColor(...PDF_COLORS.gold);
   doc.setLineWidth(1.2);
@@ -197,10 +201,6 @@ function drawTableHeader(
   doc.setLineWidth(0.5);
   doc.rect(x0, y - 10, tableWidth, rowHeight + 2, "FD");
 
-  applyPdfFont(doc, "bold");
-  doc.setFontSize(fontSize);
-  doc.setTextColor(...PDF_COLORS.muted);
-
   let x = x0 + 6;
   columns.forEach((col) => {
     const textX =
@@ -209,7 +209,12 @@ function drawTableHeader(
         : col.align === "center"
           ? x + col.width / 2
           : x;
-    doc.text(col.header, textX, y, { align: col.align ?? "left" });
+    drawPdfText(doc, col.header, textX, y, {
+      size: fontSize,
+      color: PDF_COLORS.muted,
+      align: col.align ?? "left",
+      bold: true,
+    });
     x += col.width;
   });
 }
@@ -262,10 +267,6 @@ export function drawTable(
     doc.setDrawColor(...PDF_COLORS.border);
     doc.line(x0, y + dynamicHeight - 11, x0 + tableWidth, y + dynamicHeight - 11);
 
-    applyPdfFont(doc, "normal");
-    doc.setFontSize(fontSize);
-    doc.setTextColor(...PDF_COLORS.text);
-
     let x = x0 + 6;
     row.forEach((cell, cellIndex) => {
       const col = columns[cellIndex];
@@ -278,7 +279,9 @@ export function drawTable(
             : x;
 
       lines.forEach((line, lineIndex) => {
-        doc.text(line, textX, y + lineIndex * lineHeight(fontSize), {
+        drawPdfText(doc, line, textX, y + lineIndex * lineHeight(fontSize), {
+          size: fontSize,
+          color: PDF_COLORS.text,
           align: col.align ?? "left",
         });
       });
@@ -342,7 +345,7 @@ export function drawNorthIndianChart(
 ) {
   const ascNum = SIGN_TO_NUMBER[ascendantSign] ?? 1;
   const getSignForHouse = (house: number) => {
-    let signNum = ascNum + (house - 1);
+    const signNum = ascNum + (house - 1);
     return signNum > 12 ? signNum - 12 : signNum;
   };
 
@@ -353,12 +356,14 @@ export function drawNorthIndianChart(
   doc.setLineWidth(1);
   doc.roundedRect(x - 4, y - 18, size + 8, boxHeight, 6, 6, "FD");
 
-  applyPdfFont(doc, "bold");
-  doc.setFontSize(8.5);
-  doc.setTextColor(...PDF_COLORS.primary);
-  const titleLines = doc.splitTextToSize(title, size);
-  titleLines.forEach((line: string, index: number) => {
-    doc.text(line, x + size / 2, y - 6 + index * 10, { align: "center" });
+  const titleLines = splitPdfText(doc, title, size, 8.5, true);
+  titleLines.forEach((line, index) => {
+    drawPdfText(doc, line, x + size / 2, y - 6 + index * 10, {
+      size: 8.5,
+      color: PDF_COLORS.primary,
+      align: "center",
+      bold: true,
+    });
   });
 
   doc.setDrawColor(...PDF_COLORS.accent);
@@ -387,10 +392,12 @@ export function drawNorthIndianChart(
     const cy = y + center.y * size;
     const signNum = getSignForHouse(house);
 
-    applyPdfFont(doc, "bold");
-    doc.setFontSize(6.5);
-    doc.setTextColor(...PDF_COLORS.gold);
-    doc.text(String(signNum), cx, cy - 16, { align: "center" });
+    drawPdfText(doc, String(signNum), cx, cy - 16, {
+      size: 6.5,
+      color: PDF_COLORS.gold,
+      align: "center",
+      bold: true,
+    });
 
     const planets = grouped.get(house) ?? [];
     const lines: string[] = [];
@@ -399,10 +406,6 @@ export function drawNorthIndianChart(
       const deg = p.degree !== undefined ? `${p.degree}°` : "";
       lines.push(`${p.label}${deg}${p.retro ? "*" : ""}`);
     });
-
-    applyPdfFont(doc, "bold");
-    doc.setFontSize(6.5);
-    doc.setTextColor(...PDF_COLORS.primary);
 
     const maxLines = 4;
     const visible = lines.slice(0, maxLines);
@@ -414,8 +417,13 @@ export function drawNorthIndianChart(
     let lineY = cy - blockHeight / 2 + 4;
 
     visible.forEach((line) => {
-      const wrapped = doc.splitTextToSize(line, maxHouseWidth);
-      doc.text(wrapped[0] ?? line, cx, lineY, { align: "center" });
+      const wrapped = splitPdfText(doc, line, maxHouseWidth, 6.5, true);
+      drawPdfText(doc, wrapped[0] ?? line, cx, lineY, {
+        size: 6.5,
+        color: PDF_COLORS.primary,
+        align: "center",
+        bold: true,
+      });
       lineY += lineStep;
     });
   }

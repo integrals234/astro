@@ -27,6 +27,7 @@ function ChartList({
   saveLabel,
   savedLabel,
   deleteAria,
+  lang,
 }: {
   title: string;
   icon: typeof Clock;
@@ -40,18 +41,19 @@ function ChartList({
   saveLabel: string;
   savedLabel: string;
   deleteAria: string;
+  lang: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-5">
+    <div className="bg-shell-elevated/70 rounded-2xl border border-shell-border shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Icon size={14} className="text-indigo-500" />
-        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+        <Icon size={14} className="text-shell-accent" />
+        <h3 className="text-[10px] font-bold text-shell-muted uppercase tracking-widest">
           {title}
         </h3>
       </div>
 
       {charts.length === 0 ? (
-        <p className="text-xs text-gray-400 leading-relaxed">{emptyLabel}</p>
+        <p className="text-xs text-shell-muted leading-relaxed">{emptyLabel}</p>
       ) : (
         <ul className="space-y-2">
           {charts.map((chart) => (
@@ -59,8 +61,8 @@ function ChartList({
               key={chart.id}
               className={`group rounded-xl border p-3 transition-colors ${
                 activeChartId === chart.id
-                  ? "border-indigo-200 bg-indigo-50/60"
-                  : "border-gray-100 hover:border-indigo-100 hover:bg-gray-50/80"
+                  ? "border-shell-accent/40 bg-shell-accent-soft"
+                  : "border-shell-border hover:border-shell-accent/30 hover:bg-shell-bg/60"
               }`}
             >
               <button
@@ -68,14 +70,14 @@ function ChartList({
                 onClick={() => onLoadChart(chart)}
                 className="w-full text-left"
               >
-                <div className="font-medium text-sm text-indigo-950 truncate">
+                <div className="font-medium text-sm text-shell-warm truncate">
                   {chart.name}
                 </div>
-                <div className="text-[11px] text-gray-400 truncate mt-0.5">
+                <div className="text-[11px] text-shell-muted truncate mt-0.5">
                   {chart.locationName}
                 </div>
-                <div className="text-[10px] text-gray-300 mt-1">
-                  {new Date(chart.createdAt).toLocaleDateString()}
+                <div className="text-[10px] text-shell-muted/70 mt-1">
+                  {new Date(chart.createdAt).toLocaleDateString(lang)}
                 </div>
               </button>
 
@@ -86,8 +88,8 @@ function ChartList({
                     onClick={() => onToggleSave(chart)}
                     className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg ${
                       chart.isSaved
-                        ? "bg-indigo-100 text-indigo-800"
-                        : "bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-700"
+                        ? "bg-shell-accent-soft text-shell-accent"
+                        : "bg-shell-bg text-shell-muted hover:bg-shell-accent-soft hover:text-shell-accent"
                     }`}
                   >
                     {chart.isSaved ? savedLabel : saveLabel}
@@ -96,7 +98,7 @@ function ChartList({
                 <button
                   type="button"
                   onClick={() => onDeleteChart(chart.id)}
-                  className="p-1 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50"
+                  className="p-1 rounded-lg text-shell-muted hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
                   aria-label={deleteAria}
                 >
                   <Trash2 size={12} />
@@ -136,6 +138,7 @@ export default function ChartLibraryPanel({
         saveLabel={copy.save}
         savedLabel={copy.saved}
         deleteAria={copy.deleteAria}
+        lang={lang}
       />
       <ChartList
         title={copy.savedTitle}
@@ -150,6 +153,7 @@ export default function ChartLibraryPanel({
         saveLabel={copy.save}
         savedLabel={copy.saved}
         deleteAria={copy.deleteAria}
+        lang={lang}
       />
     </div>
   );

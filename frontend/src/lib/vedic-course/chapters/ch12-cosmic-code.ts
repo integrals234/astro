@@ -35,7 +35,7 @@ export const chapter12CosmicCode: CourseChapter = {
         ja: "同じ火星がラグナによって正反対の結果を与えます。火星はシンハ（獅子）ラグナでは非常に吉星 — 第4と第9ハウスを支配。カニヤ（乙女）ラグナでは第6と第11を支配 — 強く凶。物理的な力では説明できません。",
       },
       bullets: [
-        { en: "Functional benefic/malefic depends on Ascendant", ja: "功能的吉星/凶星はアセンダント次第" },
+        { en: "Functional benefic/malefic depends on Ascendant", ja: "機能的吉星/凶星はアセンダント次第" },
         { en: "Rahu & Ketu have no physical substance — yet indicate major karmas", ja: "ラーフとケートゥに物理的実体はない — しかし主要カルマを示す" },
       ],
     },
@@ -106,7 +106,7 @@ export const chapter12CosmicCode: CourseChapter = {
         { id: "a3", front: { en: "Helicopter road map", ja: "ヘリコプター道路地図" }, back: { en: "See obstacles before you arrive", ja: "到着前に障害を見る" }, icon: "compass" },
         { id: "a4", front: { en: "Cosmic postman", ja: "宇宙の郵便配達人" }, back: { en: "Planets deliver karmic packages", ja: "惑星がカルマの荷物を届ける" }, icon: "orbit" },
         { id: "a5", front: { en: "Ayanamsa", ja: "アヤナームシャ" }, back: { en: "~24° gap tropical vs sidereal", ja: "トロピカル vs サイデリアル約24°差" }, icon: "sun" },
-        { id: "a6", front: { en: "Functional benefic", ja: "功能的吉星" }, back: { en: "Planet auspicious for YOUR Ascendant", ja: "あなたのアセンダントに吉な惑星" }, icon: "flame" },
+        { id: "a6", front: { en: "Functional benefic", ja: "機能的吉星" }, back: { en: "Planet auspicious for YOUR Ascendant", ja: "あなたのアセンダントに吉な惑星" }, icon: "flame" },
       ],
     },
     {
@@ -162,7 +162,7 @@ export const chapter12CosmicCode: CourseChapter = {
           id: "c12tf3",
           statement: { en: "The same planet always produces identical results for every person.", ja: "同じ惑星はすべての人に同一の結果をもたらす。" },
           isTrue: false,
-          explanation: { en: "Ascendant changes functional benefic/malefic status — e.g. Mars for Leo vs Virgo Lagna.", ja: "アセンダントが功能的吉星/凶星を変える — 例：獅子 vs 乙女ラグナの火星。" },
+          explanation: { en: "Ascendant changes functional benefic/malefic status — e.g. Mars for Leo vs Virgo Lagna.", ja: "アセンダントが機能的吉星/凶星を変える — 例：獅子 vs 乙女ラグナの火星。" },
         },
         {
           id: "c12tf4",

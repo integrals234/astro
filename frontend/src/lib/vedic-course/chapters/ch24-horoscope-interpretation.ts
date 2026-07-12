@@ -61,7 +61,7 @@ export const chapter24HoroscopeInterpretation: CourseChapter = {
       title: { en: "What to Include First", ja: "最初に含めるもの" },
       body: {
         en: "A solid beginner read covers: overall chart strength, Ascendant and its lord, functional benefics/malefics, planetary strength by sign and house, house conditions, Mahadashas, and significant Saturn/Jupiter transits.",
-        ja: "堅実な初心者リーディング：チャート全体の強度、アセンダントとその支配星、功能的吉星/凶星、星座とハウスによる惑星強度、ハウス状態、マハーダシャー、重要な土星/木星トランジット。",
+        ja: "堅実な初心者リーディング：チャート全体の強度、アセンダントとその支配星、機能的吉星/凶星、星座とハウスによる惑星強度、ハウス状態、マハーダシャー、重要な土星/木星トランジット。",
       },
       bullets: [
         { en: "How strength affects a planet's significations AND its ruled houses", ja: "強度が惑星の表示と支配ハウスにどう影響するか" },
@@ -110,7 +110,7 @@ export const chapter24HoroscopeInterpretation: CourseChapter = {
       cards: [
         { id: "i1", front: { en: "Jyotish Mati Pragya", ja: "ジョーティシュ・マティ・プラギャ" }, back: { en: "All-knowing intuitive consciousness in the astrologer", ja: "占星術師の全知の直感的意識" }, icon: "sparkles" },
         { id: "i2", front: { en: "Sattvic lifestyle", ja: "サートヴィック生活" }, back: { en: "Pure, balanced living supporting clear interpretation", ja: "明確な解釈を支える純粋でバランスの取れた生活" }, icon: "sun" },
-        { id: "i3", front: { en: "Functional benefic", ja: "功能的吉星" }, back: { en: "Planet acting positively for this Ascendant", ja: "このアセンダントで吉に働く惑星" }, icon: "eye" },
+        { id: "i3", front: { en: "Functional benefic", ja: "機能的吉星" }, back: { en: "Planet acting positively for this Ascendant", ja: "このアセンダントで吉に働く惑星" }, icon: "eye" },
         { id: "i4", front: { en: "Shadbala", ja: "シャダバラ" }, back: { en: "Six-fold planetary strength — defer detailed numbers early on", ja: "六分法惑星強度 — 初期は詳細数値を延期" }, icon: "mountain" },
         { id: "i5", front: { en: "Navamsha (D-9)", ja: "ナヴァムシャ（D-9）" }, back: { en: "Key divisional chart for marriage & strength refinement", ja: "結婚と強度精緻化の重要分割図" }, icon: "moon" },
         { id: "i6", front: { en: "Sambandha", ja: "サンバンダ" }, back: { en: "Mutual planetary relationship (e.g. sign exchange)", ja: "惑星間の相互関係（例：星座交換）" }, icon: "orbit" },
@@ -129,7 +129,7 @@ export const chapter24HoroscopeInterpretation: CourseChapter = {
         { leftId: "shad", left: { en: "Detailed Shadbala scores", ja: "詳細シャダバラスコア" }, rightId: "later", right: { en: "Postpone", ja: "延期" }, leftIcon: "mountain" },
         { leftId: "dasha", left: { en: "Mahadasha periods", ja: "マハーダシャー期" }, rightId: "now2", right: { en: "Include now", ja: "今含める" }, leftIcon: "moon" },
         { leftId: "varga", left: { en: "All 16 divisional charts", ja: "16の全分割図" }, rightId: "later2", right: { en: "Postpone", ja: "延期" }, leftIcon: "wind" },
-        { leftId: "func", left: { en: "Functional benefics/malefics", ja: "功能的吉星/凶星" }, rightId: "now3", right: { en: "Include now", ja: "今含める" }, leftIcon: "sparkles" },
+        { leftId: "func", left: { en: "Functional benefics/malefics", ja: "機能的吉星/凶星" }, rightId: "now3", right: { en: "Include now", ja: "今含める" }, leftIcon: "sparkles" },
         { leftId: "nak", left: { en: "Deep Nakshatra analysis", ja: "深いナクシャトラ分析" }, rightId: "later3", right: { en: "Postpone", ja: "延期" }, leftIcon: "orbit" },
       ],
     },
@@ -145,7 +145,7 @@ export const chapter24HoroscopeInterpretation: CourseChapter = {
         { id: "own", label: { en: "1. Study your own chart first", ja: "1. まず自分のチャートを研究" }, icon: "eye" },
         { id: "lagna", label: { en: "2. Assess Ascendant & its lord", ja: "2. アセンダントと支配星を評価" }, icon: "compass" },
         { id: "planets", label: { en: "3. Evaluate planetary sign & house strength", ja: "3. 惑星の星座とハウス強度を評価" }, icon: "sun" },
-        { id: "func", label: { en: "4. Identify functional benefics/malefics", ja: "4. 功能的吉星/凶星を特定" }, icon: "sparkles" },
+        { id: "func", label: { en: "4. Identify functional benefics/malefics", ja: "4. 機能的吉星/凶星を特定" }, icon: "sparkles" },
         { id: "dasha", label: { en: "5. Check current Mahadasha & transits", ja: "5. 現在のマハーダシャーとトランジットを確認" }, icon: "moon" },
         { id: "family", label: { en: "6. Compare with known life events (family/friends)", ja: "6. 既知の人生イベントと比較（家族/友人）" }, icon: "droplets" },
       ],

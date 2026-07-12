@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { SITE_NAME } from "@/lib/navigation";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { getSharedCopy } from "@/lib/i18n/shared";
 
 const sizeClasses = {
   sm: "text-base",
@@ -14,10 +18,13 @@ interface SiteBrandProps {
 
 export default function SiteBrand({ className = "", size = "md" }: SiteBrandProps) {
   const [first, second] = SITE_NAME.split(" ");
+  const { language } = useLanguage();
+  const copy = getSharedCopy(language);
 
   return (
     <Link
       href="/"
+      aria-label={copy.chrome.brandHome}
       className={`group shrink-0 inline-flex items-baseline gap-1.5 whitespace-nowrap ${sizeClasses[size]} ${className}`}
     >
       <span className="font-brand font-medium tracking-[0.04em] text-shell-warm transition-colors group-hover:text-shell-accent">

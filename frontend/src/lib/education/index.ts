@@ -13,7 +13,7 @@ export * from "./asset-paths";
 
 import { nakshatras as nakshatrasRaw, nakshatrasIntro } from "./nakshatras-content";
 import { nakshatraImages } from "./asset-paths";
-import type { EducationSectionId } from "./types";
+import type { BilingualText, EducationSectionId } from "./types";
 
 export { nakshatrasIntro };
 
@@ -36,15 +36,15 @@ export const horoscopeSigns: HoroscopeSignMeta[] = rashis.map((sign) => ({
 
 export const educationSections: {
   id: EducationSectionId;
-  label: { en: string; ja: string };
+  label: BilingualText;
 }[] = [
-  { id: "introduction", label: { en: "Introduction", ja: "入門" } },
-  { id: "rashis", label: { en: "Rashis (Signs)", ja: "ラーシ（星座）" } },
-  { id: "planets", label: { en: "Planets (Grahas)", ja: "惑星（グラハ）" } },
-  { id: "nakshatras", label: { en: "Nakshatras", ja: "ナクシャトラ" } },
-  { id: "houses", label: { en: "Houses (Bhavas)", ja: "ハウス（バーヴァ）" } },
-  { id: "aspects", label: { en: "Aspects (Drishti)", ja: "アスペクト（ドリシュティ）" } },
-  { id: "mahadashas", label: { en: "Mahadashas", ja: "マハーダシャー" } },
-  { id: "transits", label: { en: "Transits", ja: "トランジット" } },
-  { id: "remedies", label: { en: "Remedies (Upaye)", ja: "救済（ウパーヤ）" } },
+  { id: "introduction", label: { en: "Introduction", hi: "परिचय", ja: "入門", ko: "소개",} },
+  { id: "rashis", label: { en: "Rashis (Signs)", hi: "राशियाँ", ja: "ラーシ（星座）", ko: "라시(별자리)",} },
+  { id: "planets", label: { en: "Planets (Grahas)", hi: "ग्रह", ja: "惑星（グラハ）", ko: "행성(그라하)",} },
+  { id: "nakshatras", label: { en: "Nakshatras", hi: "नक्षत्र", ja: "ナクシャトラ", ko: "낙샤트라",} },
+  { id: "houses", label: { en: "Houses (Bhavas)", hi: "भाव", ja: "ハウス（バーヴァ）", ko: "궁(바바)",} },
+  { id: "aspects", label: { en: "Aspects (Drishti)", hi: "दृष्टियाँ", ja: "アスペクト（ドリシュティ）", ko: "애스펙트(드리시티)",} },
+  { id: "mahadashas", label: { en: "Mahadashas", hi: "महादशाएँ", ja: "マハーダシャー", ko: "마하다샤",} },
+  { id: "transits", label: { en: "Transits", hi: "गोचर", ja: "トランジット（ゴーチャラ）", ko: "트랜짓(고차라)",} },
+  { id: "remedies", label: { en: "Remedies (Upaye)", hi: "उपाय", ja: "改善法（ウパーヤ）", ko: "개선법(우파야)",} },
 ];

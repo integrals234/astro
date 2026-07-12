@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bookmark, Clock, MapPin, Trash2, ArrowUpRight } from "lucide-react";
 import type { SavedChartRecord } from "@/lib/chart-types";
@@ -14,32 +14,40 @@ interface ChartCollectionPageProps {
 export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) {
   const lang = useChartLang();
   const copy = getChartUi(lang).collection;
-  const [charts, setCharts] = useState<SavedChartRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadCharts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const query = mode === "saved" ? "saved" : "recent";
-      const response = await fetch(`/api/charts?type=${query}`);
-      if (!response.ok) throw new Error("Failed to load charts");
-      const data: SavedChartRecord[] = await response.json();
-      setCharts(mode === "saved" ? data : data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [mode]);
+  const [collection, setCollection] = useState<{
+    mode: ChartCollectionPageProps["mode"] | null;
+    charts: SavedChartRecord[];
+  }>({ mode: null, charts: [] });
+  const charts = collection.mode === mode ? collection.charts : [];
+  const loading = collection.mode !== mode;
 
   useEffect(() => {
-    loadCharts();
-  }, [loadCharts]);
+    const controller = new AbortController();
+    const query = mode === "saved" ? "saved" : "recent";
+
+    void fetch(`/api/charts?type=${query}`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load charts");
+        return response.json() as Promise<SavedChartRecord[]>;
+      })
+      .then((data) => setCollection({ mode, charts: data }))
+      .catch((error) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          console.error(error);
+          setCollection({ mode, charts: [] });
+        }
+      });
+
+    return () => controller.abort();
+  }, [mode]);
 
   const handleDelete = async (chartId: string) => {
     if (!confirm(copy.deleteConfirm)) return;
     await fetch(`/api/charts/${chartId}`, { method: "DELETE" });
-    await loadCharts();
+    const query = mode === "saved" ? "saved" : "recent";
+    const response = await fetch(`/api/charts?type=${query}`);
+    if (!response.ok) throw new Error("Failed to reload charts");
+    setCollection({ mode, charts: await response.json() });
   };
 
   const Icon = mode === "saved" ? Bookmark : Clock;
@@ -82,8 +90,8 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
             </p>
             <ul className="grid gap-4 md:grid-cols-2 opacity-60">
               {[
-                { name: "Vaibhav Shukla", place: "Gwalior, India", date: "Sample entry" },
-                { name: "Example Chart", place: "Delhi, India", date: "Sample entry" },
+                { name: "Vaibhav Shukla", place: copy.gwaliorIndia, date: copy.sampleEntry },
+                { name: copy.exampleChart, place: copy.delhiIndia, date: copy.sampleEntry },
               ].map((sample) => (
                 <li
                   key={sample.name}
@@ -117,7 +125,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
                     {chart.locationName}
                   </p>
                   <p className="text-[10px] uppercase tracking-widest text-shell-muted/70 mt-3">
-                    {new Date(chart.createdAt).toLocaleString()}
+                    {new Date(chart.createdAt).toLocaleString(lang)}
                   </p>
                 </div>
                 <button

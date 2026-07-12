@@ -1,4 +1,6 @@
-export type EducationLang = "en" | "ja";
+import type { AppLanguage } from "@/lib/i18n/language";
+
+export type EducationLang = AppLanguage;
 
 export type EducationSectionId =
   | "introduction"
@@ -55,10 +57,8 @@ export interface EducationNavigateTarget {
   articleId?: string;
 }
 
-export interface BilingualText {
-  en: string;
-  ja: string;
-}
+/** Localized copy shared by Home, Education, and Horoscope. */
+export type BilingualText = Record<EducationLang, string>;
 
 export interface ContentBlock {
   title?: BilingualText;

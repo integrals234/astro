@@ -4,10 +4,10 @@ import type { CourseChapter } from "../types";
 export const chapter22DrishtiMastery: CourseChapter = {
   id: "ch22",
   number: 22,
-  title: { en: "Drishti Interpretation Mastery", ja: "ドリシュティ解釈マスター" },
+  title: { en: "Drishti Interpretation Mastery", ja: "ドリシュティ解釈の習得" },
   subtitle: {
     en: "Reading aspects with natural + functional wisdom",
-    ja: "天然＋機能の知恵でアスペクトを読む",
+    ja: "生来的性質と機能的性質を合わせてアスペクトを読む",
   },
   icon: ScanEye,
   steps: [
@@ -18,7 +18,7 @@ export const chapter22DrishtiMastery: CourseChapter = {
       title: { en: "House-to-House, Not Degree Orbs", ja: "ハウス対ハウス、度数オーブではない" },
       body: {
         en: "Jyotish aspects go from one house to another — not planet-orb to planet-orb like Western astrology. A Sun at 2° in House 1 aspects Saturn at 29° in House 7. Empty houses receive aspects too — this is crucial.",
-        ja: "ジョーティシュのアスペクトはハウスからハウスへ — 西洋のような惑星オーブ対惑星オーブではない。第1ハウス2°の太陽は第7ハウス29°の土星にアスペクト。空のハウスもアスペクトを受ける — これが重要。",
+        ja: "ジョーティシュのアスペクトは、惑星同士の度数差ではなくハウスからハウスへ作用します。たとえば第1室2°の太陽は、第7室29°の土星にもアスペクトします。惑星のないハウスもアスペクトを受ける点が重要です。",
       },
       highlight: {
         en: "Both occupied AND empty houses can be strengthened or weakened by aspects.",
@@ -32,13 +32,13 @@ export const chapter22DrishtiMastery: CourseChapter = {
       title: { en: "Worked Example: Sagittarius Lagna", ja: "実例：射手座ラグナ" },
       body: {
         en: "Sun exalted in Aries (House 5) aspects Libra (House 11). Sun rules the auspicious 9th (Leo) — functional benefic. Result: gains, profits, and fulfilled desires (11th house) get a powerful boost.",
-        ja: "太陽が牡羊（第5ハウス）で高揚、天秤座（第11ハウス）にアスペクト。太陽は吉な第9（獅子）を支配 — 功能的吉星。結果：利益・収入・叶う願い（第11ハウス）が強力にブースト。",
+        ja: "太陽は牡羊座（第5室）で高揚し、天秤座（第11室）にアスペクトします。太陽は吉意の強い第9室（獅子座）を支配する機能的吉星です。その結果、第11室が示す利益・収入・願望成就が力強く後押しされます。",
       },
       bullets: [
         { en: "Step 1: Identify Ascendant", ja: "ステップ1：アセンダントを特定" },
         { en: "Step 2: Assess aspecting planet's strength & function", ja: "ステップ2：アスペクトする惑星の強度と機能を評価" },
         { en: "Step 3: Identify which house receives the aspect", ja: "ステップ3：アスペクトを受けるハウスを特定" },
-        { en: "Step 4: Read natural + functional nature together", ja: "ステップ4：天然＋機能の性質を一緒に読む" },
+        { en: "Step 4: Read natural + functional nature together", ja: "ステップ4：生来的性質と機能的性質を合わせて読む" },
       ],
     },
     {
@@ -48,7 +48,7 @@ export const chapter22DrishtiMastery: CourseChapter = {
       title: { en: "Benefic vs Malefic Aspects", ja: "吉星 vs 凶星アスペクト" },
       body: {
         en: "Benefic aspects (Jupiter, Venus, Mercury, Moon) strengthen the aspected house and its themes. Malefic aspects (Mars, Saturn) challenge them — but a strong functional benefic Saturn aspecting your 10th can build career through discipline.",
-        ja: "吉星アスペクト（木星、金星、水星、月）はアスペクト先ハウスとテーマを強化。凶星アスペクト（火星、土星）は困難を — しかし強い功能的吉星土星が第10にアスペクトすれば規律を通じてキャリアを築く。",
+        ja: "吉星アスペクト（木星、金星、水星、月）はアスペクト先ハウスとテーマを強化。凶星アスペクト（火星、土星）は困難を — しかし強い機能的吉星土星が第10にアスペクトすれば規律を通じてキャリアを築く。",
       },
       bullets: [
         { en: "Always consider BOTH natural and functional nature", ja: "常に天然と機能の両方の性質を考慮" },
@@ -95,7 +95,7 @@ export const chapter22DrishtiMastery: CourseChapter = {
       title: { en: "Aspect Rules Flashcards", ja: "アスペクトルール フラッシュカード" },
       instruction: {
         en: "Master the aspect system differences from Western astrology.",
-        ja: "西洋占星術とのアスペクト体系の違いをマスター。",
+        ja: "西洋占星術とのアスペクト体系の違いを確認しましょう。",
       },
       cards: [
         { id: "d1", front: { en: "Jyotish aspects are…", ja: "ジョーティシュアスペクトは…" }, back: { en: "House to house", ja: "ハウス対ハウス" }, icon: "eye" },
@@ -103,7 +103,7 @@ export const chapter22DrishtiMastery: CourseChapter = {
         { id: "d3", front: { en: "Rahu/Ketu aspects?", ja: "ラーフ/ケートゥアスペクト？" }, back: { en: "None — they don't cast", ja: "なし — 投げない" }, icon: "wind" },
         { id: "d4", front: { en: "Conjunction in Jyotish", ja: "ジョーティシュの合" }, back: { en: "Same sign, any degree", ja: "同じ星座、任意の度数" }, icon: "sun" },
         { id: "d5", front: { en: "Combustion threshold", ja: "燃焼閾値" }, back: { en: "~10–15° from Sun", ja: "太陽から約10–15°" }, icon: "flame" },
-        { id: "d6", front: { en: "Read aspect using…", ja: "アスペクトを読むには…" }, back: { en: "Natural + functional nature", ja: "天然＋機能の性質" }, icon: "sparkles" },
+        { id: "d6", front: { en: "Read aspect using…", ja: "アスペクトを読むには…" }, back: { en: "Natural + functional nature", ja: "生来的性質＋機能的性質の性質" }, icon: "sparkles" },
       ],
     },
     {
@@ -134,13 +134,13 @@ export const chapter22DrishtiMastery: CourseChapter = {
         { id: "asc", label: { en: "1. Establish Ascendant & functional status", ja: "1. アセンダントと機能ステータスを確立" }, icon: "compass" },
         { id: "str", label: { en: "2. Assess aspecting planet's sign strength", ja: "2. アスペクト惑星の星座強度を評価" }, icon: "mountain" },
         { id: "house", label: { en: "3. Identify the aspected house number", ja: "3. アスペクト先ハウス番号を特定" }, icon: "eye" },
-        { id: "read", label: { en: "4. Combine natural + functional + house themes", ja: "4. 天然＋機能＋ハウステーマを統合" }, icon: "sparkles" },
+        { id: "read", label: { en: "4. Combine natural + functional + house themes", ja: "4. 生来的性質＋機能的性質＋ハウステーマを統合" }, icon: "sparkles" },
       ],
     },
     {
       id: "ch22-tf",
       kind: "true-false",
-      title: { en: "Drishti Mastery: True or False", ja: "ドリシュティマスター マルバツ" },
+      title: { en: "Drishti Mastery: True or False", ja: "ドリシュティの理解：正誤問題" },
       instruction: { en: "3 of 4 correct to pass.", ja: "4問中3問正解で合格。" },
       statements: [
         {
@@ -157,7 +157,7 @@ export const chapter22DrishtiMastery: CourseChapter = {
         },
         {
           id: "c22tf3",
-          statement: { en: "When reading aspects, only the natural nature of the planet matters.", ja: "アスペクトを読むとき、惑星の天然性質のみが重要だ。" },
+          statement: { en: "When reading aspects, only the natural nature of the planet matters.", ja: "アスペクトを読むとき、惑星の生来的性質のみが重要だ。" },
           isTrue: false,
           explanation: { en: "Both natural AND functional characteristics must be considered.", ja: "天然と機能の両方の特性を考慮する必要がある。" },
         },

@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  inquiryEmailContent,
   inquiryMessages,
   parseAppraisalLocale,
 } from "@/lib/personal-appraisals/i18n/messages";
@@ -97,6 +98,7 @@ export async function sendInquiry(
 ): Promise<InquiryFormState> {
   const locale = parseAppraisalLocale(formData.get("locale"));
   const msg = inquiryMessages[locale];
+  const emailCopy = inquiryEmailContent[locale];
   const validated = validateInquiry(formData, locale);
 
   if (!validated.ok) {
@@ -127,27 +129,27 @@ export async function sendInquiry(
   const html = `
     <div style="font-family: Georgia, 'Times New Roman', serif; color: #2c2825; line-height: 1.6;">
       <h2 style="margin: 0 0 16px; font-weight: normal; color: #1c1b19;">
-        New Personal Appraisal Inquiry
+        ${emailCopy.heading}
       </h2>
       <table style="border-collapse: collapse; width: 100%; max-width: 560px;">
         <tr>
-          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">Name</td>
+          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">${emailCopy.name}</td>
           <td style="padding: 8px 0; font-weight: 600;">${escapeHtml(fullName)}</td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">Email</td>
+          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">${emailCopy.email}</td>
           <td style="padding: 8px 0;"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">WhatsApp</td>
+          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">${emailCopy.whatsApp}</td>
           <td style="padding: 8px 0;"><a href="https://wa.me/${phone.replace("+", "")}">${escapeHtml(phone)}</a></td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">Concern</td>
-          <td style="padding: 8px 0; white-space: pre-wrap;">${message ? escapeHtml(message) : "<em>Not provided</em>"}</td>
+          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">${emailCopy.concern}</td>
+          <td style="padding: 8px 0; white-space: pre-wrap;">${message ? escapeHtml(message) : `<em>${emailCopy.notProvided}</em>`}</td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">Submitted</td>
+          <td style="padding: 8px 12px 8px 0; color: #6b6560; vertical-align: top;">${emailCopy.submitted}</td>
           <td style="padding: 8px 0;">${escapeHtml(submittedAt)}</td>
         </tr>
       </table>
@@ -155,13 +157,13 @@ export async function sendInquiry(
   `;
 
   const text = [
-    "New Personal Appraisal Inquiry",
+    emailCopy.heading,
     "",
-    `Name: ${fullName}`,
-    `Email: ${email}`,
-    `WhatsApp: ${phone}`,
-    `Concern: ${message || "Not provided"}`,
-    `Submitted: ${submittedAt}`,
+    `${emailCopy.name}: ${fullName}`,
+    `${emailCopy.email}: ${email}`,
+    `${emailCopy.whatsApp}: ${phone}`,
+    `${emailCopy.concern}: ${message || emailCopy.notProvided}`,
+    `${emailCopy.submitted}: ${submittedAt}`,
   ].join("\n");
 
   try {
@@ -169,8 +171,9 @@ export async function sendInquiry(
 
     const { error } = await resend.emails.send({
       from: fromEmail,
-      to: [recipientEmail],      replyTo: email,
-      subject: `Personal Appraisal Inquiry — ${fullName}`,
+      to: [recipientEmail],
+      replyTo: email,
+      subject: `${emailCopy.subject} — ${fullName}`,
       html,
       text,
     });

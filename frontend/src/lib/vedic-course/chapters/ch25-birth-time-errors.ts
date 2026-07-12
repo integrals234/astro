@@ -29,10 +29,10 @@ export const chapter25BirthTimeErrors: CourseChapter = {
       id: "ch25-s1",
       kind: "content",
       icon: "eye",
-      title: { en: "Wrong Ascendant, Wrong Everything", ja: "間違ったアセンダント、すべてが間違い" },
+      title: { en: "Wrong Ascendant, Wrong Everything", ja: "アセンダントが違えば、解釈も変わる" },
       body: {
         en: "If the Ascendant sign is wrong, the entire house framework collapses. Functional benefics become malefics, malefics become benefics, and every house placement shifts. Near sign boundaries (within ~5°), even a few minutes can flip the Lagna entirely.",
-        ja: "アセンダント星座が間違えば、ハウス枠組み全体が崩壊。功能的吉星が凶星に、凶星が吉星に、すべてのハウス配置がずれる。星座境界近く（約5°以内）では数分でラグナが完全に反転することがある。",
+        ja: "アセンダントの星座を誤ると、ハウス体系全体がずれます。機能的吉星が凶星に、凶星が吉星に変わり、すべてのハウス配置も変化します。星座の境界付近（約5°以内）では、わずか数分の差でラグナが別の星座になることがあります。",
       },
       bullets: [
         { en: "Mid-sign Ascendant (~15°) tolerates small time errors", ja: "星座中央のアセンダント（約15°）は小さな時刻エラーに寛容" },
@@ -47,7 +47,7 @@ export const chapter25BirthTimeErrors: CourseChapter = {
       title: { en: "Remedies Can Harm — Do No Harm", ja: "処方が害をなす — 害をなさない" },
       body: {
         en: "An incorrect Ascendant can lead to prescribing gemstones for a functional malefic — potentially worsening the client's situation. Example: Aries Ascendant → recommend yellow sapphire for Jupiter (9th lord). But if true Ascendant is Taurus, Jupiter rules the 8th and 11th — a strong functional malefic. Strengthening it could be highly undesirable.",
-        ja: "間違ったアセンダントは功能的凶星への宝石処方につながる — クライアントの状況を悪化させる可能性。例：牡羊アセンダント→木星（第9支配）に黄色サファイア推奨。しかし真のアセンダントが牡牛なら、木星は第8と第11を支配 — 強い功能的凶星。強化は非常に望ましくない可能性。",
+        ja: "間違ったアセンダントは機能的凶星への宝石処方につながる — クライアントの状況を悪化させる可能性。例：牡羊アセンダント→木星（第9支配）に黄色サファイア推奨。しかし真のアセンダントが牡牛なら、木星は第8と第11を支配 — 強い機能的凶星。強化は非常に望ましくない可能性。",
       },
       highlight: {
         en: "Medicine's first principle applies to Jyotish remedies: Do No Harm.",
@@ -58,10 +58,10 @@ export const chapter25BirthTimeErrors: CourseChapter = {
       id: "ch25-s3",
       kind: "content",
       icon: "moon",
-      title: { en: "Dasha & Nakshatra Timing Errors", ja: "ダシャーとナクシャトラ時期エラー" },
+      title: { en: "Dasha & Nakshatra Timing Errors", ja: "ダシャー時期とナクシャトラのずれ" },
       body: {
         en: "Mahadasha and Antardasha start dates depend on the Moon's position. A 20-minute error can shift dasha timings by 3–6 months. For Venus, Saturn, or Rahu Mahadashas the effect is especially pronounced. Moon near a Nakshatra boundary can assign the wrong lunar mansion entirely.",
-        ja: "マハーダシャーとアンタルダシャー開始日は月の位置に依存。20分のエラーでダシャー時期が3〜6ヶ月ずれる。金星、土星、ラーフマハーダシャーでは特に顕著。ナクシャトラ境界近くの月は完全に間違った月宮を割り当てる可能性。",
+        ja: "マハーダシャーとアンタルダシャーの開始日は月の位置に左右されます。出生時刻が20分ずれるだけで、ダシャーの時期が3〜6か月ずれることがあります。金星・土星・ラーフのマハーダシャーでは特に影響が大きく、月がナクシャトラの境界付近にある場合は別のナクシャトラになる可能性もあります。",
       },
       bullets: [
         { en: "Actual birth earlier than recorded → dashas begin LATER than calculated", ja: "記録より実際の出生が早い→計算よりダシャー開始が遅い" },
@@ -76,7 +76,7 @@ export const chapter25BirthTimeErrors: CourseChapter = {
       title: { en: "Chart Rectification", ja: "チャート・リクティフィケーション" },
       body: {
         en: "When chart indications don't match life events, birth-time error is a prime suspect. Rectification compares marriage dates, children, career shifts, health crises, and dasha periods against multiple candidate birth times. Modern software makes generating and comparing charts for a time range fast and precise.",
-        ja: "チャート表示が人生イベントと一致しないとき、出生時刻エラーが第一容疑。リクティフィケーションは結婚日、子供、キャリア転換、健康危機、ダシャー期を複数の候補出生時刻と比較。現代ソフトが時間範囲のチャート生成・比較を迅速正確に。",
+        ja: "チャートの示す内容が実際の出来事と一致しない場合、まず出生時刻の誤差を疑います。出生時刻修正では、結婚、出産、転職、健康上の危機、ダシャーの時期を複数の候補時刻と照合します。現代のソフトウェアなら、一定範囲のチャートをすばやく正確に作成・比較できます。",
       },
       bullets: [
         { en: "Ask clients about documented life milestones", ja: "クライアントに記録された人生マイルストーンについて尋ねる" },
@@ -161,7 +161,7 @@ export const chapter25BirthTimeErrors: CourseChapter = {
           id: "c25tf4",
           statement: { en: "Prescribing a yellow sapphire for Jupiter is always safe regardless of Ascendant.", ja: "木星に黄色サファイアを処方するのはアセンダントに関係なく常に安全。" },
           isTrue: false,
-          explanation: { en: "Jupiter can be a strong functional malefic (e.g. Taurus Ascendant) — wrong Lagna makes this dangerous.", ja: "木星は強い功能的凶星になりうる（例：牡牛アセンダント）— 間違ったラグナで危険。" },
+          explanation: { en: "Jupiter can be a strong functional malefic (e.g. Taurus Ascendant) — wrong Lagna makes this dangerous.", ja: "木星は強い機能的凶星になりうる（例：牡牛アセンダント）— 間違ったラグナで危険。" },
         },
         {
           id: "c25tf5",
@@ -184,7 +184,7 @@ export const chapter25BirthTimeErrors: CourseChapter = {
         { id: "moon", label: { en: "Moon's precise degree & Nakshatra", ja: "月の正確な度数とナクシャトラ" }, icon: "moon" },
         { id: "dasha", label: { en: "Mahadasha start dates", ja: "マハーダシャー開始日" }, icon: "orbit" },
         { id: "sun", label: { en: "Sun's zodiac sign (usually)", ja: "太陽の星座（通常）" }, icon: "sun" },
-        { id: "func", label: { en: "Functional benefic/malefic classification", ja: "功能的吉星/凶星分類" }, icon: "sparkles" },
+        { id: "func", label: { en: "Functional benefic/malefic classification", ja: "機能的吉星/凶星分類" }, icon: "sparkles" },
         { id: "neptune", label: { en: "Neptune's house placement", ja: "海王星のハウス配置" }, icon: "wind" },
       ],
       correctOptionIds: ["lagna", "moon", "dasha", "func"],
@@ -202,8 +202,8 @@ export const chapter25BirthTimeErrors: CourseChapter = {
         ja: "占星術師が牡羊アセンダントを計算し木星に黄色サファイア推奨。真のアセンダントは牡牛。牡牛にとって木星の機能ステータスは？",
       },
       options: [
-        { id: "ben", label: { en: "Strong functional benefic", ja: "強い功能的吉星" }, icon: "sparkles" },
-        { id: "mal", label: { en: "Strong functional malefic (8th & 11th lord)", ja: "強い功能的凶星（第8・11支配）" }, icon: "mountain" },
+        { id: "ben", label: { en: "Strong functional benefic", ja: "強い機能的吉星" }, icon: "sparkles" },
+        { id: "mal", label: { en: "Strong functional malefic (8th & 11th lord)", ja: "強い機能的凶星（第8・11支配）" }, icon: "mountain" },
         { id: "neutral", label: { en: "Perfectly neutral", ja: "完全中立" }, icon: "wind" },
         { id: "yoga", label: { en: "Yogakaraka for Taurus", ja: "牡牛のヨーガカーラカ" }, icon: "sun" },
       ],
@@ -229,7 +229,7 @@ export const chapter25BirthTimeErrors: CourseChapter = {
       correctOptionId: "fast",
       explanation: {
         en: "The Moon's speed makes it — and dasha timing — extremely sensitive to birth-time errors.",
-        ja: "月の速度が — ダシャー時期も — 出生時刻エラーに非常に敏感にする。",
+        ja: "月は動きが速いため、月の位置とそれに基づくダシャーの時期は、出生時刻の誤差に非常に敏感です。",
       },
     },
   ],

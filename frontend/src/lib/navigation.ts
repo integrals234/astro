@@ -9,6 +9,8 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
+import type { AppLanguage } from "@/lib/i18n/language";
+import { getSharedCopy } from "@/lib/i18n/shared";
 
 export const SITE_NAME = "Jyotish Life";
 
@@ -19,66 +21,73 @@ export interface NavItem {
   description?: string;
 }
 
-export const mainNavItems: NavItem[] = [
+const navMeta = [
   {
     href: "/",
-    label: "Home",
     icon: Home,
-    description: "Welcome to Jyotish Life",
+    labelKey: "home",
+    descriptionKey: "homeDescription",
   },
   {
     href: "/learn-jyotish",
-    label: "Learn Jyotish",
     icon: GraduationCap,
-    description: "Vedic astrology learning hub",
+    labelKey: "learn",
+    descriptionKey: "learnDescription",
   },
   {
     href: "/horoscope",
-    label: "Horoscope",
     icon: CalendarRange,
-    description: "Live Vedic horoscope forecasts",
+    labelKey: "horoscope",
+    descriptionKey: "horoscopeDescription",
   },
   {
     href: "/chart",
-    label: "Chart",
     icon: Sparkles,
-    description: "Generate and explore charts",
+    labelKey: "chart",
+    descriptionKey: "chartDescription",
   },
   {
     href: "/personal-appraisals",
-    label: "Personal Appraisals",
     icon: MoonStar,
-    description: "Private Vedic Astrology consultations",
+    labelKey: "appraisals",
+    descriptionKey: "appraisalsDescription",
   },
   {
     href: "/test-beta",
-    label: "Vedic Course",
     icon: FlaskConical,
-    description: "インド占星術ミニコース (EN / हिन्दी / 日本語 / 한국어)",
+    labelKey: "course",
+    descriptionKey: "courseDescription",
   },
   {
     href: "/blogs",
-    label: "Blogs",
     icon: BookOpen,
-    description: "Articles and reflections",
+    labelKey: "blogs",
+    descriptionKey: "blogsDescription",
   },
   {
     href: "/settings",
-    label: "Settings",
     icon: Settings,
-    description: "Account and preferences",
+    labelKey: "settings",
+    descriptionKey: "settingsDescription",
   },
-];
+] as const;
 
-export function getNavLabel(pathname: string): string {
-  if (pathname === "/") return "Home";
-  if (pathname === "/learn-jyotish" || pathname.startsWith("/learn-jyotish/")) {
-    return "Learn Jyotish";
+export function getMainNavItems(language: AppLanguage): NavItem[] {
+  const copy = getSharedCopy(language).navigation;
+  return navMeta.map((item) => ({
+    href: item.href,
+    icon: item.icon,
+    label: copy[item.labelKey],
+    description: copy[item.descriptionKey],
+  }));
+}
+
+export function getNavLabel(pathname: string, language: AppLanguage): string {
+  if (pathname === "/premium" || pathname.startsWith("/premium/")) {
+    return getSharedCopy(language).premium.title;
   }
-  if (pathname === "/horoscope" || pathname.startsWith("/horoscope/")) {
-    return "Horoscope";
-  }
-  if (pathname === "/chart" || pathname.startsWith("/chart/")) return "Chart";
+
+  const mainNavItems = getMainNavItems(language);
 
   const match = mainNavItems
     .filter((item) => item.href !== "/")

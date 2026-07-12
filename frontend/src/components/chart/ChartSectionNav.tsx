@@ -4,15 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getChartNavItems, isChartNavActive } from "@/lib/chart-navigation";
 import { useChartLang } from "@/lib/use-chart-lang";
+import { getChartUi } from "@/lib/chart-i18n";
 
 export default function ChartSectionNav() {
   const pathname = usePathname();
   const lang = useChartLang();
   const chartNavItems = getChartNavItems(lang);
+  const copy = getChartUi(lang);
 
   return (
     <nav
-      aria-label="Chart sections"
+      aria-label={copy.nav.sectionsAria}
       className="mb-6 flex items-center gap-1 overflow-x-auto rounded-2xl border border-shell-border bg-shell-elevated/40 p-1"
     >
       {chartNavItems.map((item) => {

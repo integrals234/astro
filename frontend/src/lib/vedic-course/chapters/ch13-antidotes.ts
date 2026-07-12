@@ -4,7 +4,7 @@ import type { CourseChapter } from "../types";
 export const chapter13Antidotes: CourseChapter = {
   id: "ch13",
   number: 13,
-  title: { en: "Planetary Antidotes Masterclass", ja: "惑星解決策マスタークラス" },
+  title: { en: "Planetary Antidotes Masterclass", ja: "惑星の処方実践講座" },
   subtitle: {
     en: "Gemstones, mantras, charity & sacred rituals",
     ja: "宝石・マントラ・慈善・聖なる儀式",
@@ -18,7 +18,7 @@ export const chapter13Antidotes: CourseChapter = {
       title: { en: "Upayes — Karmic Rebalancing", ja: "ウパーヤ — カルマ再平衡" },
       body: {
         en: "Planetary antidotes (Upayes) help avert danger not yet arisen. Four main categories: gemstones, mantras, charity, and Vedic rituals (Yagnas/Homas). Their power rests on the Vedic view that everything is interconnected — Indra's Net.",
-        ja: "惑星の解決策（ウパーヤ）はまだ来ていない危険を避ける助けになります。四つの主要カテゴリー：宝石・マントラ・慈善・ヴェーダ儀式（ヤギャ/ホーマ）。力はすべてが相互接続されているというヴェーダの見解 — インドラの網 — に基づきます。",
+        ja: "惑星への処方（ウパーヤ）は、まだ生じていない困難を避ける助けとなります。主な方法は、宝石、マントラ、布施、ヴェーダの儀式（ヤギャ／ホーマ）の四つです。その考え方は、あらゆるものがつながっているというヴェーダの世界観「インドラの網」に基づきます。",
       },
       highlight: {
         en: "\"We are stardust, we are golden\" — gemstones can remind us of our cosmic connection.",
@@ -32,7 +32,7 @@ export const chapter13Antidotes: CourseChapter = {
       title: { en: "Planet → Gemstone Map", ja: "惑星→宝石マップ" },
       body: {
         en: "Each Graha has a traditional gemstone. Only strengthen auspicious (functional benefic) planets with gems — never a functional malefic! Mantras are preferred for problematic planets.",
-        ja: "各グラハに伝統的宝石があります。吉（功能的吉星）の惑星のみ宝石で強化 — 功能的凶星には決して！問題のある惑星にはマントラが好まれます。",
+        ja: "各グラハには伝統的に対応する宝石があります。宝石で強化するのは機能的吉星だけです。機能的凶星には決して用いず、問題をもたらす惑星にはマントラを選びます。",
       },
       bullets: [
         { en: "Sun–Ruby, Moon–Pearl, Mars–Red Coral, Mercury–Emerald", ja: "太陽–ルビー、月–パール、火星–赤珊瑚、水星–エメラルド" },
@@ -47,7 +47,7 @@ export const chapter13Antidotes: CourseChapter = {
       title: { en: "Gemstone Rules & Ascendant Lord", ja: "宝石のルールとアセンダント支配星" },
       body: {
         en: "Gemstones must touch the skin, be natural (not lab-created), and suit weight/quality/metal/finger guidelines. A universally safe remedy: wear the gemstone of your Ascendant Lord — the planet ruling your rising sign.",
-        ja: "宝石は肌に触れ、天然（ラボ作成でない）で、重量/品質/金属/指のガイドラインに合う必要があります。普遍的に安全なレメディ：アセンダント支配星 — 上昇星座を支配する惑星 — の宝石を着ける。",
+        ja: "宝石は肌に触れるように身につけ、合成石ではない天然石を選び、重さ・品質・金属・指についての基準にも合わせます。一般に安全とされる方法は、アセンダントを支配する惑星の宝石を身につけることです。",
       },
       bullets: [
         { en: "Planets ruling 1st, 5th, or 9th houses are generally auspicious", ja: "第1・5・9ハウスを支配する惑星は一般に吉" },
@@ -93,7 +93,7 @@ export const chapter13Antidotes: CourseChapter = {
       title: { en: "When NOT to Wear a Gemstone", ja: "宝石を着けてはいけない時" },
       body: {
         en: "Never strengthen a functional malefic with its gemstone — it amplifies difficulties. Use mantras instead. Always analyse the full chart with Ascendant before recommending any gem. Western birth-month stones ignore this entirely.",
-        ja: "功能的凶星をその宝石で強化してはいけない — 困難を増幅します。代わりにマントラを。宝石を勧める前に常にアセンダントで全チャートを分析。西洋の誕生月の石はこれを完全に無視。",
+        ja: "機能的凶星をその宝石で強化してはいけません。困難を増幅するおそれがあるため、代わりにマントラを用います。宝石を勧める前に、必ずアセンダントを基準にチャート全体を分析します。西洋式の誕生石だけで判断することはできません。",
       },
       highlight: {
         en: "Consult an experienced Jyotish astrologer — wrong gems can cause harm.",
@@ -129,8 +129,8 @@ export const chapter13Antidotes: CourseChapter = {
         ja: "各レメディ状況に最適なウパーヤアプローチを結びつけましょう。",
       },
       pairs: [
-        { leftId: "ben", left: { en: "Functional benefic needs strength", ja: "功能的吉星が強化を必要" }, rightId: "gem", right: { en: "Wear its gemstone", ja: "その宝石を着ける" }, leftIcon: "sparkles" },
-        { leftId: "mal", left: { en: "Functional malefic causing trouble", ja: "功能的凶星が問題を引き起こす" }, rightId: "man", right: { en: "Chant its mantra", ja: "そのマントラを唱える" }, leftIcon: "wind" },
+        { leftId: "ben", left: { en: "Functional benefic needs strength", ja: "機能的吉星が強化を必要" }, rightId: "gem", right: { en: "Wear its gemstone", ja: "その宝石を着ける" }, leftIcon: "sparkles" },
+        { leftId: "mal", left: { en: "Functional malefic causing trouble", ja: "機能的凶星が問題を引き起こす" }, rightId: "man", right: { en: "Chant its mantra", ja: "そのマントラを唱える" }, leftIcon: "wind" },
         { leftId: "sat", left: { en: "Saturn karmic burden", ja: "土星のカルマ負担" }, rightId: "crow", right: { en: "Feed crows on Saturday", ja: "土曜日にカラスに餌" }, leftIcon: "mountain" },
         { leftId: "all", left: { en: "Balance all nine Grahas", ja: "9グラハすべてを平衡" }, rightId: "nav", right: { en: "Nav Graha mantra", ja: "ナヴ・グラハ・マントラ" }, leftIcon: "orbit" },
         { leftId: "chart", left: { en: "Major chart imbalance", ja: "重大なチャート不均衡" }, rightId: "yag", right: { en: "Vedic Yagna / Homa ritual", ja: "ヴェーダ・ヤギャ/ホーマ儀式" }, leftIcon: "flame" },
@@ -154,12 +154,12 @@ export const chapter13Antidotes: CourseChapter = {
     {
       id: "ch13-tf",
       kind: "true-false",
-      title: { en: "Antidote Facts: True or False", ja: "解決策ファクト マルバツ" },
+      title: { en: "Antidote Facts: True or False", ja: "惑星の処方：正誤問題" },
       instruction: { en: "3 of 4 correct to pass.", ja: "4問中3問正解で合格。" },
       statements: [
         {
           id: "c13tf1",
-          statement: { en: "You should wear the gemstone of a functional malefic planet to reduce its harm.", ja: "功能的凶星の宝石を着けて害を減らすべきだ。" },
+          statement: { en: "You should wear the gemstone of a functional malefic planet to reduce its harm.", ja: "機能的凶星の宝石を着けて害を減らすべきだ。" },
           isTrue: false,
           explanation: { en: "Gemstones strengthen planets — use mantras for malefics, gems only for benefics.", ja: "宝石は惑星を強化 — 凶星にはマントラ、吉星にのみ宝石。" },
         },
@@ -192,7 +192,7 @@ export const chapter13Antidotes: CourseChapter = {
         ja: "宝石を勧める前に確認すべきことは？該当するものをすべて選んでください。",
       },
       options: [
-        { id: "asc", label: { en: "Ascendant and functional benefic status", ja: "アセンダントと功能的吉星ステータス" }, icon: "sparkles" },
+        { id: "asc", label: { en: "Ascendant and functional benefic status", ja: "アセンダントと機能的吉星ステータス" }, icon: "sparkles" },
         { id: "skin", label: { en: "Stone touches skin in proper setting", ja: "石が適切な設定で肌に触れる" }, icon: "mountain" },
         { id: "month", label: { en: "Birth month from Western calendar only", ja: "西洋暦の誕生月のみ" }, icon: "sun" },
         { id: "nat", label: { en: "Natural (not synthetic) stone quality", ja: "天然（合成でない）石の品質" }, icon: "eye" },

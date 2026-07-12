@@ -22,7 +22,7 @@ export const COURSE_PATH: CoursePathPhase[] = [
     label: { en: "Phase II — Astrological building blocks", ja: "第II章 — 占星術の構成要素" },
     chapters: [
       { number: 4, title: { en: "The 9 Planets", ja: "9つの惑星（グラハ）" } },
-      { number: 5, title: { en: "Natural Benefics & Malefics", ja: "天然吉星と凶星" } },
+      { number: 5, title: { en: "Natural Benefics & Malefics", ja: "生来的吉星と凶星" } },
       { number: 6, title: { en: "The 12 Signs", ja: "12の星座（ラーシ）" } },
     ],
   },
@@ -41,7 +41,7 @@ export const COURSE_PATH: CoursePathPhase[] = [
     chapters: [
       { number: 10, title: { en: "Planetary Strength & Dignity", ja: "惑星の強さと品位" } },
       { number: 11, title: { en: "Strength Modifiers", ja: "強度修飾因子" } },
-      { number: 12, title: { en: "Functional Benefics & Houses", ja: "功能的吉星とハウス" } },
+      { number: 12, title: { en: "Functional Benefics & Houses", ja: "機能的吉星とハウス" } },
       { number: 13, title: { en: "Yogakaraka", ja: "ヨーガカーラカ" } },
     ],
   },

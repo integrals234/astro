@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
 import InstagramFollowBanner from "@/components/personal-appraisals/InstagramFollowBanner";
 import InquiryForm from "@/components/personal-appraisals/InquiryForm";
-import PersonalAppraisalsLanguageSwitcher from "@/components/personal-appraisals/PersonalAppraisalsLanguageSwitcher";
 import { getAppraisalContent } from "@/lib/personal-appraisals/i18n/content";
-import type { AppraisalLanguage } from "@/lib/personal-appraisals/types";
 import {
   Check,
   Clock,
@@ -16,8 +14,6 @@ import {
   ScrollText,
   Sparkles,
 } from "lucide-react";
-
-const LANG_STORAGE_KEY = "personal-appraisals-lang";
 
 const offeringIcons = {
   written: ScrollText,
@@ -33,20 +29,8 @@ interface PersonalAppraisalsPageClientProps {
 export default function PersonalAppraisalsPageClient({
   defaultDialCode,
 }: PersonalAppraisalsPageClientProps) {
-  const [lang, setLang] = useState<AppraisalLanguage>("ja");
+  const { language: lang } = useLanguage();
   const content = getAppraisalContent(lang);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(LANG_STORAGE_KEY) as AppraisalLanguage | null;
-    if (saved === "en" || saved === "ja") {
-      setLang(saved);
-    }
-  }, []);
-
-  const handleLangChange = (next: AppraisalLanguage) => {
-    setLang(next);
-    localStorage.setItem(LANG_STORAGE_KEY, next);
-  };
 
   return (
     <div className="max-w-4xl space-y-12 pb-8">
@@ -57,13 +41,6 @@ export default function PersonalAppraisalsPageClient({
         eyebrow={content.header.eyebrow}
         title={content.header.title}
         description={content.header.description}
-        trailing={
-          <PersonalAppraisalsLanguageSwitcher
-            lang={lang}
-            onChange={handleLangChange}
-            ariaLabel={content.languageLabel}
-          />
-        }
       />
 
       <section className="rounded-3xl border border-shell-accent/20 bg-gradient-to-br from-shell-elevated/80 via-shell-elevated/50 to-shell-bg/60 p-7 md:p-9 backdrop-blur-sm">

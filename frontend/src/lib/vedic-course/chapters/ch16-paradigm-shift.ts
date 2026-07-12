@@ -190,14 +190,14 @@ export const chapter16ParadigmShift: CourseChapter = {
         { id: "dash", label: { en: "Mahadasha timing system", ja: "マハーダシャー時期体系" }, icon: "moon" },
         { id: "psych", label: { en: "Deep psychological counselling focus", ja: "深い心理カウンセリング焦点" }, icon: "wind" },
         { id: "rem", label: { en: "Planetary antidotes (Upayes)", ja: "惑星解決策（ウパーヤ）" }, icon: "sparkles" },
-        { id: "func", label: { en: "Functional benefic/malefic by Ascendant", ja: "アセンダントによる功能的吉/凶星" }, icon: "layers" },
+        { id: "func", label: { en: "Functional benefic/malefic by Ascendant", ja: "アセンダントによる機能的吉/凶星" }, icon: "layers" },
         { id: "pluto", label: { en: "Pluto as primary life-transformer", ja: "冥王星を主要人生変容者" }, icon: "orbit" },
         { id: "muh", label: { en: "Muhurta elective timing", ja: "ムフルタ選択時期" }, icon: "compass" },
       ],
       correctOptionIds: ["dash", "rem", "func", "muh"],
       explanation: {
         en: "Dashas, remedies, functional planets, and Muhurta are Jyotish specialties — psychology and Pluto are Western strengths.",
-        ja: "ダシャー・レメディ・功能的惑星・ムフルタはジョーティシュの専門 — 心理学と冥王星は西洋の強み。",
+        ja: "ダシャー・レメディ・機能的惑星・ムフルタはジョーティシュの専門 — 心理学と冥王星は西洋の強み。",
       },
     },
     {

@@ -1,37 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { settingsCopy } from "@/lib/i18n/settings";
 
 const options = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
+  { value: "light", label: "light", icon: Sun },
+  { value: "dark", label: "dark", icon: Moon },
+  { value: "system", label: "system", icon: Monitor },
 ] as const;
 
 export default function AppearanceSetting() {
+  const { language } = useLanguage();
+  const copy = settingsCopy[language].appearance;
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
 
   const active = theme ?? "system";
   const resolvedLabel =
     active === "system"
-      ? `System (${resolvedTheme === "dark" ? "Dark" : "Light"})`
+      ? `${copy.system} (${resolvedTheme === "dark" ? copy.dark : copy.light})`
       : active === "dark"
-        ? "Dark"
-        : "Light";
+        ? copy.dark
+        : copy.light;
 
   return (
     <section className="rounded-3xl border border-shell-border bg-shell-elevated/60 overflow-hidden">
       <div className="px-6 py-4 border-b border-shell-border">
         <h3 className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted">
-          Appearance
+          {copy.title}
         </h3>
         <p className="text-xs text-shell-muted mt-1">
-          Choose light, dark, or match your device setting.
+          {copy.description}
         </p>
       </div>
 
@@ -59,7 +65,7 @@ export default function AppearanceSetting() {
                     size={16}
                     className={isActive ? "text-shell-accent" : "text-shell-muted"}
                   />
-                  {option.label}
+                  {copy[option.label]}
                 </button>
               );
             })}
@@ -67,7 +73,7 @@ export default function AppearanceSetting() {
         )}
 
         <p className="text-xs text-shell-muted">
-          Currently using:{" "}
+          {copy.currentlyUsing}:{" "}
           <span className="text-shell-accent font-medium">
             {mounted ? resolvedLabel : "…"}
           </span>

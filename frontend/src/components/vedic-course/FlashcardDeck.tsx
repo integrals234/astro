@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { createElement, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import type { CourseLanguage, FlashcardGame } from "@/lib/vedic-course/types";
@@ -22,7 +22,6 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
   const [viewed, setViewed] = useState<Set<string>>(new Set());
 
   const card = game.cards[index];
-  const Icon = getCourseIcon(card?.icon);
   const allViewed = viewed.size >= game.cards.length;
 
   const markViewed = (cardId: string) => {
@@ -62,6 +61,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
         <button
           type="button"
           onClick={handleFlip}
+          aria-label={uiString("flipCard", lang)}
           className="relative w-full max-w-md aspect-[4/3] perspective-[1000px]"
         >
           <motion.div
@@ -75,7 +75,10 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
               style={{ backfaceVisibility: "hidden" }}
             >
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-shell-accent/25 bg-shell-elevated/80">
-                <Icon size={28} className="text-shell-accent" />
+                {createElement(getCourseIcon(card?.icon), {
+                  size: 28,
+                  className: "text-shell-accent",
+                })}
               </div>
               <p className="font-serif text-xl text-shell-warm">
                 <FormattedText text={t(card.front, lang)} />
@@ -99,6 +102,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
           <button
             type="button"
             onClick={goPrev}
+            aria-label={uiString("previousCard", lang)}
             disabled={index === 0}
             className="rounded-xl border border-shell-border p-2.5 text-shell-muted hover:text-shell-warm disabled:opacity-40"
           >
@@ -110,6 +114,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
           <button
             type="button"
             onClick={goNext}
+            aria-label={uiString("nextCard", lang)}
             disabled={index === game.cards.length - 1}
             className="rounded-xl border border-shell-border p-2.5 text-shell-muted hover:text-shell-warm disabled:opacity-40"
           >

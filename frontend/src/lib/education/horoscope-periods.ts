@@ -19,12 +19,24 @@ function startOfDay(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function formatEnDate(date: Date) {
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const DATE_LOCALES: Record<EducationLang, string> = {
+  en: "en-US",
+  hi: "hi-IN",
+  ja: "ja-JP",
+  ko: "ko-KR",
+};
+
+function formatDate(date: Date, lang: EducationLang) {
+  return date.toLocaleDateString(DATE_LOCALES[lang], {
+    year: "numeric",
+    month: lang === "en" ? "short" : "long",
+    day: "numeric",
+  });
 }
 
-function formatJaDate(date: Date) {
-  return date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+function formatRange(start: Date, end: Date, lang: EducationLang) {
+  const separator = lang === "ja" || lang === "ko" ? " 〜 " : " – ";
+  return `${formatDate(start, lang)}${separator}${formatDate(end, lang)}`;
 }
 
 function getIsoWeekInfo(date: Date) {
@@ -59,11 +71,15 @@ export function getWeeklyPeriod(date: Date): HoroscopePeriod {
     end,
     label: {
       en: `Week ${week}, ${isoYear}`,
+      hi: `${isoYear} का सप्ताह ${week}`,
       ja: `${isoYear}年 第${week}週`,
+      ko: `${isoYear}년 제${week}주`,
     },
     rangeLabel: {
-      en: `${formatEnDate(start)} – ${formatEnDate(end)}`,
-      ja: `${formatJaDate(start)} 〜 ${formatJaDate(end)}`,
+      en: formatRange(start, end, "en"),
+      hi: formatRange(start, end, "hi"),
+      ja: formatRange(start, end, "ja"),
+      ko: formatRange(start, end, "ko"),
     },
   };
 }
@@ -80,11 +96,15 @@ export function getMonthlyPeriod(date: Date): HoroscopePeriod {
     end,
     label: {
       en: start.toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+      hi: start.toLocaleDateString("hi-IN", { month: "long", year: "numeric" }),
       ja: start.toLocaleDateString("ja-JP", { year: "numeric", month: "long" }),
+      ko: start.toLocaleDateString("ko-KR", { year: "numeric", month: "long" }),
     },
     rangeLabel: {
-      en: `${formatEnDate(start)} – ${formatEnDate(end)}`,
-      ja: `${formatJaDate(start)} 〜 ${formatJaDate(end)}`,
+      en: formatRange(start, end, "en"),
+      hi: formatRange(start, end, "hi"),
+      ja: formatRange(start, end, "ja"),
+      ko: formatRange(start, end, "ko"),
     },
   };
 }
@@ -100,10 +120,14 @@ export function getYearlyPeriod(date: Date): HoroscopePeriod {
     key,
     start,
     end,
-    label: { en: String(year), ja: `${year}年` },
+    label: {
+      en: String(year),
+      hi: `${year}`,
+      ja: `${year}年`,
+      ko: `${year}년`,
+    },
     rangeLabel: {
-      en: `January 1 – December 31, ${year}`,
-      ja: `${year}年1月1日 〜 12月31日`,
+      en: `January 1 – December 31, ${year}`, hi: `1 जनवरी - 31 दिसंबर, ${year}`, ja: `${year}年1月1日 〜 12月31日`, ko: `${year} 1월 1일~12월 31일`,
     },
   };
 }
@@ -118,9 +142,9 @@ export function getHoroscopePeriods(date = new Date()) {
 
 export function periodTypeLabel(type: HoroscopePeriodType, lang: EducationLang): string {
   const labels: Record<HoroscopePeriodType, BilingualText> = {
-    weekly: { en: "Weekly", ja: "週間" },
-    monthly: { en: "Monthly", ja: "月間" },
-    yearly: { en: "Yearly", ja: "年間" },
+    weekly: { en: "Weekly", hi: "साप्ताहिक", ja: "週間", ko: "주간",},
+    monthly: { en: "Monthly", hi: "मासिक", ja: "月間", ko: "월간",},
+    yearly: { en: "Yearly", hi: "वार्षिक", ja: "年間", ko: "연간",},
   };
   return labels[type][lang];
 }

@@ -38,6 +38,8 @@ export interface ChartData {
   chalit_cusps: number[];
   vimshottari_dashas: Dasha[];
   timezone_detected: string;
+  timezone_offset_hours?: number;
+  ayanamsha?: number;
   sunrise?: string;
   sunset?: string;
 }

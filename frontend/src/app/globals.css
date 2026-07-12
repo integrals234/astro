@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Noto Sans Devanagari Local";
+  src: url("/fonts/NotoSansDevanagari.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans JP Local";
+  src: url("/fonts/NotoSansJP.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans KR Local";
+  src: url("/fonts/NotoSansKR.ttf") format("truetype");
+  font-display: swap;
+}
+
+html[lang="hi"] body { font-family: "Noto Sans Devanagari Local", "Nirmala UI", Mangal, sans-serif; }
+html[lang="ja"] body { font-family: "Noto Sans JP Local", "Yu Gothic", Meiryo, sans-serif; }
+html[lang="ko"] body { font-family: "Noto Sans KR Local", "Malgun Gothic", sans-serif; }
+
 /* System-aware defaults (before next-themes hydrates) */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -69,7 +89,7 @@
   --color-shell-muted: var(--shell-muted);
   --color-shell-accent: var(--shell-accent);
   --color-shell-accent-soft: var(--shell-accent-soft);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean);
 }
 
 .font-brand {
@@ -79,7 +99,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean), system-ui, sans-serif;
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -173,21 +193,29 @@ svg {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
 }
 
-/* Keep chart SVG text dark on the parchment surface (embedded mode overrides .text-* only) */
-.chart-workspace-embedded .kundli-chart-surface .fill-indigo-950,
-.chart-workspace-embedded .kundli-chart-surface .fill-indigo-600 {
+/* The parchment canvas is theme-independent, so its SVG palette is too. */
+.kundli-chart-svg {
+  stroke: #4b5563;
+}
+
+.kundli-chart-grid {
+  stroke: #6b7280;
+}
+
+.kundli-chart-sign {
+  fill: #b45353;
+}
+
+.kundli-chart-planet {
   fill: #1e1b4b;
 }
 
-.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400,
-.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400\/70,
-.chart-workspace-embedded .kundli-chart-surface .fill-indigo-400\/80 {
-  fill: #6366f1;
+.kundli-chart-accent {
+  fill: #4f46e5;
 }
 
-.chart-workspace-embedded .kundli-chart-surface .stroke-indigo-900,
-.chart-workspace-embedded .kundli-chart-surface .stroke-gray-400 {
-  stroke: #9ca3af;
+.kundli-chart-planet-hover:hover {
+  fill: #4338ca;
 }
 
 /* Embedded chart workspace — blend with shell, no white box */
@@ -198,70 +226,10 @@ svg {
   color: var(--shell-warm);
 }
 
-.chart-workspace-embedded .bg-white {
-  background-color: color-mix(in oklab, var(--shell-elevated) 50%, transparent);
-}
-
-.chart-workspace-embedded .bg-white\/50 {
-  background-color: color-mix(in oklab, var(--shell-elevated) 35%, transparent);
-}
-
-.chart-workspace-embedded .bg-gray-50,
-.chart-workspace-embedded .bg-gray-50\/50 {
-  background-color: color-mix(in oklab, var(--shell-bg) 55%, var(--shell-elevated));
-}
-
-.chart-workspace-embedded .border-gray-100,
-.chart-workspace-embedded .border-gray-200,
-.chart-workspace-embedded .border-dashed.border-gray-200 {
-  border-color: var(--shell-border);
-}
-
-.chart-workspace-embedded .text-gray-900,
-.chart-workspace-embedded .text-indigo-950 {
-  color: var(--shell-warm);
-}
-
-.chart-workspace-embedded .text-gray-300,
-.chart-workspace-embedded .text-gray-400,
-.chart-workspace-embedded .text-gray-500,
-.chart-workspace-embedded .text-gray-600,
-.chart-workspace-embedded .text-gray-700 {
-  color: var(--shell-muted);
-}
-
-.chart-workspace-embedded .text-indigo-600,
-.chart-workspace-embedded .text-indigo-700,
-.chart-workspace-embedded .text-indigo-800,
-.chart-workspace-embedded .text-indigo-900 {
-  color: var(--shell-accent);
-}
-
-.chart-workspace-embedded .shadow-\[0_2px_20px_rgba\(0\,0\,0\,0\.04\)\] {
-  box-shadow: none;
-}
-
-.chart-workspace-embedded input,
-.chart-workspace-embedded button[type="button"]:not(.bg-indigo-950) {
-  border-color: var(--shell-border);
-}
-
-.chart-workspace-embedded input[type="date"],
-.chart-workspace-embedded input[type="time"],
-.chart-workspace-embedded input[type="text"] {
-  background-color: color-mix(in oklab, var(--shell-bg) 65%, var(--shell-elevated));
-  color: var(--shell-warm);
-}
-
-.chart-workspace-embedded .hover\:bg-gray-50:hover,
-.chart-workspace-embedded .hover\:bg-gray-50\/50:hover {
-  background-color: color-mix(in oklab, var(--shell-elevated) 70%, transparent);
-}
-
 /* Clerk auth components */
 .cl-rootBox,
 .cl-card,
 .cl-signIn-root,
 .cl-signUp-root {
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean), system-ui, sans-serif;
 }

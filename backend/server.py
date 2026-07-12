@@ -103,6 +103,8 @@ class FullChartResponse(BaseModel):
     chalit_cusps: List[float]
     vimshottari_dashas: List[DashaPeriod]
     timezone_detected: str
+    timezone_offset_hours: float
+    ayanamsha: float
     sunrise: Optional[str] = None
     sunset: Optional[str] = None
 
@@ -333,6 +335,11 @@ async def compute_charts(payload: BirthDataRequest):
         ))
 
         dashas = generate_vimshottari(moon_lon, local_time)
+        ayanamsha = swe.get_ayanamsa(julian_day)
+        utc_offset = local_tz.localize(local_time).utcoffset()
+        timezone_offset_hours = (
+            utc_offset.total_seconds() / 3600 if utc_offset is not None else 0.0
+        )
         swe.close()
 
         return FullChartResponse(
@@ -345,6 +352,8 @@ async def compute_charts(payload: BirthDataRequest):
             chalit_cusps=[round(c, 6) for c in cusps],
             vimshottari_dashas=dashas,
             timezone_detected=tz_str,
+            timezone_offset_hours=round(timezone_offset_hours, 2),
+            ayanamsha=round(ayanamsha, 6),
             sunrise=sunrise_str,
             sunset=sunset_str
         )

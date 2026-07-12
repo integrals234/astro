@@ -71,7 +71,7 @@ export const chapter23Transits: CourseChapter = {
       ],
       highlight: {
         en: "Sade Sati is milder during a favourable Mahadasha, when Saturn is a functional benefic, or when Saturn is well placed natally.",
-        ja: "サデーサティは吉なマハーダシャー中、土星が功能的吉星のとき、または土星が出生で良い配置のときは穏やか。",
+        ja: "サデーサティは吉なマハーダシャー中、土星が機能的吉星のとき、または土星が出生で良い配置のときは穏やか。",
       },
     },
     {
@@ -158,7 +158,7 @@ export const chapter23Transits: CourseChapter = {
           id: "c23tf3",
           statement: { en: "Sade Sati always brings severe hardship regardless of dasha or chart.", ja: "サデーサティはダシャーやチャートに関係なく常に深刻な困難をもたらす。" },
           isTrue: false,
-          explanation: { en: "A favourable Mahadasha or functional benefic Saturn can soften it greatly.", ja: "吉なマハーダシャーや功能的吉星土星が大いに和らげる。" },
+          explanation: { en: "A favourable Mahadasha or functional benefic Saturn can soften it greatly.", ja: "吉なマハーダシャーや機能的吉星土星が大いに和らげる。" },
         },
         {
           id: "c23tf4",
@@ -184,7 +184,7 @@ export const chapter23Transits: CourseChapter = {
       },
       options: [
         { id: "dasha", label: { en: "Running a favourable Mahadasha", ja: "吉なマハーダシャー中" }, icon: "moon" },
-        { id: "func", label: { en: "Saturn is a functional benefic for the chart", ja: "土星がチャートの功能的吉星" }, icon: "sparkles" },
+        { id: "func", label: { en: "Saturn is a functional benefic for the chart", ja: "土星がチャートの機能的吉星" }, icon: "sparkles" },
         { id: "weak", label: { en: "Saturn is debilitated in the birth chart", ja: "土星が出生図で弱体" }, icon: "mountain" },
         { id: "placed", label: { en: "Saturn is well placed natally", ja: "土星が出生で良い配置" }, icon: "compass" },
         { id: "fav", label: { en: "Saturn rules favourable houses from Moon sign", ja: "土星が月星座から吉ハウスを支配" }, icon: "eye" },

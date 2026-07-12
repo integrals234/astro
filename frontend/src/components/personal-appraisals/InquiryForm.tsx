@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import {
@@ -41,6 +41,10 @@ export default function InquiryForm({
   );
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const regionNames = useMemo(
+    () => new Intl.DisplayNames([lang], { type: "region" }),
+    [lang],
+  );
 
   useEffect(() => {
     if (state.status === "success") {
@@ -164,7 +168,7 @@ export default function InquiryForm({
             >
               {COUNTRY_DIAL_CODES.map((country) => (
                 <option key={`${country.iso}-${country.dial}`} value={country.dial}>
-                  {country.dial} · {country.label}
+                  {country.dial} · {regionNames.of(country.iso) ?? country.label}
                 </option>
               ))}
             </select>

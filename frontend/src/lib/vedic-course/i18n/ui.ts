@@ -1,6 +1,24 @@
 import type { CourseLanguage } from "../types";
 
 export const courseUi = {
+  headerEyebrow: {
+    en: "Vedic Course",
+    hi: "वैदिक ज्योतिष पाठ्यक्रम",
+    ja: "ヴェーダ占星術コース",
+    ko: "베다 점성술 과정",
+  },
+  headerTitle: {
+    en: "Vedic Astrology Course",
+    hi: "वैदिक ज्योतिष पाठ्यक्रम",
+    ja: "インド占星術コース",
+    ko: "베다 점성술 과정",
+  },
+  headerDescription: {
+    en: "A complete beginner path in English, हिन्दी, 日本語, or 한국어 — from Jyotish foundations to planets, signs, houses, timing, remedies, and chart interpretation.",
+    hi: "अंग्रेज़ी, हिन्दी, 日本語 या 한국어 में संपूर्ण शुरुआती पाठ्यक्रम—ज्योतिष की नींव से ग्रह, राशियाँ, भाव, समय, उपाय और कुंडली विश्लेषण तक।",
+    ja: "English・हिन्दी・日本語・한국어で学べる初心者向け総合コース。ジョーティシュの基礎から、惑星・星座・ハウス・時期判断・処方・ホロスコープ解釈まで学びます。",
+    ko: "English, हिन्दी, 日本語, 한국어로 배우는 초보자 종합 과정입니다. 조티시 기초부터 행성, 별자리, 궁, 시기 판단, 처방과 차트 해석까지 다룹니다.",
+  },
   progressLabel: { en: "Progress", hi: "प्रगति", ja: "進捗", ko: "진행률" },
   progress: {
     en: (n: number) => `Progress ${n}%`,
@@ -37,10 +55,10 @@ export const courseUi = {
     ko: "대시보드로",
   },
   completeBody: {
-    en: "You've finished all 22 chapters — from Grahas to Yogakaraka, natural benefics, and Drishti mastery. Clear your 112+ games, then read your chart with full dignity, function, and aspect wisdom.",
-    hi: "आपने सभी 22 अध्याय पूरे कर लिए — ग्रहों से योगकारक, प्राकृतिक शुभ/अशुभ और दृष्टि निपुणता तक। 112+ खेल पूरे करें, फिर पूर्ण गरिमा, कार्य और दृष्टि ज्ञान से चार्ट पढ़ें।",
-    ja: "22章完了 — グラハからヨーガカーラカ・天然吉星凶星・ドリシュティマスターまで。112以上のゲームをクリアし、品位・機能・アスペクトの知恵でチャートを読みましょう。",
-    ko: "22개 장을 모두 마쳤습니다 — 그라하부터 요가카라카, 천성 길흉성, 드리슈티 마스터까지. 112개 이상의 게임을 클리어한 뒤 품위, 기능, 각 지혜로 차트를 읽어 보세요.",
+    en: "You've completed the full learning path — from Jyotish foundations to planetary strength, timing, remedies, and chart interpretation. You are ready to apply the complete method to a chart.",
+    hi: "आपने ज्योतिष की नींव से ग्रहबल, समय, उपाय और कुंडली विश्लेषण तक पूरा अध्ययन-पथ पूरा कर लिया है। अब आप संपूर्ण विधि को कुंडली पर लागू करने के लिए तैयार हैं।",
+    ja: "ジョーティシュの基礎から、惑星の強さ・時期判断・処方・ホロスコープ解釈まで、すべての学習を修了しました。これで総合的な鑑定手順を実際のチャートに応用できます。",
+    ko: "조티시 기초부터 행성의 힘, 시기 판단, 처방과 차트 해석까지 전체 학습 과정을 마쳤습니다. 이제 완전한 해석법을 실제 차트에 적용할 수 있습니다.",
   },
   tapToFlip: {
     en: "Tap to flip",
@@ -128,6 +146,42 @@ export const courseUi = {
     ja: "もう一度挑戦してみましょう",
     ko: "다시 도전해 보세요",
   },
+  previousCard: {
+    en: "Previous card",
+    hi: "पिछला कार्ड",
+    ja: "前のカード",
+    ko: "이전 카드",
+  },
+  nextCard: {
+    en: "Next card",
+    hi: "अगला कार्ड",
+    ja: "次のカード",
+    ko: "다음 카드",
+  },
+  flipCard: {
+    en: "Flip card",
+    hi: "कार्ड पलटें",
+    ja: "カードを裏返す",
+    ko: "카드 뒤집기",
+  },
+  moveUp: {
+    en: "Move up",
+    hi: "ऊपर ले जाएँ",
+    ja: "上へ移動",
+    ko: "위로 이동",
+  },
+  moveDown: {
+    en: "Move down",
+    hi: "नीचे ले जाएँ",
+    ja: "下へ移動",
+    ko: "아래로 이동",
+  },
+  progressSaveFailed: {
+    en: "Your progress could not be saved. Please try again.",
+    hi: "आपकी प्रगति सहेजी नहीं जा सकी। कृपया फिर प्रयास करें।",
+    ja: "進捗を保存できませんでした。もう一度お試しください。",
+    ko: "진행 상황을 저장하지 못했습니다. 다시 시도해 주세요.",
+  },
   language: { en: "Language", hi: "भाषा", ja: "言語", ko: "언어" },
 } as const;
 
@@ -139,7 +193,7 @@ export function uiString(
   ...args: number[]
 ): string {
   const entry = courseUi[key];
-  const val = entry[lang] ?? entry.en;
+  const val = entry[lang];
   if (typeof val === "function") {
     return (val as (a: number, b?: number) => string)(args[0], args[1]);
   }

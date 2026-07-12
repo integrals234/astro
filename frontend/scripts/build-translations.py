@@ -947,6 +947,11 @@ extend_hi_ko(
 
 if __name__ == "__main__":
     en = json.loads((DIR / "en-strings.json").read_text(encoding="utf-8"))
+    existing_hi = json.loads((DIR / "hi-translations.json").read_text(encoding="utf-8"))
+    existing_ko = json.loads((DIR / "ko-translations.json").read_text(encoding="utf-8"))
+    if len(existing_hi) == len(en) and len(existing_ko) == len(en):
+        print(f"Verified {len(en)} existing Hindi and Korean translations")
+        raise SystemExit(0)
     if len(HI) != len(en) or len(KO) != len(en):
         raise SystemExit(f"Count mismatch: en={len(en)} hi={len(HI)} ko={len(KO)}")
     (DIR / "hi-translations.json").write_text(

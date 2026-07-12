@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
-import { mainNavItems } from "@/lib/navigation";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { getMainNavItems } from "@/lib/navigation";
+import { useLanguage } from "@/components/i18n/LanguageProvider";
+import { getSharedCopy } from "@/lib/i18n/shared";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -15,6 +17,9 @@ function isActive(pathname: string, href: string) {
 
 export default function TopNav() {
   const pathname = usePathname();
+  const { language } = useLanguage();
+  const copy = getSharedCopy(language);
+  const mainNavItems = getMainNavItems(language);
 
   return (
     <nav className="desktop-topnav min-w-0 flex-1 items-center justify-end gap-0.5 overflow-x-auto">
@@ -43,15 +48,25 @@ export default function TopNav() {
       })}
 
       <div className="ml-2 pl-2 border-l border-shell-border flex items-center">
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{
-            elements: {
-              avatarBox: "h-8 w-8 ring-2 ring-shell-accent/20",
-              userButtonPopoverCard: "border border-shell-border shadow-xl",
-            },
-          }}
-        />
+        <SignedIn>
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8 ring-2 ring-shell-accent/20",
+                userButtonPopoverCard: "border border-shell-border shadow-xl",
+              },
+            }}
+          />
+        </SignedIn>
+        <SignedOut>
+          <Link
+            href="/sign-in"
+            className="rounded-lg px-2.5 py-2 text-xs font-medium text-shell-accent hover:bg-shell-accent-soft"
+          >
+            {copy.chrome.signIn}
+          </Link>
+        </SignedOut>
       </div>
     </nav>
   );

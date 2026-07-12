@@ -1,4 +1,6 @@
 import { writeFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { VEDIC_COURSE_CHAPTERS } from "../src/lib/vedic-course/content.ts";
 
 const en = new Set();
@@ -12,5 +14,6 @@ function walk(v) {
 }
 VEDIC_COURSE_CHAPTERS.forEach((ch) => walk(ch));
 const sorted = [...en].sort();
-writeFileSync("scripts/en-strings.json", JSON.stringify(sorted, null, 2));
+const scriptsDir = dirname(fileURLToPath(import.meta.url));
+writeFileSync(join(scriptsDir, "en-strings.json"), JSON.stringify(sorted, null, 2));
 console.log(sorted.length);

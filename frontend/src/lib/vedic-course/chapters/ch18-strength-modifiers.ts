@@ -122,7 +122,7 @@ export const chapter18StrengthModifiers: CourseChapter = {
         { id: "sign", label: { en: "1. Sign dignity (exalted/own/debilitated)", ja: "1. 星座品位（高揚/支配/弱体）" }, icon: "mountain" },
         { id: "mod", label: { en: "2. Modifiers (combust/retrograde/vargottama)", ja: "2. 修飾因子（燃焼/逆行/ヴァルゴッタマ）" }, icon: "orbit" },
         { id: "asp", label: { en: "3. Aspects received (benefic/malefic)", ja: "3. 受けるアスペクト（吉/凶）" }, icon: "eye" },
-        { id: "func", label: { en: "4. Functional benefic/malefic for Lagna", ja: "4. ラグナに対する功能的吉/凶" }, icon: "compass" },
+        { id: "func", label: { en: "4. Functional benefic/malefic for Lagna", ja: "4. ラグナに対する機能的吉/凶" }, icon: "compass" },
       ],
     },
     {

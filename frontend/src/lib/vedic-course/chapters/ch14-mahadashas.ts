@@ -144,8 +144,8 @@ export const chapter14Mahadashas: CourseChapter = {
       },
       bullets: [
         { en: "Natal promises stay valid for life — dashas activate portions of them", ja: "出生の約束は一生有効 — ダシャーがその一部を活性化" },
-        { en: "Functional benefics/malefics matter hugely (e.g. Jupiter malefic for Libra Lagna)", ja: "功能的吉星/凶星が大きく影響（例：天秤座ラグナで木星は凶星）" },
-        { en: "A strong functional benefic dasha + benefic antardasha → highly favourable", ja: "強い功能的吉星ダシャー＋吉星アンタルダシャー→非常に吉" },
+        { en: "Functional benefics/malefics matter hugely (e.g. Jupiter malefic for Libra Lagna)", ja: "機能的吉星/凶星が大きく影響（例：天秤座ラグナで木星は凶星）" },
+        { en: "A strong functional benefic dasha + benefic antardasha → highly favourable", ja: "強い機能的吉星ダシャー＋吉星アンタルダシャー→非常に吉" },
       ],
     },
     {

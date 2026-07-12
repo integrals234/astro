@@ -10,7 +10,6 @@ import {
   Orbit,
   Star,
   Eye,
-  Languages,
   Sparkles,
   Circle,
   Home,
@@ -45,7 +44,6 @@ import {
   type RashiEntry,
   uiText,
   useEducationLang,
-  educationUi,
 } from "@/lib/education";
 
 const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
@@ -151,7 +149,6 @@ function TopicIndexInner({
 
     const media = window.matchMedia("(min-width: 1024px)");
     if (!media.matches) {
-      setPinned(false);
       return;
     }
 
@@ -196,7 +193,7 @@ function TopicIndexInner({
       window.addEventListener("scroll", onScroll, { passive: true });
     }
     window.addEventListener("resize", remeasure, { passive: true });
-    remeasure();
+    rafId = requestAnimationFrame(remeasure);
 
     return () => {
       cancelAnimationFrame(rafId);
@@ -294,7 +291,6 @@ function ArticleSectionPanel({
   lang,
   onNavigate,
   visualTab,
-  visualLabel,
   singleArticleMode = false,
   topicOrder = "visual-first",
   tabOrder,
@@ -304,7 +300,6 @@ function ArticleSectionPanel({
   lang: EducationLang;
   onNavigate: (target: EducationNavigateTarget) => void;
   visualTab?: { id: string; label: BilingualText; content: React.ReactNode };
-  visualLabel?: BilingualText;
   /** When true, only the selected topic is shown (one page at a time). */
   singleArticleMode?: boolean;
   /** Controls whether the visual guide tab precedes or follows wisdom articles. */
@@ -591,12 +586,12 @@ function PublicHeaderActions({
 }
 
 const rashiSectionLabels: Record<keyof RashiEntry["sections"], BilingualText> = {
-  nature: { en: "Nature", ja: "性質" },
-  career: { en: "Career", ja: "キャリア" },
-  relationships: { en: "Relationships", ja: "人間関係" },
-  romance: { en: "Romance", ja: "恋愛" },
-  health: { en: "Health", ja: "健康" },
-  decans: { en: "Decans", ja: "デカン" },
+  nature: { en: "Nature", hi: "प्रकृति", ja: "性質", ko: "자연",},
+  career: { en: "Career", hi: "आजीविका", ja: "キャリア", ko: "직업",},
+  relationships: { en: "Relationships", hi: "रिश्ते", ja: "人間関係", ko: "관계",},
+  romance: { en: "Romance", hi: "रोमांस", ja: "恋愛", ko: "로맨스",},
+  health: { en: "Health", hi: "स्वास्थ्य", ja: "健康", ko: "건강",},
+  decans: { en: "Decans", hi: "डेक्कन", ja: "デカン", ko: "데칸",},
 };
 
 function RashisSection({ lang }: { lang: EducationLang }) {
@@ -804,11 +799,17 @@ function PlanetsSection({
       articleId={articleId}
       lang={lang}
       onNavigate={onNavigate}
+      tabOrder={[
+        "navagraha-guide",
+        "planetary-karakas",
+        "planetary-strengths",
+        "natural-benefics-malefics",
+        "functional-benefics-malefics",
+      ]}
       visualTab={{
         id: "navagraha-guide",
         label: {
-          en: "Nine Grahas (Visual Guide)",
-          ja: "九惑星（ビジュアルガイド）",
+          en: "Nine Grahas (Visual Guide)", hi: "नौ ग्रह (विजुअल गाइड)", ja: "九惑星（ビジュアルガイド）", ko: "나인 그라하스(비주얼 가이드)",
         },
         content: <PlanetsVisualGuide lang={lang} />,
       }}
@@ -916,8 +917,7 @@ function NakshatrasSection({
       visualTab={{
         id: "nakshatra-guide",
         label: {
-          en: "27 Lunar Mansions (Visual Guide)",
-          ja: "27ナクシャトラ（ビジュアルガイド）",
+          en: "27 Lunar Mansions (Visual Guide)", hi: "27 चंद्र भवन (विजुअल गाइड)", ja: "27ナクシャトラ（ビジュアルガイド）", ko: "27 루나 맨션(비주얼 가이드)",
         },
         content: <NakshatrasVisualGuide lang={lang} />,
       }}
@@ -1050,8 +1050,7 @@ function AspectsSection({
       visualTab={{
         id: "aspects-guide",
         label: {
-          en: "Drishti Guide (Visual)",
-          ja: "ドリシュティガイド",
+          en: "Drishti Guide (Visual)", hi: "दृष्टि गाइड (दृश्य)", ja: "ドリシュティガイド", ko: "드리시티 가이드(시각적)",
         },
         content: <AspectsVisualGuide lang={lang} />,
       }}
@@ -1140,13 +1139,7 @@ function EducationHubInner({
   const [articleId, setArticleId] = useState<string | null>(
     defaultArticleForSection(initialSection ?? "introduction")
   );
-  const { lang, toggleLang } = useEducationLang();
-
-  useEffect(() => {
-    if (!initialSection) return;
-    setSection(initialSection);
-    setArticleId(defaultArticleForSection(initialSection));
-  }, [initialSection]);
+  const { lang } = useEducationLang();
 
   const navigateTo = (target: EducationNavigateTarget) => {
     setSection(target.section);
@@ -1166,18 +1159,10 @@ function EducationHubInner({
 
       <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
         {/* Hero strip */}
-        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 sm:mb-8">
           <h1 className="font-serif text-2xl tracking-tight text-shell-warm md:text-3xl">
             {uiText("heroTitle", lang)}
           </h1>
-          <button
-            type="button"
-            onClick={toggleLang}
-            className="inline-flex items-center gap-2 self-start rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2 text-xs font-medium text-shell-warm transition-colors hover:border-shell-accent/40 sm:self-auto"
-          >
-            <Languages size={14} className="text-shell-accent" />
-            {lang === "en" ? uiText("switchToJa", lang) : uiText("switchToEn", lang)}
-          </button>
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
@@ -1231,11 +1216,11 @@ export default function EducationalHub({
     <>
       <SignedIn>
         <AppShell>
-          <EducationHubInner embedded initialSection={initialSection} />
+          <EducationHubInner key={initialSection ?? "introduction"} embedded initialSection={initialSection} />
         </AppShell>
       </SignedIn>
       <SignedOut>
-        <EducationHubInner initialSection={initialSection} />
+        <EducationHubInner key={initialSection ?? "introduction"} initialSection={initialSection} />
       </SignedOut>
     </>
   );

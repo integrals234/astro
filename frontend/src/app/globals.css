@@ -754,13 +754,14 @@ summary {
 
 /* Mobile drawer polish */
 .mobile-drawer-panel {
+  background: var(--color-washi);
   box-shadow:
-    8px 0 32px rgba(47, 47, 47, 0.1),
-    2px 0 8px rgba(47, 47, 47, 0.04);
-  will-change: transform;
+    8px 0 32px rgba(47, 47, 47, 0.12),
+    2px 0 8px rgba(47, 47, 47, 0.05);
 }
 
 .dark .mobile-drawer-panel {
+  background: var(--color-washi);
   box-shadow:
     8px 0 36px rgba(0, 0, 0, 0.55),
     2px 0 10px rgba(0, 0, 0, 0.35);

@@ -38,6 +38,7 @@ export const educationImages = {
   jyotishExplainedStars: newEduAsset("f.jpeg"),
   planetaryAntidotes: newEduAsset("g.jpeg"),
   planetaryStrengthChart: newEduAsset("h.jpeg"),
+  signRulership: newEduAsset("a.jpeg"),
 } as const;
 
 export function eduImage(

@@ -25,6 +25,7 @@ import { useWelcomeLang } from "@/lib/home/use-welcome-lang";
 import { uiText } from "@/lib/education/i18n/ui";
 
 const HOME_BANNER_SRC = "/assets/new/banner.jpeg";
+const HOME_INTRO_IMAGE_SRC = "/assets/new/e.jpeg";
 
 const startingPointIcons: Record<
   WelcomeStartingPointId,
@@ -143,13 +144,22 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
             </h1>
 
             <div className="mt-8 max-w-3xl space-y-5">
-              {welcomeContent.intro.map((paragraph) => (
-                <p
-                  key={paragraph.en}
-                  className="font-body text-sm leading-[1.9] text-text-muted md:text-base"
-                >
-                  {welcomeText(paragraph, lang)}
-                </p>
+              {welcomeContent.intro.map((paragraph, index) => (
+                <div key={paragraph.en} className="space-y-5">
+                  <p className="font-body text-sm leading-[1.9] text-text-muted md:text-base">
+                    {welcomeText(paragraph, lang)}
+                  </p>
+                  {index === 0 && (
+                    <Image
+                      src={HOME_INTRO_IMAGE_SRC}
+                      alt={welcomeText(welcomeContent.introImageAlt, lang)}
+                      width={1200}
+                      height={900}
+                      className="block h-auto w-full"
+                      sizes="(max-width: 768px) 100vw, 48rem"
+                    />
+                  )}
+                </div>
               ))}
             </div>
           </motion.section>

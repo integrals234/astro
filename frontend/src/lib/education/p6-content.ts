@@ -116,6 +116,9 @@ export const p6Articles: WisdomArticle[] = [
         text: {
           en: "The Moon's position also determines how much of that Mahadasha remains to be experienced. For example, a person may begin life nine years into a Saturn Mahadasha. Since Saturn's Mahadasha lasts a total of nineteen years, there would be ten years remaining before the next Mahadasha begins. In this case, the native would enter a Mercury Mahadasha at age ten.", hi: "चंद्रमा की स्थिति यह भी निर्धारित करती है कि उस महादशा का कितना भाग भुगतना बाकी है। उदाहरण के लिए, एक व्यक्ति शनि की महादशा में नौ साल का जीवन शुरू कर सकता है। चूँकि शनि की महादशा कुल उन्नीस वर्षों तक चलती है, इसलिए अगली महादशा शुरू होने में दस वर्ष शेष रहेंगे। इस स्थिति में, जातक दस वर्ष की आयु में बुध की महादशा में प्रवेश करेगा।", ja: "月の位置は、そのマハダシャーをどれだけ経験できるかによっても決まります。たとえば、人は土星マハダシャーになってから 9 年後に人生を始めるかもしれません。土星のマハダシャーは合計 19 年間続くため、次のマハダシャーが始まるまでには 10 年が残っていることになります。この場合、ネイティブは10歳でマーキュリー・マハダシャーに入るでしょう。", ko: "달의 위치는 또한 Mahadasha가 얼마나 많이 경험되어야 하는지를 결정합니다. 예를 들어, 어떤 사람이 토성 마하다샤(Maadasha)에서 9년 동안 삶을 시작할 수 있습니다. 토성의 마하다샤는 총 19년 동안 지속되므로 다음 마하다샤가 시작되기까지는 10년이 남게 됩니다. 이 경우 원주민은 10세가 되면 Mercury Mahadasha에 들어갈 것입니다.",}
       },
+      eduImage(educationImages.mahadashaSequence, {
+        en: "The Mahadasha sequence of planetary periods", hi: "ग्रह कालों का महादशा क्रम", ja: "惑星時代のマハダシャー シーケンス", ko: "행성 시대의 마하다샤 시퀀스",
+      }),
       {
         type: "paragraph",
         text: {
@@ -278,11 +281,6 @@ export const p6Articles: WisdomArticle[] = [
         type: "paragraph",
         text: {
           en: "Highly skilled astrologers can often work backwards from important life events to determine a more accurate birth-time. This process is known as rectification, and Mahadasha analysis plays a major role in achieving it.", hi: "अत्यधिक कुशल ज्योतिषी अक्सर अधिक सटीक जन्म-समय निर्धारित करने के लिए महत्वपूर्ण जीवन की घटनाओं से पीछे की ओर काम कर सकते हैं। इस प्रक्रिया को सुधार के रूप में जाना जाता है, और महादशा विश्लेषण इसे प्राप्त करने में प्रमुख भूमिका निभाता है।", ja: "高度なスキルを持つ占星術師は、人生の重要な出来事から逆算して、より正確な出生時刻を決定することができます。このプロセスは修正として知られており、マハダシャー分析はこれを達成する上で重要な役割を果たします。", ko: "고도로 숙련된 점성가들은 보다 정확한 출생 시간을 결정하기 위해 중요한 인생 사건에서 거꾸로 작업하는 경우가 많습니다. 이 프로세스를 정류라고 하며 Mahadasha 분석은 이를 달성하는 데 중요한 역할을 합니다.",}
-      },
-      {
-        type: "paragraph",
-        text: {
-          en: "Wow!", hi: "बहुत खूब!", ja: "おお！", ko: "우와!",}
       }
     ]
   },
@@ -374,6 +372,12 @@ export const p6Articles: WisdomArticle[] = [
         text: {
           en: "In India, people are particularly aware of the challenges that may arise when Saturn transits the 12th, 1st, and 2nd houses from the natal Moon. This seven-and-a-half-year period is known as Sade Sati.", hi: "भारत में, लोग विशेष रूप से उन चुनौतियों के बारे में जानते हैं जो तब उत्पन्न हो सकती हैं जब शनि जन्म के चंद्रमा से 12वें, पहले और दूसरे घर में गोचर करता है। इस साढ़े सात साल की अवधि को साढ़े साती के नाम से जाना जाता है।", ja: "インドでは、土星が出生の月から12室、1室、2室を通過するときに生じる可能性のある課題を人々が特に認識しています。この 7 年半の期間はサデ サティとして知られています。", ko: "인도 사람들은 토성이 산후 달에서 12하우스, 1하우스, 2하우스를 통과할 때 발생할 수 있는 어려움을 특히 잘 알고 있습니다. 이 7년 반의 기간을 사데 사티(Sade Sati)라고 합니다.",}
       },
+      eduImage(educationImages.sadeSati, {
+        en: "Shani Dev — Saturn, associated with Sade Sati",
+        hi: "शनि देव — साढ़े साती से जुड़े शनि",
+        ja: "シャニ・デーヴ — サデ・サティに関連する土星",
+        ko: "샤니 데브 — 사데 사티와 관련된 토성",
+      }),
       {
         type: "paragraph",
         text: {

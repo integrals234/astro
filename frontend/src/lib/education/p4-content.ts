@@ -114,6 +114,12 @@ export const p4Articles: WisdomArticle[] = [
       { type: "paragraph", text: { en: `• Fallen/Enemy Sign: 0%`, hi: `• पतित/शत्रु चिन्ह: 0%`, ja: `• フォールン/敵のサイン: 0%`, ko: `• 쓰러짐/적 징후: 0%`,} },
       { type: "paragraph", text: { en: `These figures should not be interpreted too literally, but they provide a useful illustration of how planetary condition influences its ability to produce positive results.`, hi: `इन आंकड़ों की बहुत शाब्दिक व्याख्या नहीं की जानी चाहिए, लेकिन वे इस बात का एक उपयोगी उदाहरण प्रदान करते हैं कि ग्रहों की स्थिति सकारात्मक परिणाम देने की क्षमता को कैसे प्रभावित करती है।`, ja: `これらの数字はあまり文字通りに解釈すべきではありませんが、惑星の状態がポジティブな結果を生み出す能力にどのような影響を与えるかを示す有益な図を提供します。`, ko: `이 수치를 너무 문자 그대로 해석해서는 안 되지만, 행성의 상태가 긍정적인 결과를 생성하는 능력에 어떻게 영향을 미치는지에 대한 유용한 예시를 제공합니다.`,} },
       { type: "paragraph", text: { en: `The chart below summarises these relationships.`, hi: `नीचे दिया गया चार्ट इन संबंधों का सारांश प्रस्तुत करता है।`, ja: `以下の図は、これらの関係をまとめたものです。`, ko: `아래 차트에는 이러한 관계가 요약되어 있습니다.`,} },
+      eduImage(educationImages.planetaryStrengthChart, {
+        en: "Chart summarising planetary strength by sign placement",
+        hi: "राशि स्थिति के अनुसार ग्रह शक्ति का सारांश चार्ट",
+        ja: "星座の配置による惑星の強さをまとめた表",
+        ko: "별자리 배치에 따른 행성 강도를 요약한 표",
+      }),
       { type: "paragraph", text: { en: `Please remember that the categories of Great Friend and Great Enemy depend upon temporary planetary relationships within a particular chart and are therefore not fixed.`, hi: `कृपया याद रखें कि महान मित्र और महान शत्रु की श्रेणियां एक विशेष चार्ट के भीतर अस्थायी ग्रह संबंधों पर निर्भर करती हैं और इसलिए तय नहीं होती हैं।`, ja: `偉大な友人と偉大な敵のカテゴリーは、特定のチャート内の一時的な惑星の関係に依存するため、固定されていないことに注意してください。`, ko: `큰 친구와 큰 적의 범주는 특정 차트 내의 일시적인 행성 관계에 따라 달라지므로 고정되지 않는다는 점을 기억하십시오.`,} },
       { type: "heading", level: 3, text: { en: `Planetary Strengths by Sign Placement – Nine Categories or States in Jyotish`, hi: `साइन प्लेसमेंट द्वारा ग्रहों की ताकत - ज्योतिष में नौ श्रेणियां या राज्य`, ja: `星座の配置による惑星の強さ – ジョーティッシュの 9 つのカテゴリーまたは州`, ko: `라시 배치에 따른 행성의 강점 – Jyotish의 9개 범주 또는 주`,} },
       { type: "paragraph", text: { en: `A table showing the relationship between sign placement (Exalted, Own Sign, etc.) and resulting planetary strength in Jyotish Astrology.`, hi: `ज्योतिष में साइन प्लेसमेंट (उच्च, स्वराशि, आदि) और परिणामी ग्रह शक्ति के बीच संबंध दिखाने वाली एक तालिका।`, ja: `ジョーティッシュにおけるサインの配置 (Exalted、Own Sign など) とその結果として生じる惑星の強さの関係を示す表。`, ko: `Jyotish Astrology에서 별자리 배치(Exalted, Own Sign 등)와 그에 따른 행성 강도 사이의 관계를 보여주는 표입니다.`,} },

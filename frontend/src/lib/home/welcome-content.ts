@@ -22,6 +22,12 @@ export const welcomeContent = {
   bannerAlt: {
     en: "Jyotish Life", hi: "ज्योतिष जीवन", ja: "ジョーティッシュ・ライフ", ko: "조티쉬 라이프",
   },
+  introImageAlt: {
+    en: "Vedic sage teaching students from a scroll in a forest hermitage",
+    hi: "वन आश्रम में स्क्रॉल से शिष्यों को पढ़ाते वैदिक ऋषि",
+    ja: "森の庵で巻物から弟子たちに教えるヴェーダの賢者",
+    ko: "숲 속 암자에서 두루마리로 제자들을 가르치는 베다 현자",
+  },
   title: {
     en: "Welcome to Jyotish Life", hi: "ज्योतिष लाइफ में आपका स्वागत है", ja: "ジョーティッシュ・ライフへようこそ", ko: "Jyotish Life에 오신 것을 환영합니다",
   },

@@ -32,6 +32,12 @@ export const educationImages = {
   mahadashaPeriodYears: newEduAsset(
     "Mahadasha period - a period of time measured in years.jpeg",
   ),
+  mahadashaSequence: newEduAsset("c.jpeg"),
+  sadeSati: newEduAsset("b.jpeg"),
+  jyotishExplained: newEduAsset("d.jpeg"),
+  jyotishExplainedStars: newEduAsset("f.jpeg"),
+  planetaryAntidotes: newEduAsset("g.jpeg"),
+  planetaryStrengthChart: newEduAsset("h.jpeg"),
 } as const;
 
 export function eduImage(

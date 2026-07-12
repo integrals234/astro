@@ -65,19 +65,19 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
           return (
             <div
               key={id}
-              className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 ${
+              className={`washi-card flex items-center gap-2 px-3 py-2.5 ${
                 showCorrect
-                  ? "border-emerald-500/40 bg-emerald-500/10"
+                  ? "border-moss bg-[rgba(124,139,111,0.12)]"
                   : showWrong
-                    ? "border-red-400/30 bg-red-500/5"
-                    : "border-shell-border bg-shell-bg/50"
+                    ? "border-caution bg-[rgba(199,123,78,0.1)]"
+                    : ""
               }`}
             >
-              <span className="w-6 text-center text-xs font-bold text-shell-muted tabular-nums">
+              <span className="w-6 text-center font-body text-xs font-medium text-text-muted tabular-nums">
                 {idx + 1}
               </span>
-              <Icon size={16} className="text-shell-accent shrink-0" />
-              <span className="flex-1 text-sm text-shell-warm">
+              <Icon size={16} className="text-terracotta shrink-0" />
+              <span className="flex-1 text-sm text-ink">
                 <FormattedText text={t(item.label, lang)} />
               </span>
               <div className="flex gap-1">
@@ -86,7 +86,7 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
                   onClick={() => move(idx, -1)}
                   aria-label={`${uiString("moveUp", lang)}: ${t(item.label, lang)}`}
                   disabled={idx === 0 || (checked && isCorrect)}
-                  className="rounded-lg border border-shell-border p-1.5 text-shell-muted hover:text-shell-warm disabled:opacity-30"
+                  className="rounded-md border border-border p-1.5 text-text-muted hover:text-ink disabled:opacity-30"
                 >
                   <ArrowUp size={14} />
                 </button>
@@ -95,12 +95,12 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
                   onClick={() => move(idx, 1)}
                   aria-label={`${uiString("moveDown", lang)}: ${t(item.label, lang)}`}
                   disabled={idx === order.length - 1 || (checked && isCorrect)}
-                  className="rounded-lg border border-shell-border p-1.5 text-shell-muted hover:text-shell-warm disabled:opacity-30"
+                  className="rounded-md border border-border p-1.5 text-text-muted hover:text-ink disabled:opacity-30"
                 >
                   <ArrowDown size={14} />
                 </button>
               </div>
-              {showCorrect && <CheckCircle2 size={16} className="text-emerald-300" />}
+              {showCorrect && <CheckCircle2 size={16} className="text-moss" />}
             </div>
           );
         })}
@@ -111,7 +111,7 @@ export default function OrderGameView({ game, lang, onComplete }: OrderGameViewP
           <button
             type="button"
             onClick={handleCheck}
-            className="rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-6 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent hover:bg-shell-accent/25"
+            className="washi-btn-primary px-6 py-3 text-xs uppercase tracking-wider"
           >
             {uiString("checkOrder", lang)}
           </button>

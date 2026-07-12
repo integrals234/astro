@@ -33,83 +33,58 @@ export default function InstagramFollowBanner({
   return (
     <section
       aria-labelledby="instagram-follow-heading"
-      className="relative overflow-hidden rounded-3xl border-2 border-transparent p-[2px] shadow-[0_0_48px_-10px_rgba(225,48,108,0.6)]"
-      style={{
-        background:
-          "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
-      }}
+      className="washi-card overflow-hidden px-6 py-8 md:px-10 md:py-11"
     >
-      <div className="relative overflow-hidden rounded-[1.35rem] bg-shell-bg/95 px-6 py-8 md:px-10 md:py-11 backdrop-blur-sm">
-        <div
-          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-35 blur-3xl"
-          style={{
-            background: "radial-gradient(circle, #dc2743 0%, transparent 70%)",
-          }}
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -bottom-24 -left-16 h-52 w-52 rounded-full opacity-25 blur-3xl"
-          style={{
-            background: "radial-gradient(circle, #bc1888 0%, transparent 70%)",
-          }}
-          aria-hidden
-        />
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 flex-1 space-y-4">
+          <p className="inline-flex items-center gap-2 border border-border px-3 py-1 text-[10px] font-body font-medium uppercase tracking-[0.22em] text-terracotta">
+            <InstagramIcon className="h-3.5 w-3.5" />
+            {copy.badge}
+          </p>
 
-        <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="min-w-0 flex-1 space-y-4">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#dc2743]/35 bg-[#dc2743]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f5a8c4]">
-              <InstagramIcon className="h-3.5 w-3.5" />
-              {copy.badge}
-            </p>
-
-            <div className="space-y-2">
-              <h2
-                id="instagram-follow-heading"
-                className="font-serif text-2xl md:text-3xl lg:text-4xl text-shell-warm leading-tight"
-              >
-                {copy.title}
-              </h2>
-              <p className="text-lg md:text-xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888]">
-                {copy.handle}
-              </p>
-            </div>
-
-            <p className="max-w-xl text-sm md:text-base text-shell-muted leading-relaxed">
-              {copy.body}
-            </p>
-
-            <ul className="flex flex-wrap gap-2 pt-1">
-              {copy.perks.map((perk) => (
-                <li
-                  key={perk}
-                  className="rounded-full border border-shell-border/80 bg-shell-elevated/60 px-3 py-1 text-xs text-shell-warm/90"
-                >
-                  {perk}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="shrink-0 md:pl-4">
-            <a
-              href={INSTAGRAM_PROFILE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex w-full md:w-auto items-center justify-center gap-2.5 rounded-2xl px-8 py-4 text-base font-semibold text-white shadow-[0_8px_32px_-6px_rgba(220,39,67,0.65)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_-4px_rgba(220,39,67,0.75)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#dc2743] animate-pulse hover:animate-none"
-              style={{
-                background:
-                  "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
-              }}
+          <div className="space-y-2">
+            <h2
+              id="instagram-follow-heading"
+              className="font-header text-2xl md:text-3xl lg:text-4xl text-ink leading-tight"
             >
-              <InstagramIcon className="h-5 w-5 shrink-0" />
-              {copy.cta}
-              <ArrowUpRight
-                size={18}
-                aria-hidden
-                className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </a>
+              {copy.title}
+            </h2>
+            <p className="font-body text-lg md:text-xl font-medium tracking-tight text-terracotta">
+              {copy.handle}
+            </p>
           </div>
+
+          <p className="max-w-xl text-sm md:text-base text-text-muted leading-relaxed">
+            {copy.body}
+          </p>
+
+          <ul className="flex flex-wrap gap-2 pt-1">
+            {copy.perks.map((perk) => (
+              <li
+                key={perk}
+                className="rounded border border-border bg-washi px-3 py-1 text-xs text-text"
+              >
+                {perk}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="shrink-0 md:pl-4">
+          <a
+            href={INSTAGRAM_PROFILE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="washi-btn-secondary group inline-flex w-full items-center justify-center gap-2.5 px-8 py-4 text-base transition-colors hover:bg-terracotta/10 md:w-auto"
+          >
+            <InstagramIcon className="h-5 w-5 shrink-0" />
+            {copy.cta}
+            <ArrowUpRight
+              size={18}
+              aria-hidden
+              className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </a>
         </div>
       </div>
     </section>

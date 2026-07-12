@@ -46,7 +46,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
       <button
         type="button"
         onClick={() => onOpenChange(true)}
-        className="mobile-only items-center justify-center h-10 w-10 rounded-xl border border-shell-border bg-shell-elevated/70 text-shell-warm hover:border-shell-accent/30 hover:text-shell-accent transition-colors"
+        className="mobile-only h-10 w-10 items-center justify-center rounded-md border border-border bg-washi-elevated text-ink transition-colors hover:text-terracotta"
         aria-label={copy.chrome.openNavigation}
       >
         <Menu size={18} />
@@ -62,7 +62,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="mobile-drawer fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+              className="mobile-drawer fixed inset-0 z-40 bg-ink/20 backdrop-blur-sm"
               onClick={() => onOpenChange(false)}
             />
 
@@ -71,21 +71,21 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="mobile-drawer fixed inset-y-0 left-0 z-50 w-[min(88vw,20rem)] flex flex-col border-r border-shell-border bg-shell-sidebar shadow-2xl"
+              className="mobile-drawer fixed inset-y-0 left-0 z-50 flex w-[min(88vw,20rem)] flex-col border-r border-border bg-washi shadow-[0_1px_3px_rgba(47,47,47,0.06)]"
             >
-              <div className="flex items-center justify-between px-5 py-5 border-b border-shell-border">
+              <div className="flex items-center justify-between border-b border-border px-5 py-5">
                 <SiteBrand size="sm" />
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-shell-border text-shell-muted hover:text-shell-warm transition-colors"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:text-ink"
                   aria-label={copy.chrome.closeMenu}
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+              <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                 {mainNavItems.map((item) => {
                   const active = isActive(pathname, item.href);
                   const Icon = item.icon;
@@ -94,38 +94,42 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all ${
+                      className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-body transition-colors ${
                         active
-                          ? "bg-shell-accent-soft text-shell-warm"
-                          : "text-shell-muted hover:bg-white/[0.03] hover:text-shell-warm"
+                          ? "border-l-2 border-terracotta text-ink"
+                          : "text-text-muted hover:text-text"
                       }`}
                     >
-                      <Icon
-                        size={18}
-                        className={active ? "text-shell-accent" : "text-shell-muted"}
-                      />
+                      <Icon size={18} />
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   );
                 })}
               </nav>
 
-              <div className="border-t border-shell-border px-4 py-4">
+              <div className="border-t border-border px-4 py-4">
                 <SignedIn>
-                  <div className="flex items-center gap-3 rounded-2xl border border-shell-border bg-shell-elevated/60 px-3 py-3">
-                    <UserButton afterSignOutUrl="/" />
+                  <div className="flex items-center gap-3 rounded-lg border border-border bg-washi-elevated px-3 py-3">
+                    <UserButton
+                      afterSignOutUrl="/"
+                      appearance={{
+                        elements: {
+                          avatarBox: "h-8 w-8 bg-terracotta text-washi",
+                        },
+                      }}
+                    />
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-shell-muted">
+                      <p className="text-[10px] font-body uppercase tracking-widest text-text-muted">
                         {copy.chrome.account}
                       </p>
-                      <p className="text-xs text-shell-warm/80">{copy.chrome.signedIn}</p>
+                      <p className="text-xs text-text">{copy.chrome.signedIn}</p>
                     </div>
                   </div>
                 </SignedIn>
                 <SignedOut>
                   <Link
                     href="/sign-in"
-                    className="flex justify-center rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-shell-accent"
+                    className="washi-btn-primary flex justify-center px-4 py-2.5 text-xs uppercase tracking-wider"
                   >
                     {copy.chrome.signIn}
                   </Link>

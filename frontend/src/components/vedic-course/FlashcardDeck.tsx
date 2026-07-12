@@ -71,27 +71,27 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
             style={{ transformStyle: "preserve-3d" }}
           >
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl border border-shell-accent/30 bg-shell-accent-soft/40 p-8 text-center backface-hidden"
+              className="washi-card absolute inset-0 flex flex-col items-center justify-center p-8 text-center backface-hidden"
               style={{ backfaceVisibility: "hidden" }}
             >
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-shell-accent/25 bg-shell-elevated/80">
+              <div className="washi-icon-chip mb-4 h-14 w-14">
                 {createElement(getCourseIcon(card?.icon), {
                   size: 28,
-                  className: "text-shell-accent",
+                  className: "text-moss",
                 })}
               </div>
-              <p className="font-serif text-xl text-shell-warm">
+              <p className="font-header text-xl text-ink">
                 <FormattedText text={t(card.front, lang)} />
               </p>
-              <p className="mt-4 text-[10px] uppercase tracking-[0.2em] text-shell-muted">
+              <p className="mt-4 font-body text-[10px] uppercase tracking-[0.2em] text-text-muted">
                 {uiString("tapToFlip", lang)}
               </p>
             </div>
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center"
+              className="absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-moss bg-[rgba(124,139,111,0.12)] p-8 text-center"
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             >
-              <p className="text-sm md:text-base text-shell-warm leading-relaxed">
+              <p className="text-sm md:text-base text-text leading-relaxed">
                 <FormattedText text={t(card.back, lang)} />
               </p>
             </div>
@@ -104,11 +104,11 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
             onClick={goPrev}
             aria-label={uiString("previousCard", lang)}
             disabled={index === 0}
-            className="rounded-xl border border-shell-border p-2.5 text-shell-muted hover:text-shell-warm disabled:opacity-40"
+            className="rounded-md border border-border p-2.5 text-text-muted hover:text-ink disabled:opacity-40"
           >
             <ChevronLeft size={18} />
           </button>
-          <span className="text-xs font-bold uppercase tracking-widest text-shell-muted tabular-nums">
+          <span className="font-body text-xs font-medium uppercase tracking-widest text-text-muted tabular-nums">
             {index + 1} / {game.cards.length}
           </span>
           <button
@@ -116,7 +116,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
             onClick={goNext}
             aria-label={uiString("nextCard", lang)}
             disabled={index === game.cards.length - 1}
-            className="rounded-xl border border-shell-border p-2.5 text-shell-muted hover:text-shell-warm disabled:opacity-40"
+            className="rounded-md border border-border p-2.5 text-text-muted hover:text-ink disabled:opacity-40"
           >
             <ChevronRight size={18} />
           </button>
@@ -128,10 +128,10 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
               key={c.id}
               className={`h-2 w-2 rounded-full transition-colors ${
                 viewed.has(c.id)
-                  ? "bg-emerald-400"
+                  ? "bg-moss"
                   : i === index
-                    ? "bg-shell-accent"
-                    : "bg-shell-border"
+                    ? "bg-terracotta"
+                    : "bg-border"
               }`}
             />
           ))}
@@ -141,7 +141,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
           <button
             type="button"
             onClick={handleFinish}
-            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/15 px-6 py-3 text-xs font-bold uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/25 transition-colors"
+            className="washi-btn-primary mt-8 gap-2 px-6 py-3 text-xs uppercase tracking-wider"
           >
             <RotateCcw size={14} />
             {uiString("doneReviewing", lang)}

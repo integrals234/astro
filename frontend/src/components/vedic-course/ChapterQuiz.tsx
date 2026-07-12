@@ -36,7 +36,7 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
 
   return (
     <GameShell kind="quiz" lang={lang}>
-      <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
+      <h3 className="font-header text-2xl md:text-3xl text-ink tracking-tight">
         <FormattedText text={t(quiz.question, lang)} />
       </h3>
 
@@ -54,49 +54,49 @@ export default function ChapterQuiz({ quiz, lang, onCorrect }: ChapterQuizProps)
               type="button"
               disabled={isCorrect}
               onClick={() => handleSelect(option.id)}
-              className={`group relative flex items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-300 ${
+              className={`washi-card group relative flex items-center gap-4 p-4 text-left transition-colors duration-300 ${
                 showCorrect
-                  ? "border-emerald-500/50 bg-emerald-500/10 shadow-[0_0_24px_rgba(52,211,153,0.15)]"
+                  ? "border-moss bg-[rgba(124,139,111,0.12)]"
                   : showWrong
-                    ? "border-red-400/40 bg-red-500/10"
+                    ? "border-caution bg-[rgba(199,123,78,0.1)]"
                     : isSelected
-                      ? "border-shell-accent/40 bg-shell-accent-soft"
-                      : "border-shell-border bg-shell-bg/50 hover:border-shell-accent/25 hover:bg-shell-elevated/60"
+                      ? "border-terracotta"
+                      : "hover:border-terracotta"
               }`}
             >
               <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-md border transition-colors ${
                   showCorrect
-                    ? "border-emerald-500/40 bg-emerald-500/15"
+                    ? "border-moss bg-[rgba(124,139,111,0.15)]"
                     : showWrong
-                      ? "border-red-400/40 bg-red-500/15"
-                      : "border-shell-border bg-shell-elevated group-hover:border-shell-accent/30"
+                      ? "border-caution bg-[rgba(199,123,78,0.12)]"
+                      : "border-border bg-washi group-hover:border-terracotta"
                 }`}
               >
                 <Icon
                   size={20}
                   className={
                     showCorrect
-                      ? "text-emerald-300"
+                      ? "text-moss"
                       : showWrong
-                        ? "text-red-300"
-                        : "text-shell-accent"
+                        ? "text-terracotta"
+                        : "text-terracotta"
                   }
                 />
               </div>
-              <span className="text-sm font-medium text-shell-warm">
+              <span className="text-sm font-medium text-ink">
                 <FormattedText text={t(option.label, lang)} />
               </span>
               {showCorrect && (
                 <CheckCircle2
                   size={18}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-300"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-moss"
                 />
               )}
               {showWrong && (
                 <XCircle
                   size={18}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-red-300"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-terracotta"
                 />
               )}
             </button>

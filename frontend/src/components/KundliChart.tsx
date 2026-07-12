@@ -51,11 +51,11 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-xl border shadow-sm relative"
+      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-lg border relative"
     >
       {isGocharChart && (
-        <div className="absolute top-4 left-4 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
-          ● {transitLabel}
+        <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-[10px] uppercase font-body font-semibold text-text-muted">
+          <span className="h-2 w-2 rounded-full bg-moss" /> {transitLabel}
         </div>
       )}
 
@@ -72,12 +72,12 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
           
           return (
             <g key={`house-${houseNum}`}>
-              <text x={x} y={y - 22} textAnchor="middle" className="kundli-chart-sign stroke-none text-sm font-bold font-mono">
+              <text x={x} y={y - 22} textAnchor="middle" className="kundli-chart-sign stroke-none text-sm font-bold font-chart">
                 {getSignForHouse(houseNum)}
               </text>
               
               {/* NATAL PLANETS & ASCENDANT */}
-              <text x={x} y={y + 2} textAnchor="middle" className="kundli-chart-planet stroke-none text-base font-bold font-sans tracking-tight cursor-pointer">
+              <text x={x} y={y + 2} textAnchor="middle" className="kundli-chart-planet stroke-none text-base font-bold font-chart tracking-tight cursor-pointer">
                 
                 {/* Render the Ascendant Marker ONLY in the 1st House */}
                 {houseNum === 1 && ascLabel && (
@@ -95,7 +95,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                     {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                     
                     {p.isRetrograde && !isGocharChart && (
-                      <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                      <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                     )}
                     
                     <tspan baselineShift="super" fontSize="10" className="kundli-chart-accent">{p.degree}</tspan>
@@ -103,20 +103,20 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                 ))}
               </text>
 
-              {/* TRANSIT PLANETS (Green) */}
+              {/* TRANSIT PLANETS (Moss) */}
               {isGocharChart && (
-                <text x={x} y={y + 20} textAnchor="middle" className="stroke-none fill-emerald-600 text-sm font-bold font-sans tracking-tight cursor-pointer">
+                <text x={x} y={y + 20} textAnchor="middle" className="kundli-chart-transit stroke-none text-sm font-bold font-chart tracking-tight cursor-pointer">
                   {transitInHouse.map((p, i) => (
-                    <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
+                    <tspan key={`t-${p.name}`} className="transition-all duration-300">
                       <title>{`${accessibility.transitPlanet} ${p.name} ${accessibility.planetAt} ${p.degree}°${p.isRetrograde ? ` (${accessibility.retrograde})` : ''}`}</title>
                       {i > 0 ? ', ' : ''}
                       {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                       
                       {p.isRetrograde && (
-                        <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                        <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                       )}
                       
-                      <tspan baselineShift="super" fontSize="9" className="fill-emerald-400/80">{p.degree}</tspan>
+                      <tspan baselineShift="super" fontSize="9" className="kundli-chart-transit">{p.degree}</tspan>
                     </tspan>
                   ))}
                 </text>

@@ -25,12 +25,12 @@ export default function SiteBrand({ className = "", size = "md" }: SiteBrandProp
     <Link
       href="/"
       aria-label={copy.chrome.brandHome}
-      className={`group shrink-0 inline-flex items-baseline gap-1.5 whitespace-nowrap ${sizeClasses[size]} ${className}`}
+      className={`group inline-flex shrink-0 items-baseline gap-1.5 whitespace-nowrap ${sizeClasses[size]} ${className}`}
     >
-      <span className="font-brand font-medium tracking-[0.04em] text-shell-warm transition-colors group-hover:text-shell-accent">
+      <span className="font-body font-medium tracking-[0.02em] text-ink transition-colors group-hover:text-terracotta">
         {first}
       </span>
-      <span className="font-brand font-normal italic tracking-[0.08em] text-shell-accent/90 transition-colors group-hover:text-shell-accent">
+      <span className="font-header font-normal italic tracking-[0.04em] text-terracotta transition-colors group-hover:opacity-90">
         {second}
       </span>
     </Link>

@@ -20,19 +20,19 @@ export default function GameShell({ kind, lang, title, instruction, children }: 
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="rounded-3xl border border-shell-border bg-gradient-to-br from-shell-elevated/90 to-shell-bg/60 p-8 md:p-10"
+      className="washi-card p-8 md:p-10"
     >
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-violet-200">
+      <div className="washi-status-neutral mb-6 inline-flex items-center gap-2 px-3 py-1.5 font-body text-[10px] font-medium uppercase tracking-[0.24em]">
         {gameKindLabel(kind, lang)}
       </div>
 
       {title && (
-        <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
+        <h3 className="font-header text-2xl md:text-3xl text-ink tracking-tight">
           {t(title, lang)}
         </h3>
       )}
       {instruction && (
-        <p className="mt-3 text-sm text-shell-muted leading-relaxed max-w-2xl">
+        <p className="mt-3 text-sm text-text-muted leading-relaxed max-w-2xl">
           {t(instruction, lang)}
         </p>
       )}

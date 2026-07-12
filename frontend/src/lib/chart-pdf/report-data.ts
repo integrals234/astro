@@ -486,8 +486,8 @@ export const DASHA_NOTE = {
 };
 
 export const SAMPLE_SOURCE = {
-  en: "Source: Jyotish Life — Vedic Astrology Birth Chart (https://www.ayurvedalife.jp/indian_jyotish/Chart)",
-  ja: "出典：Jyotish Life ヴェーダ占星術出生図（https://www.ayurvedalife.jp/indian_jyotish/Chart）",
-  hi: "स्रोत: Jyotish Life — वैदिक ज्योतिषीय जन्म-कुंडली (https://www.ayurvedalife.jp/indian_jyotish/Chart)",
-  ko: "출처: Jyotish Life — 베다 점성술 출생 차트(https://www.ayurvedalife.jp/indian_jyotish/Chart)",
+  en: "Source: Jyotish Life — Vedic Astrology Birth Chart",
+  ja: "出典：Jyotish Life ヴェーダ占星術出生図",
+  hi: "स्रोत: Jyotish Life — वैदिक ज्योतिषीय जन्म-कुंडली",
+  ko: "출처: Jyotish Life — 베다 점성술 출생 차트",
 };

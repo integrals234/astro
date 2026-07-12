@@ -20,14 +20,14 @@ interface InquiryFormProps {
 }
 
 const inputClassName =
-  "w-full rounded-xl border border-shell-border bg-shell-bg/50 px-4 py-3 text-sm text-shell-warm placeholder:text-shell-muted/70 outline-none transition-[border-color,box-shadow] focus:border-shell-accent/50 focus:ring-2 focus:ring-shell-accent/15";
+  "washi-field w-full px-4 py-3 text-sm placeholder:text-text-muted/70 outline-none transition-[border-color,box-shadow] focus:border-terracotta/50 focus:ring-2 focus:ring-terracotta/15";
 
 const labelClassName =
-  "block text-[11px] uppercase tracking-[0.18em] text-shell-muted mb-2";
+  "block text-[11px] font-body uppercase tracking-[0.18em] text-text-muted mb-2";
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="mt-1.5 text-xs text-red-400/90">{message}</p>;
+  return <p className="mt-1.5 text-xs text-terracotta">{message}</p>;
 }
 
 export default function InquiryForm({
@@ -56,16 +56,16 @@ export default function InquiryForm({
   return (
     <section
       id="inquiry"
-      className="rounded-3xl border border-shell-border bg-shell-elevated/40 backdrop-blur-sm p-6 md:p-8 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.55)]"
+      className="washi-card p-6 md:p-8"
     >
       <div className="mb-8 max-w-xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-semibold mb-3">
+        <p className="washi-eyebrow mb-3">
           {copy.sectionLabel}
         </p>
-        <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
+        <h3 className="font-body text-2xl md:text-3xl text-ink tracking-tight">
           {copy.title}
         </h3>
-        <p className="mt-3 text-sm text-shell-muted leading-relaxed">
+        <p className="mt-3 text-sm text-text-muted leading-relaxed">
           {copy.description}
         </p>
       </div>
@@ -75,15 +75,15 @@ export default function InquiryForm({
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-4"
+            className="mb-6 flex items-start gap-3 rounded-md border border-moss/30 bg-moss/10 px-4 py-4"
             role="status"
           >
             <CheckCircle2
               size={20}
-              className="text-emerald-400 shrink-0 mt-0.5"
+              className="text-moss shrink-0 mt-0.5"
               aria-hidden
             />
-            <p className="text-sm text-shell-warm leading-relaxed">
+            <p className="text-sm text-text leading-relaxed">
               {state.message}
             </p>
           </motion.div>
@@ -93,10 +93,10 @@ export default function InquiryForm({
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 rounded-2xl border border-red-500/25 bg-red-500/10 px-4 py-4"
+            className="mb-6 rounded-md border border-terracotta/30 bg-terracotta/10 px-4 py-4"
             role="alert"
           >
-            <p className="text-sm text-shell-warm leading-relaxed">
+            <p className="text-sm text-text leading-relaxed">
               {state.message}
             </p>
           </motion.div>
@@ -118,7 +118,7 @@ export default function InquiryForm({
         <div className="grid gap-5 md:grid-cols-2">
           <div>
             <label htmlFor="fullName" className={labelClassName}>
-              {copy.fullName} <span className="text-shell-accent">*</span>
+              {copy.fullName} <span className="text-terracotta">*</span>
             </label>
             <input
               id="fullName"
@@ -136,7 +136,7 @@ export default function InquiryForm({
 
           <div>
             <label htmlFor="email" className={labelClassName}>
-              {copy.email} <span className="text-shell-accent">*</span>
+              {copy.email} <span className="text-terracotta">*</span>
             </label>
             <input
               id="email"
@@ -155,7 +155,7 @@ export default function InquiryForm({
 
         <div>
           <label htmlFor="phoneLocal" className={labelClassName}>
-            {copy.whatsApp} <span className="text-shell-accent">*</span>
+            {copy.whatsApp} <span className="text-terracotta">*</span>
           </label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <select
@@ -185,14 +185,14 @@ export default function InquiryForm({
               aria-invalid={Boolean(state.fieldErrors?.phone)}
             />
           </div>
-          <p className="mt-2 text-xs text-shell-muted">{copy.whatsAppHint}</p>
+          <p className="mt-2 text-xs text-text-muted">{copy.whatsAppHint}</p>
           <FieldError message={state.fieldErrors?.phone} />
         </div>
 
         <div>
           <label htmlFor="message" className={labelClassName}>
             {copy.message}{" "}
-            <span className="normal-case tracking-normal text-shell-muted/80">
+            <span className="normal-case tracking-normal text-text-muted">
               {copy.messageOptional}
             </span>
           </label>
@@ -214,12 +214,8 @@ export default function InquiryForm({
             disabled={isPending}
             whileHover={isPending ? undefined : { scale: 1.01 }}
             whileTap={isPending ? undefined : { scale: 0.99 }}
-            className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-2.5 overflow-hidden rounded-xl border border-shell-accent/35 bg-gradient-to-r from-shell-accent/25 via-shell-accent/20 to-shell-accent/10 px-8 py-3.5 text-xs font-bold uppercase tracking-[0.22em] text-shell-warm transition-colors hover:from-shell-accent/35 hover:via-shell-accent/25 hover:to-shell-accent/15 disabled:cursor-not-allowed disabled:opacity-60"
+            className="washi-btn-primary w-full sm:w-auto gap-2.5 px-8 py-3.5 text-xs uppercase tracking-[0.22em] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <span
-              className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-              aria-hidden
-            />
             {isPending ? (
               <>
                 <Loader2 size={16} className="animate-spin" aria-hidden />

@@ -178,5 +178,16 @@ export function drawPdfText(
   applyPdfFont(doc, bold ? "bold" : "normal");
   doc.setFontSize(size);
   doc.setTextColor(...color);
+
+  // Japanese/Korean use a single Regular Noto CJK face, which renders thin and
+  // reads as washed-out. Synthesize a heavier weight by stroking each glyph
+  // outline in the same color (faux bold) so the text appears darker.
+  if (activeLanguage === "ja" || activeLanguage === "ko") {
+    doc.setDrawColor(...color);
+    doc.setLineWidth(Math.max(0.2, size * (bold ? 0.05 : 0.035)));
+    doc.text(text, x, baselineY, { align, renderingMode: "fillThenStroke" });
+    return;
+  }
+
   doc.text(text, x, baselineY, { align });
 }

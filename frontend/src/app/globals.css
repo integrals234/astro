@@ -1,81 +1,98 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Noto Sans Devanagari Local";
-  src: url("/fonts/NotoSansDevanagari.ttf") format("truetype");
-  font-display: swap;
-}
-@font-face {
-  font-family: "Noto Sans JP Local";
-  src: url("/fonts/NotoSansJP.ttf") format("truetype");
-  font-display: swap;
-}
-@font-face {
-  font-family: "Noto Sans KR Local";
-  src: url("/fonts/NotoSansKR.ttf") format("truetype");
-  font-display: swap;
-}
-
-html[lang="hi"] body { font-family: "Noto Sans Devanagari Local", "Nirmala UI", Mangal, sans-serif; }
-html[lang="ja"] body { font-family: "Noto Sans JP Local", "Yu Gothic", Meiryo, sans-serif; }
-html[lang="ko"] body { font-family: "Noto Sans KR Local", "Malgun Gothic", sans-serif; }
-
-/* System-aware defaults (before next-themes hydrates) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --shell-bg: #1c1b19;
-    --shell-sidebar: #141312;
-    --shell-elevated: #242220;
-    --shell-border: rgba(255, 255, 255, 0.06);
-    --shell-warm: #ece2d4;
-    --shell-muted: #9a928a;
-    --shell-accent: #d4a574;
-    --shell-accent-soft: rgba(212, 165, 116, 0.12);
-    --background: #1c1b19;
-    --foreground: #ece2d4;
-  }
+/* Washi Paper Minimal — light palette (default source of truth) */
+@theme {
+  --color-ink: #2f2f2f;
+  --color-moss: #7c8b6f;
+  --color-terracotta: #c77b4e;
+  --color-washi: #f5f0e6;
+  --color-washi-elevated: #fbf8f1;
+  --color-text: #333333;
+  --color-text-muted: #6b6b63;
+  --color-border: #e3dacb;
+  --color-neutral-tag: #ede7d8;
+  --color-positive: #7c8b6f;
+  --color-caution: #c77b4e;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --shell-bg: #f5f2ed;
-    --shell-sidebar: #ebe6de;
-    --shell-elevated: #ffffff;
-    --shell-border: rgba(28, 25, 23, 0.08);
-    --shell-warm: #2c2825;
-    --shell-muted: #6b6560;
-    --shell-accent: #b8844a;
-    --shell-accent-soft: rgba(184, 132, 74, 0.14);
-    --background: #f5f2ed;
-    --foreground: #2c2825;
-  }
-}
-
-/* Explicit theme overrides */
+/*
+ * Dark theme — "sumi-ink paper at night".
+ * Same editorial language on warm charcoal instead of pure black; accents
+ * lifted slightly for contrast. Utilities compile to var(--color-*), so
+ * overriding the variables here re-themes the whole site + shell-* aliases.
+ */
 .dark {
-  --shell-bg: #1c1b19;
-  --shell-sidebar: #141312;
-  --shell-elevated: #242220;
-  --shell-border: rgba(255, 255, 255, 0.06);
-  --shell-warm: #ece2d4;
-  --shell-muted: #9a928a;
-  --shell-accent: #d4a574;
-  --shell-accent-soft: rgba(212, 165, 116, 0.12);
-  --background: #1c1b19;
-  --foreground: #ece2d4;
+  --color-ink: #ece4d6;
+  --color-moss: #97a585;
+  --color-terracotta: #d68e5f;
+  --color-washi: #201e1a;
+  --color-washi-elevated: #2a2723;
+  --color-text: #ded7c9;
+  --color-text-muted: #978f80;
+  --color-border: #3a362f;
+  --color-neutral-tag: #332f29;
+  --color-positive: #97a585;
+  --color-caution: #d68e5f;
 }
 
-.light {
-  --shell-bg: #f5f2ed;
-  --shell-sidebar: #ebe6de;
-  --shell-elevated: #ffffff;
-  --shell-border: rgba(28, 25, 23, 0.08);
-  --shell-warm: #2c2825;
-  --shell-muted: #6b6560;
-  --shell-accent: #b8844a;
-  --shell-accent-soft: rgba(184, 132, 74, 0.14);
-  --background: #f5f2ed;
-  --foreground: #2c2825;
+/* Non-color tokens + compatibility aliases */
+:root,
+.light,
+.dark {
+  --h1-size: 30px;
+  --h2-size: 22px;
+  --body-size: 16px;
+  --ui-small-size: 13px;
+  --line-height-body: 1.9;
+
+  --radius-card: 8px;
+  --radius-button: 6px;
+  --radius-chip: 4px;
+  --shadow-elevated: 0 1px 3px rgba(47, 47, 47, 0.06);
+
+  /* Compatibility aliases for existing shell-* Tailwind classes */
+  --shell-bg: var(--color-washi);
+  --shell-sidebar: var(--color-washi);
+  --shell-elevated: var(--color-washi-elevated);
+  --shell-border: var(--color-border);
+  --shell-warm: var(--color-ink);
+  --shell-muted: var(--color-text-muted);
+  --shell-accent: var(--color-terracotta);
+  --shell-accent-soft: rgba(199, 123, 78, 0.12);
+  --background: var(--color-washi);
+  --foreground: var(--color-text);
+
+  --font-header: var(--font-shippori), "Shippori Mincho", serif;
+  --font-body: var(--font-zen-kaku), "Zen Kaku Gothic New", sans-serif;
+  --font-chart: var(--font-lora), "Lora", serif;
+}
+
+html[lang="en"] {
+  --font-header: var(--font-lora), "Lora", "Cormorant Garamond", serif;
+  --font-body: var(--font-zen-kaku), "Zen Kaku Gothic New", sans-serif;
+  --font-chart: var(--font-lora), "Lora", serif;
+}
+
+html[lang="ko"] {
+  --font-header: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --font-body: var(--font-noto-sans-kr), "Pretendard", "Noto Sans KR", sans-serif;
+  --font-chart: var(--font-lora), "Lora", serif;
+  --body-size: 17px;
+  --line-height-body: 2;
+}
+
+html[lang="hi"] {
+  --font-header: var(--font-martel), "Martel", serif;
+  --font-body: var(--font-hind), "Hind", sans-serif;
+  --font-chart: var(--font-lora), "Lora", serif;
+  --body-size: 17px;
+  --line-height-body: 2;
+}
+
+/* Dark-only overrides for tokens set in the shared block above */
+.dark {
+  --shadow-elevated: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shell-accent-soft: rgba(214, 142, 95, 0.16);
 }
 
 @theme inline {
@@ -89,17 +106,31 @@ html[lang="ko"] body { font-family: "Noto Sans KR Local", "Malgun Gothic", sans-
   --color-shell-muted: var(--shell-muted);
   --color-shell-accent: var(--shell-accent);
   --color-shell-accent-soft: var(--shell-accent-soft);
-  --font-sans: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean);
+  --font-sans: var(--font-body);
+}
+
+.font-header {
+  font-family: var(--font-header);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-chart {
+  font-family: var(--font-chart);
 }
 
 .font-brand {
-  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-family: var(--font-header);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean), system-ui, sans-serif;
+  background: var(--color-washi);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: var(--line-height-body);
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -132,7 +163,160 @@ svg {
   }
 }
 
-/* Responsive nav: hamburger drawer on mobile, horizontal top tabs on desktop */
+/* Reusable editorial primitives */
+.washi-card {
+  background: var(--color-washi-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevated);
+}
+
+.washi-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-button);
+  background: var(--color-terracotta);
+  color: var(--color-washi);
+  font-family: var(--font-body);
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.washi-btn-primary:hover {
+  opacity: 0.92;
+}
+
+.washi-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-terracotta);
+  background: transparent;
+  color: var(--color-terracotta);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.washi-btn-tertiary {
+  color: var(--color-terracotta);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.washi-btn-tertiary:hover {
+  text-decoration: underline;
+}
+
+.washi-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+.washi-eyebrow-muted {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.washi-icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-button);
+  background: color-mix(in srgb, var(--color-moss) 12%, transparent);
+  color: var(--color-moss);
+}
+
+.washi-status-positive {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-moss) 15%, transparent);
+  color: var(--color-moss);
+}
+
+.washi-status-caution {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-terracotta) 15%, transparent);
+  color: var(--color-terracotta);
+}
+
+.washi-status-neutral {
+  border-radius: 999px;
+  background: var(--color-neutral-tag);
+  color: var(--color-text-muted);
+}
+
+.washi-field {
+  background: var(--color-washi-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.washi-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-washi-elevated);
+}
+
+.washi-segment-selected {
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-washi);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.washi-segment-unselected {
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+}
+
+.washi-tab-active {
+  color: var(--color-ink);
+  border-bottom: 2px solid var(--color-terracotta);
+}
+
+.washi-tab-inactive {
+  color: var(--color-text-muted);
+}
+
+.washi-table-header {
+  background: var(--color-neutral-tag);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.washi-callout {
+  border-left: 3px solid var(--color-moss);
+  background: var(--color-washi-elevated);
+}
+
+.washi-blockquote {
+  border-left: 2px solid var(--color-moss);
+  padding-left: 16px;
+}
+
+/* Responsive nav */
 .mobile-only {
   display: inline-flex;
 }
@@ -180,50 +364,47 @@ svg {
   }
 }
 
-/* Chart canvas — light parchment surface so glyphs stay readable in dark site theme */
+/* Chart canvas */
 .kundli-chart-surface {
-  background-color: #faf8f5;
-  border-color: rgba(120, 100, 70, 0.22);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background-color: var(--color-washi-elevated);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-elevated);
 }
 
-.dark .kundli-chart-surface {
-  background-color: #faf8f5;
-  border-color: rgba(212, 165, 116, 0.28);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
-}
-
-/* The parchment canvas is theme-independent, so its SVG palette is too. */
 .kundli-chart-svg {
-  stroke: #4b5563;
+  stroke: var(--color-border);
 }
 
 .kundli-chart-grid {
-  stroke: #6b7280;
+  stroke: var(--color-border);
 }
 
 .kundli-chart-sign {
-  fill: #b45353;
+  fill: var(--color-terracotta);
 }
 
 .kundli-chart-planet {
-  fill: #1e1b4b;
+  fill: var(--color-ink);
+  font-family: var(--font-chart);
 }
 
 .kundli-chart-accent {
-  fill: #4f46e5;
+  fill: var(--color-terracotta);
+}
+
+.kundli-chart-transit {
+  fill: var(--color-moss);
 }
 
 .kundli-chart-planet-hover:hover {
-  fill: #4338ca;
+  fill: var(--color-terracotta);
 }
 
-/* Embedded chart workspace — blend with shell, no white box */
 .chart-workspace-embedded {
   background: transparent;
   border: none;
   box-shadow: none;
-  color: var(--shell-warm);
+  color: var(--color-text);
 }
 
 /* Clerk auth components */
@@ -231,5 +412,5 @@ svg {
 .cl-card,
 .cl-signIn-root,
 .cl-signUp-root {
-  font-family: var(--font-inter), var(--font-noto-devanagari), var(--font-noto-japanese), var(--font-noto-korean), system-ui, sans-serif;
+  font-family: var(--font-body);
 }

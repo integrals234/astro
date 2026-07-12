@@ -40,40 +40,32 @@ export default function ChapterStepper({
             type="button"
             disabled={isLocked}
             onClick={() => !isLocked && onSelectChapter(index)}
-            className={`relative rounded-2xl border p-3 sm:p-4 text-left transition-all duration-300 ${
+            className={`washi-card relative p-3 sm:p-4 text-left transition-colors duration-300 ${
               isActive
-                ? "border-shell-accent/40 bg-shell-accent-soft shadow-[0_0_24px_rgba(212,165,116,0.15)]"
+                ? "border-terracotta"
                 : isComplete
-                  ? "border-emerald-500/25 bg-emerald-500/5 hover:border-emerald-500/40"
+                  ? "hover:border-moss"
                   : isLocked
-                    ? "border-shell-border bg-shell-bg/40 opacity-50 cursor-not-allowed"
-                    : "border-shell-border bg-shell-elevated/40 hover:border-shell-accent/20"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:border-terracotta/40"
             }`}
           >
             <div className="flex items-start gap-2 sm:gap-3">
-              <div
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl border ${
-                  isActive
-                    ? "border-shell-accent/30 bg-shell-accent/20"
-                    : isComplete
-                      ? "border-emerald-500/30 bg-emerald-500/10"
-                      : "border-shell-border bg-shell-bg"
-                }`}
-              >
+              <div className="washi-icon-chip h-8 w-8 sm:h-9 sm:w-9 shrink-0">
                 {isComplete ? (
-                  <Check size={16} className="text-emerald-300" />
+                  <Check size={16} className="text-moss" />
                 ) : (
                   <Icon
                     size={16}
-                    className={isActive ? "text-shell-accent" : "text-shell-muted"}
+                    className={isActive ? "text-terracotta" : "text-moss"}
                   />
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-shell-muted">
+                <p className="font-body text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.18em] sm:tracking-[0.2em] text-text-muted">
                   {uiString("chapter", lang, chapter.number)}
                 </p>
-                <p className="mt-0.5 text-xs sm:text-sm font-medium text-shell-warm line-clamp-2 leading-snug">
+                <p className="mt-0.5 font-body text-xs sm:text-sm font-semibold text-ink line-clamp-2 leading-snug">
                   {t(chapter.title, lang)}
                 </p>
               </div>

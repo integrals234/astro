@@ -46,20 +46,20 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
 
   return (
     <GameShell kind="true-false" lang={lang} title={game.title} instruction={game.instruction}>
-      <div className="flex items-center justify-between mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-shell-muted">
+      <div className="flex items-center justify-between mb-6 font-body text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
         <span>
           {finished
             ? uiString("results", lang)
             : uiString("question", lang, index + 1, game.statements.length)}
         </span>
-        <span className="text-shell-accent tabular-nums">
+        <span className="text-terracotta tabular-nums">
           {uiString("score", lang, correctCount)}
         </span>
       </div>
 
       {!finished ? (
         <>
-          <p className="font-serif text-xl text-shell-warm leading-relaxed">
+          <p className="font-header text-xl text-ink leading-relaxed">
             <FormattedText text={t(statement.statement, lang)} />
           </p>
 
@@ -68,7 +68,7 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
               <button
                 type="button"
                 onClick={() => handleAnswer(true)}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 py-4 text-sm font-bold text-emerald-200 hover:bg-emerald-500/20 transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg border border-moss bg-[rgba(124,139,111,0.12)] py-4 text-sm font-semibold text-moss transition-colors hover:bg-[rgba(124,139,111,0.2)]"
               >
                 <Check size={18} />
                 {uiString("trueLabel", lang)}
@@ -76,7 +76,7 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
               <button
                 type="button"
                 onClick={() => handleAnswer(false)}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-red-400/30 bg-red-500/10 py-4 text-sm font-bold text-red-200 hover:bg-red-500/20 transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg border border-caution bg-[rgba(199,123,78,0.1)] py-4 text-sm font-semibold text-terracotta transition-colors hover:bg-[rgba(199,123,78,0.18)]"
               >
                 <X size={18} />
                 {uiString("falseLabel", lang)}
@@ -95,7 +95,7 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
               <button
                 type="button"
                 onClick={advanceFinal}
-                className="mt-6 w-full rounded-xl border border-shell-accent/30 bg-shell-accent/15 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent hover:bg-shell-accent/25"
+                className="washi-btn-primary mt-6 w-full py-3 text-xs uppercase tracking-wider"
               >
                 {index < game.statements.length - 1
                   ? uiString("nextQuestion", lang)
@@ -125,7 +125,7 @@ export default function TrueFalseGameView({ game, lang, onComplete }: TrueFalseG
                 setFeedback(null);
                 setFinished(false);
               }}
-              className="mt-6 w-full rounded-xl border border-shell-accent/30 bg-shell-accent/15 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent hover:bg-shell-accent/25"
+              className="washi-btn-primary mt-6 w-full py-3 text-xs uppercase tracking-wider"
             >
               {uiString("tryAgain", lang)}
             </button>

@@ -31,21 +31,21 @@ export default function AppearanceSetting() {
         : copy.light;
 
   return (
-    <section className="rounded-3xl border border-shell-border bg-shell-elevated/60 overflow-hidden">
-      <div className="px-6 py-4 border-b border-shell-border">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted">
+    <section className="washi-card overflow-hidden">
+      <div className="px-6 py-4 border-b border-border">
+        <h3 className="washi-eyebrow-muted">
           {copy.title}
         </h3>
-        <p className="text-xs text-shell-muted mt-1">
+        <p className="text-xs text-text-muted mt-1">
           {copy.description}
         </p>
       </div>
 
       <div className="p-6 space-y-4">
         {!mounted ? (
-          <div className="h-11 rounded-xl bg-shell-bg/50 border border-shell-border animate-pulse" />
+          <div className="h-11 rounded-md bg-washi border border-border animate-pulse" />
         ) : (
-          <div className="grid grid-cols-3 gap-2 p-1 rounded-2xl border border-shell-border bg-shell-bg/60">
+          <div className="grid grid-cols-3 gap-1 p-1 rounded-md border border-border bg-washi-elevated">
             {options.map((option) => {
               const Icon = option.icon;
               const isActive = active === option.value;
@@ -55,15 +55,15 @@ export default function AppearanceSetting() {
                   key={option.value}
                   type="button"
                   onClick={() => setTheme(option.value)}
-                  className={`flex flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-[10px] font-bold uppercase tracking-wider transition-all ${
+                  className={`flex flex-col items-center justify-center gap-1.5 px-2 py-3 text-[10px] uppercase tracking-wider transition-colors ${
                     isActive
-                      ? "bg-shell-accent-soft text-shell-warm shadow-[0_0_20px_rgba(212,165,116,0.12)] border border-shell-accent/25"
-                      : "text-shell-muted hover:text-shell-warm hover:bg-white/[0.03] border border-transparent"
+                      ? "washi-segment-selected"
+                      : "washi-segment-unselected hover:text-ink"
                   }`}
                 >
                   <Icon
                     size={16}
-                    className={isActive ? "text-shell-accent" : "text-shell-muted"}
+                    className={isActive ? "text-ink" : "text-text-muted"}
                   />
                   {copy[option.label]}
                 </button>
@@ -72,9 +72,9 @@ export default function AppearanceSetting() {
           </div>
         )}
 
-        <p className="text-xs text-shell-muted">
+        <p className="text-xs text-text-muted">
           {copy.currentlyUsing}:{" "}
-          <span className="text-shell-accent font-medium">
+          <span className="text-terracotta font-medium">
             {mounted ? resolvedLabel : "…"}
           </span>
         </p>

@@ -31,29 +31,29 @@ export default function GameFeedback({
           className="overflow-hidden"
         >
           <div
-            className={`rounded-2xl border px-5 py-4 ${
+            className={`rounded-lg border px-5 py-4 ${
               isCorrect
-                ? "border-emerald-500/30 bg-emerald-500/10"
-                : "border-shell-border bg-shell-bg/60"
+                ? "border-moss bg-[rgba(124,139,111,0.12)]"
+                : "border-caution bg-[rgba(199,123,78,0.1)]"
             }`}
           >
             <div className="flex items-start gap-3">
               {isCorrect ? (
-                <PartyPopper size={20} className="shrink-0 text-emerald-300 mt-0.5" />
+                <PartyPopper size={20} className="shrink-0 text-moss mt-0.5" />
               ) : (
-                <XCircle size={20} className="shrink-0 text-shell-muted mt-0.5" />
+                <XCircle size={20} className="shrink-0 text-terracotta mt-0.5" />
               )}
               <div>
                 <p
                   className={`text-sm font-medium ${
-                    isCorrect ? "text-emerald-200" : "text-shell-warm"
+                    isCorrect ? "text-moss" : "text-terracotta"
                   }`}
                 >
                   {message ??
                     (isCorrect ? uiString("correct", lang) : uiString("incorrect", lang))}
                 </p>
                 {explanation && (
-                  <p className="mt-1.5 text-sm text-shell-muted leading-relaxed">
+                  <p className="mt-1.5 text-sm text-text-muted leading-relaxed">
                     <FormattedText text={explanation} />
                   </p>
                 )}

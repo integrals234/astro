@@ -13,13 +13,13 @@ function PublicHoroscopeHeader() {
   const { lang } = useEducationLang();
 
   return (
-    <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
+    <header className="border-b border-border bg-washi/80 backdrop-blur-md">
       <div className="shell-header-desktop mx-auto w-full max-w-7xl items-center justify-between gap-6 px-8 py-4">
         <SiteBrand size="lg" className="shrink-0" />
         <nav className="flex shrink-0 items-center gap-4">
           <Link
             href="/chart"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 px-3 py-2 text-xs font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent"
+            className="washi-btn-primary gap-1.5 px-3 py-2 text-xs"
           >
             <Sparkles size={14} />
             {uiText("generateChart", lang)}
@@ -27,7 +27,7 @@ function PublicHoroscopeHeader() {
           <SignedOut>
             <Link
               href="/sign-in"
-              className="text-xs font-medium text-shell-muted transition-colors hover:text-shell-warm"
+              className="font-body text-xs font-medium text-text-muted transition-colors hover:text-ink"
             >
               {uiText("signIn", lang)}
             </Link>
@@ -42,7 +42,7 @@ function PublicHoroscopeHeader() {
         <div className="h-10 w-10 shrink-0" aria-hidden />
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
           <SiteBrand size="sm" className="shrink-0" />
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
+          <p className="font-body text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
             {uiText("horoscope", lang)}
           </p>
         </div>
@@ -56,7 +56,7 @@ function HoroscopePageInner({ embedded }: { embedded?: boolean }) {
   const { lang } = useEducationLang();
 
   return (
-    <div className={`${embedded ? "" : "min-h-screen"} bg-shell-bg text-shell-warm`}>
+    <div className={`${embedded ? "" : "min-h-screen"} bg-washi text-ink`}>
       {!embedded && <PublicHoroscopeHeader />}
 
       <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>

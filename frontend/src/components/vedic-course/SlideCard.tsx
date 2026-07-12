@@ -22,24 +22,24 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-3xl border border-shell-border bg-gradient-to-br from-shell-elevated/90 to-shell-bg/60 p-8 md:p-10"
+      className="washi-card p-8 md:p-10"
     >
       <div className="flex items-center justify-between gap-4 mb-8">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-shell-accent/25 bg-shell-accent-soft shadow-[0_0_30px_rgba(212,165,116,0.12)]">
+        <div className="washi-icon-chip h-14 w-14">
           {createElement(getCourseIcon(slide.icon), {
             size: 26,
-            className: "text-shell-accent",
+            className: "text-moss",
           })}
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted tabular-nums">
+        <span className="font-body text-[10px] font-medium uppercase tracking-[0.24em] text-text-muted tabular-nums">
           {slideIndex + 1} / {totalSlides}
         </span>
       </div>
 
-      <h3 className="font-serif text-2xl md:text-3xl text-shell-warm tracking-tight">
+      <h3 className="font-header text-2xl md:text-3xl text-ink tracking-tight">
         <FormattedText text={t(slide.title, lang)} />
       </h3>
-      <p className="mt-5 text-sm md:text-base text-shell-muted leading-relaxed max-w-2xl">
+      <p className="mt-5 text-sm md:text-base text-text-muted leading-relaxed max-w-2xl">
         <FormattedText text={t(slide.body, lang)} />
       </p>
 
@@ -48,9 +48,9 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
           {slide.bullets.map((bullet) => (
             <li
               key={bullet.en}
-              className="flex gap-3 text-sm text-shell-muted leading-relaxed"
+              className="flex gap-3 text-sm text-text leading-relaxed"
             >
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-shell-accent" />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
               <FormattedText text={t(bullet, lang)} />
             </li>
           ))}
@@ -58,8 +58,8 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
       )}
 
       {slide.highlight && (
-        <div className="mt-6 rounded-2xl border border-shell-accent/20 bg-shell-accent-soft/60 px-5 py-4">
-          <p className="text-sm text-shell-warm/90 leading-relaxed">
+        <div className="washi-callout mt-6 rounded-lg px-5 py-4">
+          <p className="text-sm text-text leading-relaxed">
             <FormattedText text={t(slide.highlight, lang)} />
           </p>
         </div>

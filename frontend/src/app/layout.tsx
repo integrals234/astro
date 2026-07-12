@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import {
-  Inter,
-  Noto_Sans_Devanagari,
-  Noto_Sans_JP,
+  Cormorant_Garamond,
+  Hind,
+  Lora,
+  Martel,
   Noto_Sans_KR,
-  Playfair_Display,
+  Noto_Serif_KR,
+  Shippori_Mincho,
+  Zen_Kaku_Gothic_New,
 } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -17,36 +20,61 @@ import {
 } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 
-// Inter for clean data, numbers, and UI elements
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: 'swap',
-});
-
-// Playfair Display for premium, editorial headings
-const playfair = Playfair_Display({ 
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: 'swap',
-});
-
-const notoDevanagari = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
-  variable: "--font-noto-devanagari",
-  display: "swap",
-});
-
-const notoJapanese = Noto_Sans_JP({
-  variable: "--font-noto-japanese",
+const shippori = Shippori_Mincho({
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-shippori",
   display: "swap",
   preload: false,
 });
 
-const notoKorean = Noto_Sans_KR({
-  variable: "--font-noto-korean",
+const zenKaku = Zen_Kaku_Gothic_New({
+  weight: ["400", "500", "700"],
+  variable: "--font-zen-kaku",
   display: "swap",
   preload: false,
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-lora",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const notoSerifKr = Noto_Serif_KR({
+  weight: ["400", "500", "600"],
+  variable: "--font-noto-serif-kr",
+  display: "swap",
+  preload: false,
+});
+
+const notoSansKr = Noto_Sans_KR({
+  weight: ["400", "500", "700"],
+  variable: "--font-noto-sans-kr",
+  display: "swap",
+  preload: false,
+});
+
+const martel = Martel({
+  subsets: ["latin", "devanagari"],
+  weight: ["400", "600", "700"],
+  variable: "--font-martel",
+  display: "swap",
+});
+
+const hind = Hind({
+  subsets: ["latin", "devanagari"],
+  weight: ["400", "500", "600"],
+  variable: "--font-hind",
+  display: "swap",
 });
 
 async function getRequestLanguage() {
@@ -69,10 +97,10 @@ export default async function RootLayout({
   return (
     <html
       lang={initialLanguage}
-      className={`${inter.variable} ${playfair.variable} ${notoDevanagari.variable} ${notoJapanese.variable} ${notoKorean.variable} antialiased`}
+      className={`${shippori.variable} ${zenKaku.variable} ${lora.variable} ${cormorant.variable} ${notoSerifKr.variable} ${notoSansKr.variable} ${martel.variable} ${hind.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased" suppressHydrationWarning>
+      <body className="font-body antialiased" suppressHydrationWarning>
         <Providers initialLanguage={initialLanguage}>
           {children}
           <Analytics />

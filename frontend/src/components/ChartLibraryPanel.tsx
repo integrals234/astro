@@ -44,25 +44,25 @@ function ChartList({
   lang: string;
 }) {
   return (
-    <div className="bg-shell-elevated/70 rounded-2xl border border-shell-border shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-5">
+    <div className="washi-card p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Icon size={14} className="text-shell-accent" />
-        <h3 className="text-[10px] font-bold text-shell-muted uppercase tracking-widest">
+        <Icon size={14} className="text-terracotta" />
+        <h3 className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">
           {title}
         </h3>
       </div>
 
       {charts.length === 0 ? (
-        <p className="text-xs text-shell-muted leading-relaxed">{emptyLabel}</p>
+        <p className="text-xs text-text-muted leading-relaxed">{emptyLabel}</p>
       ) : (
         <ul className="space-y-2">
           {charts.map((chart) => (
             <li
               key={chart.id}
-              className={`group rounded-xl border p-3 transition-colors ${
+              className={`group rounded-md border p-3 transition-colors ${
                 activeChartId === chart.id
-                  ? "border-shell-accent/40 bg-shell-accent-soft"
-                  : "border-shell-border hover:border-shell-accent/30 hover:bg-shell-bg/60"
+                  ? "border-terracotta bg-washi-elevated"
+                  : "border-border bg-washi-elevated hover:border-terracotta/40"
               }`}
             >
               <button
@@ -70,13 +70,13 @@ function ChartList({
                 onClick={() => onLoadChart(chart)}
                 className="w-full text-left"
               >
-                <div className="font-medium text-sm text-shell-warm truncate">
+                <div className="font-body font-medium text-sm text-ink truncate">
                   {chart.name}
                 </div>
-                <div className="text-[11px] text-shell-muted truncate mt-0.5">
+                <div className="text-[11px] text-text-muted truncate mt-0.5">
                   {chart.locationName}
                 </div>
-                <div className="text-[10px] text-shell-muted/70 mt-1">
+                <div className="text-[10px] text-text-muted mt-1">
                   {new Date(chart.createdAt).toLocaleDateString(lang)}
                 </div>
               </button>
@@ -86,10 +86,10 @@ function ChartList({
                   <button
                     type="button"
                     onClick={() => onToggleSave(chart)}
-                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg ${
+                    className={`text-[10px] font-body font-semibold uppercase tracking-wider px-2 py-1 rounded ${
                       chart.isSaved
-                        ? "bg-shell-accent-soft text-shell-accent"
-                        : "bg-shell-bg text-shell-muted hover:bg-shell-accent-soft hover:text-shell-accent"
+                        ? "bg-terracotta/10 text-terracotta"
+                        : "bg-neutral-tag text-text-muted hover:bg-terracotta/10 hover:text-terracotta"
                     }`}
                   >
                     {chart.isSaved ? savedLabel : saveLabel}
@@ -98,7 +98,7 @@ function ChartList({
                 <button
                   type="button"
                   onClick={() => onDeleteChart(chart.id)}
-                  className="p-1 rounded-lg text-shell-muted hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
+                  className="p-1 rounded text-text-muted hover:text-terracotta hover:bg-terracotta/10"
                   aria-label={deleteAria}
                 >
                   <Trash2 size={12} />

@@ -43,14 +43,14 @@ export default function PersonalAppraisalsPageClient({
         description={content.header.description}
       />
 
-      <section className="rounded-3xl border border-shell-accent/20 bg-gradient-to-br from-shell-elevated/80 via-shell-elevated/50 to-shell-bg/60 p-7 md:p-9 backdrop-blur-sm">
+      <section className="washi-card p-7 md:p-9">
         <div className="flex items-start gap-3 mb-5">
-          <Sparkles size={18} className="text-shell-accent shrink-0 mt-1" />
+          <Sparkles size={18} className="text-terracotta shrink-0 mt-1" />
           <div>
-            <h3 className="font-serif text-xl md:text-2xl text-shell-warm">
+            <h3 className="font-body text-xl md:text-2xl text-ink">
               {content.intro.heading}
             </h3>
-            <p className="mt-3 text-sm md:text-base text-shell-muted leading-relaxed max-w-2xl">
+            <p className="mt-3 text-sm md:text-base text-text-muted leading-relaxed max-w-2xl">
               {content.intro.body}
             </p>
           </div>
@@ -59,11 +59,11 @@ export default function PersonalAppraisalsPageClient({
           {content.intro.highlights.map((item) => (
             <li
               key={item}
-              className="flex items-start gap-2.5 text-sm text-shell-muted"
+              className="flex items-start gap-2.5 text-sm text-text"
             >
               <Check
                 size={15}
-                className="text-shell-accent shrink-0 mt-0.5"
+                className="text-moss shrink-0 mt-0.5"
                 aria-hidden
               />
               {item}
@@ -74,10 +74,10 @@ export default function PersonalAppraisalsPageClient({
 
       <section className="space-y-6">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-semibold mb-2">
+          <p className="washi-eyebrow mb-2">
             {content.offerings.sectionLabel}
           </p>
-          <h3 className="font-serif text-2xl text-shell-warm">
+          <h3 className="font-body text-2xl text-ink">
             {content.offerings.sectionTitle}
           </h3>
         </div>
@@ -91,27 +91,29 @@ export default function PersonalAppraisalsPageClient({
             return (
               <article
                 key={offering.id}
-                className="rounded-2xl border border-shell-border bg-shell-elevated/45 p-6 md:p-7"
+                className="washi-card p-6 md:p-7"
               >
-                <div className="flex items-center gap-2.5 mb-4">
-                  <Icon size={17} className="text-shell-accent" />
-                  <h4 className="font-medium text-shell-warm">{offering.title}</h4>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="washi-icon-chip h-9 w-9 shrink-0">
+                    <Icon size={17} className="text-moss" />
+                  </span>
+                  <h4 className="font-body font-medium text-ink">{offering.title}</h4>
                 </div>
-                <p className="text-sm text-shell-muted leading-relaxed">
+                <p className="text-sm text-text-muted leading-relaxed">
                   {offering.description}
                 </p>
                 <ul className="mt-4 space-y-2">
                   {offering.includes.map((item) => (
                     <li
                       key={item}
-                      className="flex items-start gap-2 text-sm text-shell-muted/90"
+                      className="flex items-start gap-2 text-sm text-text-muted"
                     >
-                      <span className="mt-2 h-1 w-1 rounded-full bg-shell-accent shrink-0" />
+                      <span className="mt-2 h-1 w-1 rounded-full bg-moss shrink-0" />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <p className="mt-4 text-xs text-shell-accent/90 italic">
+                <p className="mt-4 text-xs text-text-muted italic">
                   {offering.note}
                 </p>
               </article>
@@ -122,29 +124,29 @@ export default function PersonalAppraisalsPageClient({
 
       <section className="space-y-6">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-semibold mb-2">
+          <p className="washi-eyebrow mb-2">
             {content.pricing.sectionLabel}
           </p>
-          <h3 className="font-serif text-2xl text-shell-warm">
+          <h3 className="font-body text-2xl text-ink">
             {content.pricing.sectionTitle}
           </h3>
-          <p className="mt-2 text-sm text-shell-muted max-w-2xl leading-relaxed">
+          <p className="mt-2 text-sm text-text-muted max-w-2xl leading-relaxed">
             {content.pricing.intro}
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-shell-border bg-shell-elevated/35">
+        <div className="washi-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[540px] text-left text-sm">
               <thead>
-                <tr className="border-b border-shell-border bg-shell-bg/40">
-                  <th className="px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-shell-muted">
+                <tr className="washi-table-header border-b border-border">
+                  <th className="px-5 py-4">
                     {content.pricing.tableService}
                   </th>
-                  <th className="px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-shell-muted">
+                  <th className="px-5 py-4">
                     {content.pricing.tableDuration}
                   </th>
-                  <th className="px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-shell-muted text-right">
+                  <th className="px-5 py-4 text-right">
                     {content.pricing.tablePrice}
                   </th>
                 </tr>
@@ -153,28 +155,30 @@ export default function PersonalAppraisalsPageClient({
                 {content.pricing.plans.map((plan) => (
                   <tr
                     key={plan.id}
-                    className={`border-b border-shell-border/70 last:border-0 ${
-                      plan.featured ? "bg-shell-accent-soft/40" : ""
+                    className={`border-b border-border last:border-0 ${
+                      plan.featured ? "bg-neutral-tag/40" : ""
                     }`}
                   >
                     <td className="px-5 py-5 align-top">
-                      <p className="font-medium text-shell-warm">{plan.name}</p>
-                      <p className="mt-1.5 text-xs text-shell-muted leading-relaxed max-w-sm">
+                      <p className="font-body font-medium text-ink">{plan.name}</p>
+                      <p className="mt-1.5 text-xs text-text-muted leading-relaxed max-w-sm">
                         {plan.description}
                       </p>
                     </td>
-                    <td className="px-5 py-5 align-top text-shell-muted whitespace-nowrap">
+                    <td className="px-5 py-5 align-top text-text-muted whitespace-nowrap">
                       {plan.duration}
                     </td>
                     <td className="px-5 py-5 align-top text-right whitespace-nowrap">
                       <p
-                        className={`font-serif text-lg ${
-                          plan.featured ? "text-shell-accent" : "text-shell-warm"
+                        className={`font-chart text-lg ${
+                          plan.featured
+                            ? "text-terracotta font-semibold"
+                            : "text-ink"
                         }`}
                       >
                         {plan.price}
                       </p>
-                      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-shell-muted">
+                      <p className="mt-0.5 text-[11px] uppercase tracking-wider text-text-muted">
                         {plan.priceNote}
                       </p>
                     </td>
@@ -185,22 +189,22 @@ export default function PersonalAppraisalsPageClient({
           </div>
         </div>
 
-        <p className="text-xs text-shell-muted leading-relaxed">
+        <p className="text-xs text-text-muted leading-relaxed">
           {content.pricing.footnote}
         </p>
       </section>
 
-      <section className="rounded-2xl border border-dashed border-shell-accent/25 bg-shell-accent-soft/20 p-6 md:p-7">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-semibold mb-4">
+      <section className="washi-card p-6 md:p-7">
+        <p className="washi-eyebrow mb-4">
           {content.process.sectionLabel}
         </p>
         <ol className="space-y-4">
           {content.process.steps.map((step, index) => (
             <li key={step} className="flex gap-4">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-shell-accent/30 bg-shell-accent/10 text-xs font-semibold text-shell-accent">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-neutral-tag text-xs font-body font-semibold text-text">
                 {index + 1}
               </span>
-              <p className="text-sm text-shell-muted leading-relaxed pt-0.5">
+              <p className="text-sm text-text-muted leading-relaxed pt-0.5">
                 {step}
               </p>
             </li>

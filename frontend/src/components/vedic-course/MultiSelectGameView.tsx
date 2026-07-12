@@ -43,10 +43,10 @@ export default function MultiSelectGameView({ game, lang, onComplete }: MultiSel
 
   return (
     <GameShell kind="multi-select" lang={lang} title={game.title}>
-      <h4 className="font-serif text-xl text-shell-warm">
+      <h4 className="font-header text-xl text-ink">
         <FormattedText text={t(game.question, lang)} />
       </h4>
-      <p className="mt-2 text-xs text-shell-muted">{uiString("selectAll", lang)}</p>
+      <p className="mt-2 text-xs text-text-muted">{uiString("selectAll", lang)}</p>
 
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
         {game.options.map((option) => {
@@ -62,21 +62,21 @@ export default function MultiSelectGameView({ game, lang, onComplete }: MultiSel
               type="button"
               disabled={submitted && isCorrect}
               onClick={() => toggle(option.id)}
-              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+              className={`washi-card flex items-center gap-3 px-4 py-3 text-left text-sm transition-colors ${
                 showCorrect
-                  ? "border-emerald-500/50 bg-emerald-500/10"
+                  ? "border-moss bg-[rgba(124,139,111,0.12)]"
                   : showWrong
-                    ? "border-red-400/40 bg-red-500/10"
+                    ? "border-caution bg-[rgba(199,123,78,0.1)]"
                     : isSelected
-                      ? "border-shell-accent/40 bg-shell-accent-soft"
-                      : "border-shell-border bg-shell-bg/50 hover:border-shell-accent/25"
+                      ? "border-terracotta"
+                      : "hover:border-terracotta"
               }`}
             >
-              <Icon size={16} className="text-shell-accent shrink-0" />
-              <span className="flex-1 text-shell-warm">
+              <Icon size={16} className="text-terracotta shrink-0" />
+              <span className="flex-1 text-ink">
                 <FormattedText text={t(option.label, lang)} />
               </span>
-              {showCorrect && <CheckCircle2 size={16} className="text-emerald-300" />}
+              {showCorrect && <CheckCircle2 size={16} className="text-moss" />}
             </button>
           );
         })}
@@ -87,7 +87,7 @@ export default function MultiSelectGameView({ game, lang, onComplete }: MultiSel
           type="button"
           onClick={handleSubmit}
           disabled={selected.size === 0}
-          className="mt-6 rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-6 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent hover:bg-shell-accent/25 disabled:opacity-40"
+          className="washi-btn-primary mt-6 px-6 py-3 text-xs uppercase tracking-wider disabled:opacity-40"
         >
           {uiString("checkAnswers", lang)}
         </button>

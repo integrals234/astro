@@ -19,34 +19,34 @@ export default function PremiumPage() {
         description={copy.description}
       />
 
-      <div className="rounded-3xl border border-shell-accent/25 bg-gradient-to-br from-shell-elevated to-shell-bg p-8 md:p-10">
+      <div className="washi-card p-8 md:p-10">
         <div className="flex items-center gap-2 mb-6">
-          <Crown size={20} className="text-shell-accent" />
-          <span className="text-[10px] uppercase tracking-[0.28em] text-shell-accent font-bold">
+          <Crown size={20} className="text-terracotta" />
+          <span className="text-[10px] font-body uppercase tracking-[0.12em] text-terracotta font-medium">
             {copy.waitlist}
           </span>
         </div>
-        <p className="font-serif text-2xl text-shell-warm mb-6">
+        <p className="font-header text-2xl text-ink mb-6">
           {copy.heading}
         </p>
         <ul className="space-y-3 mb-8">
           {copy.perks.map((perk) => (
-            <li key={perk} className="flex items-center gap-3 text-sm text-shell-muted">
-              <Check size={16} className="text-shell-accent shrink-0" />
+            <li key={perk} className="flex items-center gap-3 text-sm text-text">
+              <Check size={16} className="text-moss shrink-0" />
               {perk}
             </li>
           ))}
         </ul>
         <button
           type="button"
-          className="rounded-xl bg-shell-accent/25 border border-shell-accent/40 px-6 py-3 text-xs font-bold uppercase tracking-wider text-shell-warm hover:bg-shell-accent/35 transition-colors"
+          className="washi-btn-primary px-6 py-3 text-xs uppercase tracking-wider"
         >
           {copy.join}
         </button>
       </div>
 
-      <p className="text-sm text-shell-muted">
-        <Link href="/chart" className="text-shell-accent hover:text-shell-warm transition-colors">
+      <p className="text-sm text-text-muted">
+        <Link href="/chart" className="text-terracotta hover:underline transition-colors">
           {copy.back}
         </Link>
       </p>

@@ -1,33 +1,70 @@
 import type { Appearance } from "@clerk/types";
 
-export const clerkAppearance: Appearance = {
-  variables: {
-    colorPrimary: "#312e81",
-    colorText: "#111827",
-    colorTextSecondary: "#6b7280",
-    colorBackground: "#ffffff",
-    colorInputBackground: "#f9fafb",
-    colorInputText: "#111827",
-    colorDanger: "#dc2626",
-    borderRadius: "0.75rem",
-    fontFamily: "var(--font-inter), system-ui, sans-serif",
-    fontFamilyButtons: "var(--font-inter), system-ui, sans-serif",
+type ThemeMode = "light" | "dark";
+
+const palette: Record<ThemeMode, {
+  primary: string;
+  text: string;
+  textSecondary: string;
+  background: string;
+  inputBackground: string;
+  inputText: string;
+  danger: string;
+}> = {
+  light: {
+    primary: "#C77B4E",
+    text: "#333333",
+    textSecondary: "#6B6B63",
+    background: "#FBF8F1",
+    inputBackground: "#FBF8F1",
+    inputText: "#333333",
+    danger: "#C77B4E",
   },
-  elements: {
-    rootBox: "mx-auto w-full",
-    card: "shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 rounded-3xl",
-    headerTitle: "font-serif text-indigo-950 tracking-tight",
-    headerSubtitle: "text-gray-500",
-    socialButtonsBlockButton:
-      "border border-gray-200 bg-gray-50/50 hover:bg-gray-50 text-gray-700",
-    formButtonPrimary:
-      "bg-indigo-950 hover:bg-indigo-900 shadow-lg shadow-indigo-900/20 normal-case",
-    formFieldInput:
-      "border border-gray-200 rounded-xl bg-gray-50/50 focus:border-indigo-500 focus:ring-indigo-500",
-    footerActionLink: "text-indigo-600 hover:text-indigo-800",
-    identityPreviewEditButton: "text-indigo-600",
-    formFieldLabel: "text-gray-500 text-xs uppercase tracking-widest font-bold",
-    dividerLine: "bg-gray-100",
-    dividerText: "text-gray-400 text-xs uppercase tracking-widest",
+  dark: {
+    primary: "#D68E5F",
+    text: "#ECE4D6",
+    textSecondary: "#978F80",
+    background: "#2A2723",
+    inputBackground: "#201E1A",
+    inputText: "#DED7C9",
+    danger: "#D68E5F",
   },
 };
+
+export function getClerkAppearance(mode: ThemeMode = "light"): Appearance {
+  const c = palette[mode];
+  return {
+    variables: {
+      colorPrimary: c.primary,
+      colorText: c.text,
+      colorTextSecondary: c.textSecondary,
+      colorBackground: c.background,
+      colorInputBackground: c.inputBackground,
+      colorInputText: c.inputText,
+      colorDanger: c.danger,
+      borderRadius: "6px",
+      fontFamily: "var(--font-body)",
+      fontFamilyButtons: "var(--font-body)",
+    },
+    elements: {
+      rootBox: "mx-auto w-full",
+      card: "shadow-[var(--shadow-elevated)] border border-border rounded-lg bg-washi-elevated",
+      headerTitle: "font-header text-ink tracking-tight",
+      headerSubtitle: "text-text-muted",
+      socialButtonsBlockButton:
+        "border border-border bg-washi hover:bg-washi-elevated text-text",
+      formButtonPrimary:
+        "bg-terracotta hover:opacity-90 text-washi shadow-none normal-case font-semibold",
+      formFieldInput:
+        "border border-border rounded-md bg-washi-elevated focus:border-terracotta focus:ring-terracotta",
+      footerActionLink: "text-terracotta hover:underline",
+      identityPreviewEditButton: "text-terracotta",
+      formFieldLabel: "text-text-muted text-xs uppercase tracking-widest font-semibold",
+      dividerLine: "bg-border",
+      dividerText: "text-text-muted text-xs uppercase tracking-widest",
+    },
+  };
+}
+
+/** Default (light) appearance for non-theme-aware call sites. */
+export const clerkAppearance: Appearance = getClerkAppearance("light");

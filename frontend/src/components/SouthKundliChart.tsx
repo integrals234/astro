@@ -46,11 +46,11 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-xl border shadow-sm relative"
+      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-lg border relative"
     >
       {isGocharChart && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
-          ● {transitLabel}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 text-[10px] uppercase font-body font-semibold text-text-muted bg-washi-elevated px-3 py-1.5 rounded-md border border-border">
+          <span className="h-2 w-2 rounded-full bg-moss" /> {transitLabel}
         </div>
       )}
 
@@ -89,20 +89,20 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
           return (
             <g key={`sign-${signName}`}>
               {/* Faint Zodiac Number (Optional, helps beginners) */}
-              <text x={x + 10} y={y + 20} textAnchor="start" className="kundli-chart-sign stroke-none text-xs font-bold font-mono">
+              <text x={x + 10} y={y + 20} textAnchor="start" className="kundli-chart-sign stroke-none text-xs font-bold font-chart">
                 {signNumbers[signName]}
               </text>
 
               {/* ASCENDANT MARKER */}
               {isAscendant && ascLabel && (
-                <text x={x + 50} y={y + 25} textAnchor="middle" className="kundli-chart-accent stroke-none text-xs font-bold font-sans">
+                <text x={x + 50} y={y + 25} textAnchor="middle" className="kundli-chart-accent stroke-none text-xs font-bold font-chart">
                   {ascLabel}
                   {ascDegree !== undefined && <tspan baselineShift="super" fontSize="8">{ascDegree}</tspan>}
                 </text>
               )}
 
               {/* NATAL PLANETS */}
-              <text x={x + 50} y={y + 55} textAnchor="middle" className="kundli-chart-planet stroke-none text-base font-bold font-sans tracking-tight">
+              <text x={x + 50} y={y + 55} textAnchor="middle" className="kundli-chart-planet stroke-none text-base font-bold font-chart tracking-tight">
                 {natalInSign.map((p, i) => (
                   <tspan key={`n-${p.name}`} className="kundli-chart-planet-hover transition-all duration-300">
                     <title>{`${p.name} ${accessibility.planetAt} ${p.degree}°${p.isRetrograde ? ` (${accessibility.retrograde})` : ''}`}</title>
@@ -110,7 +110,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
                     {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                     
                     {p.isRetrograde && !isGocharChart && (
-                      <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                      <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                     )}
                     
                     <tspan baselineShift="super" fontSize="10" className="kundli-chart-accent">{p.degree}</tspan>
@@ -120,18 +120,18 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
 
               {/* TRANSIT PLANETS */}
               {isGocharChart && (
-                <text x={x + 50} y={y + 75} textAnchor="middle" className="stroke-none fill-emerald-600 text-sm font-bold font-sans tracking-tight">
+                <text x={x + 50} y={y + 75} textAnchor="middle" className="kundli-chart-transit stroke-none text-sm font-bold font-chart tracking-tight">
                   {transitInSign.map((p, i) => (
-                    <tspan key={`t-${p.name}`} className="transition-all duration-300 hover:fill-emerald-400">
+                    <tspan key={`t-${p.name}`} className="transition-all duration-300">
                       <title>{`${accessibility.transitPlanet} ${p.name} ${accessibility.planetAt} ${p.degree}°${p.isRetrograde ? ` (${accessibility.retrograde})` : ''}`}</title>
                       {i > 0 ? ', ' : ''}
                       {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                       
                       {p.isRetrograde && (
-                        <tspan className="fill-red-500 font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                        <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                       )}
                       
-                      <tspan baselineShift="super" fontSize="9" className="fill-emerald-400/80">{p.degree}</tspan>
+                      <tspan baselineShift="super" fontSize="9" className="kundli-chart-transit">{p.degree}</tspan>
                     </tspan>
                   ))}
                 </text>

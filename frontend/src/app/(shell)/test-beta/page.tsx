@@ -9,7 +9,7 @@ export default async function VedicCoursePage() {
     <div className="max-w-5xl space-y-8">
       <VedicCourseHeader />
 
-      <section className="relative rounded-3xl border border-shell-border bg-shell-elevated/40 p-5 pt-8 sm:p-8 sm:pt-8">
+      <section className="washi-card relative p-5 pt-8 sm:p-8 sm:pt-8">
         <VedicCourseModule initialProgress={initialProgress} />
       </section>
     </div>

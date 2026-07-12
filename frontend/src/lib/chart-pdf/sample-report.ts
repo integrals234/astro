@@ -109,6 +109,38 @@ function fillPageBg(doc: jsPDF) {
   doc.rect(0, 0, SAMPLE_PAGE.width, SAMPLE_PAGE.height, "F");
 }
 
+/**
+ * Tile a semi-transparent diagonal "www.jyotishlife.jp" watermark across every
+ * page. This is drawn last, directly into each page's content stream (not a
+ * removable annotation/OCG layer), so it cannot be toggled off in a viewer and
+ * survives normal copy/print — a user would have to re-author the PDF's content
+ * streams to strip it. Uses the always-available Helvetica standard font since
+ * the mark is ASCII, keeping it independent of the locale font.
+ */
+const WATERMARK_TEXT = "www.jyotishlife.jp";
+
+function drawWatermarkAllPages(doc: jsPDF) {
+  const pageCount = doc.getNumberOfPages();
+  for (let page = 1; page <= pageCount; page += 1) {
+    doc.setPage(page);
+    doc.saveGraphicsState();
+    doc.setGState(doc.GState({ opacity: 0.14 }));
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(64, 64, 64);
+
+    let row = 0;
+    for (let y = 60; y < SAMPLE_PAGE.height + 60; y += 132, row += 1) {
+      const rowOffset = row % 2 === 0 ? 0 : 95;
+      for (let x = -60 + rowOffset; x < SAMPLE_PAGE.width + 60; x += 190) {
+        doc.text(WATERMARK_TEXT, x, y, { angle: 30 });
+      }
+    }
+
+    doc.restoreGraphicsState();
+  }
+}
+
 function ensureSpace(doc: jsPDF, y: number, needed: number): number {
   if (y + needed <= SAMPLE_PAGE.contentBottom) return y;
   doc.addPage();
@@ -836,16 +868,27 @@ function drawDashaPages(
   });
 }
 
-export async function generateSampleReportPdf({
-  name,
-  locationName,
-  formData,
-  chartData,
-  lang = "ja",
-}: SampleReportInput) {
-  const doc = new jsPDF({ unit: "pt", format: "a4" });
-  await registerLocaleFont(doc, lang);
-  setActivePdfFont(lang);
+/**
+ * Encryption applied to every downloaded report. The user password is empty so
+ * the file opens without a prompt, but a random, unguessable owner password
+ * locks the permission set: only printing is granted, while copying text,
+ * modifying content, and adding annotations are denied. Combined with the
+ * flattened raster pages, this means the watermark cannot be selected, edited
+ * out, or stripped in a standard PDF viewer.
+ */
+function reportEncryption() {
+  const randomOwnerPassword =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID() + crypto.randomUUID()
+      : Math.random().toString(36).slice(2) + Date.now().toString(36);
+  return {
+    userPassword: "",
+    ownerPassword: randomOwnerPassword,
+    userPermissions: ["print"] as ("print" | "modify" | "copy" | "annot-forms")[],
+  };
+}
+
+function setReportMetadata(doc: jsPDF, lang: PdfLanguage) {
   const labels = getPdfLabels(lang);
   doc.setProperties({
     title: labels.reportTitle,
@@ -853,6 +896,71 @@ export async function generateSampleReportPdf({
     subject: labels.birthChart,
     creator: "Jyotish Life",
   });
+}
+
+function reportFileName(displayName: string, lang: PdfLanguage) {
+  const safeName =
+    (displayName || "chart")
+      .normalize("NFC")
+      .replace(/[^\p{L}\p{N}_-]+/gu, "-")
+      .replace(/^-+|-+$/g, "")
+      .toLocaleLowerCase(lang) || "chart";
+  return `${safeName}-birth-chart-report-${lang}.pdf`;
+}
+
+/**
+ * Re-render every vector page of `sourceDoc` to a high-resolution raster and
+ * rebuild the document as flattened images inside an encrypted PDF. Because the
+ * tiled watermark is drawn into the source content stream first, it becomes
+ * part of the rasterized pixels and can no longer be separated from the report.
+ * Runs only in the browser (needs Canvas + a PDF renderer) and is guarded by a
+ * fallback in the caller.
+ */
+async function flattenToEncryptedPdf(
+  sourceDoc: jsPDF,
+  lang: PdfLanguage,
+): Promise<jsPDF> {
+  const pdfjs = await import("pdfjs-dist");
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.min.mjs",
+    import.meta.url,
+  ).toString();
+
+  const data = sourceDoc.output("arraybuffer");
+  const loadingTask = pdfjs.getDocument({ data, password: "" });
+  const pdf = await loadingTask.promise;
+
+  const out = new jsPDF({ unit: "pt", format: "a4", encryption: reportEncryption() });
+  setReportMetadata(out, lang);
+
+  const renderScale = 2.5;
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+    const page = await pdf.getPage(pageNumber);
+    const viewport = page.getViewport({ scale: renderScale });
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Canvas 2D context unavailable for PDF flatten");
+    await page.render({ canvas, canvasContext: context, viewport }).promise;
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    if (pageNumber > 1) out.addPage();
+    out.addImage(imgData, "JPEG", 0, 0, SAMPLE_PAGE.width, SAMPLE_PAGE.height);
+    page.cleanup();
+  }
+
+  await pdf.destroy();
+  return out;
+}
+
+async function buildReport(
+  doc: jsPDF,
+  { name, locationName, formData, chartData, lang }: Required<SampleReportInput>,
+): Promise<string> {
+  await registerLocaleFont(doc, lang);
+  setActivePdfFont(lang);
+  setReportMetadata(doc, lang);
 
   // Prefetch images used on page 2
   const moon = chartData.planets.find((p) => p.name === "Moon");
@@ -923,12 +1031,51 @@ export async function generateSampleReportPdf({
   await drawLagnaNakshatraPage(doc, chartData, lang);
   drawDashaPages(doc, chartData, formData, lang);
 
-  const suffix = lang;
-  const safeName =
-    (displayName || "chart")
-      .normalize("NFC")
-      .replace(/[^\p{L}\p{N}_-]+/gu, "-")
-      .replace(/^-+|-+$/g, "")
-      .toLocaleLowerCase(lang) || "chart";
-  doc.save(`${safeName}-birth-chart-report-${suffix}.pdf`);
+  // Bake the tiled watermark into every page after all content is laid out.
+  drawWatermarkAllPages(doc);
+
+  return reportFileName(displayName, lang);
+}
+
+export async function generateSampleReportPdf({
+  name,
+  locationName,
+  formData,
+  chartData,
+  lang = "ja",
+}: SampleReportInput) {
+  const input: Required<SampleReportInput> = {
+    name,
+    locationName,
+    formData,
+    chartData,
+    lang,
+  };
+
+  // Build the full vector report (with the tiled watermark baked in).
+  const sourceDoc = new jsPDF({ unit: "pt", format: "a4" });
+  const fileName = await buildReport(sourceDoc, input);
+
+  // Preferred output: flatten pages to raster inside an encrypted PDF so the
+  // watermark is fused into the pixels and content can't be edited/copied.
+  try {
+    const flattened = await flattenToEncryptedPdf(sourceDoc, lang);
+    flattened.save(fileName);
+    return;
+  } catch (error) {
+    console.warn(
+      "PDF rasterization failed; falling back to encrypted vector report.",
+      error,
+    );
+  }
+
+  // Fallback: rebuild into an encrypted vector document. The watermark is still
+  // embedded in the content stream, and copy/modify permissions remain locked.
+  const fallbackDoc = new jsPDF({
+    unit: "pt",
+    format: "a4",
+    encryption: reportEncryption(),
+  });
+  await buildReport(fallbackDoc, input);
+  fallbackDoc.save(fileName);
 }

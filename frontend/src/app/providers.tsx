@@ -2,7 +2,8 @@
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { enUS, hiIN, jaJP, koKR } from "@clerk/localizations";
-import { clerkAppearance } from "@/lib/clerk-appearance";
+import { useTheme } from "next-themes";
+import { getClerkAppearance } from "@/lib/clerk-appearance";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ContentProtection from "@/components/layout/ContentProtection";
 import {
@@ -16,10 +17,11 @@ const clerkLocalizations = { en: enUS, hi: hiIN, ja: jaJP, ko: koKR } as const;
 
 function LocalizedClerkProvider({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
+  const { resolvedTheme } = useTheme();
 
   return (
     <ClerkProvider
-      appearance={clerkAppearance}
+      appearance={getClerkAppearance(resolvedTheme === "dark" ? "dark" : "light")}
       localization={clerkLocalizations[language]}
     >
       <LanguageAccountSync />

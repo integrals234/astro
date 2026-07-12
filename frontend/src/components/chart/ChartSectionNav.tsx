@@ -15,7 +15,7 @@ export default function ChartSectionNav() {
   return (
     <nav
       aria-label={copy.nav.sectionsAria}
-      className="mb-6 flex items-center gap-1 overflow-x-auto rounded-2xl border border-shell-border bg-shell-elevated/40 p-1"
+      className="mb-6 flex items-center gap-1 overflow-x-auto border-b border-border"
     >
       {chartNavItems.map((item) => {
         const active = isChartNavActive(pathname, item.href);
@@ -26,16 +26,13 @@ export default function ChartSectionNav() {
             key={item.href}
             href={item.href}
             title={item.description}
-            className={`relative flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-medium whitespace-nowrap transition-all duration-200 ${
+            className={`relative flex items-center gap-2 px-3.5 py-2.5 text-xs font-body font-medium whitespace-nowrap transition-colors ${
               active
-                ? "bg-shell-accent-soft text-shell-warm shadow-[inset_0_-2px_0_0_var(--shell-accent)]"
-                : "text-shell-muted hover:text-shell-warm hover:bg-white/[0.04]"
+                ? "text-ink border-b-2 border-terracotta"
+                : "text-text-muted hover:text-text"
             }`}
           >
-            <Icon
-              size={14}
-              className={`shrink-0 ${active ? "text-shell-accent" : "text-shell-muted"}`}
-            />
+            <Icon size={14} className="shrink-0" />
             <span>{item.label}</span>
           </Link>
         );

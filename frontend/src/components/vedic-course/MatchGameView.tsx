@@ -76,7 +76,7 @@ export default function MatchGameView({ game, lang, onComplete }: MatchGameProps
     >
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-shell-muted mb-3">
+          <p className="font-body text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted mb-3">
             {uiString("terms", lang)}
           </p>
           {game.pairs.map((pair) => {
@@ -91,28 +91,28 @@ export default function MatchGameView({ game, lang, onComplete }: MatchGameProps
                 type="button"
                 disabled={isMatched || completed}
                 onClick={() => handleLeft(pair.leftId)}
-                className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+                className={`washi-card flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors ${
                   isMatched
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
+                    ? "border-moss bg-[rgba(124,139,111,0.12)] text-moss"
                     : isWrong
-                      ? "border-red-400/40 bg-red-500/10"
+                      ? "border-caution bg-[rgba(199,123,78,0.1)]"
                       : isSelected
-                        ? "border-shell-accent/50 bg-shell-accent-soft text-shell-warm"
-                        : "border-shell-border bg-shell-bg/50 text-shell-warm hover:border-shell-accent/25"
+                        ? "border-terracotta text-ink"
+                        : "text-ink hover:border-terracotta"
                 }`}
               >
-                <Icon size={16} className="shrink-0 text-shell-accent" />
+                <Icon size={16} className="shrink-0 text-terracotta" />
                 <span className="flex-1">
                   <FormattedText text={t(pair.left, lang)} />
                 </span>
-                {isMatched && <CheckCircle2 size={16} className="text-emerald-300" />}
+                {isMatched && <CheckCircle2 size={16} className="text-moss" />}
               </button>
             );
           })}
         </div>
 
         <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-shell-muted mb-3">
+          <p className="font-body text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted mb-3">
             {uiString("meanings", lang)}
           </p>
           {rightItems.map((item) => {
@@ -125,14 +125,14 @@ export default function MatchGameView({ game, lang, onComplete }: MatchGameProps
                 type="button"
                 disabled={isMatched || completed || !selectedLeft}
                 onClick={() => handleRight(item.id)}
-                className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+                className={`washi-card flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors ${
                   isMatched
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
+                    ? "border-moss bg-[rgba(124,139,111,0.12)] text-moss"
                     : isWrong
-                      ? "border-red-400/40 bg-red-500/10"
+                      ? "border-caution bg-[rgba(199,123,78,0.1)]"
                       : selectedLeft
-                        ? "border-shell-border bg-shell-bg/50 text-shell-warm hover:border-violet-400/30 hover:bg-violet-500/5"
-                        : "border-shell-border bg-shell-bg/30 text-shell-muted"
+                        ? "text-ink hover:border-terracotta"
+                        : "text-text-muted"
                 }`}
               >
                 <Link2 size={14} className="shrink-0 opacity-50" />

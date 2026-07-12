@@ -19,16 +19,16 @@ export default function ShellPageHeader({
   return (
     <div className="mb-8">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-shell-border bg-shell-elevated/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.24em] text-shell-muted">
-          <Icon size={12} className="text-shell-accent" />
+        <div className="inline-flex items-center gap-2 border border-border px-3 py-1.5 text-xs font-body uppercase tracking-[0.12em] text-terracotta">
+          <Icon size={12} className="text-terracotta" />
           {eyebrow}
         </div>
         {trailing}
       </div>
-      <h2 className="font-serif text-3xl md:text-4xl text-shell-warm tracking-tight">
+      <h1 className="font-header text-[30px] text-ink tracking-tight md:text-[34px]">
         {title}
-      </h2>
-      <p className="mt-3 text-sm md:text-base text-shell-muted max-w-2xl leading-relaxed">
+      </h1>
+      <p className="mt-3 max-w-2xl text-base font-body leading-[1.9] text-text-muted">
         {description}
       </p>
     </div>

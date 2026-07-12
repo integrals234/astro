@@ -67,7 +67,7 @@ export default function BackToNavButton({
           }}
           aria-label={buttonLabel}
           title={buttonLabel}
-          className={`fixed z-30 flex h-10 w-10 items-center justify-center rounded-full border border-shell-border/40 bg-shell-bg/70 text-shell-muted/90 shadow-[0_6px_24px_-10px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[color,background-color,border-color,opacity,transform] duration-200 hover:border-shell-accent/35 hover:bg-shell-accent-soft/70 hover:text-shell-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-accent/40 active:scale-95 bottom-5 right-5 supports-[padding:max(0px)]:bottom-[max(1.25rem,env(safe-area-inset-bottom))] supports-[padding:max(0px)]:right-[max(1.25rem,env(safe-area-inset-right))] md:bottom-8 md:right-8 ${className}`}
+          className={`fixed z-30 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-washi-elevated text-text-muted shadow-[0_1px_3px_rgba(47,47,47,0.06)] transition-[color,background-color,border-color,opacity,transform] duration-200 hover:border-terracotta hover:text-terracotta focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/40 active:scale-95 bottom-5 right-5 supports-[padding:max(0px)]:bottom-[max(1.25rem,env(safe-area-inset-bottom))] supports-[padding:max(0px)]:right-[max(1.25rem,env(safe-area-inset-right))] md:bottom-8 md:right-8 ${className}`}
         >
           <ArrowUp size={17} strokeWidth={2.25} aria-hidden />
         </motion.button>

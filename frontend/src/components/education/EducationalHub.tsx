@@ -227,9 +227,9 @@ function TopicIndexInner({
       <nav
         ref={navRef}
         aria-label={uiText("topicsInSection", lang)}
-        className={`-mx-1 mb-8 rounded-2xl border border-shell-border/70 bg-shell-sidebar/40 px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:bg-shell-bg/95 lg:backdrop-blur-md ${pinned
-            ? "lg:border-shell-accent/25 lg:py-2.5 lg:shadow-[0_10px_30px_-14px_rgba(0,0,0,0.55)]"
-            : "lg:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)]"
+        className={`-mx-1 mb-8 rounded-lg border border-border bg-washi-elevated px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:backdrop-blur-md ${pinned
+            ? "lg:border-terracotta/40 lg:py-2.5"
+            : ""
           }`}
       >
         <button
@@ -266,12 +266,12 @@ function TopicIndexInner({
                   type="button"
                   onClick={() => handleJump(tab.id)}
                   aria-current={active ? "location" : undefined}
-                  className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium leading-snug transition-all ${active
-                      ? "bg-shell-accent-soft text-shell-warm border border-shell-accent/40 shadow-[inset_0_-1px_0_0_var(--shell-accent)]"
-                      : "text-shell-muted border border-shell-border/50 hover:text-shell-warm hover:bg-white/[0.04]"
+                  className={`rounded-md bg-washi-elevated px-3 py-1.5 text-left text-xs font-medium leading-snug transition-colors ${active
+                      ? "text-ink border border-border border-l-[3px] border-l-terracotta"
+                      : "text-text-muted border border-border hover:text-ink hover:border-terracotta"
                     }`}
                 >
-                  <span className="mr-1.5 text-[10px] tabular-nums text-shell-accent/75">
+                  <span className="mr-1.5 text-[10px] tabular-nums text-terracotta">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   {t(tab.label, lang)}
@@ -485,7 +485,7 @@ function InfographicImage({
   }
 
   return (
-    <div className={`overflow-hidden bg-[#fafaf8] ${className}`}>
+    <div className={`overflow-hidden bg-washi-elevated ${className}`}>
       <div className="scale-[1.03] origin-center">
         <Image
           src={src}
@@ -612,7 +612,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
       {rashisOverviewBlocks.map((block, i) => (
         <article
           key={i}
-          className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8"
+          className="washi-card p-6 md:p-8"
         >
           {block.title && (
             <h3 className="font-serif text-xl text-shell-warm mb-4">
@@ -641,7 +641,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
         {rashis.map((sign) => (
           <article
             key={sign.id}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
+            className="washi-card overflow-hidden"
           >
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
@@ -738,7 +738,7 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
         {planets.map((planet) => (
           <article
             key={planet.id}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden"
+            className="washi-card overflow-hidden"
           >
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
@@ -836,7 +836,7 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
         {nakshatras.map((nak) => (
           <article
             key={nak.id}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 overflow-hidden flex flex-col"
+            className="washi-card overflow-hidden flex flex-col"
           >
             {nak.image ? (
               <InfographicImage
@@ -846,7 +846,7 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
-              <div className="flex h-28 items-center justify-center rounded-t-2xl bg-[#fafaf8]">
+              <div className="flex h-28 items-center justify-center rounded-t-2xl bg-washi-elevated">
                 <Star size={28} className="text-shell-accent/50" />
               </div>
             )}
@@ -937,7 +937,7 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
         </h2>
       </div>
 
-      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
+      <article className="washi-card p-6 md:p-8">
         {aspectsIntro.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
             {formatted(aspectsIntro.title, lang)}
@@ -950,7 +950,7 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
         ))}
       </article>
 
-      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
+      <article className="washi-card p-6 md:p-8">
         {universalAspect.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
             {formatted(universalAspect.title!, lang)}
@@ -984,7 +984,7 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
         {specialAspects.map((rule, i) => (
           <article
             key={i}
-            className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8"
+            className="washi-card p-6 md:p-8"
           >
             <h3 className="font-serif text-xl text-shell-warm mb-1">
               {t(rule.planet, lang)}
@@ -1007,7 +1007,7 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
         ))}
       </div>
 
-      <article className="rounded-2xl border border-shell-border bg-shell-elevated/40 p-6 md:p-8">
+      <article className="washi-card p-6 md:p-8">
         {conjunctionBlock.title && (
           <h3 className="font-serif text-xl text-shell-warm mb-4">
             {formatted(conjunctionBlock.title!, lang)}
@@ -1177,12 +1177,12 @@ function EducationHubInner({
                     key={item.id}
                     type="button"
                     onClick={() => selectSection(item.id)}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs sm:text-sm transition-all lg:gap-2.5 lg:px-4 lg:py-3 ${active
-                        ? "bg-shell-accent-soft text-shell-warm shadow-[inset_3px_0_0_0_var(--shell-accent)]"
-                        : "text-shell-muted hover:bg-white/[0.04] hover:text-shell-warm"
+                    className={`flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-xs sm:text-sm transition-colors lg:gap-2.5 lg:px-4 lg:py-3 ${active
+                        ? "text-ink shadow-[inset_3px_0_0_0_var(--color-terracotta)]"
+                        : "text-text-muted hover:text-ink"
                       }`}
                   >
-                    <Icon size={16} className={`shrink-0 ${active ? "text-shell-accent" : ""}`} />
+                    <Icon size={16} className={`shrink-0 ${active ? "text-terracotta" : ""}`} />
                     <span className="min-w-0 leading-snug">{item.label[lang]}</span>
                   </button>
                 );

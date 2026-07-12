@@ -146,7 +146,7 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
       {saveError && (
         <p
           role="alert"
-          className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+          className="rounded-lg border border-caution bg-[rgba(199,123,78,0.1)] px-4 py-3 text-sm text-terracotta"
         >
           {saveError}
         </p>
@@ -161,19 +161,19 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
       />
 
       {courseComplete ? (
-        <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-shell-bg p-8 sm:p-10 text-center">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/15">
-            <Trophy size={32} className="text-emerald-300" />
+        <div className="washi-card p-8 sm:p-10 text-center">
+          <div className="washi-icon-chip mx-auto mb-5 h-16 w-16">
+            <Trophy size={32} className="text-moss" />
           </div>
-          <h3 className="font-serif text-2xl sm:text-3xl text-shell-warm">
+          <h3 className="font-header text-2xl sm:text-3xl text-ink">
             {uiString("courseComplete", lang)}
           </h3>
-          <p className="mt-3 text-sm text-shell-muted max-w-lg mx-auto leading-relaxed">
+          <p className="mt-3 text-sm text-text-muted max-w-lg mx-auto leading-relaxed">
             {uiString("completeBody", lang)}
           </p>
           <Link
             href="/chart"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-6 py-3 text-xs font-bold uppercase tracking-wider text-shell-accent transition-all hover:bg-shell-accent/25 hover:text-shell-warm"
+            className="washi-btn-primary mt-8 gap-2 px-6 py-3 text-xs uppercase tracking-wider"
           >
             {uiString("goDashboard", lang)}
             <ChevronRight size={16} />
@@ -181,17 +181,17 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
         </div>
       ) : (
         <>
-          <div className="rounded-3xl border border-shell-border bg-shell-elevated/30 px-5 py-4 sm:px-6">
-            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted">
+          <div className="washi-card px-5 py-4 sm:px-6">
+            <p className="font-body text-[10px] font-medium uppercase tracking-[0.24em] text-text-muted">
               {uiString("chapter", lang, chapter.number)}
               {isInteractive && (
-                <span className="ml-2 text-violet-300">· {uiString("game", lang)}</span>
+                <span className="ml-2 text-terracotta">· {uiString("game", lang)}</span>
               )}
             </p>
-            <h2 className="mt-1 font-serif text-lg sm:text-xl text-shell-warm">
+            <h2 className="mt-1 font-body text-lg sm:text-xl font-semibold text-ink">
               {t(chapter.title, lang)}
             </h2>
-            <p className="mt-1 text-sm text-shell-muted">{t(chapter.subtitle, lang)}</p>
+            <p className="mt-1 text-sm text-text-muted">{t(chapter.subtitle, lang)}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -210,7 +210,7 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
               type="button"
               onClick={handlePrev}
               disabled={currentChapter === 0 && currentStepIndex === 0}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-shell-border bg-shell-elevated/60 px-4 py-2.5 sm:px-5 sm:py-3 text-xs font-bold uppercase tracking-wider text-shell-muted transition-colors hover:text-shell-warm disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-washi-elevated px-4 py-2.5 sm:px-5 sm:py-3 font-body text-xs font-medium uppercase tracking-wider text-text-muted transition-colors hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <ChevronLeft size={16} />
               {uiString("back", lang)}
@@ -220,7 +220,7 @@ export default function VedicCourseModule({ initialProgress }: VedicCourseModule
               type="button"
               onClick={handleNext}
               disabled={!canGoNext}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-shell-accent/30 bg-shell-accent/15 px-5 py-2.5 sm:px-6 sm:py-3 text-xs font-bold uppercase tracking-wider text-shell-accent transition-all hover:bg-shell-accent/25 hover:text-shell-warm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-shell-accent/15"
+              className="washi-btn-primary gap-1.5 px-5 py-2.5 sm:px-6 sm:py-3 text-xs uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isLastStepInChapter && isLastChapter
                 ? uiString("finish", lang)

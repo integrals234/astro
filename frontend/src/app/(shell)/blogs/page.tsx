@@ -18,8 +18,8 @@ export default function BlogsPage() {
         description={copy.description}
       />
 
-      <div className="flex min-h-[40vh] items-center justify-center rounded-3xl border border-shell-border bg-shell-elevated/35 px-6 py-16">
-        <p className="text-sm md:text-base text-shell-muted text-center">
+      <div className="washi-card flex min-h-[40vh] items-center justify-center px-6 py-16">
+        <p className="text-sm md:text-base text-text-muted text-center">
           {copy.empty}
         </p>
       </div>

@@ -14,16 +14,16 @@ export default function LanguageSetting() {
   return (
     <section
       id="language"
-      className="scroll-mt-6 overflow-hidden rounded-3xl border border-shell-border bg-shell-elevated/60"
+      className="washi-card scroll-mt-6 overflow-hidden"
     >
-      <div className="border-b border-shell-border px-6 py-4">
+      <div className="border-b border-border px-6 py-4">
         <div className="flex items-center gap-2">
-          <Languages size={15} className="text-shell-accent" />
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.24em] text-shell-muted">
+          <Languages size={15} className="text-moss" />
+          <h3 className="washi-eyebrow-muted">
             {copy.title}
           </h3>
         </div>
-        <p className="mt-1 text-xs text-shell-muted">{copy.description}</p>
+        <p className="mt-1 text-xs text-text-muted">{copy.description}</p>
       </div>
 
       <div className="grid gap-2 p-6 sm:grid-cols-2">
@@ -35,10 +35,10 @@ export default function LanguageSetting() {
               type="button"
               onClick={() => setLanguage(option.code)}
               aria-pressed={active}
-              className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition-colors ${
+              className={`flex items-center justify-between rounded-md border px-4 py-3 text-left font-body transition-colors ${
                 active
-                  ? "border-shell-accent/35 bg-shell-accent-soft text-shell-warm"
-                  : "border-shell-border bg-shell-bg/50 text-shell-muted hover:text-shell-warm"
+                  ? "border-terracotta/60 bg-neutral-tag text-ink"
+                  : "border-border bg-washi text-text-muted hover:text-ink"
               }`}
             >
               <span>
@@ -49,13 +49,13 @@ export default function LanguageSetting() {
                   </span>
                 )}
               </span>
-              {active && <Check size={16} className="text-shell-accent" />}
+              {active && <Check size={16} className="text-terracotta" />}
             </button>
           );
         })}
       </div>
 
-      <p className="px-6 pb-5 text-xs text-shell-muted">
+      <p className="px-6 pb-5 text-xs text-text-muted">
         {isSignedIn ? copy.signedIn : copy.signedOut}
       </p>
     </section>

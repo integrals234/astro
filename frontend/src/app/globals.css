@@ -293,6 +293,19 @@ svg {
   }
 }
 
+/*
+ * Component primitives live in Tailwind's `components` layer.
+ *
+ * Without this they were plain top-level rules, which the cascade places
+ * *after* the utilities from `@import "tailwindcss"` — so a component class
+ * silently beat any utility touching the same property. `.washi-seal` sets
+ * `display: inline-flex`, which meant `class="washi-seal hidden lg:inline-flex"`
+ * rendered the seal at every width: the mobile hero showed a second copy of
+ * the eyebrow, laid out horizontally, squeezing the h1 into a narrow column.
+ *
+ * In a layer, utilities win — which is the whole point of utilities.
+ */
+@layer components {
 /* Reusable editorial primitives */
 .washi-card {
   background: var(--color-washi-elevated);
@@ -781,6 +794,7 @@ html[lang="en"] .washi-measure {
   color: var(--color-gold);
   font-size: 0.75em;
   line-height: 1;
+}
 }
 
 /* Responsive nav */

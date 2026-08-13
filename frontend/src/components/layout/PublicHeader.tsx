@@ -119,22 +119,33 @@ export default function PublicHeader({
       <div
         className={`shell-header-mobile mx-auto w-full ${maxWidth} items-center gap-2 px-4 py-3`}
       >
+        {/*
+         * Three controls, not five. The theme toggle is a 3-button segmented
+         * control and the language switcher is four links — side by side on
+         * the right they overran a 390px viewport and collided with the
+         * brand. Both now live in the drawer, which has room for them.
+         */}
         <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
 
-        <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
-          <SiteBrand size="sm" className="shrink-0" />
+        <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 overflow-hidden text-center">
+          <SiteBrand size="sm" className="max-w-full shrink-0" />
           {pageLabel && (
-            <p className="washi-eyebrow-muted text-[10px] tracking-[0.2em]">
+            <p className="washi-eyebrow-muted w-full truncate text-[10px] tracking-[0.2em]">
               {pageLabel}
             </p>
           )}
         </div>
 
-        <ThemeToggle iconOnly />
-        <PublicLanguageLink
-          iconOnly
-          className="inline-flex h-9 shrink-0 items-center justify-center gap-1 rounded-md border border-border bg-washi-elevated px-1.5 text-[10px] text-text transition-colors hover:text-terracotta"
-        />
+        <div className="flex shrink-0 items-center">
+          <SignedOut>
+            <Link href="/sign-in" className="washi-btn-tertiary text-[11px]">
+              {copy.chrome.signIn}
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+        </div>
       </div>
     </header>
   );

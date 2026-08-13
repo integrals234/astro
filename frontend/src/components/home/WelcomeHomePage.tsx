@@ -47,11 +47,20 @@ type Lang = ReturnType<typeof useWelcomeLang>["lang"];
 function HomeBanner({ embedded, lang }: { embedded?: boolean; lang: Lang }) {
   return (
     <figure
-      className={`relative ${embedded ? "-mx-4 mb-10 md:-mx-8" : "mb-10 w-full"}`}
+      /*
+       * `overflow-hidden` belongs here, on the parent.
+       *
+       * Moment #1 scales the inner span to 1.06 and lifts it, and an element
+       * cannot clip its own transform — so with the clip on the span the
+       * banner grew upward and covered the site header.
+       */
+      className={`relative overflow-hidden ${
+        embedded ? "-mx-4 mb-10 md:-mx-8" : "mb-10 w-full"
+      }`}
     >
       {/* Moment #1: the banner recedes at half scroll speed as the page moves
           past it. Scrubbed, so it reverses on scroll-back. */}
-      <span data-scroll="banner" className="block overflow-hidden">
+      <span data-scroll="banner" className="block">
         <Image
           src={HOME_BANNER_SRC}
           alt={welcomeText(welcomeContent.bannerAlt, lang)}
@@ -126,27 +135,26 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
             {welcomeText(welcomeContent.heroEyebrow, lang)}
           </p>
 
-          <div className="flex gap-6">
-            {/* 縦書き seal, ja/ko only — falls back to horizontal for en/hi. */}
-            <p className="washi-seal hidden shrink-0 self-start lg:inline-flex">
-              {welcomeText(welcomeContent.heroEyebrow, lang)}
-            </p>
+          {/*
+           * The 縦書き seal is gone from the hero. It rendered the *same*
+           * string as the eyebrow directly above it, and under `[lang="en"]`
+           * it falls back to horizontal — so English got the words twice in a
+           * row, and the flex row it sat in squeezed the h1 into a narrow
+           * column that broke mid-word. `.washi-seal` stays in the design
+           * system for surfaces where it is the only label.
+           */}
+          <h1 className="max-w-3xl font-header text-[length:var(--step-4)] leading-[1.12] tracking-tight text-ink">
+            {welcomeText(welcomeContent.title, lang)}
+          </h1>
 
-            <div className="min-w-0">
-              <h1 className="max-w-3xl font-header text-[length:var(--step-4)] leading-[1.12] tracking-tight text-ink">
-                {welcomeText(welcomeContent.title, lang)}
-              </h1>
+          <p className="washi-measure mt-6 font-header text-[length:var(--step-1)] italic text-text-muted">
+            {welcomeText(welcomeContent.heroLead, lang)}
+          </p>
 
-              <p className="washi-measure mt-6 font-header text-[length:var(--step-1)] italic text-text-muted">
-                {welcomeText(welcomeContent.heroLead, lang)}
-              </p>
+          <HeroCtaRow lang={lang} />
 
-              <HeroCtaRow lang={lang} />
-
-              <div className="mt-8">
-                <TrustBadges />
-              </div>
-            </div>
+          <div className="mt-8">
+            <TrustBadges />
           </div>
         </section>
 

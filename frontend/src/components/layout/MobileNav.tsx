@@ -2,6 +2,7 @@
 
 import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/i18n/LocaleLink";
@@ -127,8 +128,9 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               </nav>
 
               <div className="shrink-0 space-y-3 border-t border-border bg-washi px-4 py-4">
-                <div className="flex justify-center">
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   <ThemeToggle />
+                  <PublicLanguageLink className="inline-flex items-center gap-1.5 rounded-md border border-border bg-washi-elevated px-2.5 py-2 text-xs text-text-muted transition-colors hover:text-ink" />
                 </div>
                 <SignedIn>
                   <div className="flex items-center gap-3 rounded-lg border border-border bg-washi-elevated px-3 py-3">

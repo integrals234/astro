@@ -1,7 +1,11 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { DEFAULT_APP_LANGUAGE } from "@/lib/i18n/language";
-import { LOCALE_SEGMENT_PATTERN, stripLocale } from "@/lib/i18n/routing";
+import {
+  LOCALE_SEGMENT_PATTERN,
+  localizedHref,
+  stripLocale,
+} from "@/lib/i18n/routing";
 
 /*
  * Default public, explicitly protected (Phase 3.1).
@@ -32,7 +36,7 @@ const PROTECTED_PATTERNS = [
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
 
-  const { pathname: bare } = stripLocale(pathname);
+  const { locale, pathname: bare } = stripLocale(pathname);
   if (PROTECTED_PATTERNS.some((pattern) => pattern.test(bare))) {
     /*
      * Returned explicitly rather than calling `auth.protect()`.
@@ -44,14 +48,25 @@ export default clerkMiddleware(async (auth, request) => {
      * at a protected URL. Returning the redirect here leaves no ambiguity: the
      * gate is a plain 307 to sign-in, and nothing downstream runs.
      */
-    const { userId, redirectToSignIn } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       // A `fetch()` expecting JSON should get a status it can branch on, not
       // an HTML sign-in page with a 307 in front of it.
       if (pathname.startsWith("/api")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
-      return redirectToSignIn({ returnBackUrl: request.url });
+
+      /*
+       * Built by hand rather than via `redirectToSignIn()`, which uses the
+       * single `NEXT_PUBLIC_CLERK_SIGN_IN_URL` and would drop the locale —
+       * sending an `/en` visitor to the Japanese sign-in page.
+       */
+      const signInUrl = new URL(
+        localizedHref(locale, "/sign-in"),
+        request.url,
+      );
+      signInUrl.searchParams.set("redirect_url", request.url);
+      return NextResponse.redirect(signInUrl);
     }
   }
 

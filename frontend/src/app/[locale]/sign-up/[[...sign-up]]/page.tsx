@@ -6,6 +6,7 @@ import SiteBrand from "@/components/layout/SiteBrand";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { getSharedCopy } from "@/lib/i18n/shared";
+import { localizedHref } from "@/lib/i18n/routing";
 
 export default function SignUpPage() {
   const { language } = useLanguage();
@@ -22,11 +23,17 @@ export default function SignUpPage() {
           {copy.signUpDescription}
         </p>
       </div>
+      {/*
+       * `path` must match the URL this component is actually mounted at.
+       * Locale routing moved it from `/sign-up` to `/en/sign-up` (and the
+       * bare path for Japanese), and a mismatch makes Clerk render nothing —
+       * the page shipped its heading and no form at all.
+       */}
       <SignUp
         appearance={clerkAppearance}
         routing="path"
-        path="/sign-up"
-        signInUrl="/sign-in"
+        path={localizedHref(language, "/sign-up")}
+        signInUrl={localizedHref(language, "/sign-in")}
       />
     </main>
   );

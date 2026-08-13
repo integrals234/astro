@@ -13,13 +13,25 @@
   --color-neutral-tag: #ede7d8;
   --color-positive: #7c8b6f;
   --color-caution: #c77b4e;
+
+  /* Tonal ramp (Phase 0.1). The eleven above keep their values and meaning;
+   * these only give them somewhere to go. Deep values are for borders, hard
+   * offset shadows, and text-on-tint — never for large fills. */
+  --color-gold: #a9832e; /* rules, glyphs, seals — never a CTA */
+  --color-moss-deep: #333f26;
+  --color-moss-tint: #dde4ce;
+  --color-terracotta-deep: #8f3f1e;
+  --color-terracotta-tint: #f0dcc9;
+  --color-washi-deep: #eae0c6; /* image mats, inset panels — DARKER than washi */
+  --color-ink-soft: #3a362c;
+  --color-ink-deep: #1d1b16; /* inverted-section ground */
 }
 
 /*
  * Dark theme — "sumi-ink paper at night".
  * Same editorial language on warm charcoal instead of pure black; accents
  * lifted slightly for contrast. Utilities compile to var(--color-*), so
- * overriding the variables here re-themes the whole site + shell-* aliases.
+ * overriding the variables here re-themes the whole site.
  */
 .dark {
   --color-ink: #ece4d6;
@@ -33,17 +45,43 @@
   --color-neutral-tag: #332f29;
   --color-positive: #97a585;
   --color-caution: #d68e5f;
+
+  /* Ramp inversion. Gold lifts so the hairline stays visible on sumi; the
+   * tints become low-alpha mixes rather than literal pastels, which would
+   * glow on a dark ground. */
+  --color-gold: #c9a24f;
+  --color-moss-deep: #46543a;
+  --color-moss-tint: color-mix(in srgb, var(--color-moss) 16%, var(--color-washi));
+  --color-terracotta-deep: #a3552c;
+  --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 16%, var(--color-washi));
+  --color-washi-deep: #171512; /* still an inset: darker than the dark ground */
+  --color-ink-soft: #c9c1b2;
+  --color-ink-deep: #100f0c;
 }
 
 /* Non-color tokens + compatibility aliases */
 :root,
 .light,
 .dark {
-  --h1-size: 30px;
-  --h2-size: 22px;
-  --body-size: 16px;
-  --ui-small-size: 13px;
+  /* Fluid type scale (Phase 0.2). The previous fixed 30/22/16/13px rendered
+   * identically on a 390px phone and a 2560px display, which is why the hero
+   * had no presence. */
+  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem); /* 13→14  UI small */
+  --step-0: clamp(0.9375rem, 0.91rem + 0.14vw, 1rem); /* 15→16  body */
+  --step-1: clamp(1.125rem, 1.07rem + 0.27vw, 1.3125rem); /* 18→21  lead */
+  --step-2: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem); /* 22→28  h2 */
+  --step-3: clamp(1.75rem, 1.55rem + 1vw, 2.5rem); /* 28→40  h1 */
+  --step-4: clamp(2.25rem, 1.8rem + 2.25vw, 4rem); /* 36→64  display */
+
+  /* Legacy names kept as aliases so nothing breaks mid-migration. */
+  --h1-size: var(--step-3);
+  --h2-size: var(--step-2);
+  --body-size: var(--step-0);
+  --ui-small-size: var(--step--1);
   --line-height-body: 1.9;
+
+  --measure: 34em; /* ~34 JP chars — researched optimum is 25–35 */
+  --measure-latin: 68ch;
 
   --radius-card: 8px;
   --radius-button: 6px;
@@ -53,21 +91,15 @@
   --shadow-lift: 0 8px 24px rgba(47, 47, 47, 0.08), 0 2px 6px rgba(47, 47, 47, 0.04);
   --shadow-press: 0 1px 2px rgba(47, 47, 47, 0.08) inset;
   --shadow-glow-terracotta: 0 4px 18px rgba(199, 123, 78, 0.22);
+  /* Paper top edge — the depth device. Composed into every card shadow so it
+   * survives hover/press state changes. */
+  --card-edge: inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
   --ease-butter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
   --duration-fast: 160ms;
   --duration-base: 280ms;
   --duration-slow: 480ms;
 
-  /* Compatibility aliases for existing shell-* Tailwind classes */
-  --shell-bg: var(--color-washi);
-  --shell-sidebar: var(--color-washi);
-  --shell-elevated: var(--color-washi-elevated);
-  --shell-border: var(--color-border);
-  --shell-warm: var(--color-ink);
-  --shell-muted: var(--color-text-muted);
-  --shell-accent: var(--color-terracotta);
-  --shell-accent-soft: rgba(199, 123, 78, 0.12);
   --background: var(--color-washi);
   --foreground: var(--color-text);
 
@@ -86,7 +118,8 @@ html[lang="ko"] {
   --font-header: var(--font-noto-serif-kr), "Noto Serif KR", serif;
   --font-body: var(--font-noto-sans-kr), "Pretendard", "Noto Sans KR", sans-serif;
   --font-chart: var(--font-lora), "Lora", serif;
-  --body-size: 17px;
+  /* Override the scale step, not --body-size — the latter is now an alias. */
+  --step-0: 1.0625rem;
   --line-height-body: 2;
 }
 
@@ -94,7 +127,7 @@ html[lang="hi"] {
   --font-header: var(--font-martel), "Martel", serif;
   --font-body: var(--font-hind), "Hind", sans-serif;
   --font-chart: var(--font-lora), "Lora", serif;
-  --body-size: 17px;
+  --step-0: 1.0625rem;
   --line-height-body: 2;
 }
 
@@ -105,20 +138,12 @@ html[lang="hi"] {
   --shadow-lift: 0 10px 28px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-press: 0 1px 3px rgba(0, 0, 0, 0.5) inset;
   --shadow-glow-terracotta: 0 4px 20px rgba(214, 142, 95, 0.28);
-  --shell-accent-soft: rgba(214, 142, 95, 0.16);
+  --card-edge: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-shell-bg: var(--shell-bg);
-  --color-shell-sidebar: var(--shell-sidebar);
-  --color-shell-elevated: var(--shell-elevated);
-  --color-shell-border: var(--shell-border);
-  --color-shell-warm: var(--shell-warm);
-  --color-shell-muted: var(--shell-muted);
-  --color-shell-accent: var(--shell-accent);
-  --color-shell-accent-soft: var(--shell-accent-soft);
   --font-sans: var(--font-body);
 }
 
@@ -154,10 +179,54 @@ body {
   font-family: var(--font-body);
   font-size: var(--body-size);
   line-height: var(--line-height-body);
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+
+  /* Japanese typographic metrics (Phase 0.3). None of this was set before,
+   * and it is the clearest tell between a site designed for Japan and a
+   * Western site with Japanese text pasted in. */
+  font-feature-settings: "palt" 1; /* proportional kana — kills the gappy look */
+  font-kerning: normal;
+  letter-spacing: 0.02em; /* JP body wants slight positive tracking */
+  line-break: strict; /* correct 禁則処理 */
+  word-break: normal;
+  overflow-wrap: break-word;
+  text-autospace: normal; /* auto space between JP and Latin/digits */
+}
+
+:where(h1, h2, h3) {
+  font-feature-settings: "palt" 1;
+  letter-spacing: 0.01em;
+  line-height: 1.45; /* headings tighter than the 1.9 body */
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Latin and Devanagari runs should not inherit JP tracking */
+:lang(en),
+:lang(hi) {
+  letter-spacing: 0;
+}
+
+/* Paper grain (Phase 0.4) — fixed, non-interactive, no image asset. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: multiply;
+}
+
+.dark body::before {
+  opacity: 0.055;
+  mix-blend-mode: overlay;
 }
 
 /* Buttery scroll feel on overflow roots */
@@ -168,30 +237,59 @@ body {
   overscroll-behavior-y: contain;
 }
 
-input,
-textarea,
-select,
-[contenteditable="true"],
-[data-allow-copy="true"],
-.cl-formFieldInput,
-.cl-input,
-.cl-otpCodeFieldInput {
-  -webkit-user-select: text;
-  user-select: text;
-  -webkit-touch-callout: default;
-}
-
+/*
+ * Content protection is scoped to images (Phase 3.16). The previous global
+ * `user-select: none` + print kill-switch broke JP mobile translation tools,
+ * reader mode, screen-reader selection and find-on-page — and "cannot select
+ * text" reads as evasive to a user deciding whether to pay. Image rights are
+ * the real exposure; the PDF export carries its own watermark + encryption.
+ */
 img,
 video,
 svg {
   -webkit-user-drag: none;
   user-drag: none;
+  -webkit-touch-callout: none;
 }
 
+/* Grain and ambient washes must never reach paper. */
 @media print {
-  html,
-  body {
+  body::before,
+  .washi-ambient::after {
     display: none !important;
+  }
+}
+
+/* Ambient drift (Phase 0.4) — applied to page roots, never to a card.
+ * The host needs `position: relative` and its content needs to sit above it. */
+.washi-ambient {
+  position: relative;
+  isolation: isolate;
+}
+
+.washi-ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 50% at 12% 8%,
+      color-mix(in srgb, var(--color-terracotta) 6%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      55% 45% at 88% 82%,
+      color-mix(in srgb, var(--color-moss) 5%, transparent),
+      transparent 55%
+    );
+  animation: washi-drift 42s var(--ease-soft) infinite alternate;
+}
+
+@keyframes washi-drift {
+  to {
+    transform: translate3d(-2%, 2%, 0) scale(1.06);
   }
 }
 
@@ -200,7 +298,9 @@ svg {
   background: var(--color-washi-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-elevated);
+  /* Depth comes from the paper edge, not the blur — the blur stays at the
+   * 0 1px 3px weight the market expects. */
+  box-shadow: var(--card-edge), var(--shadow-elevated);
   transition:
     box-shadow var(--duration-base) var(--ease-butter),
     transform var(--duration-base) var(--ease-butter),
@@ -209,7 +309,7 @@ svg {
 
 .washi-card.washi-card-interactive:hover,
 .washi-card.group:hover {
-  box-shadow: var(--shadow-lift);
+  box-shadow: var(--card-edge), var(--shadow-lift);
   border-color: color-mix(in srgb, var(--color-terracotta) 35%, var(--color-border));
   transform: translateY(-2px);
 }
@@ -217,7 +317,7 @@ svg {
 .washi-card.washi-card-interactive:active,
 .washi-card.group:active,
 .washi-card.is-pressing {
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--card-edge), var(--shadow-soft);
   transform: translateY(0) scale(0.985);
 }
 
@@ -230,26 +330,26 @@ svg {
   color: var(--color-washi);
   font-family: var(--font-body);
   font-weight: 600;
-  box-shadow: 0 1px 2px rgba(47, 47, 47, 0.08), 0 4px 12px rgba(199, 123, 78, 0.18);
+  /* Hard offset, not a blur — letterpress rather than web app. The press
+   * travels the full 3px so the button physically lands. */
+  box-shadow: 0 3px 0 var(--color-terracotta-deep);
   transition:
-    opacity var(--duration-fast) var(--ease-soft),
+    background-color var(--duration-fast) var(--ease-soft),
     transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-base) var(--ease-butter),
-    filter var(--duration-fast) var(--ease-soft);
+    box-shadow var(--duration-fast) var(--ease-soft);
   will-change: transform;
 }
 
 .washi-btn-primary:hover {
-  opacity: 0.96;
-  box-shadow: var(--shadow-glow-terracotta);
-  transform: translateY(-1px);
+  background: var(--color-terracotta-deep);
+  box-shadow: 0 2px 0 var(--color-terracotta-deep);
+  transform: translateY(1px);
 }
 
 .washi-btn-primary:active,
 .washi-btn-primary.is-pressing {
-  opacity: 1;
-  transform: translateY(0) scale(0.97);
-  box-shadow: var(--shadow-press);
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--color-terracotta-deep);
 }
 
 .washi-btn-secondary {
@@ -262,11 +362,11 @@ svg {
   color: var(--color-terracotta);
   font-family: var(--font-body);
   font-weight: 600;
-  box-shadow: 0 0 0 0 transparent;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
   transition:
     background-color var(--duration-fast) var(--ease-soft),
     transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-base) var(--ease-butter),
+    box-shadow var(--duration-fast) var(--ease-soft),
     border-color var(--duration-fast) var(--ease-soft),
     color var(--duration-fast) var(--ease-soft);
   will-change: transform;
@@ -274,14 +374,15 @@ svg {
 
 .washi-btn-secondary:hover {
   background: color-mix(in srgb, var(--color-terracotta) 10%, transparent);
-  box-shadow: 0 4px 14px rgba(199, 123, 78, 0.12);
-  transform: translateY(-1px);
+  border-color: var(--color-terracotta-deep);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
+  transform: translateY(1px);
 }
 
 .washi-btn-secondary:active,
 .washi-btn-secondary.is-pressing {
-  transform: translateY(0) scale(0.97);
-  box-shadow: var(--shadow-press);
+  transform: translateY(3px);
+  box-shadow: 0 0 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
 }
 
 .washi-btn-tertiary {
@@ -337,9 +438,33 @@ summary {
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-terracotta);
+  color: var(--color-terracotta-deep);
+}
+
+/*
+ * Rule-flanked eyebrow variants (Phase 0.5). These are opt-in modifiers
+ * rather than a change to the base class: `.washi-eyebrow` has dozens of
+ * existing call sites in varied layouts, and adding pseudo-element rules to
+ * all of them at once is a change no one can eyeball. Phase 2 applies these
+ * deliberately, surface by surface.
+ */
+.washi-eyebrow-flanked,
+.washi-eyebrow-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.washi-eyebrow-flanked::before,
+.washi-eyebrow-flanked::after,
+.washi-eyebrow-lead::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  flex: none;
+  background: var(--color-gold);
 }
 
 .washi-eyebrow-muted {
@@ -456,6 +581,208 @@ summary {
   padding-left: 16px;
 }
 
+/* ── Ornament primitives (Phase 0.5) ───────────────────────────────── */
+
+/*
+ * Torn / deckled paper edge. The scallop is punched out of the panel by
+ * painting the *page ground* over it, so `--deckle-ground` must match
+ * whatever sits behind the panel. Defaults to the page background.
+ */
+.washi-deckle {
+  position: relative;
+  background: var(--color-washi-deep);
+  --deckle-ground: var(--color-washi);
+}
+
+.washi-deckle::before,
+.washi-deckle::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  height: 10px;
+  background: radial-gradient(circle at 8px 0, transparent 8px, var(--deckle-ground) 9px)
+    repeat-x;
+  background-size: 16px 10px;
+  pointer-events: none;
+}
+
+.washi-deckle::before {
+  top: -9px;
+}
+
+.washi-deckle::after {
+  bottom: -9px;
+  transform: rotate(180deg);
+}
+
+/* The everyday divider. */
+.washi-hairline,
+.washi-rule {
+  height: 1px;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold) 15%,
+    var(--color-gold) 85%,
+    transparent
+  );
+}
+
+/* Major section breaks only. */
+.washi-glyph-divider {
+  padding: 26px 0;
+  text-align: center;
+  color: var(--color-gold);
+  letter-spacing: 14px;
+  /* letter-spacing trails the last glyph; pull it back so it reads centered */
+  text-indent: 14px;
+  font-size: var(--step--1);
+  user-select: none;
+}
+
+.washi-glyph-divider::before {
+  content: "✦ ✦ ✦";
+}
+
+/* Image mat — inset in a deeper ground with a hairline border. */
+.washi-mat {
+  padding: 10px;
+  background: var(--color-washi-deep);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.washi-mat :where(img, svg, video) {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+/*
+ * The dark band that gives a page its spine. In dark mode it inverts to a
+ * *lighter* band so the contrast device survives the theme flip instead of
+ * vanishing into the ground.
+ */
+.washi-inverted {
+  background: var(--color-ink-deep);
+  color: var(--color-washi);
+  --card-edge: inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent);
+  --deckle-ground: var(--color-ink-deep);
+}
+
+.washi-inverted .washi-card {
+  background: color-mix(in srgb, var(--color-washi) 6%, var(--color-ink-deep));
+  border-color: color-mix(in srgb, var(--color-washi) 14%, transparent);
+  color: var(--color-washi);
+}
+
+.dark .washi-inverted {
+  background: #35312a;
+  color: var(--color-ink);
+  --deckle-ground: #35312a;
+}
+
+.dark .washi-inverted .washi-card {
+  background: color-mix(in srgb, var(--color-ink) 7%, #35312a);
+  border-color: color-mix(in srgb, var(--color-ink) 16%, transparent);
+  color: var(--color-ink);
+}
+
+/* Pull-quote: italic serif body, small-caps attribution. */
+.washi-quote {
+  font-family: var(--font-header);
+  font-style: italic;
+  font-size: var(--step-1);
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+
+.washi-quote-attribution {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-terracotta-deep);
+}
+
+/*
+ * 縦書き seal — the JP-native counterpart to a horizontal eyebrow.
+ * Latin and Devanagari do not set vertically, so `en`/`hi` fall back to the
+ * horizontal eyebrow treatment.
+ */
+.washi-seal {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.25em;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-terracotta-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.washi-seal::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: none;
+  background: var(--color-terracotta);
+}
+
+html[lang="en"] .washi-seal,
+html[lang="hi"] .washi-seal {
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* 縦中横 — upright 2-digit numerals inside vertical text (第1章). */
+.washi-tatechuyoko {
+  text-combine-upright: all;
+}
+
+/* Prose column width. */
+.washi-measure {
+  max-width: var(--measure);
+}
+
+html[lang="en"] .washi-measure {
+  max-width: var(--measure-latin);
+}
+
+/* Trust-signal chip with a diamond bullet. */
+.washi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-washi-elevated);
+  color: var(--color-text-muted);
+  font-size: var(--step--1);
+  padding: 6px 14px;
+}
+
+.washi-badge::before {
+  content: "◆";
+  color: var(--color-gold);
+  font-size: 0.75em;
+  line-height: 1;
+}
+
 /* Responsive nav */
 .mobile-only {
   display: inline-flex;
@@ -555,20 +882,25 @@ summary {
   font-family: var(--font-body);
 }
 
-/* ── Instagram accent surfaces (creative, still editorial) ── */
+/*
+ * ── Instagram surfaces (Phase 2.7) ──────────────────────────────────
+ *
+ * This block used to be 137 lines and the only non-washi palette in the app,
+ * with full-saturation #f58529 → #dd2a7b → #8134af forced through `!important`.
+ *
+ * The gradient *form* is what makes a chip read as Instagram — not the
+ * specific hues. So the form is preserved and the hues are the site's:
+ * terracotta → gold → moss. That removes every `!important`, makes the whole
+ * block theme-aware for free (the tokens already invert in dark mode), and
+ * retires the `.ig-badge` dark special-case entirely.
+ */
 .ig-strip {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-color: color-mix(in srgb, #e1306c 18%, var(--color-border));
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, #f58529 7%, var(--color-washi-elevated)) 0%,
-      color-mix(in srgb, #dd2a7b 6%, var(--color-washi-elevated)) 45%,
-      color-mix(in srgb, #8134af 7%, var(--color-washi-elevated)) 100%
-    );
-  box-shadow: var(--shadow-soft);
+  border-color: color-mix(in srgb, var(--color-terracotta) 22%, var(--color-border));
+  background: color-mix(in srgb, var(--color-terracotta) 6%, var(--color-washi-elevated));
+  box-shadow: var(--card-edge), var(--shadow-soft);
   transition:
     box-shadow var(--duration-base) var(--ease-butter),
     transform var(--duration-base) var(--ease-butter),
@@ -580,67 +912,68 @@ summary {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
-  background: linear-gradient(180deg, #f58529, #dd2a7b, #8134af, #515bd4);
+  background: linear-gradient(
+    180deg,
+    var(--color-terracotta),
+    var(--color-gold) 60%,
+    var(--color-moss)
+  );
   border-radius: var(--radius-card) 0 0 var(--radius-card);
   z-index: 1;
 }
 
 .ig-strip:hover {
-  box-shadow: var(--shadow-lift), 0 0 0 1px color-mix(in srgb, #dd2a7b 12%, transparent);
+  box-shadow: var(--card-edge), var(--shadow-lift);
+  border-color: color-mix(in srgb, var(--color-terracotta) 40%, var(--color-border));
   transform: translateY(-2px);
 }
 
 .ig-strip:active,
 .ig-strip.is-pressing {
   transform: translateY(0) scale(0.99);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--card-edge), var(--shadow-soft);
 }
 
 .ig-icon-chip {
-  background: linear-gradient(135deg, #f58529 0%, #dd2a7b 50%, #8134af 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(221, 42, 123, 0.28);
-  transition: transform var(--duration-base) var(--ease-butter), box-shadow var(--duration-base) var(--ease-butter);
+  background: linear-gradient(
+    135deg,
+    var(--color-terracotta) 0%,
+    var(--color-gold) 60%,
+    var(--color-moss) 100%
+  );
+  color: var(--color-washi);
+  transition:
+    transform var(--duration-base) var(--ease-butter),
+    box-shadow var(--duration-base) var(--ease-butter);
 }
 
 .ig-strip:hover .ig-icon-chip {
   transform: scale(1.06) rotate(-3deg);
-  box-shadow: 0 4px 14px rgba(221, 42, 123, 0.35);
 }
 
 .ig-handle {
-  background: linear-gradient(90deg, #f58529, #dd2a7b 45%, #8134af 80%, #515bd4);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-terracotta-deep);
+  font-weight: 600;
 }
 
 .ig-banner {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-color: color-mix(in srgb, #e1306c 22%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-terracotta) 24%, var(--color-border));
   background:
-    radial-gradient(ellipse 80% 70% at 100% 0%, rgba(245, 133, 41, 0.14), transparent 55%),
-    radial-gradient(ellipse 70% 60% at 0% 100%, rgba(129, 52, 175, 0.12), transparent 50%),
-    radial-gradient(ellipse 50% 50% at 70% 80%, rgba(221, 42, 123, 0.08), transparent 45%),
+    radial-gradient(
+      ellipse 80% 70% at 100% 0%,
+      color-mix(in srgb, var(--color-terracotta) 12%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 0% 100%,
+      color-mix(in srgb, var(--color-moss) 10%, transparent),
+      transparent 50%
+    ),
     var(--color-washi-elevated);
-  box-shadow: var(--shadow-soft);
-}
-
-.ig-banner::after {
-  content: "";
-  position: absolute;
-  top: -20%;
-  right: -8%;
-  width: min(42vw, 18rem);
-  height: min(42vw, 18rem);
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(245, 133, 41, 0.12), rgba(221, 42, 123, 0.1), rgba(81, 91, 212, 0.08));
-  filter: blur(28px);
-  pointer-events: none;
-  z-index: 0;
-  animation: ig-orb-float 9s var(--ease-soft) infinite alternate;
+  box-shadow: var(--card-edge), var(--shadow-soft);
 }
 
 .ig-banner > * {
@@ -649,19 +982,14 @@ summary {
 }
 
 .ig-badge {
-  border-color: color-mix(in srgb, #dd2a7b 28%, var(--color-border));
-  background: color-mix(in srgb, #dd2a7b 6%, var(--color-washi));
-  color: #c13584;
-}
-
-.dark .ig-badge {
-  color: #f0a0c8;
-  background: color-mix(in srgb, #dd2a7b 12%, var(--color-washi));
+  border-color: color-mix(in srgb, var(--color-terracotta) 30%, var(--color-border));
+  background: color-mix(in srgb, var(--color-terracotta) 8%, var(--color-washi));
+  color: var(--color-terracotta-deep);
 }
 
 .ig-perk {
-  border-color: color-mix(in srgb, #8134af 22%, var(--color-border));
-  background: color-mix(in srgb, #8134af 6%, var(--color-washi));
+  border-color: color-mix(in srgb, var(--color-moss) 24%, var(--color-border));
+  background: color-mix(in srgb, var(--color-moss) 6%, var(--color-washi));
   transition:
     transform var(--duration-fast) var(--ease-butter),
     box-shadow var(--duration-base) var(--ease-butter),
@@ -670,57 +998,37 @@ summary {
 
 .ig-perk:hover {
   transform: translateY(-1px);
-  border-color: color-mix(in srgb, #dd2a7b 35%, var(--color-border));
-  box-shadow: 0 3px 10px rgba(129, 52, 175, 0.12);
+  border-color: color-mix(in srgb, var(--color-terracotta) 38%, var(--color-border));
+  box-shadow: var(--shadow-soft);
 }
 
+/* Letterpress, like every other primary action — no more `!important` fork. */
 .ig-cta {
-  border: none !important;
-  background: linear-gradient(135deg, #f58529 0%, #dd2a7b 48%, #8134af 100%) !important;
-  color: #fff !important;
-  box-shadow: 0 4px 16px rgba(221, 42, 123, 0.28) !important;
+  border: none;
+  background: linear-gradient(
+    45deg,
+    var(--color-terracotta) 0%,
+    var(--color-gold) 60%,
+    var(--color-moss) 100%
+  );
+  color: var(--color-washi);
+  box-shadow: 0 3px 0 var(--color-terracotta-deep);
+  transition:
+    transform var(--duration-fast) var(--ease-butter),
+    box-shadow var(--duration-fast) var(--ease-soft),
+    filter var(--duration-fast) var(--ease-soft);
 }
 
 .ig-cta:hover {
-  filter: brightness(1.05);
-  box-shadow: 0 8px 24px rgba(221, 42, 123, 0.36) !important;
-  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow: 0 2px 0 var(--color-terracotta-deep);
+  transform: translateY(1px);
 }
 
 .ig-cta:active,
 .ig-cta.is-pressing {
-  filter: brightness(0.97);
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 8px rgba(221, 42, 123, 0.22) !important;
-}
-
-@keyframes ig-orb-float {
-  from {
-    transform: translate(0, 0) scale(1);
-  }
-  to {
-    transform: translate(-6%, 8%) scale(1.08);
-  }
-}
-
-@keyframes soft-rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes shimmer-line {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 100% 50%;
-  }
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--color-terracotta-deep);
 }
 
 /* Nav link underline glide */
@@ -787,6 +1095,169 @@ summary {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-terracotta) 18%, transparent);
 }
 
+/* ── View transitions (Phase 1.2) ─────────────────────────────────── */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: vt-out 220ms var(--ease-soft) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 380ms var(--ease-butter) both;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/*
+ * The header and nav hold still while the body crossfades. This is what makes
+ * a route change read as one continuous surface rather than a slideshow.
+ */
+[data-vt-static] {
+  view-transition-name: none;
+}
+
+/* Theme switch — circular wipe from the clicked control (Phase 1.3). */
+[data-theme-transition]::view-transition-old(root) {
+  animation: none;
+  z-index: 0;
+}
+
+[data-theme-transition]::view-transition-new(root) {
+  animation: theme-wipe 520ms var(--ease-butter) both;
+  z-index: 1;
+}
+
+@keyframes theme-wipe {
+  from {
+    clip-path: circle(0 at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y));
+  }
+}
+
+/* ── Scroll choreography (Phase 1.6) ──────────────────────────────── */
+
+/*
+ * Everything here is gated behind @supports and applies only below the fold.
+ * Nothing above the fold animates on load: LCP must never wait on a timeline.
+ * Native `animation-timeline` runs on the compositor; a scroll listener
+ * driving style.transform runs on the main thread and jitters — which matters
+ * doubly on JP mobile, where speed and stability are read as care.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 32%;
+    }
+
+    /* #1 — hero banner recedes as the page scrolls past it. */
+    [data-scroll="banner"] {
+      animation: banner-recede linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 60%;
+    }
+
+    /* #4 — the kundli draws itself: a product demo, not decoration. */
+    [data-scroll="draw"] :where(line, polygon, path, rect) {
+      animation: stroke-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+      stroke-dasharray: var(--draw-length, 400);
+    }
+
+    /* #7 — reading progress hairline on long articles. */
+    [data-scroll="progress"] {
+      animation: progress-scale linear both;
+      animation-timeline: scroll(root);
+      transform-origin: left center;
+    }
+
+    /* #8 — nav condenses on scroll. */
+    [data-scroll="condense"] {
+      animation: nav-condense linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 160px;
+    }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes banner-recede {
+  to {
+    transform: scale(1.06) translateY(-4%);
+  }
+}
+
+@keyframes stroke-draw {
+  from {
+    stroke-dashoffset: var(--draw-length, 400);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes progress-scale {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes nav-condense {
+  to {
+    border-bottom-color: color-mix(in srgb, var(--color-ink) 22%, var(--color-border));
+    padding-block: 0.35rem;
+  }
+}
+
+/* Reading-progress hairline. */
+.washi-progress-bar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 50;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    var(--color-gold),
+    color-mix(in srgb, var(--color-terracotta) 70%, var(--color-gold))
+  );
+  pointer-events: none;
+}
+
 /* Respect reduced motion everywhere */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -805,6 +1276,34 @@ summary {
   .washi-btn-secondary:hover,
   .ig-cta:hover {
     transform: none;
+  }
+
+  /* Ambient drift resolves to its start state, not a 0.01ms jump to the end. */
+  .washi-ambient::after {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /*
+   * Every scroll moment resolves to its *end* state — fully visible, fully
+   * drawn — rather than to a shortened animation. A 0.01ms reveal would leave
+   * content mid-transform.
+   */
+  [data-reveal],
+  [data-scroll] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-scroll="draw"] :where(line, polygon, path, rect) {
+    stroke-dashoffset: 0 !important;
+    stroke-dasharray: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 
   .motion-ready main,

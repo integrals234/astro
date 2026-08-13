@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import Link from "next/link";
+import Link from "@/components/i18n/LocaleLink";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
 import AppearanceSetting from "@/components/settings/AppearanceSetting";
 import LanguageSetting from "@/components/settings/LanguageSetting";

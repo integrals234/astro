@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/i18n/LocaleLink";
 import { AnimatePresence, motion } from "framer-motion";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
@@ -13,6 +14,8 @@ import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { useHaptic } from "@/hooks/useHaptic";
 import { easeOutExpo, springDrawer } from "@/lib/motion/tokens";
+
+const subscribeToClient = () => () => {};
 
 interface MobileNavProps {
   open: boolean;
@@ -28,16 +31,14 @@ function isActive(pathname: string, href: string) {
 }
 
 export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
-  const pathname = usePathname();
+  const pathname = useBarePathname();
   const { language } = useLanguage();
   const copy = getSharedCopy(language);
   const mainNavItems = getMainNavItems(language);
   const { light, selection, medium } = useHaptic();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Portal target only exists on the client. `useSyncExternalStore` rather
+  // than setState-in-effect, matching the pattern in ChartWorkspace.
+  const mounted = useSyncExternalStore(subscribeToClient, () => true, () => false);
 
   useEffect(() => {
     onOpenChange(false);
@@ -125,7 +126,10 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
                 })}
               </nav>
 
-              <div className="shrink-0 border-t border-border bg-washi px-4 py-4">
+              <div className="shrink-0 space-y-3 border-t border-border bg-washi px-4 py-4">
+                <div className="flex justify-center">
+                  <ThemeToggle />
+                </div>
                 <SignedIn>
                   <div className="flex items-center gap-3 rounded-lg border border-border bg-washi-elevated px-3 py-3">
                     <UserButton

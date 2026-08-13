@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
+import Link from "@/components/i18n/LocaleLink";
 import { getChartNavItems, isChartNavActive } from "@/lib/chart-navigation";
 import { useChartLang } from "@/lib/use-chart-lang";
 import { getChartUi } from "@/lib/chart-i18n";
 
 export default function ChartSectionNav() {
-  const pathname = usePathname();
+  const pathname = useBarePathname();
   const lang = useChartLang();
   const chartNavItems = getChartNavItems(lang);
   const copy = getChartUi(lang);

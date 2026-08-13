@@ -127,7 +127,7 @@ function drawWatermarkAllPages(doc: jsPDF) {
     doc.setGState(doc.GState({ opacity: 0.14 }));
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
-    doc.setTextColor(64, 64, 64);
+    doc.setTextColor(...SAMPLE_COLORS.caption);
 
     let row = 0;
     for (let y = 60; y < SAMPLE_PAGE.height + 60; y += 132, row += 1) {
@@ -264,20 +264,6 @@ function drawSampleChart(
   doc.setFillColor(...SAMPLE_COLORS.white);
   doc.rect(x, y, size, size, "F");
 
-  // Side diamonds (sage) — houses 4 & 10 bands in sample
-  doc.setFillColor(...sage);
-  doc.triangle(x + mid, y, x + size, y + mid, x + mid, y + size, "F");
-  doc.triangle(x + mid, y, x, y + mid, x + mid, y + size, "F");
-
-  // Opposite pair (peach) — houses 1 & 7 orientation in sample
-  doc.setFillColor(...peach);
-  doc.triangle(x, y + mid, x + mid, y, x + mid, y + size, "F");
-  doc.triangle(x + size, y + mid, x + mid, y, x + mid, y + size, "F");
-
-  // Re-paint center correctly: sample has peach for 1/7 diamonds and sage for 4/10
-  // Clearer approach matching sample fills:
-  doc.setFillColor(...SAMPLE_COLORS.white);
-  doc.rect(x, y, size, size, "F");
   doc.setFillColor(...peach);
   // top diamond (house 1 area) + bottom (house 7)
   doc.triangle(x + mid, y, x + size, y + mid, x, y + mid, "F");

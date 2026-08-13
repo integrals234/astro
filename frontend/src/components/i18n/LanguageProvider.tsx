@@ -1,13 +1,13 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useState,
-  useSyncExternalStore,
 } from "react";
 import {
   APP_LANGUAGE_COOKIE_MAX_AGE,
@@ -17,6 +17,7 @@ import {
   isAppLanguage,
   type AppLanguage,
 } from "@/lib/i18n/language";
+import { switchLocale } from "@/lib/i18n/routing";
 
 interface LanguageContextValue {
   language: AppLanguage;
@@ -24,40 +25,17 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const APP_LANGUAGE_CHANGE_EVENT = "app-language-change";
 
-function readBrowserLanguage(initialLanguage?: AppLanguage): AppLanguage {
-  if (typeof window === "undefined") {
-    return initialLanguage ?? DEFAULT_APP_LANGUAGE;
-  }
-
-  const explicit = localStorage.getItem(APP_LANGUAGE_KEY);
-  if (isAppLanguage(explicit)) return explicit;
-
-  for (const key of LEGACY_LANGUAGE_STORAGE_KEYS) {
-    const legacy = localStorage.getItem(key);
-    if (isAppLanguage(legacy)) return legacy;
-  }
-
-  return initialLanguage ?? DEFAULT_APP_LANGUAGE;
-}
-
-function persistBrowserLanguage(language: AppLanguage) {
+/**
+ * Persisted preference. Since Phase 3.2 this is *memory only* — it records
+ * what the visitor last chose so we can offer them a link, and it is what the
+ * signed-in account preference syncs against. It never decides what gets
+ * rendered; the URL does. Redirecting or swapping content off a stored
+ * preference is what made Googlebot see English on Japanese URLs.
+ */
+function persistLanguagePreference(language: AppLanguage) {
   localStorage.setItem(APP_LANGUAGE_KEY, language);
   document.cookie = `${APP_LANGUAGE_KEY}=${language}; Path=/; Max-Age=${APP_LANGUAGE_COOKIE_MAX_AGE}; SameSite=Lax`;
-}
-
-function subscribeToBrowserLanguage(onChange: () => void) {
-  const onStorage = (event: StorageEvent) => {
-    if (event.key === APP_LANGUAGE_KEY) onChange();
-  };
-
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(APP_LANGUAGE_CHANGE_EVENT, onChange);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(APP_LANGUAGE_CHANGE_EVENT, onChange);
-  };
 }
 
 export function LanguageProvider({
@@ -67,19 +45,26 @@ export function LanguageProvider({
   children: React.ReactNode;
   initialLanguage?: AppLanguage;
 }) {
-  const language = useSyncExternalStore(
-    subscribeToBrowserLanguage,
-    () => readBrowserLanguage(initialLanguage),
-    () => initialLanguage ?? DEFAULT_APP_LANGUAGE,
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Authoritative: handed down from the `[locale]` route param.
+  const language = initialLanguage ?? DEFAULT_APP_LANGUAGE;
+
+  const applyLanguage = useCallback(
+    (nextLanguage: AppLanguage) => {
+      persistLanguagePreference(nextLanguage);
+      if (nextLanguage === language) return;
+      router.push(switchLocale(pathname, nextLanguage));
+    },
+    [language, pathname, router],
   );
-  const applyLanguage = useCallback((nextLanguage: AppLanguage) => {
-    persistBrowserLanguage(nextLanguage);
-    window.dispatchEvent(new Event(APP_LANGUAGE_CHANGE_EVENT));
-  }, []);
 
   useEffect(() => {
+    // The server already renders <html lang>. This keeps it correct across
+    // client-side navigations between locales.
     document.documentElement.lang = language;
-    persistBrowserLanguage(language);
+    persistLanguagePreference(language);
 
     for (const key of LEGACY_LANGUAGE_STORAGE_KEYS) {
       localStorage.removeItem(key);
@@ -95,7 +80,7 @@ export function LanguageProvider({
 
 export function LanguageAccountSync() {
   const { isLoaded, isSignedIn, user } = useUser();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [accountLoadedFor, setAccountLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
@@ -113,7 +98,12 @@ export function LanguageAccountSync() {
         if (!response.ok) return;
 
         const data = (await response.json()) as { language: unknown };
-        if (isAppLanguage(data.language)) setLanguage(data.language);
+        // Recorded as preference memory only — deliberately *not* applied.
+        // Auto-navigating a signed-in user off the URL they requested is the
+        // same content-swap bug in a different costume.
+        if (isAppLanguage(data.language)) {
+          persistLanguagePreference(data.language);
+        }
         setAccountLoadedFor(userId);
       } catch (error) {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
@@ -124,7 +114,7 @@ export function LanguageAccountSync() {
 
     void loadAccountPreference();
     return () => controller.abort();
-  }, [isLoaded, isSignedIn, setLanguage, user]);
+  }, [isLoaded, isSignedIn, user]);
 
   useEffect(() => {
     if (!isSignedIn || !user || accountLoadedFor !== user.id) return;

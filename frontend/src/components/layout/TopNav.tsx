@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import Link from "@/components/i18n/LocaleLink";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { getMainNavItems } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -17,7 +18,7 @@ function isActive(pathname: string, href: string) {
 }
 
 export default function TopNav() {
-  const pathname = usePathname();
+  const pathname = useBarePathname();
   const { language } = useLanguage();
   const copy = getSharedCopy(language);
   const mainNavItems = getMainNavItems(language);
@@ -53,7 +54,8 @@ export default function TopNav() {
         );
       })}
 
-      <div className="ml-2 flex items-center border-l border-border pl-2">
+      <div className="ml-2 flex items-center gap-2 border-l border-border pl-2">
+        <ThemeToggle />
         <SignedIn>
           <UserButton
             afterSignOutUrl="/"

@@ -1,7 +1,7 @@
 "use client";
 
+import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import MobileNav from "@/components/layout/MobileNav";
 import TopNav from "@/components/layout/TopNav";
 import SiteBrand from "@/components/layout/SiteBrand";
@@ -9,7 +9,7 @@ import { getNavLabel } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const pathname = useBarePathname();
   const { language } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const pageTitle = getNavLabel(pathname, language);

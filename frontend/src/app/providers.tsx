@@ -7,6 +7,7 @@ import { getClerkAppearance } from "@/lib/clerk-appearance";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ContentProtection from "@/components/layout/ContentProtection";
 import MotionProvider from "@/components/motion/MotionProvider";
+import { ToastProvider } from "@/components/ui/Toaster";
 import {
   LanguageAccountSync,
   LanguageProvider,
@@ -27,7 +28,9 @@ function LocalizedClerkProvider({ children }: { children: React.ReactNode }) {
     >
       <LanguageAccountSync />
       <ContentProtection />
-      <MotionProvider>{children}</MotionProvider>
+      <MotionProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </MotionProvider>
     </ClerkProvider>
   );
 }

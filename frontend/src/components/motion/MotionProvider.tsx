@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import { haptic } from "@/hooks/useHaptic";
 
 /**
  * Global tactile + press-feel layer.
  * Adds a soft active class and light haptic on interactive elements
  * without changing component APIs.
+ *
+ * Also the reduced-motion floor for the whole app. The CSS
+ * `prefers-reduced-motion` block in globals.css uses `!important` on
+ * animation/transition duration, which cannot reach framer-motion — it drives
+ * inline transforms via rAF/WAAPI. `MotionConfig reducedMotion="user"` is the
+ * only thing that does, and it covers every framer consumer in the tree.
  */
 export default function MotionProvider({
   children,
@@ -59,5 +66,5 @@ export default function MotionProvider({
     };
   }, []);
 
-  return <>{children}</>;
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
 }

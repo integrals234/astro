@@ -7,7 +7,6 @@ export const nakshatrasIntro = {
 export const nakshatras: NakshatraEntry[] = [
   {
     id: "ashwini",
-    image: "/assets/ashwini.png",
     number: 1,
     name: { en: "Ashwini", hi: "अश्विनी", ja: "アシュヴィニ", ko: "아쉬위니",},
     sanskrit: { en: "Aśvinī", hi: "अश्विनी", ja: "アシュヴィニー", ko: "아스비니",},
@@ -27,7 +26,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "bharani",
-    image: "/assets/bharani.png",
     number: 2,
     name: { en: "Bharani", hi: "भरनी", ja: "バラニ", ko: "바라니어",},
     sanskrit: { en: "Bharaṇī", hi: "भरनी", ja: "バラニー", ko: "바라니",},
@@ -47,7 +45,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "krittika",
-    image: "/assets/krittika.png",
     number: 3,
     name: { en: "Krittika", hi: "कृत्तिका", ja: "クリッティカ", ko: "크리티카",},
     sanskrit: { en: "Kṛttikā", hi: "कृत्तिका", ja: "クリッティカー", ko: "크리티카",},
@@ -67,7 +64,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "rohini",
-    image: "/assets/rohini.png",
     number: 4,
     name: { en: "Rohini", hi: "रोहिणी", ja: "ローヒニ", ko: "로히니",},
     sanskrit: { en: "Rohiṇī", hi: "रोहिणी", ja: "ローヒニー", ko: "로히니",},
@@ -87,7 +83,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "mrigashira",
-    image: "/assets/mrigashira.png",
     number: 5,
     name: { en: "Mrigashira", hi: "मृगशिरा", ja: "ムリガシーラ", ko: "므리가시라",},
     sanskrit: { en: "Mṛgaśira", hi: "मृगशिरा", ja: "ムリガシーラ", ko: "음가시라",},
@@ -107,7 +102,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "ardra",
-    image: "/assets/ardra.png",
     number: 6,
     name: { en: "Ardra", hi: "आर्द्रा", ja: "アールドラ", ko: "아르드라",},
     sanskrit: { en: "Ārdrā", hi: "आर्द्रा", ja: "アードラー", ko: "아르드라",},
@@ -127,7 +121,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "punarvasu",
-    image: "/assets/punarvasu.png",
     number: 7,
     name: { en: "Punarvasu", hi: "पुनर्वसु", ja: "プナルヴァス", ko: "푸나르바수",},
     sanskrit: { en: "Punarvasu", hi: "पुनर्वसु", ja: "プナルヴァス", ko: "푸나르바수",},
@@ -147,7 +140,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "pushya",
-    image: "/assets/pushya.png",
     number: 8,
     name: { en: "Pushya", hi: "पुष्य", ja: "プシュヤ", ko: "푸샤",},
     sanskrit: { en: "Puṣya", hi: "पुष्य", ja: "プシュヤ", ko: "푸샤",},
@@ -167,7 +159,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "ashlesha",
-    image: "/assets/ashlesha.png",
     number: 9,
     name: { en: "Ashlesha", hi: "आश्लेषा", ja: "アシュレシャ", ko: "아슬레샤",},
     sanskrit: { en: "Āśleṣā", hi: "आश्लेषा", ja: "アーシュレーシャー", ko: "아슬레샤",},
@@ -187,7 +178,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "magha",
-    image: "/assets/magha.png",
     number: 10,
     name: { en: "Magha", hi: "माघ", ja: "マガ", ko: "마가",},
     sanskrit: { en: "Maghā", hi: "माघ", ja: "マガー", ko: "마가",},
@@ -207,7 +197,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "purva-phalguni",
-    image: "/assets/purva-phalguni.png",
     number: 11,
     name: { en: "Purva Phalguni", hi: "पूर्वा फाल्गुनी", ja: "プルヴァ・パールグニ", ko: "푸르바 팔구니",},
     sanskrit: { en: "Pūrva Phalgunī", hi: "पूर्वा फाल्गुनी", ja: "プールヴァ・パールグニー", ko: "푸르바 팔구니",},
@@ -227,7 +216,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "uttara-phalguni",
-    image: "/assets/uttara-phalguni.png",
     number: 12,
     name: { en: "Uttara Phalguni", hi: "उत्तरा फाल्गुनी", ja: "ウッタラ・パールグニ", ko: "우타라 팔구니",},
     sanskrit: { en: "Uttara Phalgunī", hi: "उत्तरा फाल्गुनी", ja: "ウッタラ・パールグニー", ko: "우타라 팔구니",},
@@ -247,7 +235,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "hasta",
-    image: "/assets/hasta.png",
     number: 13,
     name: { en: "Hasta", hi: "हस्त", ja: "ハスタ", ko: "하스타",},
     sanskrit: { en: "Hasta", hi: "हस्त", ja: "ハスタ", ko: "하스타",},
@@ -267,7 +254,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "chitra",
-    image: "/assets/chitra.png",
     number: 14,
     name: { en: "Chitra", hi: "चित्रा", ja: "チトラ", ko: "치트라",},
     sanskrit: { en: "Citrā", hi: "सिट्रा", ja: "チトラー", ko: "시트라",},
@@ -287,7 +273,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "swati",
-    image: "/assets/swati.png",
     number: 15,
     name: { en: "Swati", hi: "स्वाति", ja: "スワティ", ko: "스와티어",},
     sanskrit: { en: "Svātī", hi: "स्वाति", ja: "スヴァーティー", ko: "스바티",},
@@ -307,7 +292,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "vishakha",
-    image: "/assets/vishakha.png",
     number: 16,
     name: { en: "Vishakha", hi: "विशाखा", ja: "ヴィシャーカ", ko: "비샤카",},
     sanskrit: { en: "Viśākhā", hi: "विशाखा", ja: "ヴィシャーカー", ko: "비샤카",},
@@ -327,7 +311,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "anuradha",
-    image: "/assets/anuradha.png",
     number: 17,
     name: { en: "Anuradha", hi: "अनुराधा", ja: "アヌラーダ", ko: "아누라다",},
     sanskrit: { en: "Anurādhā", hi: "अनुराधा", ja: "アヌラーダー", ko: "아누라다",},
@@ -347,7 +330,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "jyeshtha",
-    image: "/assets/jyeshtha.png",
     number: 18,
     name: { en: "Jyeshtha", hi: "ज्येष्ठ", ja: "ジェーシュタ", ko: "제슈타",},
     sanskrit: { en: "Jyeṣṭhā", hi: "ज्येष्ठा", ja: "ジェーシュター", ko: "Jyeṣṭha",},
@@ -367,7 +349,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "mula",
-    image: "/assets/mula.png",
     number: 19,
     name: { en: "Mula", hi: "मुला", ja: "ムーラ", ko: "물라",},
     sanskrit: { en: "Mūla", hi: "मुला", ja: "ムーラ", ko: "물라",},
@@ -387,7 +368,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "purva-ashadha",
-    image: "/assets/purva-ashadha.png",
     number: 20,
     name: { en: "Purva Ashadha", hi: "पूर्वा आषाढ़", ja: "プルヴァ・アシャーダ", ko: "푸르바 아샤다",},
     sanskrit: { en: "Pūrva Aṣāḍhā", hi: "पूर्व आषाढ़", ja: "プールヴァ・アーシャーダー", ko: "Pūrva Aṣāḍhā",},
@@ -407,7 +387,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "uttara-ashadha",
-    image: "/assets/uttara-ashadha.png",
     number: 21,
     name: { en: "Uttara Ashadha", hi: "उत्तरा आषाढ़", ja: "ウッタラ・アシャーダ", ko: "우타라 아샤다",},
     sanskrit: { en: "Uttara Aṣāḍhā", hi: "उत्तरा आषाढ़", ja: "ウッタラ・アーシャーダー", ko: "웃타라 아샤다(Uttara Aṣāḍhā)",},
@@ -427,7 +406,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "shravana",
-    image: "/assets/shravana.png",
     number: 22,
     name: { en: "Shravana", hi: "श्रावण", ja: "シュラヴァナ", ko: "슈라바나",},
     sanskrit: { en: "Śravaṇa", hi: "श्रवण", ja: "シュラヴァナ", ko: "스라바나",},
@@ -447,7 +425,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "dhanishta",
-    image: "/assets/dhanishta.png",
     number: 23,
     name: { en: "Dhanishta", hi: "धनिष्ठा", ja: "ダニシュタ", ko: "다니슈타",},
     sanskrit: { en: "Dhaniṣṭhā", hi: "धनिष्ठा", ja: "ダニーシュター", ko: "다니쉬타",},
@@ -467,7 +444,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "shatabhisha",
-    image: "/assets/shatabhisha.png",
     number: 24,
     name: { en: "Shatabhisha", hi: "शतभिषा", ja: "シャタビシャ", ko: "샤타비샤",},
     sanskrit: { en: "Śatabhiṣā", hi: "शतभिषा", ja: "シャタビシャー", ko: "샤타비샤",},
@@ -487,7 +463,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "purva-bhadrapada",
-    image: "/assets/purva-bhadrapada.png",
     number: 25,
     name: { en: "Purva Bhadrapada", hi: "पूर्व भाद्रपद", ja: "プルヴァ・バドラパダ", ko: "푸르바 바드라파다",},
     sanskrit: { en: "Pūrva Bhādrapadā", hi: "पूर्व भाद्रपद", ja: "プールヴァ・バードラパダー", ko: "푸르바 바드라파다",},
@@ -507,7 +482,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "uttara-bhadrapada",
-    image: "/assets/uttara-bhadrapada.png",
     number: 26,
     name: { en: "Uttara Bhadrapada", hi: "उत्तरा भाद्रपद", ja: "ウッタラ・バドラパダ", ko: "우타라 바드라파다",},
     sanskrit: { en: "Uttara Bhādrapadā", hi: "उत्तरा भाद्रपद", ja: "ウッタラ・バードラパダー", ko: "웃타라 바드라파다",},
@@ -527,7 +501,6 @@ export const nakshatras: NakshatraEntry[] = [
   },
   {
     id: "revati",
-    image: "/assets/revati.png",
     number: 27,
     name: { en: "Revati", hi: "रेवती", ja: "レヴァティ", ko: "레바티",},
     sanskrit: { en: "Revatī", hi: "रेवती", ja: "レヴァティー", ko: "레바티",},

@@ -53,7 +53,7 @@ const navMeta = [
     descriptionKey: "appraisalsDescription",
   },
   {
-    href: "/test-beta",
+    href: "/course",
     icon: FlaskConical,
     labelKey: "course",
     descriptionKey: "courseDescription",

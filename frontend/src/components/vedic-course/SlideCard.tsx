@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { fadeUpPresence } from "@/lib/motion/tokens";
 import { createElement } from "react";
 import { FormattedText } from "@/lib/format-inline-text";
 import type { CourseLanguage, CourseSlide } from "@/lib/vedic-course/types";
@@ -18,9 +19,7 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
   return (
     <motion.article
       key={slide.id}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
+      {...fadeUpPresence}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="washi-card p-8 md:p-10"
     >

@@ -49,6 +49,15 @@ export interface SharedCopy {
     signInDescription: string;
     signUpDescription: string;
   };
+  footer: {
+    contentHeading: string;
+    legalHeading: string;
+    followHeading: string;
+    languageHeading: string;
+    instagram: string;
+    disclaimer: string;
+    rights: string;
+  };
 }
 
 export const sharedCopy: Record<AppLanguage, SharedCopy> = {
@@ -110,6 +119,16 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
       signInDescription: "Sign in to access your dashboard and premium features",
       signUpDescription: "Create an account to save charts and unlock premium tools",
     },
+    footer: {
+      contentHeading: "Explore",
+      legalHeading: "Legal",
+      followHeading: "Follow",
+      languageHeading: "Language",
+      instagram: "Instagram",
+      disclaimer:
+        "Jyotish Life is offered for entertainment and self-understanding. Readings are not guaranteed, and are not medical, legal, or financial advice.",
+      rights: "All rights reserved.",
+    },
   },
   hi: {
     metadata: {
@@ -168,6 +187,16 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
     auth: {
       signInDescription: "अपने डैशबोर्ड और प्रीमियम सुविधाओं के लिए साइन इन करें",
       signUpDescription: "कुंडलियाँ सहेजने और प्रीमियम उपकरण पाने के लिए खाता बनाएँ",
+    },
+    footer: {
+      contentHeading: "सामग्री",
+      legalHeading: "कानूनी",
+      followHeading: "फ़ॉलो करें",
+      languageHeading: "भाषा",
+      instagram: "इंस्टाग्राम",
+      disclaimer:
+        "ज्योतिष लाइफ़ मनोरंजन और आत्म-बोध के उद्देश्य से प्रस्तुत है। परिणामों की गारंटी नहीं है, और यह चिकित्सा, कानूनी या वित्तीय सलाह नहीं है।",
+      rights: "सर्वाधिकार सुरक्षित।",
     },
   },
   ja: {
@@ -228,6 +257,16 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
       signInDescription: "ダッシュボードとプレミアム機能を利用するにはサインインしてください",
       signUpDescription: "チャートの保存とプレミアムツールの利用にはアカウントを作成してください",
     },
+    footer: {
+      contentHeading: "コンテンツ",
+      legalHeading: "規約・情報",
+      followHeading: "フォロー",
+      languageHeading: "言語",
+      instagram: "Instagram",
+      disclaimer:
+        "本サービスは娯楽および自己理解を目的としています。鑑定結果を保証するものではなく、医療・法律・財務に関する助言ではありません。",
+      rights: "All rights reserved.",
+    },
   },
   ko: {
     metadata: {
@@ -286,6 +325,16 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
     auth: {
       signInDescription: "대시보드와 프리미엄 기능을 이용하려면 로그인하세요",
       signUpDescription: "차트를 저장하고 프리미엄 도구를 사용하려면 계정을 만드세요",
+    },
+    footer: {
+      contentHeading: "콘텐츠",
+      legalHeading: "약관·정보",
+      followHeading: "팔로우",
+      languageHeading: "언어",
+      instagram: "인스타그램",
+      disclaimer:
+        "본 서비스는 오락 및 자기 이해를 목적으로 합니다. 결과를 보장하지 않으며, 의료·법률·재무 조언이 아닙니다.",
+      rights: "All rights reserved.",
     },
   },
 };

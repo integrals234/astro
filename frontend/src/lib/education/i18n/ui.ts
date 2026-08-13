@@ -35,6 +35,9 @@ export const educationUi = {
   backToSignList: { en: "Back to sign list", hi: "राशि सूची पर वापस जाएँ", ja: "ラーシ一覧へ戻る", ko: "별자리 목록으로 돌아가기",},
   relatedWisdom: { en: "Related Wisdom", hi: "सम्बंधित ज्ञान", ja: "関連する智慧", ko: "관련된 지혜",},
   vedicWisdom: { en: "Vedic Wisdom", hi: "वैदिक ज्ञान", ja: "ヴェーダの智慧", ko: "베다의 지혜",},
+  exploreSections: { en: "Explore other sections", hi: "अन्य अनुभाग देखें", ja: "他のセクションを見る", ko: "다른 섹션 둘러보기",},
+  readArticle: { en: "Read", hi: "पढ़ें", ja: "読む", ko: "읽기",},
+  sectionOverview: { en: "In this section", hi: "इस अनुभाग में", ja: "このセクションの内容", ko: "이 섹션의 내용",},
 } as const satisfies Record<string, BilingualText>;
 
 export type EducationUiKey = keyof typeof educationUi;

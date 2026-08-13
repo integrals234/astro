@@ -48,7 +48,6 @@ function InfographicImage({
         alt={alt}
         width={1008}
         height={1055}
-        unoptimized
         style={
           circle
             ? { width: "100%", height: "100%", objectFit: "cover" }
@@ -104,9 +103,9 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
         <p className="washi-eyebrow mb-3">
           {uiText("liveForecasts", lang)}
         </p>
-        <h2 className="font-header text-3xl tracking-tight text-ink">
+        <h1 className="font-header text-[length:var(--step-3)] tracking-tight text-ink">
           {uiText("horoscope", lang)}
-        </h2>
+        </h1>
         <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {horoscopeIntro[lang]}
         </p>

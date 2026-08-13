@@ -1,7 +1,7 @@
 "use client";
 
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
-import ScrollReveal from "@/components/motion/ScrollReveal";
+import Reveal from "@/components/motion/Reveal";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import InstagramFollowBanner from "@/components/personal-appraisals/InstagramFollowBanner";
 import InquiryForm from "@/components/personal-appraisals/InquiryForm";
@@ -35,20 +35,20 @@ export default function PersonalAppraisalsPageClient({
 
   return (
     <div className="max-w-4xl space-y-12 pb-8">
-      <ScrollReveal y={18}>
+      <Reveal>
         <InstagramFollowBanner copy={content.instagram} />
-      </ScrollReveal>
+      </Reveal>
 
-      <ScrollReveal y={16} delay={0.05}>
+      <Reveal>
         <ShellPageHeader
           icon={MoonStar}
           eyebrow={content.header.eyebrow}
           title={content.header.title}
           description={content.header.description}
         />
-      </ScrollReveal>
+      </Reveal>
 
-      <ScrollReveal y={18} delay={0.04}>
+      <Reveal>
       <section className="washi-card washi-card-interactive p-7 md:p-9">
         <div className="flex items-start gap-3 mb-5">
           <Sparkles size={18} className="text-terracotta shrink-0 mt-1" />
@@ -77,10 +77,10 @@ export default function PersonalAppraisalsPageClient({
           ))}
         </ul>
       </section>
-      </ScrollReveal>
+      </Reveal>
 
       <section className="space-y-6">
-        <ScrollReveal y={12}>
+        <Reveal>
           <div>
             <p className="washi-eyebrow mb-2">
               {content.offerings.sectionLabel}
@@ -89,16 +89,16 @@ export default function PersonalAppraisalsPageClient({
               {content.offerings.sectionTitle}
             </h3>
           </div>
-        </ScrollReveal>
+        </Reveal>
 
         <div className="grid gap-5">
-          {content.offerings.items.map((offering, index) => {
+          {content.offerings.items.map((offering) => {
             const Icon =
               offeringIcons[offering.id as keyof typeof offeringIcons] ??
               ScrollText;
 
             return (
-              <ScrollReveal key={offering.id} delay={0.05 * index} y={18}>
+              <Reveal key={offering.id}>
                 <article className="washi-card washi-card-interactive group p-6 md:p-7">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="washi-icon-chip h-9 w-9 shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110 group-hover:-rotate-3">
@@ -124,13 +124,13 @@ export default function PersonalAppraisalsPageClient({
                     {offering.note}
                   </p>
                 </article>
-              </ScrollReveal>
+              </Reveal>
             );
           })}
         </div>
       </section>
 
-      <ScrollReveal y={16} as="section" className="space-y-6">
+      <Reveal as="section" className="space-y-6">
         <div>
           <p className="washi-eyebrow mb-2">
             {content.pricing.sectionLabel}
@@ -200,9 +200,9 @@ export default function PersonalAppraisalsPageClient({
         <p className="text-xs text-text-muted leading-relaxed">
           {content.pricing.footnote}
         </p>
-      </ScrollReveal>
+      </Reveal>
 
-      <ScrollReveal y={14}>
+      <Reveal>
         <section className="washi-card washi-card-interactive p-6 md:p-7">
           <p className="washi-eyebrow mb-4">
             {content.process.sectionLabel}
@@ -220,15 +220,15 @@ export default function PersonalAppraisalsPageClient({
             ))}
           </ol>
         </section>
-      </ScrollReveal>
+      </Reveal>
 
-      <ScrollReveal y={16}>
+      <Reveal>
         <InquiryForm
           defaultDialCode={defaultDialCode}
           lang={lang}
           copy={content.form}
         />
-      </ScrollReveal>
+      </Reveal>
     </div>
   );
 }

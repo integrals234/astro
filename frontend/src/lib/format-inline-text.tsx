@@ -15,7 +15,7 @@ export function formatInlineMarkdown(text: string): ReactNode {
     }
     if (match[1] !== undefined) {
       nodes.push(
-        <strong key={key++} className="font-semibold text-shell-warm">
+        <strong key={key++} className="font-semibold text-ink">
           {match[1]}
         </strong>
       );

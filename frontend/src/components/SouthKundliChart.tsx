@@ -110,7 +110,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
                     {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                     
                     {p.isRetrograde && !isGocharChart && (
-                      <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                      <tspan className="kundli-chart-accent font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                     )}
                     
                     <tspan baselineShift="super" fontSize="10" className="kundli-chart-accent">{p.degree}</tspan>
@@ -128,7 +128,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
                       {useSymbols ? planetSymbols[p.enName || p.name] || p.name.substring(0, 2) : p.name.substring(0, 2)}
                       
                       {p.isRetrograde && (
-                        <tspan className="fill-terracotta font-bold" fontSize="18" baselineShift="-3px">*</tspan>
+                        <tspan className="kundli-chart-accent font-bold" fontSize="18" baselineShift="-3px">*</tspan>
                       )}
                       
                       <tspan baselineShift="super" fontSize="9" className="kundli-chart-transit">{p.degree}</tspan>

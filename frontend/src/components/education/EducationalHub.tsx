@@ -1,16 +1,14 @@
 "use client";
 
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { fadeUpPresence } from "@/lib/motion/tokens";
 import {
   BookOpen,
   Orbit,
   Star,
   Eye,
-  Sparkles,
   Circle,
   Home,
   Clock,
@@ -18,10 +16,10 @@ import {
   HeartHandshake,
   ChevronDown,
 } from "lucide-react";
-import AppShell from "@/components/layout/AppShell";
-import SiteBrand from "@/components/layout/SiteBrand";
 import BackToNavButton from "@/components/education/BackToNavButton";
 import WisdomArticleView from "@/components/education/WisdomArticleView";
+import { rashiSectionLabels } from "@/lib/education/entity-labels";
+import PublicHeader from "@/components/layout/PublicHeader";
 import { FormattedText } from "@/lib/format-inline-text";
 import {
   educationSections,
@@ -41,7 +39,6 @@ import {
   type EducationSectionId,
   type EducationNavigateTarget,
   type BilingualText,
-  type RashiEntry,
   uiText,
   useEducationLang,
 } from "@/lib/education";
@@ -239,15 +236,15 @@ function TopicIndexInner({
           aria-expanded={expanded}
           aria-controls="topic-index-list"
         >
-          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-shell-accent">
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-terracotta">
             {topicLabel}
-            <span className="ml-1.5 normal-case tracking-normal text-shell-muted">
+            <span className="ml-1.5 normal-case tracking-normal text-text-muted">
               ({tabs.length})
             </span>
           </span>
           <ChevronDown
             size={16}
-            className={`shrink-0 text-shell-muted transition-transform duration-200 ${expanded ? "rotate-180" : ""
+            className={`shrink-0 text-text-muted transition-transform duration-200 ${expanded ? "rotate-180" : ""
               }`}
             aria-hidden
           />
@@ -380,7 +377,7 @@ function ArticleSectionPanel({
 
   if (tabs.length === 0) {
     return (
-      <p className="text-sm text-shell-muted">
+      <p className="text-sm text-text-muted">
         {uiText("noContent", lang)}
       </p>
     );
@@ -412,9 +409,7 @@ function ArticleSectionPanel({
             <motion.section
               key={activeTab.id}
               id={educationTopicAnchor(section, activeTab.id)}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
+              {...fadeUpPresence}
               transition={{ duration: 0.25, ease: "easeOut" }}
               className="scroll-mt-4 lg:scroll-mt-28"
             >
@@ -432,7 +427,7 @@ function ArticleSectionPanel({
             >
               {index > 0 ? (
                 <div
-                  className="mb-12 border-t border-dashed border-shell-border/60 pt-12"
+                  className="mb-12 border-t border-dashed border-border/60 pt-12"
                   aria-hidden
                 />
               ) : null}
@@ -475,7 +470,6 @@ function InfographicImage({
           alt={alt}
           width={1008}
           height={1055}
-          unoptimized
           style={{ width: "100%", height: "auto" }}
           className="block w-full h-auto"
           sizes={sizes}
@@ -511,9 +505,7 @@ function SectionFade({
     <AnimatePresence mode="wait">
       <motion.div
         key={sectionKey}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
+        {...fadeUpPresence}
         transition={{ duration: 0.35, ease: "easeOut" }}
       >
         {children}
@@ -522,89 +514,19 @@ function SectionFade({
   );
 }
 
-function PublicHeader({ lang }: { lang: EducationLang }) {
-  return (
-    <header className="border-b border-shell-border bg-shell-sidebar/80 backdrop-blur-md">
-      {/* Desktop */}
-      <div className="shell-header-desktop mx-auto w-full max-w-7xl items-center justify-between gap-6 px-8 py-4">
-        <SiteBrand size="lg" className="shrink-0" />
-        <nav className="flex shrink-0 items-center gap-4">
-          <PublicHeaderActions lang={lang} />
-        </nav>
-      </div>
 
-      {/* Mobile */}
-      <div className="shell-header-mobile mx-auto w-full max-w-7xl items-center gap-2 px-4 py-4">
-        <div className="h-10 w-10 shrink-0" aria-hidden />
-        <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-center">
-          <SiteBrand size="sm" className="shrink-0" />
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-shell-muted">
-            {uiText("learnJyotish", lang)}
-          </p>
-        </div>
-        <nav className="flex shrink-0 items-center gap-2">
-          <PublicHeaderActions lang={lang} compact />
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function PublicHeaderActions({
-  lang,
-  compact = false,
-}: {
-  lang: EducationLang;
-  compact?: boolean;
-}) {
-  return (
-    <>
-      <Link
-        href="/chart"
-        className={`inline-flex items-center gap-1.5 rounded-lg border border-shell-border bg-shell-elevated/60 font-medium text-shell-warm transition-all hover:border-shell-accent/40 hover:text-shell-accent ${compact ? "px-2.5 py-2 text-[11px]" : "px-3 py-2 text-xs"
-          }`}
-      >
-        <Sparkles size={14} />
-        {compact
-          ? uiText("chart", lang)
-          : uiText("generateChart", lang)}
-      </Link>
-      <SignedOut>
-        <Link
-          href="/sign-in"
-          className={`font-medium text-shell-muted transition-colors hover:text-shell-warm ${compact ? "text-[11px]" : "text-xs"
-            }`}
-        >
-          {uiText("signIn", lang)}
-        </Link>
-      </SignedOut>
-      <SignedIn>
-        <UserButton afterSignOutUrl="/" />
-      </SignedIn>
-    </>
-  );
-}
-
-const rashiSectionLabels: Record<keyof RashiEntry["sections"], BilingualText> = {
-  nature: { en: "Nature", hi: "प्रकृति", ja: "性質", ko: "자연",},
-  career: { en: "Career", hi: "आजीविका", ja: "キャリア", ko: "직업",},
-  relationships: { en: "Relationships", hi: "रिश्ते", ja: "人間関係", ko: "관계",},
-  romance: { en: "Romance", hi: "रोमांस", ja: "恋愛", ko: "로맨스",},
-  health: { en: "Health", hi: "स्वास्थ्य", ja: "健康", ko: "건강",},
-  decans: { en: "Decans", hi: "डेक्कन", ja: "デカン", ko: "데칸",},
-};
 
 function RashisSection({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-terracotta mb-3">
           {uiText("twelveRashis", lang)}
         </p>
-        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+        <h2 className="font-header text-3xl text-ink tracking-tight">
           {uiText("rashisTitle", lang)}
         </h2>
-        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
+        <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {rashisIntro[lang]}
         </p>
       </div>
@@ -615,13 +537,13 @@ function RashisSection({ lang }: { lang: EducationLang }) {
           className="washi-card p-6 md:p-8"
         >
           {block.title && (
-            <h3 className="font-serif text-xl text-shell-warm mb-4">
+            <h3 className="font-header text-xl text-ink mb-4">
               {formatted(block.title, lang)}
             </h3>
           )}
           <div className="space-y-4">
             {block.paragraphs.map((p, j) => (
-              <p key={j} className="text-sm leading-relaxed text-shell-muted">
+              <p key={j} className="text-sm leading-relaxed text-text-muted">
                 {formatted(p, lang)}
               </p>
             ))}
@@ -630,7 +552,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
             <InfographicImage
               src={block.image.src}
               alt={t(block.image.alt, lang)}
-              className="mt-5 rounded-xl"
+              className="mt-5 rounded-[var(--radius-card)]"
               sizes="(max-width: 768px) 100vw, 672px"
             />
           ) : null}
@@ -644,7 +566,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
             className="washi-card overflow-hidden"
           >
             <div className="flex flex-col md:flex-row">
-              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
+              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-border/60">
                 <InfographicImage
                   src={sign.image}
                   alt={t(sign.name, lang)}
@@ -655,39 +577,39 @@ function RashisSection({ lang }: { lang: EducationLang }) {
               </div>
               <div className="flex-1 min-w-0 p-6 md:p-8">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
-                  <span className="text-[10px] text-shell-muted">#{sign.number}</span>
-                  <h3 className="font-serif text-2xl text-shell-warm">
+                  <span className="text-[10px] text-text-muted">#{sign.number}</span>
+                  <h3 className="font-header text-2xl text-ink">
                     {t(sign.name, lang)}
                   </h3>
-                  <span className="text-sm text-shell-accent">{t(sign.sanskrit, lang)}</span>
+                  <span className="text-sm text-terracotta">{t(sign.sanskrit, lang)}</span>
                 </div>
-                <p className="text-xs text-shell-muted mb-4">{t(sign.dates, lang)}</p>
-                <p className="text-sm leading-relaxed text-shell-muted mb-5">
+                <p className="text-xs text-text-muted mb-4">{t(sign.dates, lang)}</p>
+                <p className="text-sm leading-relaxed text-text-muted mb-5">
                   {formatted(sign.description, lang)}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5 text-xs">
                   <div>
-                    <span className="text-shell-accent">{uiText("element", lang)}: </span>
-                    <span className="text-shell-warm/90">{t(sign.element, lang)}</span>
+                    <span className="text-terracotta">{uiText("element", lang)}: </span>
+                    <span className="text-ink/90">{t(sign.element, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{uiText("ruler", lang)}: </span>
-                    <span className="text-shell-warm/90">{t(sign.ruler, lang)}</span>
+                    <span className="text-terracotta">{uiText("ruler", lang)}: </span>
+                    <span className="text-ink/90">{t(sign.ruler, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{uiText("symbol", lang)}: </span>
-                    <span className="text-shell-warm/90">{t(sign.symbol, lang)}</span>
+                    <span className="text-terracotta">{uiText("symbol", lang)}: </span>
+                    <span className="text-ink/90">{t(sign.symbol, lang)}</span>
                   </div>
                   <div>
-                    <span className="text-shell-accent">{uiText("body", lang)}: </span>
-                    <span className="text-shell-warm/90">{t(sign.bodyPart, lang)}</span>
+                    <span className="text-terracotta">{uiText("body", lang)}: </span>
+                    <span className="text-ink/90">{t(sign.bodyPart, lang)}</span>
                   </div>
                 </div>
                 <ul className="flex flex-wrap gap-2 mb-5">
                   {sign.traits.map((trait, i) => (
                     <li
                       key={i}
-                      className="rounded-full border border-shell-border/60 bg-shell-sidebar/40 px-3 py-1 text-[11px] text-shell-warm/90"
+                      className="rounded-full border border-border/60 bg-washi/40 px-3 py-1 text-[11px] text-ink/90"
                     >
                       {t(trait, lang)}
                     </li>
@@ -698,12 +620,12 @@ function RashisSection({ lang }: { lang: EducationLang }) {
                     (key) => (
                       <div
                         key={key}
-                        className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3"
+                        className="rounded-[var(--radius-card)] border border-border/60 bg-washi/50 px-4 py-3"
                       >
-                        <p className="text-[10px] uppercase tracking-widest text-shell-accent mb-1">
+                        <p className="text-[10px] uppercase tracking-widest text-terracotta mb-1">
                           {t(rashiSectionLabels[key], lang)}
                         </p>
-                        <p className="text-sm text-shell-warm/90 leading-relaxed">
+                        <p className="text-sm text-ink/90 leading-relaxed">
                           {formatted(sign.sections[key], lang)}
                         </p>
                       </div>
@@ -723,13 +645,13 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-terracotta mb-3">
           {uiText("navagraha", lang)}
         </p>
-        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+        <h2 className="font-header text-3xl text-ink tracking-tight">
           {uiText("nineGrahas", lang)}
         </h2>
-        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
+        <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {planetsIntro[lang]}
         </p>
       </div>
@@ -741,7 +663,7 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
             className="washi-card overflow-hidden"
           >
             <div className="flex flex-col md:flex-row">
-              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-shell-border/60">
+              <div className="w-full md:w-64 lg:w-72 xl:w-80 shrink-0 md:border-r border-border/60">
                 <InfographicImage
                   src={planet.image}
                   alt={t(planet.name, lang)}
@@ -751,27 +673,27 @@ function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
               </div>
               <div className="flex-1 min-w-0 p-6 md:p-8">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
-                  <h3 className="font-serif text-2xl text-shell-warm">
+                  <h3 className="font-header text-2xl text-ink">
                     {t(planet.name, lang)}
                   </h3>
-                  <span className="text-sm text-shell-accent">{t(planet.sanskrit, lang)}</span>
+                  <span className="text-sm text-terracotta">{t(planet.sanskrit, lang)}</span>
                 </div>
-                <p className="text-sm leading-relaxed text-shell-muted mb-5">
+                <p className="text-sm leading-relaxed text-text-muted mb-5">
                   {formatted(planet.description, lang)}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
                   {planet.attributes.map((attr, i) => (
                     <div key={i} className="text-xs">
-                      <span className="text-shell-accent">{t(attr.label, lang)}: </span>
-                      <span className="text-shell-warm/90">{t(attr.value, lang)}</span>
+                      <span className="text-terracotta">{t(attr.label, lang)}: </span>
+                      <span className="text-ink/90">{t(attr.value, lang)}</span>
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl border border-shell-border/60 bg-shell-sidebar/50 px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-widest text-shell-muted mb-1">
+                <div className="rounded-[var(--radius-card)] border border-border/60 bg-washi/50 px-4 py-3">
+                  <p className="text-[10px] uppercase tracking-widest text-text-muted mb-1">
                     {uiText("significations", lang)}
                   </p>
-                  <p className="text-sm text-shell-warm/90 leading-relaxed">
+                  <p className="text-sm text-ink/90 leading-relaxed">
                     {formatted(planet.significations, lang)}
                   </p>
                 </div>
@@ -821,13 +743,13 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-terracotta mb-3">
           {uiText("lunarMansions", lang)}
         </p>
-        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+        <h2 className="font-header text-3xl text-ink tracking-tight">
           {uiText("nakshatras", lang)}
         </h2>
-        <p className="mt-4 text-sm leading-relaxed text-shell-muted">
+        <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {nakshatrasIntro[lang]}
         </p>
       </div>
@@ -847,41 +769,41 @@ function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
               />
             ) : (
               <div className="flex h-28 items-center justify-center rounded-t-2xl bg-washi-elevated">
-                <Star size={28} className="text-shell-accent/50" />
+                <Star size={28} className="text-terracotta/50" />
               </div>
             )}
             <div className="p-5 flex-1">
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-[10px] text-shell-muted">#{nak.number}</span>
-                <h3 className="font-serif text-lg text-shell-warm">
+                <span className="text-[10px] text-text-muted">#{nak.number}</span>
+                <h3 className="font-header text-lg text-ink">
                   {t(nak.name, lang)}
                 </h3>
               </div>
-              <p className="text-xs text-shell-accent mb-2">{t(nak.sanskrit, lang)}</p>
-              <p className="text-xs leading-relaxed text-shell-muted mb-3">
+              <p className="text-xs text-terracotta mb-2">{t(nak.sanskrit, lang)}</p>
+              <p className="text-xs leading-relaxed text-text-muted mb-3">
                 {formatted(nak.description, lang)}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-shell-muted/90">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-text-muted/90">
                 <span>
-                  <span className="text-shell-accent">{uiText("deity", lang)}: </span>
+                  <span className="text-terracotta">{uiText("deity", lang)}: </span>
                   {t(nak.deity, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{uiText("ruler", lang)}: </span>
+                  <span className="text-terracotta">{uiText("ruler", lang)}: </span>
                   {t(nak.ruler, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{uiText("symbol", lang)}: </span>
+                  <span className="text-terracotta">{uiText("symbol", lang)}: </span>
                   {t(nak.symbol, lang)}
                 </span>
                 <span>
-                  <span className="text-shell-accent">{uiText("range", lang)}: </span>
+                  <span className="text-terracotta">{uiText("range", lang)}: </span>
                   {t(nak.range, lang)}
                 </span>
               </div>
               <ul className="mt-2 space-y-0.5">
                 {nak.qualities.map((q, i) => (
-                  <li key={i} className="text-[11px] text-shell-warm/80 before:content-['·'] before:mr-1.5 before:text-shell-accent">
+                  <li key={i} className="text-[11px] text-ink/80 before:content-['·'] before:mr-1.5 before:text-terracotta">
                     {formatted(q, lang)}
                   </li>
                 ))}
@@ -929,22 +851,22 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-shell-accent mb-3">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-terracotta mb-3">
           {uiText("drishti", lang)}
         </p>
-        <h2 className="font-serif text-3xl text-shell-warm tracking-tight">
+        <h2 className="font-header text-3xl text-ink tracking-tight">
           {uiText("aspectsTitle", lang)}
         </h2>
       </div>
 
       <article className="washi-card p-6 md:p-8">
         {aspectsIntro.title && (
-          <h3 className="font-serif text-xl text-shell-warm mb-4">
+          <h3 className="font-header text-xl text-ink mb-4">
             {formatted(aspectsIntro.title, lang)}
           </h3>
         )}
         {aspectsIntro.paragraphs.map((p, i) => (
-          <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3 last:mb-0">
+          <p key={i} className="text-sm leading-relaxed text-text-muted mb-3 last:mb-0">
             {formatted(p, lang)}
           </p>
         ))}
@@ -952,19 +874,19 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
 
       <article className="washi-card p-6 md:p-8">
         {universalAspect.title && (
-          <h3 className="font-serif text-xl text-shell-warm mb-4">
+          <h3 className="font-header text-xl text-ink mb-4">
             {formatted(universalAspect.title!, lang)}
           </h3>
         )}
         {universalAspect.paragraphs.map((p, i) => (
-          <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3">
+          <p key={i} className="text-sm leading-relaxed text-text-muted mb-3">
             {formatted(p, lang)}
           </p>
         ))}
         {universalAspect.bullets && (
           <ul className="space-y-2">
             {universalAspect.bullets.map((b, i) => (
-              <li key={i} className="text-sm text-shell-warm/90 before:content-['·'] before:mr-2 before:text-shell-accent">
+              <li key={i} className="text-sm text-ink/90 before:content-['·'] before:mr-2 before:text-terracotta">
                 {formatted(b, lang)}
               </li>
             ))}
@@ -974,7 +896,7 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
           <InfographicImage
             src={universalAspect.image.src}
             alt={t(universalAspect.image.alt, lang)}
-            className="mt-5 rounded-xl"
+            className="mt-5 rounded-[var(--radius-card)]"
             sizes="(max-width: 768px) 100vw, 672px"
           />
         ) : null}
@@ -986,21 +908,21 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
             key={i}
             className="washi-card p-6 md:p-8"
           >
-            <h3 className="font-serif text-xl text-shell-warm mb-1">
+            <h3 className="font-header text-xl text-ink mb-1">
               {t(rule.planet, lang)}
             </h3>
-            <p className="text-xs text-shell-accent mb-3">
+            <p className="text-xs text-terracotta mb-3">
               {uiText("aspectsHouses", lang)}: {rule.houses}
             </p>
             {rule.image ? (
               <InfographicImage
                 src={rule.image}
                 alt={t(rule.planet, lang)}
-                className="mb-4 rounded-xl"
+                className="mb-4 rounded-[var(--radius-card)]"
                 sizes="(max-width: 768px) 100vw, 672px"
               />
             ) : null}
-            <p className="text-sm leading-relaxed text-shell-muted">
+            <p className="text-sm leading-relaxed text-text-muted">
               {formatted(rule.description, lang)}
             </p>
           </article>
@@ -1009,19 +931,19 @@ function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
 
       <article className="washi-card p-6 md:p-8">
         {conjunctionBlock.title && (
-          <h3 className="font-serif text-xl text-shell-warm mb-4">
+          <h3 className="font-header text-xl text-ink mb-4">
             {formatted(conjunctionBlock.title!, lang)}
           </h3>
         )}
         {conjunctionBlock.paragraphs.map((p, i) => (
-          <p key={i} className="text-sm leading-relaxed text-shell-muted mb-3">
+          <p key={i} className="text-sm leading-relaxed text-text-muted mb-3">
             {formatted(p, lang)}
           </p>
         ))}
         {conjunctionBlock.bullets && (
           <ul className="space-y-2">
             {conjunctionBlock.bullets.map((b, i) => (
-              <li key={i} className="text-sm text-shell-warm/90 before:content-['·'] before:mr-2 before:text-shell-accent">
+              <li key={i} className="text-sm text-ink/90 before:content-['·'] before:mr-2 before:text-terracotta">
                 {formatted(b, lang)}
               </li>
             ))}
@@ -1154,13 +1076,13 @@ function EducationHubInner({
   };
 
   const content = (
-    <div className={`${embedded ? "" : "min-h-screen"} bg-shell-bg text-shell-warm`}>
-      {!embedded && <PublicHeader lang={lang} />}
+    <div className={`${embedded ? "" : "min-h-screen"} bg-washi text-ink`}>
+      {!embedded && <PublicHeader pageLabel={uiText("learnJyotish", lang)} />}
 
       <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
         {/* Hero strip */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="font-serif text-2xl tracking-tight text-shell-warm md:text-3xl">
+          <h1 className="font-header text-2xl tracking-tight text-ink md:text-3xl">
             {uiText("heroTitle", lang)}
           </h1>
         </div>
@@ -1212,16 +1134,11 @@ export default function EducationalHub({
 }: {
   initialSection?: EducationSectionId;
 }) {
+  // Rendered once — see the note in WelcomeHomePage on the prerender bailout.
   return (
-    <>
-      <SignedIn>
-        <AppShell>
-          <EducationHubInner key={initialSection ?? "introduction"} embedded initialSection={initialSection} />
-        </AppShell>
-      </SignedIn>
-      <SignedOut>
-        <EducationHubInner key={initialSection ?? "introduction"} initialSection={initialSection} />
-      </SignedOut>
-    </>
+    <EducationHubInner
+      key={initialSection ?? "introduction"}
+      initialSection={initialSection}
+    />
   );
 }

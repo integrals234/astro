@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocaleLink";
 import { Bookmark, Clock, MapPin, Trash2, ArrowUpRight } from "lucide-react";
 import type { SavedChartRecord } from "@/lib/chart-types";
-import { getChartUi } from "@/lib/chart-i18n";
+import { getChartUi, chartFormCopy } from "@/lib/chart-i18n";
+import { useToast } from "@/components/ui/Toaster";
 import { useChartLang } from "@/lib/use-chart-lang";
 
 interface ChartCollectionPageProps {
@@ -14,6 +15,8 @@ interface ChartCollectionPageProps {
 export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) {
   const lang = useChartLang();
   const copy = getChartUi(lang).collection;
+  const { confirm: confirmDialog } = useToast();
+  const actionCopy = chartFormCopy[lang];
   const [collection, setCollection] = useState<{
     mode: ChartCollectionPageProps["mode"] | null;
     charts: SavedChartRecord[];
@@ -42,7 +45,12 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
   }, [mode]);
 
   const handleDelete = async (chartId: string) => {
-    if (!confirm(copy.deleteConfirm)) return;
+    const confirmed = await confirmDialog({
+      message: copy.deleteConfirm,
+      confirmLabel: actionCopy.deleteConfirmAction,
+      cancelLabel: actionCopy.cancel,
+    });
+    if (!confirmed) return;
     await fetch(`/api/charts/${chartId}`, { method: "DELETE" });
     const query = mode === "saved" ? "saved" : "recent";
     const response = await fetch(`/api/charts?type=${query}`);

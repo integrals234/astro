@@ -87,7 +87,6 @@ function ArticleBlock({
           alt={t(block.alt, lang)}
           width={800}
           height={600}
-          unoptimized
           className="block w-full h-auto rounded-md"
           sizes="(max-width: 768px) 100vw, 672px"
         />

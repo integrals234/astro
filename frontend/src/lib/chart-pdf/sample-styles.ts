@@ -1,4 +1,25 @@
-/** Exact colors sampled from temp-content/indian_astrology_chart.pdf */
+/**
+ * Exact colors sampled from temp-content/indian_astrology_chart.pdf.
+ *
+ * ⚠ SEPARATE FRONT FROM THE WEB PALETTE (Phase 2.8).
+ *
+ * jsPDF cannot read CSS custom properties, so these are a hand-maintained RGB
+ * fork of the brand tokens in `src/app/globals.css`. If a brand value changes
+ * there, it must be changed here by hand or the PDF export silently drifts
+ * away from the site.
+ *
+ * Current correspondence (light theme):
+ *   pageBg      ← --color-washi          #f5f0e6
+ *   headerBar   ← --color-ink            #2f2f2f
+ *   tableHeader ← --color-neutral-tag    #ede7d8  (sampled 237,227,211)
+ *   border      ← --color-border         #e3dacb  (darkened for print contrast)
+ *   accent      ← --color-terracotta     #c77b4e
+ *
+ * The Phase 0 tonal ramp (gold, -deep, -tint) is deliberately *not* mirrored
+ * here: it exists to build depth on screen, and the print front has no use for
+ * it. Verify any change by exporting a chart and comparing against a
+ * pre-change PDF.
+ */
 
 export const SAMPLE_COLORS = {
   /** Page fill (0.961, 0.941, 0.902) */

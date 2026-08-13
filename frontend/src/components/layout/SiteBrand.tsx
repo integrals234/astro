@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/i18n/LocaleLink";
 import { SITE_NAME } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { getSharedCopy } from "@/lib/i18n/shared";

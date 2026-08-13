@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { requireUserId } from "@/lib/auth";
 import type { CourseProgress } from "@/lib/vedic-course/types";
 import type { AppLanguage } from "@/lib/i18n/language";
@@ -17,8 +18,21 @@ const DEFAULT_PROGRESS: CourseProgress = {
   completedSlides: [],
 };
 
+/**
+ * Saved progress for the signed-in user, or a fresh course for everyone else.
+ *
+ * This used to call `requireUserId()`, which throws. That was safe while
+ * `/test-beta` sat behind the middleware auth gate — a signed-out visitor was
+ * redirected to sign-in and never reached the page. Phase 3.1 made the course
+ * public, so the throw surfaced as a **500 on a route that is in the sitemap**:
+ * signed-out humans and Googlebot both got an error page instead of the course.
+ *
+ * Reading progress is not a privileged operation — an anonymous visitor simply
+ * has none. Writing still requires a user; see `saveVedicCourseProgress`.
+ */
 export async function getVedicCourseProgress(): Promise<CourseProgress> {
-  const userId = await requireUserId();
+  const { userId } = await auth();
+  if (!userId) return DEFAULT_PROGRESS;
 
   const record = await prisma.vedicCourseProgress.findUnique({
     where: { userId },

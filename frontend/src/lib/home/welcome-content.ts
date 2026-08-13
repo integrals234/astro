@@ -9,6 +9,11 @@ export type WelcomeStartingPointId =
 export interface WelcomeQuickLink {
   href: string;
   label: BilingualText;
+  /**
+   * Marks the card's terminal action. A flag rather than a restructure, so the
+   * localisation audit's shape check keeps passing across all four locales.
+   */
+  primary?: boolean;
 }
 
 export interface WelcomeStartingPoint {
@@ -17,6 +22,34 @@ export interface WelcomeStartingPoint {
   body: BilingualText;
   links: WelcomeQuickLink[];
 }
+
+export interface WelcomeTestimonial {
+  quote: string;
+  attribution: string;
+}
+
+/**
+ * Testimonials and trust badges ship empty on purpose.
+ *
+ * 景品表示法 bars 優良誤認, and PRIORITY.md is explicit that these are strong
+ * E-E-A-T devices only if genuine. The components are built and styled; they
+ * render nothing until real, attributed entries are added here. Do not
+ * populate with examples — anything in this array is a public claim.
+ */
+export const welcomeTestimonials: Record<EducationLang, WelcomeTestimonial[]> = {
+  en: [],
+  hi: [],
+  ja: [],
+  ko: [],
+};
+
+/** Verifiable facts about the practice only — no superlatives, no guarantees. */
+export const welcomeTrustBadges: Record<EducationLang, string[]> = {
+  en: [],
+  hi: [],
+  ja: [],
+  ko: [],
+};
 
 export const welcomeContent = {
   bannerAlt: {
@@ -41,6 +74,71 @@ export const welcomeContent = {
   ],
   startingPointsLead: {
     en: "Below are some suggested starting points, depending on what you are looking for", hi: "आप जो खोज रहे हैं उसके आधार पर नीचे कुछ शुरुआती बिंदु सुझाए गए हैं", ja: "お探しの内容に応じて、以下の出発点をご提案します", ko: "다음은 찾고 있는 항목에 따라 몇 가지 제안된 시작점입니다.",
+  },
+
+  /*
+   * CTA ladder + restage copy.
+   *
+   * Audited against 消費者契約法 霊感等条項 per Phase 3.17: no fear framing, no
+   * claim that repeating difficulty is the visitor's fault, no positioning of
+   * the service as the remedy, no urgency, no guarantee of results. The
+   * register is the calm, descriptive one the rest of the site already uses.
+   */
+  heroEyebrow: {
+    en: "Vedic Astrology", hi: "वैदिक ज्योतिष", ja: "インド占星術", ko: "베다 점성술",
+  },
+  heroLead: {
+    en: "Charts, readings, and a place to learn — prepared in the Vedic tradition and explained in plain language.",
+    hi: "कुंडलियाँ, अध्ययन और सीखने का स्थान — वैदिक परंपरा में तैयार और सरल भाषा में समझाया गया।",
+    ja: "チャート、鑑定、そして学びの場を。ヴェーダの伝統に基づき、平易な言葉でお伝えします。",
+    ko: "차트와 감정, 그리고 배움의 자리 — 베다 전통에 따라 준비하고 쉬운 말로 설명합니다.",
+  },
+  ctaPrimary: {
+    en: "Create your free horoscope", hi: "निःशुल्क कुंडली बनाएँ", ja: "無料でホロスコープを作成", ko: "무료로 호로스코프 만들기",
+  },
+  ctaSecondary: {
+    en: "Request a personal appraisal", hi: "व्यक्तिगत रीडिंग का अनुरोध करें", ja: "個人鑑定を申し込む", ko: "개인 감정 신청하기",
+  },
+  stickyCtaLead: {
+    en: "A free birth chart, in about a minute", hi: "लगभग एक मिनट में निःशुल्क जन्म कुंडली", ja: "約1分で、無料の出生図を", ko: "약 1분이면 무료 출생 차트",
+  },
+  stickyCtaDismiss: {
+    en: "Dismiss", hi: "बंद करें", ja: "閉じる", ko: "닫기",
+  },
+  bannerCaption: {
+    en: "A practice rooted in the Vedic tradition, offered in plain language.",
+    hi: "वैदिक परंपरा में निहित एक अभ्यास, सरल भाषा में प्रस्तुत।",
+    ja: "ヴェーダの伝統に根ざした実践を、平易な言葉で。",
+    ko: "베다 전통에 뿌리내린 실천을, 쉬운 말로.",
+  },
+  pullQuote: {
+    en: "Jyotish does not promise to remove difficulty. It offers a way to read the timing of a life more clearly.",
+    hi: "ज्योतिष कठिनाइयाँ दूर करने का वादा नहीं करता। यह जीवन के समय-चक्र को अधिक स्पष्टता से पढ़ने का एक तरीका देता है।",
+    ja: "ジョーティッシュは、困難を取り除くと約束するものではありません。人生の時の流れを、より明確に読むための手立てです。",
+    ko: "조티시는 어려움을 없애준다고 약속하지 않습니다. 삶의 흐름을 더 분명하게 읽는 방법을 제시할 뿐입니다.",
+  },
+  startingPointsEyebrow: {
+    en: "Where to begin", hi: "कहाँ से शुरू करें", ja: "はじめに", ko: "어디서 시작할까",
+  },
+  testimonialsEyebrow: {
+    en: "In their words", hi: "उनके शब्दों में", ja: "お客様の声", ko: "이용자의 말",
+  },
+  trustEyebrow: {
+    en: "About this practice", hi: "इस अभ्यास के बारे में", ja: "この鑑定について", ko: "이 감정에 대하여",
+  },
+  quickChart: {
+    eyebrow: {
+      en: "Birth details", hi: "जन्म विवरण", ja: "出生データ", ko: "출생 정보",
+    },
+    heading: {
+      en: "Start with your own chart", hi: "अपनी कुंडली से शुरुआत करें", ja: "ご自身のチャートから始める", ko: "자신의 차트로 시작하기",
+    },
+    lead: {
+      en: "Enter your birth details and we will draw your Vedic chart. Nothing is saved unless you sign in.",
+      hi: "अपना जन्म विवरण दर्ज करें, हम आपकी वैदिक कुंडली बनाएँगे। साइन इन किए बिना कुछ भी सहेजा नहीं जाता।",
+      ja: "出生データを入力すると、ヴェーダ式のチャートを作成します。ログインしない限り、データは保存されません。",
+      ko: "출생 정보를 입력하시면 베다 차트를 작성해 드립니다. 로그인하지 않으면 아무것도 저장되지 않습니다.",
+    },
   },
   instagram: {
     en: {
@@ -77,17 +175,18 @@ export const welcomeContent = {
         {
           href: "/learn-jyotish",
           label: { en: "Learn Jyotish", hi: "ज्योतिष सीखें", ja: "占星術を学ぶ", ko: "조티어 배우기",},
+          primary: true,
         },
         {
-          href: "/learn-jyotish?section=introduction",
+          href: "/learn-jyotish/introduction",
           label: { en: "Introduction", hi: "परिचय", ja: "入門", ko: "소개",},
         },
         {
-          href: "/learn-jyotish?section=rashis",
+          href: "/learn-jyotish/rashis",
           label: { en: "Rashis (Signs)", hi: "राशियाँ (संकेत)", ja: "ラーシ（星座）", ko: "라시(표지판)",},
         },
         {
-          href: "/learn-jyotish?section=planets",
+          href: "/learn-jyotish/planets",
           label: { en: "Planets", hi: "ग्रहों", ja: "惑星（グラハ）", ko: "행성",},
         },
       ],
@@ -104,6 +203,7 @@ export const welcomeContent = {
         {
           href: "/chart",
           label: { en: "Chart generator", hi: "चार्ट जनरेटर", ja: "チャート作成", ko: "차트 생성기",},
+          primary: true,
         },
       ],
     },
@@ -117,8 +217,9 @@ export const welcomeContent = {
       },
       links: [
         {
-          href: "/test-beta",
+          href: "/course",
           label: { en: "Interactive Jyotish game", hi: "इंटरैक्टिव ज्योतिष खेल", ja: "インタラクティブ・ジョーティッシュ", ko: "대화형 Jyotish 게임",},
+          primary: true,
         },
       ],
     },
@@ -134,6 +235,7 @@ export const welcomeContent = {
         {
           href: "/personal-appraisals",
           label: { en: "Personal Appraisals", hi: "व्यक्तिगत मूल्यांकन", ja: "個人鑑定", ko: "개인 평가",},
+          primary: true,
         },
       ],
     },

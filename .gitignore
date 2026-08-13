@@ -20,3 +20,9 @@ backend/venv/
 .env*
 !.env.example
 !frontend/.env.example
+
+
+description.txt
+LAUNCH_PLAN.md
+PRIORITY.md
+SEO_PLAN.md

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { uiText } from "@/lib/education/i18n/ui";
 import type { BilingualText, EducationLang } from "@/lib/education/types";
@@ -53,7 +53,7 @@ export default function BackToNavButton({
   return (
     <AnimatePresence>
       {visible ? (
-        <motion.button
+        <m.button
           type="button"
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -70,7 +70,7 @@ export default function BackToNavButton({
           className={`fixed z-30 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-washi-elevated text-text-muted shadow-[0_1px_3px_rgba(47,47,47,0.06)] transition-[color,background-color,border-color,opacity,transform] duration-200 hover:border-terracotta hover:text-terracotta focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/40 active:scale-95 bottom-5 right-5 supports-[padding:max(0px)]:bottom-[max(1.25rem,env(safe-area-inset-bottom))] supports-[padding:max(0px)]:right-[max(1.25rem,env(safe-area-inset-right))] md:bottom-8 md:right-8 ${className}`}
         >
           <ArrowUp size={17} strokeWidth={2.25} aria-hidden />
-        </motion.button>
+        </m.button>
       ) : null}
     </AnimatePresence>
   );

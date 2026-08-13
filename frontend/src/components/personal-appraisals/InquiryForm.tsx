@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useRef } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import {
   sendInquiry,
@@ -72,7 +72,7 @@ export default function InquiryForm({
 
       <div ref={statusRef}>
         {state.status === "success" && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 flex items-start gap-3 rounded-md border border-moss/30 bg-moss/10 px-4 py-4"
@@ -86,11 +86,11 @@ export default function InquiryForm({
             <p className="text-sm text-text leading-relaxed">
               {state.message}
             </p>
-          </motion.div>
+          </m.div>
         )}
 
         {state.status === "error" && state.message && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 rounded-md border border-terracotta/30 bg-terracotta/10 px-4 py-4"
@@ -99,7 +99,7 @@ export default function InquiryForm({
             <p className="text-sm text-text leading-relaxed">
               {state.message}
             </p>
-          </motion.div>
+          </m.div>
         )}
       </div>
 
@@ -209,7 +209,7 @@ export default function InquiryForm({
         </div>
 
         <div className="pt-2">
-          <motion.button
+          <m.button
             type="submit"
             disabled={isPending}
             whileHover={isPending ? undefined : { scale: 1.01 }}
@@ -227,7 +227,7 @@ export default function InquiryForm({
                 {copy.submit}
               </>
             )}
-          </motion.button>
+          </m.button>
         </div>
       </form>
     </section>

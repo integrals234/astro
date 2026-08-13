@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, Suspense, useSyncExternalStore } from 'react';
 import Link from '@/components/i18n/LocaleLink';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
 import { Search, MapPin, Sparkles, Eye, Download, Bookmark, BookmarkCheck, LayoutDashboard } from 'lucide-react';
@@ -90,7 +90,7 @@ const DashaNode = ({ dasha, level = 1, t, lang }: { dasha: Dasha, level?: number
     <div className="w-full">
       <div onClick={() => hasSubs && setIsOpen(!isOpen)} className={`flex justify-between items-center rounded-md border cursor-pointer transition-colors duration-200 mb-1 ${levelStyles[level]}`}>
         <div className="flex items-center gap-2">
-          {hasSubs && <motion.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] text-moss">▶</motion.span>}
+          {hasSubs && <m.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] text-moss">▶</m.span>}
           {!hasSubs && <span className="w-3"></span>} 
           <span>
             <span className="mr-2 text-terracotta font-chart">{planetSymbols[dasha.lord]}</span>
@@ -105,9 +105,9 @@ const DashaNode = ({ dasha, level = 1, t, lang }: { dasha: Dasha, level?: number
       </div>
       <AnimatePresence>
         {isOpen && hasSubs && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }} className="overflow-hidden border-l border-border ml-4 pl-2">
+          <m.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }} className="overflow-hidden border-l border-border ml-4 pl-2">
             {dasha.sub_dashas!.map((sub, i) => <DashaNode key={i} dasha={sub} level={level + 1} t={t} lang={lang} />)}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
@@ -515,7 +515,7 @@ function ChartWorkspaceInner({
       <div className={`max-w-7xl mx-auto grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8 flex-grow w-full`}>
         
         {/* LEFT COLUMN: Form */}
-        <motion.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
+        <m.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
           <div className="washi-card p-8">
             
             <div className="mb-8">
@@ -539,7 +539,7 @@ function ChartWorkspaceInner({
                 {isCommandOpen && (
                   <>
                     <button type="button" aria-label={t.closeDialog} className="fixed inset-0 z-40 cursor-default" onClick={() => setIsCommandOpen(false)} />
-                    <motion.div 
+                    <m.div 
                       role="dialog"
                       aria-label={t.locationDialog}
                       {...popPresence}
@@ -572,7 +572,7 @@ function ChartWorkspaceInner({
                           ))}
                         </Command.List>
                       </Command>
-                    </motion.div>
+                    </m.div>
                   </>
                 )}
               </AnimatePresence>
@@ -616,9 +616,9 @@ function ChartWorkspaceInner({
                 </div>
               </div>
 
-              <motion.button whileHover={hoverLift} whileTap={tapPress} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="washi-btn-primary w-full py-4 text-sm disabled:opacity-50 transition-all">
+              <m.button whileHover={hoverLift} whileTap={tapPress} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="washi-btn-primary w-full py-4 text-sm disabled:opacity-50 transition-all">
                 {isLoading ? t.computingBtn : t.generateBtn}
-              </motion.button>
+              </m.button>
             </form>
           </div>
 
@@ -632,13 +632,13 @@ function ChartWorkspaceInner({
               onDeleteChart={handleDeleteChart}
             />
           )}
-        </motion.div>
+        </m.div>
 
         {/* RIGHT COLUMN: Output Dashboard */}
         <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
           <AnimatePresence mode="wait">
             {chartData ? (
-              <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="washi-card text-text overflow-hidden">
+              <m.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="washi-card text-text overflow-hidden">
                 
                 <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-border bg-washi">
                   <div>
@@ -712,7 +712,7 @@ function ChartWorkspaceInner({
                   </div>
 
                   <AnimatePresence mode="wait">
-                    <motion.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                    <m.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
                       
                       {/* STANDARD CHARTS */}
                       {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
@@ -774,7 +774,7 @@ function ChartWorkspaceInner({
                                 const isRetro = p.name === 'Rahu' || p.name === 'Ketu' ? true : p.is_retrograde;
                                 
                                 return (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card p-5">
+                                <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card p-5">
                                   <div className="flex justify-between items-start mb-3">
                                     <div className="flex items-center gap-2">
                                       <h3 className={`font-body font-semibold text-ink ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
@@ -813,7 +813,7 @@ function ChartWorkspaceInner({
                                       </div>
                                     </div>
                                   </div>
-                                </motion.div>
+                                </m.div>
                               )})}
                             </div>
                         </div>
@@ -825,7 +825,7 @@ function ChartWorkspaceInner({
                            <h2 className="text-2xl font-header text-ink mb-8 flex items-center gap-2"><Eye className="text-terracotta" size={24} /> {t.tabTitles?.Aspects}</h2>
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                              {chartData.planets.filter(p => p.aspects_houses.length > 0).map((p, idx) => (
-                               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card flex flex-col p-5">
+                               <m.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card flex flex-col p-5">
                                   <div className="flex items-center gap-2 mb-4">
                                     <div className="w-8 h-8 rounded-full washi-icon-chip font-chart text-base">{planetSymbols[p.name]}</div>
                                     <span className="font-body font-semibold text-ink">{t.planets[p.name]}</span>
@@ -841,7 +841,7 @@ function ChartWorkspaceInner({
                                       ))}
                                     </div>
                                   </div>
-                               </motion.div>
+                               </m.div>
                              ))}
                            </div>
                         </div>
@@ -858,7 +858,7 @@ function ChartWorkspaceInner({
                         </div>
                       )}
 
-                    </motion.div>
+                    </m.div>
                   </AnimatePresence>
                 </div>
                 {/* --- GLOBAL CONTROLS AREA --- */}
@@ -900,10 +900,10 @@ function ChartWorkspaceInner({
                       </div>
                     )}
                   </div>
-              </motion.div>
+              </m.div>
             ) : (
               // Empty State
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
+              <m.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
                 <div className="text-center text-text-muted p-8 max-w-sm">
                   <div className="washi-icon-chip w-16 h-16 mx-auto mb-6">
                     <MapPin size={24} />
@@ -911,7 +911,7 @@ function ChartWorkspaceInner({
                   <h3 className="text-lg font-header text-ink mb-2">{t.awaitingTitle}</h3>
                   <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>

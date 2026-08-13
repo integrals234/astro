@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 interface MappedPlanet { 
   name: string; 
@@ -47,7 +47,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
   const isGocharChart = transitPlanets.length > 0;
 
   return (
-    <motion.div 
+    <m.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
@@ -125,6 +125,6 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
           );
         })}
       </svg>
-    </motion.div>
+    </m.div>
   );
 }

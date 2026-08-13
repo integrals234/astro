@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { PartyPopper, XCircle } from "lucide-react";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
@@ -24,7 +24,7 @@ export default function GameFeedback({
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0, marginTop: 0 }}
           animate={{ opacity: 1, height: "auto", marginTop: 24 }}
           exit={{ opacity: 0, height: 0, marginTop: 0 }}
@@ -60,7 +60,7 @@ export default function GameFeedback({
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

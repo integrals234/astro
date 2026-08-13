@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { gameKindLabel } from "@/lib/vedic-course/step-utils";
 import type { CourseStep } from "@/lib/vedic-course/types";
@@ -16,7 +16,7 @@ interface GameShellProps {
 
 export default function GameShell({ kind, lang, title, instruction, children }: GameShellProps) {
   return (
-    <motion.article
+    <m.article
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
@@ -38,6 +38,6 @@ export default function GameShell({ kind, lang, title, instruction, children }: 
       )}
 
       <div className={title || instruction ? "mt-8" : ""}>{children}</div>
-    </motion.article>
+    </m.article>
   );
 }

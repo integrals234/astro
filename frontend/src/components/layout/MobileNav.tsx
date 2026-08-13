@@ -6,7 +6,7 @@ import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/i18n/LocaleLink";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { getMainNavItems } from "@/lib/navigation";
@@ -68,7 +68,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
       <AnimatePresence>
         {open && (
           <>
-            <motion.button
+            <m.button
               type="button"
               aria-label={copy.chrome.closeNavigation}
               initial={{ opacity: 0 }}
@@ -79,7 +79,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               onClick={closeMenu}
             />
 
-            <motion.aside
+            <m.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
@@ -160,7 +160,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
                   </Link>
                 </SignedOut>
               </div>
-            </motion.aside>
+            </m.aside>
           </>
         )}
       </AnimatePresence>,

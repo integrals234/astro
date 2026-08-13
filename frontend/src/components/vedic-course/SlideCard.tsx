@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { fadeUpPresence } from "@/lib/motion/tokens";
 import { createElement } from "react";
 import { FormattedText } from "@/lib/format-inline-text";
@@ -17,7 +17,7 @@ interface SlideCardProps {
 
 export default function SlideCard({ slide, lang, slideIndex, totalSlides }: SlideCardProps) {
   return (
-    <motion.article
+    <m.article
       key={slide.id}
       {...fadeUpPresence}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -63,6 +63,6 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
           </p>
         </div>
       )}
-    </motion.article>
+    </m.article>
   );
 }

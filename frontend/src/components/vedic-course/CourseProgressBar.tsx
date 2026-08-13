@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 
@@ -24,7 +24,7 @@ export default function CourseProgressBar({ percent, lang }: CourseProgressBarPr
         aria-valuemax={100}
         aria-valuenow={percent}
       >
-        <motion.div
+        <m.div
           className="absolute inset-y-0 left-0 rounded-full bg-terracotta"
           initial={{ width: 0 }}
           animate={{ width: `${percent}%` }}

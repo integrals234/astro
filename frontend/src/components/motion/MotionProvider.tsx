@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { MotionConfig } from "framer-motion";
+import { LazyMotion, MotionConfig, domMax } from "framer-motion";
 import { haptic } from "@/hooks/useHaptic";
 
 /**
@@ -66,5 +66,28 @@ export default function MotionProvider({
     };
   }, []);
 
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  /*
+   * `LazyMotion` + `m` (Phase 4).
+   *
+   * Every component previously imported `motion`, which pulls framer's whole
+   * feature set into the main bundle whether a surface uses it or not. `m` is
+   * the same API with the features stripped out; `LazyMotion` loads them once,
+   * asynchronously, for the tree below.
+   *
+   * `domMax` rather than the `domAnimation` the plan suggested: two surfaces
+   * use layout animations — the chart workspace's form column and the toast
+   * stack — and `domAnimation` omits them, which would have made toast
+   * dismissal jump instead of slide. The extra features are still lazy, so
+   * this costs nothing on first paint.
+   *
+   * Deliberately not `strict`. Strict throws at runtime on any stray
+   * `motion.*`, and a crash is a far worse failure than the silent fallback
+   * of loading the full bundle. Guard with the grep instead:
+   *   grep -rn "</\?motion\." src --include=*.tsx   # must return nothing
+   */
+  return (
+    <LazyMotion features={domMax}>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LazyMotion>
+  );
 }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { fadeUpPresence } from "@/lib/motion/tokens";
 import {
   BookOpen,
@@ -406,7 +406,7 @@ function ArticleSectionPanel({
       {singleArticleMode ? (
         activeTab ? (
           <AnimatePresence mode="wait">
-            <motion.section
+            <m.section
               key={activeTab.id}
               id={educationTopicAnchor(section, activeTab.id)}
               {...fadeUpPresence}
@@ -414,7 +414,7 @@ function ArticleSectionPanel({
               className="scroll-mt-4 lg:scroll-mt-28"
             >
               {activeTab.content}
-            </motion.section>
+            </m.section>
           </AnimatePresence>
         ) : null
       ) : (
@@ -503,13 +503,13 @@ function SectionFade({
 }) {
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key={sectionKey}
         {...fadeUpPresence}
         transition={{ duration: 0.35, ease: "easeOut" }}
       >
         {children}
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   );
 }

@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { popPresence, scrimPresence } from "@/lib/motion/tokens";
 import { AlertTriangle, Check, X } from "lucide-react";
 
@@ -103,7 +103,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       >
         <AnimatePresence initial={false}>
           {toasts.map((entry) => (
-            <motion.div
+            <m.div
               key={entry.id}
               layout
               {...popPresence}
@@ -131,18 +131,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               >
                 <X size={14} aria-hidden />
               </button>
-            </motion.div>
+            </m.div>
           ))}
         </AnimatePresence>
       </div>
 
       <AnimatePresence>
         {request && (
-          <motion.div
+          <m.div
             {...scrimPresence}
             className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
           >
-            <motion.div
+            <m.div
               role="alertdialog"
               aria-modal="true"
               aria-label={request.message}
@@ -167,8 +167,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   {request.confirmLabel}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </ToastContext.Provider>

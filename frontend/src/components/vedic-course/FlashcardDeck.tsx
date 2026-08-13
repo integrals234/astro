@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import type { CourseLanguage, FlashcardGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";
@@ -64,7 +64,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
           aria-label={uiString("flipCard", lang)}
           className="relative w-full max-w-md aspect-[4/3] perspective-[1000px]"
         >
-          <motion.div
+          <m.div
             animate={{ rotateY: flipped ? 180 : 0 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="relative h-full w-full"
@@ -95,7 +95,7 @@ export default function FlashcardDeck({ game, lang, onComplete }: FlashcardDeckP
                 <FormattedText text={t(card.back, lang)} />
               </p>
             </div>
-          </motion.div>
+          </m.div>
         </button>
 
         <div className="mt-6 flex items-center gap-4">

@@ -11,9 +11,8 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 import {
   breadcrumbSchema,
   organizationSchema,
+  personSchema,
   websiteSchema,
-  ORGANIZATION_ID,
-  PERSON_ID,
 } from "@/lib/seo/schema";
 import { getSharedCopy } from "@/lib/i18n/shared";
 
@@ -59,18 +58,10 @@ export default async function AboutPage({ params }: Params) {
     <PublicPageShell>
       <JsonLd
         nodes={[
-          organizationSchema(),
+          organizationSchema(language),
           websiteSchema(language),
           breadcrumbSchema(language, crumbs),
-          {
-            "@type": "Person",
-            "@id": PERSON_ID,
-            name: aboutContent.title[language],
-            description: aboutContent.lead[language],
-            knowsAbout: ABOUT_KNOWS_ABOUT,
-            sameAs: ["https://www.instagram.com/jyotishlife.jp/"],
-            worksFor: { "@id": ORGANIZATION_ID },
-          },
+          personSchema(language),
         ]}
       />
 

@@ -41,6 +41,21 @@ export interface AshtakootInput {
   moonNakshatra: string;
 }
 
+/**
+ * Order matters, and it is not a bug.
+ *
+ * Six of the eight kutas are symmetric, but Varna and Gana are directional in
+ * the classical rules: Varna awards its point only when the second party's
+ * varna is not below the first's, and Gana scores a Manushya-first/Rakshasa-
+ * second pairing differently from the reverse. Classically the first position
+ * is the bride and the second the groom.
+ *
+ * Swapping the two arguments can therefore change the total by up to two
+ * points. Any UI over this must say so rather than presenting the order as
+ * arbitrary — a score that silently changes when someone reorders two dropdowns
+ * destroys trust in the whole tool.
+ */
+
 export interface AshtakootResult {
   total: number;
   max: 36;

@@ -15,6 +15,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import PublicHeader from "@/components/layout/PublicHeader";
 import HomeInstagramStrip from "@/components/home/HomeInstagramStrip";
 import QuickChartForm from "@/components/home/QuickChartForm";
+import HomeToolGrid from "@/components/home/HomeToolGrid";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
 import { TrustBadges, Testimonials } from "@/components/home/TrustSignals";
 import Reveal from "@/components/motion/Reveal";
@@ -161,6 +162,15 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
         {/* Inline birth-details form — the highest-conversion surface. */}
         <Reveal className="mb-16 md:mb-20">
           <QuickChartForm />
+        </Reveal>
+
+        {/*
+          Tool grid directly under the form. Density near the top of the
+          homepage is what turns a single-purpose visit into an exploring one,
+          and every card below reuses the details just entered above.
+        */}
+        <Reveal className="mb-16 md:mb-20">
+          <HomeToolGrid />
         </Reveal>
 
         <hr className="washi-hairline mb-14" />

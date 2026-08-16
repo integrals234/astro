@@ -37,7 +37,7 @@ export interface ToolLanding {
    * without re-entering anything. The workspace stays below as the way to enter
    * or change details, which is why this is additive rather than a replacement.
    */
-  resultPanel?: "sukuyo";
+  resultPanel?: "sukuyo" | "compatibility";
 }
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -280,6 +280,78 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "इनका मूल और 27-नक्षत्र ढाँचा साझा है, पर पूरी पद्धति नहीं। ज्योतिष लग्न, नौ ग्रह, भाव और दशाओं को भी पढ़ता है।",
           ja: "起源と二十七宿という枠組みは共通していますが、体系全体が同じわけではありません。宿曜は日本で独自の解釈伝統を発展させ、主に宿とその相互関係を扱います。インド占星術はこれに加えてラグナ、九つの惑星、十二の室、そしてダシャー期間を読むため、本命宿だけよりはるかに多くのことが分かります。",
           ko: "기원과 27수 체계는 공유하지만 전체 체계가 같지는 않습니다. 조티시는 라그나, 아홉 행성, 12궁, 다샤까지 함께 읽습니다.",
+        },
+      },
+    ],
+  },
+  {
+    /*
+     * 相性 is the highest-volume commercial intent in Japanese fortune-telling,
+     * and the paid compatibility reading is the natural next step from it. The
+     * scoring is a pure function of two Moon positions, so no backend work.
+     */
+    slug: "compatibility",
+    defaultTab: "D1",
+    resultPanel: "compatibility",
+    title: {
+      en: "Vedic compatibility calculator (Ashtakoot, 36 points)",
+      hi: "वैदिक अनुकूलता गणक (अष्टकूट, 36 अंक)",
+      ja: "インド占星術 相性診断｜アシュタクータ三十六点",
+      ko: "베다 궁합 계산기 (아슈타쿠타 36점)",
+    },
+    description: {
+      en: "Score compatibility between two birth charts across the eight classical kutas, with the full breakdown rather than a single number.",
+      hi: "दो कुंडलियों के बीच आठ शास्त्रीय कूटों पर अनुकूलता, पूर्ण विभाजन के साथ।",
+      ja: "お二人の出生図から、古典的な八項目・三十六点法で相性を算出します。合計点だけでなく、ヴァルナからナーディまで各項目の内訳を表示します。",
+      ko: "두 사람의 출생 차트로 여덟 개 고전 쿠타에 걸쳐 궁합을 산출하고, 총점이 아닌 전체 내역을 보여줍니다.",
+    },
+    lead: {
+      en: "Ashtakoot scores eight criteria totalling thirty-six points, all derived from the two Moon positions. This page shows every component, because a total on its own hides which part of the relationship it is describing.",
+      hi: "अष्टकूट आठ कसौटियों पर छत्तीस अंक देता है, सभी दो चंद्र स्थितियों से। यह पृष्ठ हर घटक दिखाता है।",
+      ja: "アシュタクータは八つの観点を合計三十六点で評価する古典的な相性判定法です。すべてお二人の月の位置から算出されます。当ページが合計点だけでなく各項目の内訳を表示するのは、同じ点数でもどの項目で失点しているかによって意味がまったく異なるためです。",
+      ko: "아슈타쿠타는 여덟 관점을 합계 36점으로 평가하는 고전적 궁합 판정법이며, 모두 두 사람의 달 위치에서 산출됩니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "How many points are considered a good match?",
+          hi: "कितने अंक अच्छा मेल माने जाते हैं?",
+          ja: "何点あれば相性が良いといえますか？",
+          ko: "몇 점이면 궁합이 좋다고 하나요?",
+        },
+        answer: {
+          en: "Eighteen out of thirty-six is the figure usually quoted, but it should not be read as a verdict. Ashtakoot uses only the two Moon positions, and ignores the ascendant, the seventh house and its lord, and the dasha period each person is in. Low scores frequently work out and high ones still meet difficulty.",
+          hi: "छत्तीस में से अठारह प्रायः उद्धृत आँकड़ा है, पर इसे निर्णय नहीं मानना चाहिए। अष्टकूट केवल दो चंद्र स्थितियाँ देखता है।",
+          ja: "一般には三十六点中十八点以上とされますが、これを結論として読むべきではありません。アシュタクータはお二人の月の位置のみを用い、ラグナ、七室とその支配星、現在のダシャー期間を考慮していないためです。点数が低くても続く関係も、高くても難しい時期を迎える関係もあります。",
+          ko: "일반적으로 36점 중 18점 이상이라고 하지만, 이를 결론으로 읽어서는 안 됩니다. 아슈타쿠타는 두 사람의 달 위치만 사용합니다.",
+        },
+      },
+      {
+        question: {
+          en: "What are Bhakoot and Nadi dosha?",
+          hi: "भकूट और नाड़ी दोष क्या हैं?",
+          ja: "バクート・ドーシャとナーディ・ドーシャとは何ですか？",
+          ko: "바쿠타 도샤와 나디 도샤란 무엇인가요?",
+        },
+        answer: {
+          en: "They are the two heaviest zero-scores. Bhakoot dosha occurs when the two Moon signs stand in a 6–8, 5–9 or 2–12 relationship; Nadi dosha when both people share the same nadi. Classical texts also list several conditions under which each is cancelled, so a zero is a prompt to look closer rather than a conclusion.",
+          hi: "ये दो सबसे भारी शून्य हैं। भकूट दोष 6-8, 5-9 या 2-12 संबंध में होता है; नाड़ी दोष समान नाड़ी होने पर। शास्त्रों में इनके निरसन के नियम भी हैं।",
+          ja: "配点の大きい二項目が零点になる状態を指します。バクート・ドーシャは二人の月星座が六と八、五と九、二と十二の関係にある場合、ナーディ・ドーシャは二人が同じナーディに属する場合です。ただし古典には、それぞれが他の配置によって相殺される条件が複数記されています。零点は結論ではなく、詳しく見るべき合図と考えるのが適切です。",
+          ko: "가장 무거운 두 개의 0점입니다. 바쿠타 도샤는 두 달 별자리가 6-8, 5-9, 2-12 관계일 때, 나디 도샤는 같은 나디일 때 발생합니다.",
+        },
+      },
+      {
+        question: {
+          en: "Do we both need exact birth times?",
+          hi: "क्या दोनों का सटीक जन्म समय आवश्यक है?",
+          ja: "二人とも正確な出生時刻が必要ですか？",
+          ko: "두 사람 모두 정확한 출생 시각이 필요한가요?",
+        },
+        answer: {
+          en: "Birth time matters because it fixes the Moon's nakshatra, and five of the eight kutas depend on it. The Moon moves through one nakshatra in roughly a day, so an hour or two rarely changes the result — but a birth near a boundary can. If a time is unknown, calculate with noon and treat the result as provisional.",
+          hi: "जन्म समय चंद्र नक्षत्र तय करता है, और आठ में से पाँच कूट उस पर निर्भर हैं। सीमा के निकट जन्म में अंतर पड़ सकता है।",
+          ja: "出生時刻は月のナクシャトラを確定するために必要で、八項目のうち五項目がこれに依存します。月は一つのナクシャトラをおよそ一日で通過するため、一、二時間の違いで結果が変わることは多くありませんが、境界付近の生まれでは変わり得ます。時刻が不明な場合は正午で計算し、結果は暫定的なものとお考えください。",
+          ko: "출생 시각은 달의 낙샤트라를 확정하므로 필요하며, 여덟 항목 중 다섯이 이에 의존합니다. 경계 부근 출생은 결과가 달라질 수 있습니다.",
         },
       },
     ],

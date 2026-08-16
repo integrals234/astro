@@ -6,11 +6,13 @@ import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import ToolWorkspace from "@/components/tools/ToolWorkspace";
 import SukuyoResult from "@/components/tools/SukuyoResult";
+import CompatibilityResult from "@/components/tools/CompatibilityResult";
 import { uiText } from "@/lib/education";
 import {
   TOOL_LANDINGS,
   findToolLanding,
 } from "@/lib/tools/landing-content";
+import { findToolLongForm } from "@/lib/tools/content";
 import { APP_LANGUAGES, parseAppLanguage } from "@/lib/i18n/language";
 import { localizedHref } from "@/lib/i18n/routing";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -61,6 +63,7 @@ export default async function ToolLandingPage({ params }: Params) {
 
   const language = parseAppLanguage(locale);
   const path = `/tools/${slug}`;
+  const longForm = findToolLongForm(slug);
 
   const crumbs = [
     { name: uiText("home", language), path: "/" },
@@ -127,12 +130,57 @@ export default async function ToolLandingPage({ params }: Params) {
             <SukuyoResult />
           </div>
         ) : null}
+        {tool.resultPanel === "compatibility" ? (
+          <div className="mt-10">
+            <CompatibilityResult />
+          </div>
+        ) : null}
 
         <div className="mt-10" id="tool-form">
           <ToolWorkspace initialTab={tool.defaultTab} />
         </div>
 
         <hr className="washi-hairline my-14" />
+
+        {/*
+          Long-form body. A calculator plus three FAQs does not rank against a
+          competitor running thousands of words per page; these sections are
+          that depth, written to explain rather than to fill.
+        */}
+        {longForm ? (
+          <article className="washi-measure">
+            {longForm.sections.map((section) => (
+              <section key={section.heading.en} className="mb-12">
+                <h2 className="mb-4 font-header text-[length:var(--step-2)] text-ink">
+                  {section.heading[language]}
+                </h2>
+                {section.body.map((paragraph) => (
+                  <p
+                    key={paragraph.en}
+                    className="mb-4 font-body leading-relaxed text-text"
+                  >
+                    {paragraph[language]}
+                  </p>
+                ))}
+                {section.bullets ? (
+                  <ul className="mt-5 space-y-2">
+                    {section.bullets.map((bullet) => (
+                      <li
+                        key={bullet.en}
+                        className="flex items-start gap-2.5 font-body text-sm text-text-muted"
+                      >
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-moss" />
+                        {bullet[language]}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
+            ))}
+          </article>
+        ) : null}
+
+        {longForm ? <hr className="washi-hairline my-14" /> : null}
 
         {/*
          * Question-shaped H2 with the answer in the first sentence — the shape

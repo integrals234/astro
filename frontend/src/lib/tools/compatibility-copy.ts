@@ -2,11 +2,10 @@ import type { KutaId } from "@/lib/jyotish/ashtakoot";
 import type { AppLanguage } from "@/lib/i18n/language";
 
 interface CompatibilityCopy {
-  needTwo: string;
-  needOneMore: string;
-  addPerson: string;
-  personA: string;
-  personB: string;
+  pickExisting: string;
+  addNew: string;
+  bride: string;
+  groom: string;
   choose: string;
   compute: string;
   computing: string;
@@ -16,31 +15,36 @@ interface CompatibilityCopy {
   orderNote: string;
   doshaNote: string;
   footnote: string;
+  managePeople: (count: number) => string;
+  deletePerson: (label: string) => string;
+  addAs: (label: string) => string;
+  added: string;
   kutaNames: Record<KutaId, string>;
   kutaBlurbs: Record<KutaId, string>;
 }
 
 export const compatibilityCopy: Record<AppLanguage, CompatibilityCopy> = {
   ja: {
-    needTwo:
-      "相性を算出するには、お二人分の出生データが必要です。まずご自身の情報を下のフォームから登録し、続けてお相手の情報も追加してください。一度登録すれば、当サイトの他のツールでも再入力は不要です。",
-    needOneMore:
-      "お相手の出生データを追加してください。下のフォームで生年月日・出生時刻・出生地を入力すると、相性の算出ができるようになります。",
-    addPerson: "出生データを追加する",
-    personA: "お一人目",
-    personB: "お二人目",
+    pickExisting: "登録済みの方から選ぶ",
+    addNew: "新しく追加する",
+    bride: "新婦（お一人目）",
+    groom: "新郎（お二人目）",
     choose: "選択してください",
     compute: "相性を算出する",
     computing: "計算中…",
     samePerson: "異なるお二人を選択してください。",
-    error: "計算に失敗しました。しばらくしてから再度お試しください。",
+    error: "処理に失敗しました。しばらくしてから再度お試しください。",
     totalLabel: "アシュタクータ合計点",
     orderNote:
-      "古典では八項目のうちヴァルナとガナの二つが方向性を持つため、お一人目とお二人目を入れ替えると合計が最大二点変わることがあります。伝統的にはお一人目が女性、お二人目が男性とされてきました。",
+      "古典では八項目のうちヴァルナとガナの二つが方向性を持つため、新婦と新郎を入れ替えると合計が最大二点変わることがあります。伝統的な区分に従い、一人目を新婦、二人目を新郎としています。",
     doshaNote:
       "バクートまたはナーディが零点です。古典ではこの二つを特に重視しますが、他の配置によって相殺される規定も複数あり、この結果のみで判断することは想定されていません。",
     footnote:
       "この点数は、お二人の月の位置のみから機械的に算出したものです。ラグナ、七室とその支配星、金星・火星の状態、現在のダシャー期間は含まれていません。関係の判断材料としては、二つのチャート全体を読み合わせる必要があります。",
+    managePeople: (n) => `登録済みの人（${n}件）を管理`,
+    deletePerson: (l) => `${l} を削除`,
+    addAs: (l) => `${l}として追加`,
+    added: "追加しました",
     kutaNames: {
       varna: "ヴァルナ（気質の階層）",
       vashya: "ヴァシャ（主導権）",
@@ -63,25 +67,26 @@ export const compatibilityCopy: Record<AppLanguage, CompatibilityCopy> = {
     },
   },
   en: {
-    needTwo:
-      "Two sets of birth details are needed. Enter your own below, then add your partner's. Once entered, every other tool on this site will use them without asking again.",
-    needOneMore:
-      "Add your partner's birth details below — date, time and place — and the score becomes available.",
-    addPerson: "Add birth details",
-    personA: "First person",
-    personB: "Second person",
+    pickExisting: "Choose from people you've already added",
+    addNew: "Add someone new",
+    bride: "Bride (first position)",
+    groom: "Groom (second position)",
     choose: "Select",
     compute: "Calculate compatibility",
     computing: "Calculating…",
     samePerson: "Please choose two different people.",
-    error: "The calculation failed. Please try again shortly.",
+    error: "That failed. Please try again shortly.",
     totalLabel: "Ashtakoot total",
     orderNote:
-      "Two of the eight criteria — Varna and Gana — are directional in the classical rules, so swapping the two people can change the total by up to two points. Traditionally the first position is the bride and the second the groom.",
+      "Two of the eight criteria — Varna and Gana — are directional in the classical rules, so swapping bride and groom can change the total by up to two points. The first position is traditionally the bride and the second the groom, which is how the two slots above are labelled.",
     doshaNote:
       "Bhakoot or Nadi scored zero. The tradition weighs these two most heavily, but classical rules cancel them in several configurations, and this result alone was never meant to decide anything.",
     footnote:
       "This score is computed mechanically from two Moon positions. It does not include the ascendant, the seventh house and its lord, the condition of Venus and Mars, or the dasha period either person is currently in.",
+    managePeople: (n) => `Manage saved people (${n})`,
+    deletePerson: (l) => `Delete ${l}`,
+    addAs: (l) => `Add as ${l.toLowerCase()}`,
+    added: "Added",
     kutaNames: {
       varna: "Varna (temperament tier)",
       vashya: "Vashya (initiative)",
@@ -104,25 +109,26 @@ export const compatibilityCopy: Record<AppLanguage, CompatibilityCopy> = {
     },
   },
   hi: {
-    needTwo:
-      "अनुकूलता के लिए दोनों के जन्म-विवरण चाहिए। पहले अपना विवरण नीचे दर्ज करें, फिर साथी का जोड़ें।",
-    needOneMore:
-      "अपने साथी का जन्म-विवरण नीचे जोड़ें — तिथि, समय और स्थान — तब अंक उपलब्ध होंगे।",
-    addPerson: "जन्म-विवरण जोड़ें",
-    personA: "पहला व्यक्ति",
-    personB: "दूसरा व्यक्ति",
+    pickExisting: "पहले से जोड़े गए व्यक्तियों में से चुनें",
+    addNew: "नया व्यक्ति जोड़ें",
+    bride: "वधू (पहला स्थान)",
+    groom: "वर (दूसरा स्थान)",
     choose: "चुनें",
     compute: "अनुकूलता निकालें",
     computing: "गणना हो रही है…",
     samePerson: "कृपया दो भिन्न व्यक्ति चुनें।",
-    error: "गणना विफल रही। कृपया कुछ देर बाद प्रयास करें।",
+    error: "यह विफल रहा। कृपया कुछ देर बाद प्रयास करें।",
     totalLabel: "अष्टकूट कुल अंक",
     orderNote:
-      "आठ में से दो कूट — वर्ण और गण — शास्त्रीय रूप से दिशात्मक हैं, इसलिए दोनों को बदलने पर कुल दो अंक तक बदल सकता है। परंपरा में पहला स्थान वधू का और दूसरा वर का होता है।",
+      "आठ में से दो कूट — वर्ण और गण — शास्त्रीय रूप से दिशात्मक हैं, इसलिए वधू और वर को बदलने पर कुल दो अंक तक बदल सकता है। परंपरा में पहला स्थान वधू का और दूसरा वर का होता है, जैसा ऊपर दोनों स्थान अंकित हैं।",
     doshaNote:
       "भकूट या नाड़ी शून्य है। परंपरा इन्हें सर्वाधिक भार देती है, पर कई विन्यासों में शास्त्रीय नियम इन्हें निरस्त करते हैं।",
     footnote:
       "यह अंक केवल दो चंद्र स्थितियों से यांत्रिक रूप से निकला है। इसमें लग्न, सप्तम भाव, शुक्र-मंगल की स्थिति या वर्तमान दशा शामिल नहीं है।",
+    managePeople: (n) => `सहेजे गए व्यक्ति प्रबंधित करें (${n})`,
+    deletePerson: (l) => `${l} हटाएँ`,
+    addAs: (l) => `${l} के रूप में जोड़ें`,
+    added: "जोड़ा गया",
     kutaNames: {
       varna: "वर्ण",
       vashya: "वश्य",
@@ -145,25 +151,26 @@ export const compatibilityCopy: Record<AppLanguage, CompatibilityCopy> = {
     },
   },
   ko: {
-    needTwo:
-      "궁합을 산출하려면 두 사람의 출생 정보가 필요합니다. 먼저 본인 정보를 아래 양식에 등록하고, 이어서 상대방 정보를 추가해 주세요.",
-    needOneMore:
-      "상대방의 출생 정보를 추가해 주세요. 생년월일, 출생 시각, 출생지를 입력하면 궁합을 산출할 수 있습니다.",
-    addPerson: "출생 정보 추가",
-    personA: "첫 번째 사람",
-    personB: "두 번째 사람",
+    pickExisting: "이미 추가한 사람 중에서 선택",
+    addNew: "새로 추가하기",
+    bride: "신부 (첫 번째 위치)",
+    groom: "신랑 (두 번째 위치)",
     choose: "선택하세요",
     compute: "궁합 산출하기",
     computing: "계산 중…",
     samePerson: "서로 다른 두 사람을 선택해 주세요.",
-    error: "계산에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    error: "처리에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     totalLabel: "아슈타쿠타 총점",
     orderNote:
-      "여덟 항목 중 바르나와 가나는 고전 규칙상 방향성을 가지므로, 두 사람의 순서를 바꾸면 총점이 최대 2점까지 달라질 수 있습니다. 전통적으로 첫 번째가 신부, 두 번째가 신랑입니다.",
+      "여덟 항목 중 바르나와 가나는 고전 규칙상 방향성을 가지므로, 신부와 신랑을 바꾸면 총점이 최대 2점까지 달라질 수 있습니다. 전통적으로 첫 번째가 신부, 두 번째가 신랑이며 위의 두 칸도 그렇게 표시되어 있습니다.",
     doshaNote:
       "바쿠타 또는 나디가 0점입니다. 고전은 이 둘을 특히 중시하지만, 다른 배치로 상쇄되는 규정도 여럿 있어 이 결과만으로 판단하도록 의도되지 않았습니다.",
     footnote:
       "이 점수는 두 사람의 달 위치만으로 기계적으로 산출된 것입니다. 라그나, 7궁과 그 지배성, 금성·화성의 상태, 현재의 다샤 시기는 포함되지 않습니다.",
+    managePeople: (n) => `저장된 사람 관리 (${n}명)`,
+    deletePerson: (l) => `${l} 삭제`,
+    addAs: (l) => `${l}(으)로 추가`,
+    added: "추가됨",
     kutaNames: {
       varna: "바르나(기질 층위)",
       vashya: "바샤(주도권)",

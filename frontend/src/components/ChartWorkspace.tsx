@@ -26,6 +26,7 @@ import { getChartUi, chartFormCopy, type ChartTranslations } from '@/lib/chart-i
 import { useToast } from '@/components/ui/Toaster';
 import { popPresence, hoverLift, tapPress } from '@/lib/motion/tokens';
 import { parseChartPrefill } from '@/lib/chart-prefill';
+import { useBirthProfile } from '@/components/profile/ProfileProvider';
 import type { AppLanguage } from '@/lib/i18n/language';
 
 interface ChartWorkspaceProps {
@@ -196,8 +197,35 @@ function ChartWorkspaceInner({
   const [savedCharts, setSavedCharts] = useState<SavedChartRecord[]>([]);
   const [isSavingChart, setIsSavingChart] = useState(false);
 
+  const { upsertProfile, primary: primaryProfile, isLoaded: profilesLoaded } =
+    useBirthProfile();
   const { toast, confirm: confirmDialog } = useToast();
   const t: ChartTranslations = chartFormCopy[lang];
+
+  /*
+   * Prefill from the remembered person.
+   *
+   * Runs once, and only when the URL carried no prefill and the visitor has not
+   * already chosen a place — an explicit link or a half-typed form always beats
+   * a stored profile. This is what turns the second tool someone opens from
+   * another empty form into their own chart.
+   */
+  const [appliedProfileId, setAppliedProfileId] = useState<string | null>(null);
+  if (
+    profilesLoaded &&
+    primaryProfile &&
+    appliedProfileId !== primaryProfile.id &&
+    !prefill &&
+    !selectedLocationName
+  ) {
+    // Adjusting state during render rather than in an effect: React re-runs
+    // this component before touching the DOM, so there is no cascading render
+    // and no flash of the empty form.
+    setAppliedProfileId(primaryProfile.id);
+    setFormData((current) => ({ ...current, ...primaryProfile.birth }));
+    setSelectedLocationName(primaryProfile.locationName);
+    if (!personName.trim()) setPersonName(primaryProfile.label);
+  }
   const chartCopy = getChartUi(lang);
 
   const refreshLibrary = useCallback(async () => {
@@ -407,6 +435,24 @@ function ChartWorkspaceInner({
       if (!response.ok) throw new Error(t.errCalc);
       const data: ChartData = await response.json();
       setChartData(data);
+
+      // Remember the person, so every other tool on the site can answer for
+      // them without asking again. Deliberately after a successful compute:
+      // birth data that the engine rejected is not worth keeping.
+      upsertProfile({
+        label: personName.trim() || selectedLocationName,
+        locationName: selectedLocationName,
+        birth: {
+          year: formData.year,
+          month: formData.month,
+          day: formData.day,
+          hour: formData.hour,
+          minute: formData.minute,
+          latitude: formData.latitude,
+          longitude: formData.longitude,
+        },
+        isPrimary: false,
+      });
       setCurrentChartId(null);
       setIsCurrentSaved(false);
       if (enablePersistence) {

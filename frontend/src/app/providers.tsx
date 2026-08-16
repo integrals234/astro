@@ -7,6 +7,7 @@ import { getClerkAppearance } from "@/lib/clerk-appearance";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ContentProtection from "@/components/layout/ContentProtection";
 import MotionProvider from "@/components/motion/MotionProvider";
+import { ProfileProvider } from "@/components/profile/ProfileProvider";
 import { ToastProvider } from "@/components/ui/Toaster";
 import {
   LanguageAccountSync,
@@ -29,7 +30,10 @@ function LocalizedClerkProvider({ children }: { children: React.ReactNode }) {
       <LanguageAccountSync />
       <ContentProtection />
       <MotionProvider>
-        <ToastProvider>{children}</ToastProvider>
+        {/* Inside ClerkProvider: adoption of guest profiles on sign-in needs useAuth. */}
+        <ProfileProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </ProfileProvider>
       </MotionProvider>
     </ClerkProvider>
   );

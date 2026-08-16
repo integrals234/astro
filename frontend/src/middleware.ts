@@ -35,6 +35,7 @@ const PROTECTED_PATTERNS = [
   // save/list/delete routes under the same prefix stay protected.
   /^\/api\/charts(?!\/compute)(?:\/|$)/,
   /^\/api\/preferences(?:\/|$)/,
+  /^\/api\/profiles(?:\/|$)/,
 ];
 
 /**

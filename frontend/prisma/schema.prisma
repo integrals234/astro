@@ -36,6 +36,7 @@ model User {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   charts              SavedChart[]
+  birthProfiles       BirthProfile[]
   vedicCourseProgress VedicCourseProgress?
 }
 
@@ -47,6 +48,28 @@ model VedicCourseProgress {
   completedSlides String[] @default([])
   updatedAt       DateTime @updatedAt
   createdAt       DateTime @default(now())
+}
+
+/// A person whose chart the user cares about.
+///
+/// Promoted from localStorage on sign-in. Birth details are the highest-friction
+/// thing we ask for, so they are stored once and reused by every tool rather
+/// than re-collected per calculator.
+///
+/// Natal fields only — transit dates are per-request and never stored, or the
+/// row would be stale the next day.
+model BirthProfile {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label        String
+  locationName String
+  birth        Json
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId, createdAt])
 }
 
 /// Computed-chart cache.

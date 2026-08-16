@@ -29,6 +29,15 @@ export interface ToolLanding {
   /** Tab the embedded workspace opens on. */
   defaultTab: ChartTab;
   faqs: ToolFaq[];
+  /**
+   * A purpose-built result panel rendered above the chart workspace.
+   *
+   * Tools that answer one specific question ("which mansion am I?") get a
+   * dedicated component reading the shared birth profile, so the answer appears
+   * without re-entering anything. The workspace stays below as the way to enter
+   * or change details, which is why this is additive rather than a replacement.
+   */
+  resultPanel?: "sukuyo";
 }
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -194,6 +203,83 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "सत्ताईस, प्रत्येक राशिचक्र के 13°20′ में फैला और चार पादों में विभाजित।",
           ja: "27あります。それぞれ黄道の13度20分を占め、さらに4つのパダに分かれます。",
           ko: "스물일곱 개이며, 각각 황도의 13°20′를 차지하고 네 개의 파다로 나뉩니다.",
+        },
+      },
+    ],
+  },
+  {
+    /*
+     * 宿曜 is the strategic page on this site.
+     *
+     * It is a native Japanese search term for a Japanese Buddhist tradition
+     * that descends from the same 27 nakshatras Jyotish uses — so it is a
+     * question Japanese searchers already ask, that a Vedic engine is uniquely
+     * placed to answer well, and that an India-focused competitor has no reason
+     * to build. Most Japanese sukuyō sites derive the mansion from a
+     * lunar-calendar date; this derives it from the Moon's actual longitude.
+     */
+    slug: "sukuyo",
+    defaultTab: "D1",
+    resultPanel: "sukuyo",
+    title: {
+      en: "Sukuyō: find your birth mansion (27 nakshatras)",
+      hi: "सुक्युō: अपना जन्म नक्षत्र जानें (27 नक्षत्र)",
+      ja: "宿曜占星術｜本命宿を調べる（二十七宿）",
+      ko: "수쿠요(宿曜) 본명수 찾기 (27수)",
+    },
+    description: {
+      en: "Find your Sukuyō birth mansion from the Moon's real position, not a calendar date. All 27 mansions, with the nakshatra each one comes from.",
+      hi: "चंद्रमा की वास्तविक स्थिति से अपना सुक्युō जन्म नक्षत्र जानें। सभी 27 नक्षत्र और उनका स्रोत।",
+      ja: "生年月日と出生時刻から、本命宿を正確に算出します。旧暦の日付ではなく月の実際の位置に基づくため、境界日でも判定がぶれません。二十七宿とインド占星術のナクシャトラの対応も示します。",
+      ko: "달의 실제 위치에서 수쿠요 본명수를 산출합니다. 음력 날짜가 아니라 실제 황경 기준입니다.",
+    },
+    lead: {
+      en: "Sukuyō is Japan's system of 27 lunar mansions, carried from India through Tang-dynasty China. It uses the same divisions Jyotish calls nakshatras. Enter your birth details once and this page will find your mansion from the Moon's sidereal longitude.",
+      hi: "सुक्युō जापान की सत्ताईस नक्षत्रों की पद्धति है, जो भारत से चीन होते हुए जापान पहुँची। यह वही विभाजन प्रयोग करती है जिन्हें ज्योतिष नक्षत्र कहता है।",
+      ja: "宿曜（すくよう）は、インドの二十七宿が唐代の中国を経て日本に伝わった体系で、インド占星術のナクシャトラと同じ月の分割を用います。出生データを一度ご入力いただければ、月の実際の黄経から本命宿を算出します。",
+      ko: "수쿠요는 인도의 27수가 당나라를 거쳐 일본에 전해진 체계로, 조티시의 낙샤트라와 같은 달의 분할을 사용합니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What is Sukuyō astrology?",
+          hi: "सुक्युō ज्योतिष क्या है?",
+          ja: "宿曜占星術とは何ですか？",
+          ko: "수쿠요 점성술이란 무엇인가요?",
+        },
+        answer: {
+          en: "Sukuyō is a Japanese astrological system based on 27 lunar mansions. It arrived in Japan in the ninth century via the Chinese translation of an Indian text, and its 27 mansions are the same divisions of the Moon's path that Vedic astrology calls nakshatras.",
+          hi: "सुक्युō जापान की एक ज्योतिष पद्धति है जो 27 चंद्र नक्षत्रों पर आधारित है। यह नौवीं शताब्दी में एक भारतीय ग्रंथ के चीनी अनुवाद के माध्यम से जापान पहुँची।",
+          ja: "宿曜占星術は、二十七の月宿に基づく日本の占術です。九世紀に空海が『宿曜経』を持ち帰ったことで伝わりました。その二十七宿は、インド占星術がナクシャトラと呼ぶ月の通り道の分割と同じものです。",
+          ko: "수쿠요는 27개의 달 저택에 기반한 일본의 점성 체계입니다. 9세기에 인도 문헌의 한역본을 통해 일본에 전해졌으며, 27수는 베다 점성술의 낙샤트라와 같은 분할입니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why does my mansion differ from other Sukuyō sites?",
+          hi: "मेरा नक्षत्र अन्य साइटों से भिन्न क्यों है?",
+          ja: "他の宿曜サイトと本命宿が違うのはなぜですか？",
+          ko: "다른 사이트와 본명수가 다른 이유는 무엇인가요?",
+        },
+        answer: {
+          en: "Most Sukuyō sites assign a mansion from the lunar-calendar date, which is accurate for most days but wrong near boundaries. This page computes the Moon's actual sidereal longitude at your birth time from the Swiss Ephemeris, so a birth close to a mansion change resolves correctly. Birth time matters for exactly this reason.",
+          hi: "अधिकांश साइटें पंचांग तिथि से नक्षत्र निर्धारित करती हैं, जो सीमावर्ती दिनों में गलत हो सकता है। यह पृष्ठ जन्म समय पर चंद्रमा के वास्तविक निरयण देशांतर की गणना करता है।",
+          ja: "多くの宿曜サイトは旧暦の日付から本命宿を割り当てます。ほとんどの日は一致しますが、宿の境目にあたる日はずれます。当ページはスイス天体暦を用いて出生時刻における月の実際の黄経を計算するため、境界付近の生まれでも正しく判定できます。出生時刻が重要なのはこのためです。",
+          ko: "대부분의 사이트는 음력 날짜로 본명수를 배정하는데, 경계일에는 어긋날 수 있습니다. 이 페이지는 출생 시각의 실제 황경을 계산합니다.",
+        },
+      },
+      {
+        question: {
+          en: "Is Sukuyō the same as Vedic astrology?",
+          hi: "क्या सुक्युō वैदिक ज्योतिष के समान है?",
+          ja: "宿曜とインド占星術は同じものですか？",
+          ko: "수쿠요와 베다 점성술은 같은 것인가요?",
+        },
+        answer: {
+          en: "They share an origin and the 27-mansion framework, but not the whole system. Sukuyō developed its own interpretive tradition in Japan and works mainly with the mansions and their relationships. Vedic astrology also reads the ascendant, all nine grahas, the houses, and the dasha periods, which is why a full reading says considerably more than a mansion alone.",
+          hi: "इनका मूल और 27-नक्षत्र ढाँचा साझा है, पर पूरी पद्धति नहीं। ज्योतिष लग्न, नौ ग्रह, भाव और दशाओं को भी पढ़ता है।",
+          ja: "起源と二十七宿という枠組みは共通していますが、体系全体が同じわけではありません。宿曜は日本で独自の解釈伝統を発展させ、主に宿とその相互関係を扱います。インド占星術はこれに加えてラグナ、九つの惑星、十二の室、そしてダシャー期間を読むため、本命宿だけよりはるかに多くのことが分かります。",
+          ko: "기원과 27수 체계는 공유하지만 전체 체계가 같지는 않습니다. 조티시는 라그나, 아홉 행성, 12궁, 다샤까지 함께 읽습니다.",
         },
       },
     ],

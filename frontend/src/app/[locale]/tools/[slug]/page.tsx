@@ -5,6 +5,7 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import ToolWorkspace from "@/components/tools/ToolWorkspace";
+import SukuyoResult from "@/components/tools/SukuyoResult";
 import { uiText } from "@/lib/education";
 import {
   TOOL_LANDINGS,
@@ -71,7 +72,7 @@ export default async function ToolLandingPage({ params }: Params) {
     <PublicPageShell>
       <JsonLd
         nodes={[
-          organizationSchema(),
+          organizationSchema(language),
           websiteSchema(language),
           breadcrumbSchema(language, crumbs),
           {
@@ -116,7 +117,18 @@ export default async function ToolLandingPage({ params }: Params) {
           {tool.lead[language]}
         </p>
 
-        <div className="mt-10">
+        {/*
+          Purpose-built answer first, general workspace below. A visitor with a
+          saved profile sees their result without touching a form; the workspace
+          remains as the way to enter or change birth details.
+        */}
+        {tool.resultPanel === "sukuyo" ? (
+          <div className="mt-10">
+            <SukuyoResult />
+          </div>
+        ) : null}
+
+        <div className="mt-10" id="tool-form">
           <ToolWorkspace initialTab={tool.defaultTab} />
         </div>
 

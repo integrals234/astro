@@ -25,19 +25,38 @@ export type NatalInput = Pick<
   "year" | "month" | "day" | "hour" | "minute" | "latitude" | "longitude"
 >;
 
-export type NewBirthProfile = Omit<BirthProfile, "id" | "createdAt">;
+export type NewBirthProfile = Omit<BirthProfile, "id" | "createdAt"> & {
+  /**
+   * A chart already computed for this person, if the caller has one.
+   *
+   * Signed-in profiles are backed by `SavedChart` rows — the same table behind
+   * `/chart`'s recent and saved lists — so creating one requires a computed
+   * chart. Most callers already have it (they just ran the compute to get a
+   * Moon position or draw a preview); passing it here avoids a second round
+   * trip. If omitted, the signed-in path computes it itself.
+   */
+  chartData?: import("@/lib/chart-types").ChartData;
+};
+
+/** Attach today's transit date to a natal input, for a compute request. */
+export function natalToChartFormData(
+  natal: NatalInput,
+  transitDate = new Date(),
+): ChartFormData {
+  return {
+    ...natal,
+    transit_year: transitDate.getFullYear(),
+    transit_month: transitDate.getMonth() + 1,
+    transit_day: transitDate.getDate(),
+  };
+}
 
 /** Expand a stored profile into a full compute request for today's transits. */
 export function toChartFormData(
   profile: BirthProfile,
   transitDate = new Date(),
 ): ChartFormData {
-  return {
-    ...profile.birth,
-    transit_year: transitDate.getFullYear(),
-    transit_month: transitDate.getMonth() + 1,
-    transit_day: transitDate.getDate(),
-  };
+  return natalToChartFormData(profile.birth, transitDate);
 }
 
 export function isCompleteNatalInput(value: unknown): value is NatalInput {

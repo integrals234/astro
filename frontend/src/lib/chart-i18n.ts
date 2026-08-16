@@ -211,10 +211,11 @@ export function parseChartLang(value: string | null): AppLanguage {
 
 
 /**
- * Chart workspace copy. Lifted out of ChartWorkspace.tsx so <QuickChartForm>
- * on the homepage can share the exact same labels without importing the
- * 1,000-line workspace, and so it stays inside a catalog path the
- * localisation audit already scans (scripts/audit-localization.mjs).
+ * Chart workspace copy. Lifted out of ChartWorkspace.tsx so the lighter
+ * birth-detail entry points — `BirthDetailsFields`, `ChartPreviewResult` —
+ * can share the exact same labels without importing the 1,000-line
+ * workspace, and so it stays inside a catalog path the localisation audit
+ * already scans (scripts/audit-localization.mjs).
  */
 export const chartFormCopy = {
   en: {

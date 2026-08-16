@@ -49,6 +49,46 @@ model VedicCourseProgress {
   createdAt       DateTime @default(now())
 }
 
+/// Computed-chart cache.
+///
+/// The ephemeris is deterministic: the same birth data and transit date always
+/// produce the same chart, so recomputing it is pure waste. Matters more than a
+/// normal cache would because the engine is a Render service that cold-starts
+/// at ~30s — a cache hit is the difference between an instant chart and a
+/// bounce.
+///
+/// `key` is a sha256 of the canonicalised ChartFormData. Rows are disposable;
+/// `createdAt` drives TTL pruning since each payload is ~600 KB.
+model ChartCache {
+  key       String   @id
+  chartData Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+/// Server-side funnel log.
+///
+/// Mirrors the money events from `lib/analytics/events.ts`. Client analytics is
+/// blockable and lossy, which is fine for engagement metrics but not for the
+/// one number the business runs on — booked appraisals per 1,000 sessions.
+/// `anonId` is the middleware cookie, so a conversion can be traced back across
+/// the sign-in boundary to the landing page that produced it.
+model FunnelEvent {
+  id        String      @id @default(cuid())
+  anonId    String
+  userId    String?
+  event     String
+  props     Json?
+  locale    AppLanguage
+  path      String
+  createdAt DateTime    @default(now())
+
+  @@index([event, createdAt])
+  @@index([anonId, createdAt])
+  @@index([userId, createdAt])
+}
+
 model SavedChart {
   id           String   @id @default(cuid())
   userId       String

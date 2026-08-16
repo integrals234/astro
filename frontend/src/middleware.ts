@@ -29,12 +29,44 @@ const PROTECTED_PATTERNS = [
   /^\/chart\/recent(?:\/|$)/,
   /^\/saved-charts(?:\/|$)/,
   /^\/recent-charts(?:\/|$)/,
-  /^\/api\/charts(?:\/|$)/,
+  // `/api/charts/compute` is deliberately exempt: it computes a chart from
+  // posted birth data and reads no user record. Gating it would put a sign-in
+  // wall in front of the free tool that feeds the entire booking funnel. The
+  // save/list/delete routes under the same prefix stay protected.
+  /^\/api\/charts(?!\/compute)(?:\/|$)/,
   /^\/api\/preferences(?:\/|$)/,
 ];
 
+/**
+ * Anonymous visitor id, set once and carried until sign-in.
+ *
+ * This is what makes the funnel answerable: a visitor lands from search,
+ * generates a chart, leaves, comes back a week later and books. Without a
+ * stable id spanning the signed-out and signed-in halves, those are four
+ * unrelated rows and the conversion is invisible.
+ *
+ * Not a tracking identifier in the advertising sense — first-party, no
+ * cross-site scope, and it holds no personal data. Kept `lax` so it survives
+ * a click in from Google or Instagram.
+ */
+const ANON_COOKIE = "jl_anon";
+const ANON_MAX_AGE = 60 * 60 * 24 * 365;
+
+function withAnonId(response: NextResponse, existing: string | undefined) {
+  if (existing) return response;
+  response.cookies.set(ANON_COOKIE, crypto.randomUUID(), {
+    maxAge: ANON_MAX_AGE,
+    sameSite: "lax",
+    httpOnly: false,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  });
+  return response;
+}
+
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
+  const anonId = request.cookies.get(ANON_COOKIE)?.value;
 
   const { locale, pathname: bare } = stripLocale(pathname);
   if (PROTECTED_PATTERNS.some((pattern) => pattern.test(bare))) {
@@ -84,12 +116,12 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   // `/en`, `/hi`, `/ko` are real URLs — serve them as-is.
-  if (localeMatch) return NextResponse.next();
+  if (localeMatch) return withAnonId(NextResponse.next(), anonId);
 
   // Everything else is Japanese, served from the root and rewritten inward.
   const url = request.nextUrl.clone();
   url.pathname = `/${DEFAULT_APP_LANGUAGE}${pathname === "/" ? "" : pathname}`;
-  return NextResponse.rewrite(url);
+  return withAnonId(NextResponse.rewrite(url), anonId);
 });
 
 export const config = {

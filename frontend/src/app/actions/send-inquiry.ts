@@ -1,5 +1,6 @@
 "use server";
 
+import { recordConversion } from "@/lib/analytics/conversion";
 import {
   inquiryEmailContent,
   inquiryMessages,
@@ -116,6 +117,13 @@ export async function sendInquiry(
       "Missing inquiry email configuration:",
       resendConfig.missing.join(", "),
     );
+    // Recorded, not just logged: a misconfigured mailer silently drops paying
+    // customers, and a console line nobody reads is how that goes unnoticed.
+    await recordConversion("inquiry_failed", {
+      locale,
+      path: "/personal-appraisals",
+      props: { reason: "resend_unconfigured" },
+    });
     return {
       status: "error",
       message: msg.unavailable,
@@ -180,11 +188,25 @@ export async function sendInquiry(
 
     if (error) {
       console.error("Resend error:", error);
+      await recordConversion("inquiry_failed", {
+        locale,
+        path: "/personal-appraisals",
+        props: { reason: "resend_error" },
+      });
       return {
         status: "error",
         message: msg.sendFailed,
       };
     }
+
+    // The conversion, recorded server-side. Until now the only trace an inquiry
+    // ever happened was an email in an inbox — unattributable to a locale, a
+    // landing page, or the session that produced it.
+    await recordConversion("inquiry_submitted", {
+      locale,
+      path: "/personal-appraisals",
+      props: { hasMessage: Boolean(message) },
+    });
 
     return {
       status: "success",

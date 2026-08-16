@@ -11,6 +11,7 @@ import {
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { Providers } from "../providers";
 import {
   APP_LANGUAGES,
@@ -126,6 +127,7 @@ export default async function RootLayout({
           {children}
           <Analytics />
           <SpeedInsights />
+          <GoogleAnalytics />
         </Providers>
       </body>
     </html>

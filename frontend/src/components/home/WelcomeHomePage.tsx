@@ -14,7 +14,7 @@ import {
 import SiteFooter from "@/components/layout/SiteFooter";
 import PublicHeader from "@/components/layout/PublicHeader";
 import HomeInstagramStrip from "@/components/home/HomeInstagramStrip";
-import QuickChartForm from "@/components/home/QuickChartForm";
+import ChartPreviewResult from "@/components/tools/ChartPreviewResult";
 import HomeToolGrid from "@/components/home/HomeToolGrid";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
 import { TrustBadges, Testimonials } from "@/components/home/TrustSignals";
@@ -159,9 +159,32 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
           </div>
         </section>
 
-        {/* Inline birth-details form — the highest-conversion surface. */}
+        {/*
+          Inline birth-details form — the highest-conversion surface.
+          Previously this collected details and redirected to /chart, which
+          meant a second wait, a second load, and the whole form re-appearing
+          before anything was visible. It now computes and draws the chart
+          right here — Lagna by default, with Moon and transit as tabs on the
+          same data — and only links out to the full workspace for whoever
+          wants every tab, not as the only way to see a result.
+        */}
         <Reveal className="mb-16 md:mb-20">
-          <QuickChartForm />
+          <div className="washi-deckle relative mx-auto max-w-3xl px-6 py-8 sm:px-9">
+            <p className="washi-eyebrow washi-eyebrow-flanked mb-3 justify-center">
+              {welcomeText(welcomeContent.quickChart.eyebrow, lang)}
+            </p>
+            <h2 className="mb-2 text-center font-header text-[length:var(--step-2)] text-ink">
+              {welcomeText(welcomeContent.quickChart.heading, lang)}
+            </h2>
+            <p className="mb-7 text-center text-sm text-text-muted">
+              {welcomeText(welcomeContent.quickChart.lead, lang)}
+            </p>
+            <ChartPreviewResult
+              views={["lagna", "moon", "gochar"]}
+              toolSlug="home"
+              handoffTool="generic"
+            />
+          </div>
         </Reveal>
 
         {/*

@@ -1,5 +1,7 @@
 import type { BilingualText } from "@/lib/education/types";
 import type { ChartTab } from "@/lib/chart-types";
+import type { ChartView } from "@/lib/chart-render";
+import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
 
 /**
  * Tool landing pages (Phase 3.6).
@@ -35,9 +37,28 @@ export interface ToolLanding {
    * Tools that answer one specific question ("which mansion am I?") get a
    * dedicated component reading the shared birth profile, so the answer appears
    * without re-entering anything. The workspace stays below as the way to enter
-   * or change details, which is why this is additive rather than a replacement.
+   * or change details, which is why this is additive rather than a replacement
+   * for "sukuyo"/"compatibility" — but "chart" tools (a single chart view: the
+   * Lagna, Moon or transit picture) skip the workspace entirely, per
+   * `skipWorkspace`, since embedding the full 949-line multi-tab workspace
+   * beneath a page whose whole point is "just show me this one chart" would
+   * reintroduce the redirect-and-redo-everything friction this was built to
+   * remove.
    */
-  resultPanel?: "sukuyo" | "compatibility";
+  resultPanel?: "sukuyo" | "compatibility" | "chart";
+  /** Which view(s) a `"chart"` panel draws — more than one renders as tabs. */
+  chartViews?: readonly ChartView[];
+  /** Which `BookingHandoff` copy a `"chart"` panel closes with. */
+  chartHandoff?: ToolHandoffId;
+  /** Omit the embedded `ToolWorkspace` below the result panel. */
+  skipWorkspace?: boolean;
+  /**
+   * One line on what this is actually used for — shown on the homepage grid,
+   * where `description` alone reads as a feature list ("draws your kundli")
+   * rather than a reason to click ("check before scheduling anything
+   * important").
+   */
+  useCase: BilingualText;
 }
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -55,6 +76,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       hi: "अपनी जन्म तिथि, समय और स्थान से सटीक वैदिक जन्म कुंडली बनाएँ। निःशुल्क, खाते की आवश्यकता नहीं।",
       ja: "生年月日・出生時刻・出生地から、精密なヴェーダ式ホロスコープを作成します。無料、登録不要です。",
       ko: "생년월일, 출생 시각, 출생지로 정확한 베다 출생 차트를 생성합니다. 무료이며 가입이 필요 없습니다.",
+    },
+    useCase: {
+      en: "Use this before booking anything: see your chart's shape for free, then decide if a full reading is worth it.",
+      hi: "कुछ भी बुक करने से पहले इसे आज़माएँ: पहले निःशुल्क अपनी कुंडली की बनावट देखें, फिर तय करें कि पूर्ण परामर्श लेना है या नहीं।",
+      ja: "鑑定を予約する前に。まず無料でチャートの全体像を見て、本格的な鑑定が必要かどうかご判断ください。",
+      ko: "무엇이든 예약하기 전에. 먼저 무료로 차트의 전체 모습을 보고, 정식 감정이 필요한지 판단해 보세요.",
     },
     lead: {
       en: "Enter your birth details below to draw a full Vedic birth chart. The calculation uses the sidereal zodiac and real ephemeris data, and nothing is stored unless you sign in.",
@@ -96,6 +123,10 @@ export const TOOL_LANDINGS: ToolLanding[] = [
   {
     slug: "birth-chart",
     defaultTab: "D1",
+    resultPanel: "chart",
+    chartViews: ["lagna"],
+    chartHandoff: "generic",
+    skipWorkspace: true,
     title: {
       en: "Vedic birth chart (kundli) calculator",
       hi: "वैदिक जन्म कुंडली कैलकुलेटर",
@@ -107,6 +138,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       hi: "उत्तर या दक्षिण भारतीय प्रारूप में अपनी कुंडली बनाएँ — ग्रह अंश, नक्षत्र और भाव स्थिति सहित।",
       ja: "北インド式・南インド式の出生図を作成。惑星の度数、ナクシャトラ、ハウス配置まで表示します。",
       ko: "북인도식 또는 남인도식으로 쿤달리를 작성하고, 행성 도수·낙샤트라·하우스 위치를 확인하세요.",
+    },
+    useCase: {
+      en: "Your reference chart — pull it up any time you want to check a placement before a conversation or a decision.",
+      hi: "आपकी संदर्भ कुंडली — किसी बातचीत या निर्णय से पहले कोई स्थिति जाँचने के लिए कभी भी खोलें।",
+      ja: "基準となる出生図。会話や決断の前に、惑星の配置をいつでも確認できます。",
+      ko: "기준이 되는 출생 차트. 대화나 결정을 앞두고 언제든 배치를 확인하세요.",
     },
     lead: {
       en: "A kundli is the Vedic birth chart: a map of the sky at the moment you were born. This tool draws it in both the North Indian diamond and South Indian square layouts.",
@@ -146,6 +183,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       ja: "ヴィムショッタリ・ダシャーの周期を表示します。マハーダシャー、アンタルダシャー、さらに細かい階層まで開始日と終了日つきで確認できます。",
       ko: "비쇼타리 다샤 타임라인을 확인하세요. 마하다샤, 안타르다샤 및 더 깊은 단계를 시작일·종료일과 함께 보여줍니다.",
     },
+    useCase: {
+      en: "Check which period you're in before reading too much into a hard month — dasha context changes how a season should be read.",
+      hi: "किसी कठिन महीने को अधिक गंभीरता से लेने से पहले देखें आप किस दशा में हैं — दशा का संदर्भ यह बदल देता है कि किसी दौर को कैसे समझा जाए।",
+      ja: "調子の悪い月を過度に受け止める前に、今どの期間にいるか確認を。ダシャーの文脈で季節の読み方が変わります。",
+      ko: "힘든 한 달을 너무 무겁게 받아들이기 전에 지금이 어느 시기인지 확인하세요. 다샤의 맥락이 그 시기를 읽는 방식을 바꿉니다.",
+    },
     lead: {
       en: "Vimshottari dasha divides a life into planetary periods, calculated from the Moon's nakshatra at birth. This tool computes the full timeline down to four levels.",
       hi: "विंशोत्तरी दशा जीवन को ग्रह-कालों में विभाजित करती है, जिसकी गणना जन्म के समय चंद्रमा के नक्षत्र से होती है। यह उपकरण चार स्तरों तक पूरी समयरेखा निकालता है।",
@@ -183,6 +226,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       hi: "अपने जन्म विवरण से अपना जन्म नक्षत्र और पाद जानें — प्रत्येक का स्वामी, देवता और प्रतीक सहित।",
       ja: "出生データから、生まれた月宿（ナクシャトラ）とパダを調べます。支配星・神格・象徴もあわせて確認できます。",
       ko: "출생 정보로 태어난 낙샤트라와 파다를 찾고, 각각의 지배 행성·신격·상징을 확인하세요.",
+    },
+    useCase: {
+      en: "The starting point for reading anything else about the Moon — temperament, timing, and the mansion your Sukuyō sign comes from.",
+      hi: "चंद्रमा से जुड़ी हर बात पढ़ने का प्रारंभिक बिंदु — स्वभाव, समय और आपके नक्षत्र का आधार।",
+      ja: "月にまつわるすべての読み解きの出発点。気質、タイミング、そして宿曜の宿の元になる情報です。",
+      ko: "달과 관련된 모든 것을 읽는 출발점 — 기질, 시기, 그리고 수쿠요 본명수의 근거입니다.",
     },
     lead: {
       en: "Your birth nakshatra is the lunar mansion the Moon occupied when you were born — one of 27 divisions of the zodiac, each with its own ruler and character.",
@@ -232,6 +281,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       hi: "चंद्रमा की वास्तविक स्थिति से अपना सुक्युō जन्म नक्षत्र जानें। सभी 27 नक्षत्र और उनका स्रोत।",
       ja: "生年月日と出生時刻から、本命宿を正確に算出します。旧暦の日付ではなく月の実際の位置に基づくため、境界日でも判定がぶれません。二十七宿とインド占星術のナクシャトラの対応も示します。",
       ko: "달의 실제 위치에서 수쿠요 본명수를 산출합니다. 음력 날짜가 아니라 실제 황경 기준입니다.",
+    },
+    useCase: {
+      en: "For anyone raised on Japanese fortune-telling terms who has never seen where their sign actually comes from.",
+      hi: "उन सभी के लिए जो जापानी भविष्यफल की शब्दावली से परिचित हैं पर कभी नहीं जाना कि उनका चिह्न वास्तव में कहाँ से आता है।",
+      ja: "日本の占い用語には親しんでいても、自分の宿がどこから来ているのかは知らなかった方に。",
+      ko: "일본식 점술 용어는 익숙하지만 자신의 별자리가 실제로 어디서 왔는지는 몰랐던 분들께.",
     },
     lead: {
       en: "Sukuyō is Japan's system of 27 lunar mansions, carried from India through Tang-dynasty China. It uses the same divisions Jyotish calls nakshatras. Enter your birth details once and this page will find your mansion from the Moon's sidereal longitude.",
@@ -305,6 +360,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       ja: "お二人の出生図から、古典的な八項目・三十六点法で相性を算出します。合計点だけでなく、ヴァルナからナーディまで各項目の内訳を表示します。",
       ko: "두 사람의 출생 차트로 여덟 개 고전 쿠타에 걸쳐 궁합을 산출하고, 총점이 아닌 전체 내역을 보여줍니다.",
     },
+    useCase: {
+      en: "Run before a serious conversation about marriage or moving in together — as a starting point for what to actually talk about, not a verdict.",
+      hi: "विवाह या साथ रहने जैसी गंभीर बातचीत से पहले आज़माएँ — निर्णय के रूप में नहीं, बल्कि यह समझने के लिए कि किन बातों पर चर्चा करनी चाहिए।",
+      ja: "結婚や同居について真剣に話す前に。結論としてではなく、何を話し合うべきかの出発点として。",
+      ko: "결혼이나 동거처럼 진지한 대화를 나누기 전에. 결론이 아니라 무엇을 이야기해야 할지 짚어보는 출발점으로.",
+    },
     lead: {
       en: "Ashtakoot scores eight criteria totalling thirty-six points, all derived from the two Moon positions. This page shows every component, because a total on its own hides which part of the relationship it is describing.",
       hi: "अष्टकूट आठ कसौटियों पर छत्तीस अंक देता है, सभी दो चंद्र स्थितियों से। यह पृष्ठ हर घटक दिखाता है।",
@@ -352,6 +413,137 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "जन्म समय चंद्र नक्षत्र तय करता है, और आठ में से पाँच कूट उस पर निर्भर हैं। सीमा के निकट जन्म में अंतर पड़ सकता है।",
           ja: "出生時刻は月のナクシャトラを確定するために必要で、八項目のうち五項目がこれに依存します。月は一つのナクシャトラをおよそ一日で通過するため、一、二時間の違いで結果が変わることは多くありませんが、境界付近の生まれでは変わり得ます。時刻が不明な場合は正午で計算し、結果は暫定的なものとお考えください。",
           ko: "출생 시각은 달의 낙샤트라를 확정하므로 필요하며, 여덟 항목 중 다섯이 이에 의존합니다. 경계 부근 출생은 결과가 달라질 수 있습니다.",
+        },
+      },
+    ],
+  },
+  {
+    // A different chart than birth-chart's D1: house 1 is the Moon sign, not
+    // the ascendant. Reads mood, instinct and reaction rather than identity
+    // and life direction — the chart most Western-astrology-literate visitors
+    // are actually used to, since tropical Sun-sign astrology is closer in
+    // spirit to a Moon-anchored reading than to Vedic Lagna.
+    slug: "moon-sign",
+    defaultTab: "Chandra",
+    resultPanel: "chart",
+    chartViews: ["moon"],
+    chartHandoff: "moonSign",
+    skipWorkspace: true,
+    title: {
+      en: "Vedic Moon sign (Chandra Rashi) calculator",
+      hi: "वैदिक चंद्र राशि कैलकुलेटर",
+      ja: "インド占星術 月星座（チャンドラ・ラーシ）計算",
+      ko: "베다 달별자리(찬드라 라시) 계산기",
+    },
+    description: {
+      en: "Find your Vedic Moon sign — the chart re-centred on the Moon rather than the ascendant, read for temperament, instinct and emotional response.",
+      hi: "अपनी वैदिक चंद्र राशि जानें — लग्न के बजाय चंद्रमा पर केंद्रित कुंडली, स्वभाव और भावनात्मक प्रतिक्रिया के लिए।",
+      ja: "ラグナではなく月を中心に据えたチャート。気質、本能、感情の反応を読みます。",
+      ko: "상승궁이 아닌 달을 중심에 둔 차트. 기질, 본능, 감정적 반응을 읽습니다.",
+    },
+    useCase: {
+      en: "Start here if you already know Western Sun-sign astrology — this is the closer Vedic equivalent, not the ascendant chart.",
+      hi: "यदि आप पश्चिमी सूर्य-राशि ज्योतिष जानते हैं तो यहीं से शुरू करें — यह उसके निकटतम वैदिक समकक्ष है, लग्न कुंडली नहीं।",
+      ja: "西洋の太陽星座占星術をご存じの方は、まずこちらから。ラグナ・チャートよりも近いヴェーダ式の対応物です。",
+      ko: "서양 태양별자리 점성술을 아신다면 여기서 시작하세요 — 상승궁 차트보다 더 가까운 베다식 대응입니다.",
+    },
+    lead: {
+      en: "Vedic astrology often reads a chart from the Moon rather than the ascendant — the Moon governs the mind, and a Chandra-based chart shows temperament and instinct more directly than the Lagna chart does. Enter your birth details once and see it here.",
+      hi: "वैदिक ज्योतिष प्रायः लग्न के बजाय चंद्रमा से कुंडली पढ़ता है — चंद्रमा मन का कारक है। जन्म-विवरण एक बार दर्ज करें और यहीं देखें।",
+      ja: "ヴェーダ占星術では、ラグナではなく月を基準にチャートを読むことがよくあります。月は心を司るため、チャンドラ・チャートはラグナ・チャートより直接的に気質と本能を示します。出生データを一度入力すれば、ここに表示されます。",
+      ko: "베다 점성술은 종종 상승궁이 아니라 달을 기준으로 차트를 읽습니다. 달은 마음을 관장하므로, 찬드라 차트는 라그나 차트보다 기질과 본능을 더 직접적으로 보여줍니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What is the difference between the Moon sign and the ascendant?",
+          hi: "चंद्र राशि और लग्न में क्या अंतर है?",
+          ja: "月星座とラグナは何が違いますか？",
+          ko: "달별자리와 상승궁은 무엇이 다른가요?",
+        },
+        answer: {
+          en: "The ascendant (Lagna) is the sign rising on the eastern horizon at birth and anchors the whole chart — house 1 is the self as presented to the world. The Moon sign re-anchors house 1 on wherever the Moon was instead, which is read for temperament and emotional instinct rather than outward identity.",
+          hi: "लग्न जन्म के समय पूर्वी क्षितिज पर उदय होने वाली राशि है और पूरी कुंडली का आधार है। चंद्र राशि भाव-1 को चंद्रमा की स्थिति पर पुनः केंद्रित करती है, जो स्वभाव और भावनात्मक प्रवृत्ति के लिए पढ़ी जाती है।",
+          ja: "ラグナ（上昇宮）は出生時に東の地平線から昇る星座で、チャート全体の基準です。第1室は世界に示す自己を表します。月星座は第1室を月の位置に置き換え、外面的な自己像ではなく気質と感情的な本能を読みます。",
+          ko: "라그나(상승궁)는 태어난 순간 동쪽 지평선에서 떠오르는 별자리로 차트 전체의 기준이 됩니다. 달별자리는 1궁을 달의 위치로 다시 설정하여, 외적 정체성이 아닌 기질과 감정적 본능을 읽습니다.",
+        },
+      },
+      {
+        question: {
+          en: "Is this the same as a Western Sun sign?",
+          hi: "क्या यह पश्चिमी सूर्य राशि जैसा ही है?",
+          ja: "西洋の太陽星座と同じですか？",
+          ko: "서양의 태양별자리와 같은가요?",
+        },
+        answer: {
+          en: "Not exactly, but it is the closer comparison. Western tropical astrology reads the Sun sign as the core of a personality profile; Vedic astrology, using the sidereal zodiac, tends to give that role to the Moon instead. A Vedic Moon sign will often differ from a Western Sun sign by one sign, due to the roughly 24-degree gap between the sidereal and tropical zodiacs.",
+          hi: "बिल्कुल नहीं, पर यह निकटतम तुलना है। पश्चिमी ज्योतिष सूर्य राशि को व्यक्तित्व का केंद्र मानता है; वैदिक ज्योतिष यह भूमिका प्रायः चंद्रमा को देता है।",
+          ja: "完全に同じではありませんが、より近い比較対象です。西洋のトロピカル占星術は太陽星座を性格の核として読みますが、サイデリアル黄道を用いるインド占星術では、その役割はしばしば月に与えられます。サイデリアルとトロピカルの黄道には約24度のずれがあるため、ヴェーダの月星座は西洋の太陽星座と一つずれることがよくあります。",
+          ko: "정확히는 아니지만 더 가까운 비교입니다. 서양의 트로피컬 점성술은 태양별자리를 성격의 핵심으로 읽지만, 항성 황도를 쓰는 베다 점성술은 그 역할을 대개 달에 부여합니다.",
+        },
+      },
+    ],
+  },
+  {
+    // The transit (Gochar) chart, anchored on the ascendant by default —
+    // where the sky is right now, laid over the birth chart's houses.
+    slug: "transit-now",
+    defaultTab: "Gochar",
+    resultPanel: "chart",
+    chartViews: ["gochar"],
+    chartHandoff: "saturn",
+    skipWorkspace: true,
+    title: {
+      en: "Current planetary transits (Gochar) over your chart",
+      hi: "आपकी कुंडली पर वर्तमान ग्रह गोचर",
+      ja: "現在の惑星トランジット（ゴーチャラ）を出生図に重ねて表示",
+      ko: "내 차트 위의 현재 행성 트랜짓(고차라)",
+    },
+    description: {
+      en: "See where the planets are right now, mapped onto the houses of your own birth chart — the transits that current events are read against.",
+      hi: "अभी ग्रह कहाँ हैं, यह आपकी अपनी कुंडली के भावों पर मैप किया गया — वर्तमान घटनाओं को इन्हीं गोचर के संदर्भ में पढ़ा जाता है।",
+      ja: "いま惑星がどこにあるかを、ご自身の出生図のハウスに重ねて表示します。現在の出来事はこのトランジットを基準に読まれます。",
+      ko: "지금 행성이 어디에 있는지 본인 차트의 하우스에 겹쳐 보여줍니다. 현재의 사건들은 이 트랜짓을 기준으로 읽습니다.",
+    },
+    useCase: {
+      en: "Check this when something notable is happening in your life and you want to see what the sky is doing to explain it — not to predict, to orient.",
+      hi: "जब जीवन में कुछ उल्लेखनीय हो रहा हो और आप देखना चाहें कि आकाश क्या कर रहा है — भविष्यवाणी के लिए नहीं, समझने के लिए।",
+      ja: "人生で何か特筆すべきことが起きているとき、空が何をしているか確認するために。予測のためではなく、状況を理解するために。",
+      ko: "삶에서 특별한 일이 일어나고 있을 때 하늘이 무엇을 하고 있는지 확인하려고 — 예측이 아니라 상황을 파악하기 위해서입니다.",
+    },
+    lead: {
+      en: "Gochar is how Vedic astrology reads the present moment: where each planet is right now, seen through the houses of your birth chart. This computes it from your saved details and shows both layers together.",
+      hi: "गोचर वैदिक ज्योतिष का वर्तमान क्षण पढ़ने का तरीका है — अभी हर ग्रह कहाँ है, आपकी कुंडली के भावों के माध्यम से देखा गया।",
+      ja: "ゴーチャラは、ヴェーダ占星術が「今」を読む方法です。いま各惑星がどこにあるかを、あなたの出生図のハウスを通して見ます。保存済みの出生データから計算し、両方の層を重ねて表示します。",
+      ko: "고차라는 베다 점성술이 현재를 읽는 방식입니다. 지금 각 행성이 어디에 있는지를 당신의 출생 차트 하우스를 통해 봅니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What is Gochar (transit)?",
+          hi: "गोचर (ट्रांज़िट) क्या है?",
+          ja: "ゴーチャラ（トランジット）とは何ですか？",
+          ko: "고차라(트랜짓)란 무엇인가요?",
+        },
+        answer: {
+          en: "Gochar is the current position of the planets, read against the houses of your birth chart rather than in isolation. The same transit lands differently for two people because it activates whichever house it falls in for each individual chart — which is why a generic 'Saturn is in Pisces' forecast means very little without a birth chart to place it against.",
+          hi: "गोचर ग्रहों की वर्तमान स्थिति है, जिसे अकेले नहीं बल्कि आपकी कुंडली के भावों के संदर्भ में पढ़ा जाता है। एक ही गोचर दो व्यक्तियों के लिए अलग असर डालता है।",
+          ja: "ゴーチャラとは、惑星の現在位置を単独でではなく、出生図のハウスに照らして読むものです。同じトランジットでも、それが各人のチャートのどの室に落ちるかによって作用が異なります。だからこそ「土星が魚座にある」という一般的な予測は、出生図と照らし合わせなければほとんど意味を持ちません。",
+          ko: "고차라는 행성의 현재 위치를 단독이 아니라 출생 차트의 하우스에 비추어 읽는 것입니다. 같은 트랜짓이라도 각자의 차트에서 어느 하우스에 떨어지느냐에 따라 작용이 다릅니다.",
+        },
+      },
+      {
+        question: {
+          en: "Which chart does the transit use as its anchor?",
+          hi: "गोचर किस कुंडली को आधार बनाकर दिखाया जाता है?",
+          ja: "トランジットはどのチャートを基準にしますか？",
+          ko: "트랜짓은 어느 차트를 기준으로 하나요?",
+        },
+        answer: {
+          en: "This page anchors transits on your ascendant (Lagna) chart, the most commonly used base. Some traditions read transits from the Moon sign instead — that comparison, and the deeper interpretation of what a given transit means for you, is what a live reading covers.",
+          hi: "यह पृष्ठ गोचर को आपकी लग्न कुंडली पर आधारित दिखाता है, जो सबसे सामान्य आधार है। कुछ परंपराएँ चंद्र राशि से गोचर पढ़ती हैं।",
+          ja: "このページはトランジットを、最も一般的に使われるラグナ・チャートを基準に表示します。伝統によっては月星座を基準に読むこともあります。その比較や、特定のトランジットがあなたにとって何を意味するかという深い解釈は、ライブ鑑定で扱う内容です。",
+          ko: "이 페이지는 가장 일반적으로 쓰이는 라그나 차트를 기준으로 트랜짓을 표시합니다. 일부 전통은 달별자리를 기준으로 트랜짓을 읽기도 합니다.",
         },
       },
     ],

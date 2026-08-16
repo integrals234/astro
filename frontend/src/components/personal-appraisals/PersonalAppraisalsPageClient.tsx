@@ -193,17 +193,28 @@ export default function PersonalAppraisalsPageClient({
                         {plan.priceNote}
                       </p>
                       {/*
-                        Straight into scheduling rather than back to the form.
-                        Every plan id here is a key in BOOKING_CATALOG, and that
-                        route decides for itself whether to show a calendar or
-                        fall back to the inquiry flow.
+                        Only the live consultation goes straight to a calendar.
+                        The other three all start with a conversation first —
+                        compatibility needs two people's birth data,
+                        rectification is investigative, and the written
+                        appraisal has no live session to schedule at all — so
+                        they link to the inquiry form instead of /book/*.
                       */}
-                      <Link
-                        href={`/book/${plan.id}`}
-                        className="mt-2 inline-block text-xs text-terracotta underline underline-offset-4 hover:opacity-80"
-                      >
-                        {bookCopy.bookCta}
-                      </Link>
+                      {plan.id === "consultation" ? (
+                        <Link
+                          href="/book/consultation"
+                          className="mt-2 inline-block text-xs text-terracotta underline underline-offset-4 hover:opacity-80"
+                        >
+                          {bookCopy.bookCta}
+                        </Link>
+                      ) : (
+                        <Link
+                          href="#inquiry"
+                          className="mt-2 inline-block text-xs text-terracotta underline underline-offset-4 hover:opacity-80"
+                        >
+                          {bookCopy.requestCta}
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}

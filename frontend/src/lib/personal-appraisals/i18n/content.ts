@@ -163,7 +163,7 @@ const en: AppraisalPageContent = {
         name: "Personal Consultation",
         price: "By inquiry",
         priceNote: "quoted individually",
-        duration: "60 minutes",
+        duration: "3–4 weeks",
         description:
           "A live, one-to-one Vedic Astrology session — your chart opened and interpreted with care, with space for your questions on career, relationships, health, or life direction.",
         featured: true,
@@ -173,7 +173,7 @@ const en: AppraisalPageContent = {
         name: "Written Natal Appraisal",
         price: "By inquiry",
         priceNote: "quoted individually",
-        duration: "PDF · 3–4 weeks",
+        duration: "3–4 weeks",
         description:
           "A composed written reading delivered privately — ideal if you prefer to reflect before scheduling a live conversation.",
         featured: false,
@@ -183,7 +183,7 @@ const en: AppraisalPageContent = {
         name: "Union & Compatibility",
         price: "By inquiry",
         priceNote: "quoted individually",
-        duration: "60–90 minutes",
+        duration: "3–4 weeks",
         description:
           "Synastry between two charts with timing guidance for commitment, partnership, or reconciliation.",
         featured: false,
@@ -193,7 +193,7 @@ const en: AppraisalPageContent = {
         name: "Birth Time Refinement",
         price: "By inquiry",
         priceNote: "quoted individually",
-        duration: "Varies",
+        duration: "3–4 weeks",
         description:
           "Structured rectification when your birth time is uncertain — using life events to establish a reliable chart.",
         featured: false,
@@ -328,7 +328,7 @@ const ja: AppraisalPageContent = {
         name: "パーソナル鑑定",
         price: "お問い合わせ",
         priceNote: "個別お見積り",
-        duration: "60分",
+        duration: "3〜4週間",
         description:
           "一対一のライブ・ヴェーダ占星術セッション。キャリア、人間関係、健康、人生の方向性など、ご質問に丁寧にお答えします。",
         featured: true,
@@ -338,7 +338,7 @@ const ja: AppraisalPageContent = {
         name: "書面による出生図鑑定",
         price: "お問い合わせ",
         priceNote: "個別お見積り",
-        duration: "PDF · 3〜4週間",
+        duration: "3〜4週間",
         description:
           "ご自身のペースで読み返し、考えを深めたい方に適した、個別の書面鑑定です。",
         featured: false,
@@ -348,7 +348,7 @@ const ja: AppraisalPageContent = {
         name: "相性・パートナーシップ鑑定",
         price: "お問い合わせ",
         priceNote: "個別お見積り",
-        duration: "60〜90分",
+        duration: "3〜4週間",
         description:
           "二人のチャート照合と、結婚・パートナーシップ・復縁のタイミングに関するガイダンス。",
         featured: false,
@@ -358,7 +358,7 @@ const ja: AppraisalPageContent = {
         name: "出生時刻の精密化",
         price: "お問い合わせ",
         priceNote: "個別お見積り",
-        duration: "個別",
+        duration: "3〜4週間",
         description:
           "出生時刻が不明な場合 — 人生の出来事を用いた構造的な補正により、信頼できるチャートを確立します。",
         featured: false,
@@ -494,7 +494,7 @@ const hi: AppraisalPageContent = {
         name: "व्यक्तिगत परामर्श",
         price: "पूछताछ पर",
         priceNote: "व्यक्तिगत शुल्क",
-        duration: "60 मिनट",
+        duration: "3–4 सप्ताह",
         description:
           "करियर, संबंध, स्वास्थ्य या जीवन-दिशा से जुड़े प्रश्नों के लिए एक-से-एक लाइव वैदिक ज्योतिष सत्र।",
         featured: true,
@@ -504,7 +504,7 @@ const hi: AppraisalPageContent = {
         name: "लिखित जन्मकुंडली विश्लेषण",
         price: "पूछताछ पर",
         priceNote: "व्यक्तिगत शुल्क",
-        duration: "PDF · 3–4 सप्ताह",
+        duration: "3–4 सप्ताह",
         description:
           "निजी रूप से भेजा गया सुविचारित लिखित विश्लेषण—अपनी गति से पढ़ने और समझने के लिए।",
         featured: false,
@@ -514,7 +514,7 @@ const hi: AppraisalPageContent = {
         name: "विवाह एवं संबंध अनुकूलता",
         price: "पूछताछ पर",
         priceNote: "व्यक्तिगत शुल्क",
-        duration: "60–90 मिनट",
+        duration: "3–4 सप्ताह",
         description:
           "दो कुंडलियों की तुलना तथा प्रतिबद्धता, साझेदारी या पुनर्मिलन के समय पर मार्गदर्शन।",
         featured: false,
@@ -524,7 +524,7 @@ const hi: AppraisalPageContent = {
         name: "जन्म समय परिशोधन",
         price: "पूछताछ पर",
         priceNote: "व्यक्तिगत शुल्क",
-        duration: "परिस्थिति अनुसार",
+        duration: "3–4 सप्ताह",
         description:
           "जन्म समय अनिश्चित होने पर जीवन की प्रमुख घटनाओं के आधार पर विश्वसनीय कुंडली स्थापित करने की व्यवस्थित प्रक्रिया।",
         featured: false,
@@ -660,7 +660,7 @@ const ko: AppraisalPageContent = {
         name: "개인 상담",
         price: "문의 후 안내",
         priceNote: "개별 견적",
-        duration: "60분",
+        duration: "3~4주",
         description:
           "직업, 관계, 건강이나 삶의 방향에 관한 질문을 다루는 일대일 실시간 베다 점성술 상담입니다.",
         featured: true,
@@ -670,7 +670,7 @@ const ko: AppraisalPageContent = {
         name: "서면 출생 차트 감정",
         price: "문의 후 안내",
         priceNote: "개별 견적",
-        duration: "PDF · 3~4주",
+        duration: "3~4주",
         description:
           "자신의 속도로 읽고 생각할 수 있도록 비공개로 전달하는 정성스러운 서면 감정입니다.",
         featured: false,
@@ -680,7 +680,7 @@ const ko: AppraisalPageContent = {
         name: "인연·궁합 감정",
         price: "문의 후 안내",
         priceNote: "개별 견적",
-        duration: "60~90분",
+        duration: "3~4주",
         description:
           "두 차트의 궁합과 약속, 동반자 관계 또는 재결합 시기에 관한 안내입니다.",
         featured: false,
@@ -690,7 +690,7 @@ const ko: AppraisalPageContent = {
         name: "출생 시각 보정",
         price: "문의 후 안내",
         priceNote: "개별 견적",
-        duration: "상황에 따라 다름",
+        duration: "3~4주",
         description:
           "출생 시각이 불확실할 때 주요 삶의 사건을 이용해 신뢰할 수 있는 차트를 찾는 체계적인 보정입니다.",
         featured: false,

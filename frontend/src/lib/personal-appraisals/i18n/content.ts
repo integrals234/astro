@@ -73,7 +73,6 @@ export interface AppraisalPageContent {
     submit: string;
     submitting: string;
     dialCodeLabel: string;
-    successMessage: string;
   };
 }
 
@@ -106,7 +105,7 @@ const en: AppraisalPageContent = {
         includes: [
           "Core personality and karmic patterns",
           "Strengths, sensitivities, and growth edges",
-          "Delivered as a private PDF within 3–5 business days",
+          "Delivered as a private PDF within 3–4 weeks",
         ],
         note: "Ideal if you prefer to reflect in your own time before a live conversation.",
       },
@@ -174,7 +173,7 @@ const en: AppraisalPageContent = {
         name: "Written Natal Appraisal",
         price: "By inquiry",
         priceNote: "quoted individually",
-        duration: "PDF · 3–5 days",
+        duration: "PDF · 3–4 weeks",
         description:
           "A composed written reading delivered privately — ideal if you prefer to reflect before scheduling a live conversation.",
         featured: false,
@@ -223,7 +222,7 @@ const en: AppraisalPageContent = {
     sectionLabel: "Begin your inquiry",
     title: "Request a personal consultation",
     description:
-      "Share a few details below. We respond personally — usually within one business day — and coordinate your session over WhatsApp at a time that suits you.",
+      "Share a few details below. We respond personally — usually within two to three business days — and coordinate your session over WhatsApp at a time that suits you.",
     fullName: "Full name",
     email: "Email address",
     whatsApp: "WhatsApp number",
@@ -239,8 +238,6 @@ const en: AppraisalPageContent = {
     submit: "Request consultation",
     submitting: "Sending inquiry…",
     dialCodeLabel: "Country calling code",
-    successMessage:
-      "Thank you. Our astrologers will contact you via WhatsApp shortly.",
   },
 };
 
@@ -273,7 +270,7 @@ const ja: AppraisalPageContent = {
         includes: [
           "基本的な性格とカルマのパターン",
           "強み、繊細さ、成長のポイント",
-          "3〜5営業日以内にPDFで個別お届け",
+          "3〜4週間以内にPDFで個別お届け",
         ],
         note: "対面での会話を急がず、まずご自身のペースで内容を受け取りたい方に適しています。",
       },
@@ -341,7 +338,7 @@ const ja: AppraisalPageContent = {
         name: "書面による出生図鑑定",
         price: "お問い合わせ",
         priceNote: "個別お見積り",
-        duration: "PDF · 3〜5日",
+        duration: "PDF · 3〜4週間",
         description:
           "ご自身のペースで読み返し、考えを深めたい方に適した、個別の書面鑑定です。",
         featured: false,
@@ -390,7 +387,7 @@ const ja: AppraisalPageContent = {
     sectionLabel: "お問い合わせ",
     title: "パーソナル鑑定のご依頼",
     description:
-      "必要事項をご記入ください。通常1営業日以内に個別にご返信し、WhatsAppでご都合の良い日時を調整いたします。",
+      "必要事項をご記入ください。通常2〜3営業日以内に個別にご返信し、WhatsAppでご都合の良い日時を調整いたします。",
     fullName: "お名前",
     email: "メールアドレス",
     whatsApp: "WhatsApp番号",
@@ -406,8 +403,6 @@ const ja: AppraisalPageContent = {
     submit: "鑑定を依頼する",
     submitting: "送信中…",
     dialCodeLabel: "国番号",
-    successMessage:
-      "ありがとうございます。占星術師よりWhatsAppで折り返しご連絡いたします。",
   },
 };
 
@@ -441,7 +436,7 @@ const hi: AppraisalPageContent = {
         includes: [
           "मूल व्यक्तित्व और कर्म-संबंधी प्रवृत्तियाँ",
           "क्षमताएँ, संवेदनशीलताएँ और विकास के क्षेत्र",
-          "3–5 कार्यदिवस में निजी PDF",
+          "3–4 सप्ताह में निजी PDF",
         ],
         note: "उन लोगों के लिए उपयुक्त जो लाइव बातचीत से पहले अपनी गति से विचार करना चाहते हैं।",
       },
@@ -509,7 +504,7 @@ const hi: AppraisalPageContent = {
         name: "लिखित जन्मकुंडली विश्लेषण",
         price: "पूछताछ पर",
         priceNote: "व्यक्तिगत शुल्क",
-        duration: "PDF · 3–5 दिन",
+        duration: "PDF · 3–4 सप्ताह",
         description:
           "निजी रूप से भेजा गया सुविचारित लिखित विश्लेषण—अपनी गति से पढ़ने और समझने के लिए।",
         featured: false,
@@ -558,7 +553,7 @@ const hi: AppraisalPageContent = {
     sectionLabel: "पूछताछ शुरू करें",
     title: "व्यक्तिगत परामर्श का अनुरोध",
     description:
-      "नीचे कुछ जानकारी साझा करें। हम सामान्यतः एक कार्यदिवस में व्यक्तिगत उत्तर देते हैं और WhatsApp पर सुविधाजनक समय तय करते हैं।",
+      "नीचे कुछ जानकारी साझा करें। हम सामान्यतः दो से तीन कार्यदिवस में व्यक्तिगत उत्तर देते हैं और WhatsApp पर सुविधाजनक समय तय करते हैं।",
     fullName: "पूरा नाम",
     email: "ईमेल पता",
     whatsApp: "WhatsApp नंबर",
@@ -574,8 +569,6 @@ const hi: AppraisalPageContent = {
     submit: "परामर्श का अनुरोध भेजें",
     submitting: "पूछताछ भेजी जा रही है…",
     dialCodeLabel: "देश का फ़ोन कोड",
-    successMessage:
-      "धन्यवाद। हमारे ज्योतिषी शीघ्र ही WhatsApp पर आपसे संपर्क करेंगे।",
   },
 };
 
@@ -609,7 +602,7 @@ const ko: AppraisalPageContent = {
         includes: [
           "핵심 성격과 카르마 패턴",
           "강점, 민감한 부분과 성장 과제",
-          "영업일 기준 3~5일 이내 비공개 PDF 제공",
+          "3~4주 이내 비공개 PDF 제공",
         ],
         note: "실시간 상담 전에 자신의 속도로 천천히 살펴보고 싶은 분께 적합합니다.",
       },
@@ -677,7 +670,7 @@ const ko: AppraisalPageContent = {
         name: "서면 출생 차트 감정",
         price: "문의 후 안내",
         priceNote: "개별 견적",
-        duration: "PDF · 3~5일",
+        duration: "PDF · 3~4주",
         description:
           "자신의 속도로 읽고 생각할 수 있도록 비공개로 전달하는 정성스러운 서면 감정입니다.",
         featured: false,
@@ -726,7 +719,7 @@ const ko: AppraisalPageContent = {
     sectionLabel: "문의 시작",
     title: "개인 상담 신청",
     description:
-      "아래에 간단한 정보를 남겨 주세요. 보통 영업일 기준 하루 안에 직접 답변드리고 WhatsApp으로 편한 상담 시간을 조율합니다.",
+      "아래에 간단한 정보를 남겨 주세요. 보통 영업일 기준 2~3일 안에 직접 답변드리고 WhatsApp으로 편한 상담 시간을 조율합니다.",
     fullName: "이름",
     email: "이메일 주소",
     whatsApp: "WhatsApp 번호",
@@ -742,8 +735,6 @@ const ko: AppraisalPageContent = {
     submit: "상담 신청 보내기",
     submitting: "문의를 보내는 중…",
     dialCodeLabel: "국가 전화 코드",
-    successMessage:
-      "감사합니다. 담당 점성술사가 곧 WhatsApp으로 연락드리겠습니다.",
   },
 };
 

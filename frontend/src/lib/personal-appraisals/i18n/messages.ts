@@ -29,7 +29,7 @@ export const inquiryMessages: Record<
     message: "Message must be 2,000 characters or fewer.",
     spam: "Unable to submit this request.",
     success:
-      "Thank you. Our astrologers will contact you via WhatsApp shortly.",
+      "Thank you. Our astrologers will contact you via WhatsApp within two to three business days.",
   },
   ja: {
     reviewFields: "入力内容をご確認のうえ、再度お試しください。",
@@ -44,7 +44,7 @@ export const inquiryMessages: Record<
     message: "メッセージは2,000文字以内でご入力ください。",
     spam: "送信できませんでした。",
     success:
-      "ありがとうございます。占星術師よりWhatsAppで折り返しご連絡いたします。",
+      "ありがとうございます。占星術師より2〜3営業日以内にWhatsAppでご連絡いたします。",
   },
   hi: {
     reviewFields: "कृपया चिह्नित फ़ील्ड जाँचें और फिर से प्रयास करें।",
@@ -60,7 +60,7 @@ export const inquiryMessages: Record<
     message: "संदेश 2,000 अक्षरों से अधिक नहीं हो सकता।",
     spam: "यह अनुरोध भेजा नहीं जा सका।",
     success:
-      "धन्यवाद। हमारे ज्योतिषी शीघ्र ही WhatsApp पर आपसे संपर्क करेंगे।",
+      "धन्यवाद। हमारे ज्योतिषी दो से तीन कार्यदिवस में WhatsApp पर आपसे संपर्क करेंगे।",
   },
   ko: {
     reviewFields: "표시된 항목을 확인한 후 다시 시도해 주세요.",
@@ -76,7 +76,7 @@ export const inquiryMessages: Record<
     message: "메시지는 2,000자 이내로 입력해 주세요.",
     spam: "이 요청을 제출할 수 없습니다.",
     success:
-      "감사합니다. 담당 점성술사가 곧 WhatsApp으로 연락드리겠습니다.",
+      "감사합니다. 담당 점성술사가 영업일 기준 2~3일 안에 WhatsApp으로 연락드리겠습니다.",
   },
 };
 

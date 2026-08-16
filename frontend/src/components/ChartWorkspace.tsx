@@ -12,7 +12,6 @@ import KundliChart from '@/components/KundliChart';
 import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
-import { downloadChartPdf } from '@/lib/generate-chart-pdf';
 import type {
   Planet,
   TransitPlanet,
@@ -338,6 +337,11 @@ function ChartWorkspaceInner({
       return;
     }
     try {
+      // Loaded on demand: jspdf plus the CJK font loader is the largest single
+      // payload in this component, and it is only needed once someone actually
+      // clicks download. This page and all four /tools/* landings were paying
+      // for it on every visit.
+      const { downloadChartPdf } = await import('@/lib/generate-chart-pdf');
       await downloadChartPdf({
         name: personName.trim() || t.chart,
         locationName: selectedLocationName,
@@ -394,9 +398,11 @@ function ChartWorkspaceInner({
     if (enablePersistence && !personName.trim()) return toast(t.errNoName);
     setIsLoading(true);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${API_URL}/api/v1/compute-charts`, { 
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) 
+      // Same-origin proxy rather than the Render service directly: identical
+      // birth data is served from cache instead of recomputed, and the backend
+      // origin stays private.
+      const response = await fetch('/api/charts/compute', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData)
       });
       if (!response.ok) throw new Error(t.errCalc);
       const data: ChartData = await response.json();

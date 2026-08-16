@@ -50,6 +50,40 @@ model VedicCourseProgress {
   createdAt       DateTime @default(now())
 }
 
+enum BookingStatus {
+  scheduled
+  cancelled
+  completed
+}
+
+/// A booked consultation, mirrored from Cal.com.
+///
+/// Cal.com owns the calendar; this table exists so a booking is answerable
+/// against the rest of the funnel — which locale it came from, whether the
+/// person had already built a chart, and how many inquiries became sessions.
+/// None of that is visible from inside Cal.
+///
+/// `amountJpy` stays null while pricing is by inquiry; it is here so adding
+/// checkout later does not need a migration on a table that already has rows.
+model Booking {
+  id            String        @id @default(cuid())
+  userId        String?
+  email         String
+  name          String?
+  offeringId    String
+  status        BookingStatus @default(scheduled)
+  amountJpy     Int?
+  calBookingUid String        @unique
+  scheduledAt   DateTime?
+  locale        AppLanguage?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, scheduledAt])
+  @@index([userId, createdAt])
+}
+
 /// A person whose chart the user cares about.
 ///
 /// Promoted from localStorage on sign-in. Birth details are the highest-friction

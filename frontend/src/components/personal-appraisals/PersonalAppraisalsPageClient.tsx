@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "@/components/i18n/LocaleLink";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
 import Reveal from "@/components/motion/Reveal";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import InstagramFollowBanner from "@/components/personal-appraisals/InstagramFollowBanner";
 import InquiryForm from "@/components/personal-appraisals/InquiryForm";
 import { getAppraisalContent } from "@/lib/personal-appraisals/i18n/content";
+import { bookingCopy } from "@/lib/booking/i18n";
 import {
   Check,
   Clock,
@@ -32,6 +34,7 @@ export default function PersonalAppraisalsPageClient({
 }: PersonalAppraisalsPageClientProps) {
   const { language: lang } = useLanguage();
   const content = getAppraisalContent(lang);
+  const bookCopy = bookingCopy[lang];
 
   return (
     <div className="max-w-4xl space-y-12 pb-8">
@@ -189,6 +192,18 @@ export default function PersonalAppraisalsPageClient({
                       <p className="mt-0.5 text-[11px] uppercase tracking-wider text-text-muted">
                         {plan.priceNote}
                       </p>
+                      {/*
+                        Straight into scheduling rather than back to the form.
+                        Every plan id here is a key in BOOKING_CATALOG, and that
+                        route decides for itself whether to show a calendar or
+                        fall back to the inquiry flow.
+                      */}
+                      <Link
+                        href={`/book/${plan.id}`}
+                        className="mt-2 inline-block text-xs text-terracotta underline underline-offset-4 hover:opacity-80"
+                      >
+                        {bookCopy.bookCta}
+                      </Link>
                     </td>
                   </tr>
                 ))}

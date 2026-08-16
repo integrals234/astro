@@ -20,6 +20,9 @@ const DISALLOW = [
   "/chart/recent",
   "/saved-charts",
   "/recent-charts",
+  // Transaction surface: five near-identical variants of a scheduling page,
+  // already noindex. /personal-appraisals is the page meant to rank.
+  "/book",
   "/*?chart=",
 ];
 

@@ -197,8 +197,12 @@ function ChartWorkspaceInner({
   const [savedCharts, setSavedCharts] = useState<SavedChartRecord[]>([]);
   const [isSavingChart, setIsSavingChart] = useState(false);
 
-  const { upsertProfile, primary: primaryProfile, isLoaded: profilesLoaded } =
-    useBirthProfile();
+  const {
+    upsertProfile,
+    primary: primaryProfile,
+    isLoaded: profilesLoaded,
+    setPrimary,
+  } = useBirthProfile();
   const { toast, confirm: confirmDialog } = useToast();
   const t: ChartTranslations = chartFormCopy[lang];
 
@@ -436,27 +440,37 @@ function ChartWorkspaceInner({
       const data: ChartData = await response.json();
       setChartData(data);
 
-      // Remember the person, so every other tool on the site can answer for
-      // them without asking again. Deliberately after a successful compute:
-      // birth data that the engine rejected is not worth keeping.
-      upsertProfile({
-        label: personName.trim() || selectedLocationName,
-        locationName: selectedLocationName,
-        birth: {
-          year: formData.year,
-          month: formData.month,
-          day: formData.day,
-          hour: formData.hour,
-          minute: formData.minute,
-          latitude: formData.latitude,
-          longitude: formData.longitude,
-        },
-        isPrimary: false,
-      });
       setCurrentChartId(null);
       setIsCurrentSaved(false);
+
+      const birth = {
+        year: formData.year,
+        month: formData.month,
+        day: formData.day,
+        hour: formData.hour,
+        minute: formData.minute,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+      };
+
       if (enablePersistence) {
-        await persistChart(data, false);
+        // On /chart, persistChart is already the single writer to SavedChart —
+        // calling upsertProfile here too would create a second row for the
+        // same computation for a signed-in visitor. The first chart anyone
+        // creates still becomes their "primary" for cross-tool prefill.
+        const record = await persistChart(data, false);
+        if (record && !primaryProfile) setPrimary(record.id);
+      } else {
+        // Remember the person, so every other tool on the site can answer for
+        // them without asking again. The chart is already computed, so it is
+        // passed through rather than recomputed for a signed-in visitor.
+        await upsertProfile({
+          label: personName.trim() || selectedLocationName,
+          locationName: selectedLocationName,
+          birth,
+          isPrimary: false,
+          chartData: data,
+        });
       }
     } catch (error: unknown) {
       toast(error instanceof Error ? error.message : t.errCalc);

@@ -1,34 +1,44 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useBirthProfile } from "@/components/profile/ProfileProvider";
 import BookingHandoff from "@/components/tools/BookingHandoff";
+import BirthDetailsFields, {
+  EMPTY_BIRTH_DETAILS,
+  isBirthDetailsComplete,
+  type BirthDetailsValue,
+} from "@/components/shared/BirthDetailsFields";
 import { trackEvent } from "@/lib/analytics/events";
 import { computeAshtakoot, type AshtakootResult } from "@/lib/jyotish/ashtakoot";
-import { toChartFormData, type BirthProfile } from "@/lib/profile/types";
+import {
+  natalToChartFormData,
+  toChartFormData,
+  type BirthProfile,
+} from "@/lib/profile/types";
 import type { ChartData } from "@/lib/chart-types";
 import { compatibilityCopy } from "@/lib/tools/compatibility-copy";
 
 /**
- * Ashtakoot compatibility between two saved birth profiles.
+ * Ashtakoot compatibility between a bride and a groom.
  *
- * Needs two people, which is what makes the shared profile store pay off here:
- * a visitor who has already entered themselves only has to add a partner. The
- * scoring itself is a pure function tested against all 236,196 combinations,
- * so everything below is presentation.
+ * Two ways to fill the two slots: pick from profiles already on the account
+ * (which now means real `SavedChart` rows — see `ProfileProvider`), or add
+ * someone new directly here, side by side. Either way the person becomes a
+ * real profile, visible afterwards in /chart's own recent/saved lists too,
+ * since both paths write to the same table now.
  *
- * The breakdown is shown in full rather than a headline number, for the reason
- * the page body argues: two couples can both score 24 and mean different
- * things.
+ * The scoring is a pure function tested against all 236,196 combinations;
+ * everything here is presentation and person management.
  */
 export default function CompatibilityResult() {
   const { language } = useLanguage();
-  const { profiles, isLoaded } = useBirthProfile();
+  const { profiles, isLoaded, removeProfile, isSyncing } = useBirthProfile();
   const copy = compatibilityCopy[language];
 
-  const [aId, setAId] = useState<string>("");
-  const [bId, setBId] = useState<string>("");
+  const [brideId, setBrideId] = useState<string>("");
+  const [groomId, setGroomId] = useState<string>("");
   const [result, setResult] = useState<AshtakootResult | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
 
@@ -46,15 +56,15 @@ export default function CompatibilityResult() {
   }, []);
 
   const run = useCallback(async () => {
-    const a = profiles.find((p) => p.id === aId);
-    const b = profiles.find((p) => p.id === bId);
-    if (!a || !b) return;
+    const bride = profiles.find((p) => p.id === brideId);
+    const groom = profiles.find((p) => p.id === groomId);
+    if (!bride || !groom) return;
 
     setStatus("loading");
     trackEvent("tool_opened", { slug: "compatibility", locale: language });
     try {
-      const [ma, mb] = await Promise.all([moonOf(a), moonOf(b)]);
-      const scored = computeAshtakoot(ma, mb);
+      const [mb, mg] = await Promise.all([moonOf(bride), moonOf(groom)]);
+      const scored = computeAshtakoot(mb, mg);
       if (!scored) throw new Error("scoring failed");
       setResult(scored);
       setStatus("idle");
@@ -62,70 +72,119 @@ export default function CompatibilityResult() {
     } catch {
       setStatus("error");
     }
-  }, [aId, bId, profiles, moonOf, language]);
+  }, [brideId, groomId, profiles, moonOf, language]);
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (id === brideId) setBrideId("");
+      if (id === groomId) setGroomId("");
+      setResult(null);
+      await removeProfile(id);
+    },
+    [brideId, groomId, removeProfile],
+  );
 
   if (!isLoaded) {
     return <div className="washi-card h-40 animate-pulse" aria-hidden />;
   }
 
-  if (profiles.length < 2) {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="font-body text-text">
-          {profiles.length === 0 ? copy.needTwo : copy.needOneMore}
-        </p>
-        <a href="#tool-form" className="washi-btn-primary mt-4 inline-block">
-          {copy.addPerson}
-        </a>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
+      {profiles.length > 0 && (
+        <div className="washi-card p-6 md:p-7">
+          <p className="washi-eyebrow mb-4">{copy.pickExisting}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <PersonPicker
+              label={copy.bride}
+              value={brideId}
+              onChange={setBrideId}
+              profiles={profiles}
+              placeholder={copy.choose}
+            />
+            <PersonPicker
+              label={copy.groom}
+              value={groomId}
+              onChange={setGroomId}
+              profiles={profiles}
+              placeholder={copy.choose}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={run}
+            disabled={!brideId || !groomId || brideId === groomId || status === "loading"}
+            className="washi-btn-primary mt-5 disabled:opacity-50"
+          >
+            {status === "loading" ? copy.computing : copy.compute}
+          </button>
+          {brideId && brideId === groomId && (
+            <p className="mt-2 text-sm text-text-muted">{copy.samePerson}</p>
+          )}
+          {status === "error" && (
+            <p className="mt-3 text-sm text-terracotta">{copy.error}</p>
+          )}
+
+          {/*
+            Varna and Gana are directional in the classical rules, so the order
+            of these two picks can move the total by up to two points. Stated
+            next to the inputs it applies to — a score that silently changes on
+            reorder would look like a bug.
+          */}
+          <p className="washi-measure mt-4 text-xs leading-relaxed text-text-muted">
+            {copy.orderNote}
+          </p>
+        </div>
+      )}
+
+      {/* Side-by-side entry, so the two people can be added without leaving the tool. */}
       <div className="washi-card p-6 md:p-7">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <PersonPicker
-            label={copy.personA}
-            value={aId}
-            onChange={setAId}
-            profiles={profiles}
-            placeholder={copy.choose}
+        <p className="washi-eyebrow mb-4">{copy.addNew}</p>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <AddPersonForm
+            role="bride"
+            label={copy.bride}
+            onAdded={(id) => setBrideId(id)}
           />
-          <PersonPicker
-            label={copy.personB}
-            value={bId}
-            onChange={setBId}
-            profiles={profiles}
-            placeholder={copy.choose}
+          <AddPersonForm
+            role="groom"
+            label={copy.groom}
+            onAdded={(id) => setGroomId(id)}
           />
         </div>
-
-        <button
-          type="button"
-          onClick={run}
-          disabled={!aId || !bId || aId === bId || status === "loading"}
-          className="washi-btn-primary mt-5 disabled:opacity-50"
-        >
-          {status === "loading" ? copy.computing : copy.compute}
-        </button>
-        {aId && aId === bId && (
-          <p className="mt-2 text-sm text-text-muted">{copy.samePerson}</p>
-        )}
-        {/*
-          Varna and Gana are directional in the classical rules, so the order of
-          these two dropdowns can move the total by up to two points. Stated up
-          front, next to the inputs it applies to — a score that silently
-          changes on reorder would look like a bug and cost the tool its
-          credibility.
-        */}
-        <p className="washi-measure mt-4 text-xs leading-relaxed text-text-muted">
-          {copy.orderNote}
-        </p>
-        {status === "error" && (
-          <p className="mt-3 text-sm text-terracotta">{copy.error}</p>
-        )}
       </div>
+
+      {profiles.length > 0 && (
+        <details className="washi-card p-6 md:p-7">
+          <summary className="cursor-pointer font-body text-sm text-ink">
+            {copy.managePeople(profiles.length)}
+          </summary>
+          <ul className="mt-4 space-y-2">
+            {profiles.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center justify-between gap-3 rounded-md border border-border p-2.5"
+              >
+                <div className="min-w-0">
+                  <p className="truncate font-body text-sm text-ink">{p.label}</p>
+                  <p className="truncate text-xs text-text-muted">
+                    {p.locationName}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(p.id)}
+                  disabled={isSyncing}
+                  aria-label={copy.deletePerson(p.label)}
+                  className="shrink-0 rounded-md p-1.5 text-text-muted transition-colors hover:text-terracotta disabled:opacity-50"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       {result && (
         <>
@@ -219,5 +278,89 @@ function PersonPicker({
         ))}
       </select>
     </label>
+  );
+}
+
+function AddPersonForm({
+  role,
+  label,
+  onAdded,
+}: {
+  role: "bride" | "groom";
+  label: string;
+  onAdded: (id: string) => void;
+}) {
+  const { language } = useLanguage();
+  const { upsertProfile } = useBirthProfile();
+  const copy = compatibilityCopy[language];
+
+  const [value, setValue] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
+  const [status, setStatus] = useState<"idle" | "loading" | "error" | "done">(
+    "idle",
+  );
+
+  const handleAdd = async () => {
+    if (!isBirthDetailsComplete(value) || !value.location) return;
+    setStatus("loading");
+    try {
+      const birth = {
+        year: Number(value.date.slice(0, 4)),
+        month: Number(value.date.slice(5, 7)),
+        day: Number(value.date.slice(8, 10)),
+        hour: Number(value.time.slice(0, 2)),
+        minute: Number(value.time.slice(3, 5)),
+        latitude: Number(value.location.lat),
+        longitude: Number(value.location.lon),
+      };
+
+      const response = await fetch("/api/charts/compute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(natalToChartFormData(birth)),
+      });
+      if (!response.ok) throw new Error("compute failed");
+      const chartData: ChartData = await response.json();
+
+      const profile = await upsertProfile({
+        label: value.name.trim() || value.location.display_name,
+        locationName: value.location.display_name,
+        birth,
+        isPrimary: false,
+        chartData,
+      });
+
+      onAdded(profile.id);
+      setStatus("done");
+      setValue(EMPTY_BIRTH_DETAILS);
+      window.setTimeout(() => setStatus("idle"), 2000);
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div>
+      <p className="washi-eyebrow-muted mb-3">{label}</p>
+      <BirthDetailsFields
+        value={value}
+        onChange={(patch) => setValue((v) => ({ ...v, ...patch }))}
+        idPrefix={`compat-${role}`}
+      />
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={!isBirthDetailsComplete(value) || status === "loading"}
+        className="washi-btn-secondary mt-3 w-full text-sm disabled:opacity-50"
+      >
+        {status === "loading"
+          ? copy.computing
+          : status === "done"
+            ? copy.added
+            : copy.addAs(label)}
+      </button>
+      {status === "error" && (
+        <p className="mt-2 text-xs text-terracotta">{copy.error}</p>
+      )}
+    </div>
   );
 }

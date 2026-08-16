@@ -7,6 +7,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import ToolWorkspace from "@/components/tools/ToolWorkspace";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
+import ChartPreviewResult from "@/components/tools/ChartPreviewResult";
 import { uiText } from "@/lib/education";
 import {
   TOOL_LANDINGS,
@@ -135,10 +136,21 @@ export default async function ToolLandingPage({ params }: Params) {
             <CompatibilityResult />
           </div>
         ) : null}
+        {tool.resultPanel === "chart" && tool.chartViews ? (
+          <div className="mt-10">
+            <ChartPreviewResult
+              views={tool.chartViews}
+              toolSlug={tool.slug}
+              handoffTool={tool.chartHandoff}
+            />
+          </div>
+        ) : null}
 
-        <div className="mt-10" id="tool-form">
-          <ToolWorkspace initialTab={tool.defaultTab} />
-        </div>
+        {!tool.skipWorkspace ? (
+          <div className="mt-10" id="tool-form">
+            <ToolWorkspace initialTab={tool.defaultTab} />
+          </div>
+        ) : null}
 
         <hr className="washi-hairline my-14" />
 

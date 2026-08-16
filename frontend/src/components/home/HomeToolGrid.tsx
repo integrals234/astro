@@ -8,6 +8,8 @@ import {
   Orbit,
   ScrollText,
   Sparkles,
+  Telescope,
+  Waves,
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -26,6 +28,11 @@ import { homeToolsCopy } from "@/lib/home/tools-copy";
  * The difference here is the personalisation line: once a birth profile exists,
  * this says so, because "every one of these already knows your details" is the
  * part a grid of twenty separate forms cannot claim.
+ *
+ * Each card carries two lines, not one: what the tool is (`description`) and
+ * when to actually use it (`useCase`). A feature list ("draws your kundli")
+ * does not give anyone a reason to click; "check before scheduling anything
+ * important" does.
  */
 const ICONS: Record<string, LucideIcon> = {
   "free-horoscope": Sparkles,
@@ -34,6 +41,8 @@ const ICONS: Record<string, LucideIcon> = {
   "nakshatra-finder": Moon,
   sukuyo: Compass,
   compatibility: Heart,
+  "moon-sign": Waves,
+  "transit-now": Telescope,
 };
 
 export default function HomeToolGrid() {
@@ -79,6 +88,9 @@ export default function HomeToolGrid() {
                   </span>
                   <span className="mt-1 block text-xs leading-relaxed text-text-muted">
                     {tool.description[language]}
+                  </span>
+                  <span className="mt-1.5 block text-xs italic leading-relaxed text-terracotta">
+                    {tool.useCase[language]}
                   </span>
                 </span>
               </Link>

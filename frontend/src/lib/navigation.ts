@@ -3,7 +3,6 @@ import {
   Sparkles,
   FlaskConical,
   MoonStar,
-  BookOpen,
   GraduationCap,
   CalendarRange,
   Settings,
@@ -57,12 +56,6 @@ const navMeta = [
     icon: FlaskConical,
     labelKey: "course",
     descriptionKey: "courseDescription",
-  },
-  {
-    href: "/blogs",
-    icon: BookOpen,
-    labelKey: "blogs",
-    descriptionKey: "blogsDescription",
   },
   {
     href: "/settings",

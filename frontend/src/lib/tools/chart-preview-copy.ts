@@ -5,7 +5,12 @@ interface ChartPreviewCopy {
   needDetails: string;
   generate: string;
   openFullChart: string;
-  viewLabels: Record<ChartView, string>;
+  /**
+   * Partial rather than full `ChartView` coverage: this panel only ever
+   * offers lagna/moon/gochar as switchable tabs (see the registered tools in
+   * `landing-content.ts`). D9 and Chalit remain workspace-only for now.
+   */
+  viewLabels: Partial<Record<ChartView, string>>;
 }
 
 export const chartPreviewCopy: Record<AppLanguage, ChartPreviewCopy> = {

@@ -13,8 +13,6 @@ import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import type {
-  Planet,
-  TransitPlanet,
   Dasha,
   ChartData,
   ChartFormData,
@@ -28,6 +26,12 @@ import { popPresence, hoverLift, tapPress } from '@/lib/motion/tokens';
 import { parseChartPrefill } from '@/lib/chart-prefill';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
 import type { AppLanguage } from '@/lib/i18n/language';
+import { chartView, type ChartView } from '@/lib/chart-render';
+import {
+  formatDMS,
+  formatDashaDisplayDate,
+  planetSymbols,
+} from '@/lib/chart-format';
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
@@ -41,40 +45,21 @@ interface ChartWorkspaceProps {
   initialTab?: ChartTab;
 }
 
-const signToNumber: Record<string, number> = {
-  "Aries": 1, "Taurus": 2, "Gemini": 3, "Cancer": 4, "Leo": 5, "Virgo": 6, 
-  "Libra": 7, "Scorpio": 8, "Sagittarius": 9, "Capricorn": 10, "Aquarius": 11, "Pisces": 12 
-};
-
-const formatDMS = (raw: number) => { 
-  const l = raw % 30; 
-  const d = Math.floor(l); 
-  const mF = (l - d) * 60; 
-  const m = Math.floor(mF); 
-  const s = Math.floor((mF - m) * 60); 
-  return `${d}° ${m.toString().padStart(2, '0')}' ${s.toString().padStart(2, '0')}"`; 
-};
-
-const getIntegerDegree = (raw: number) => Math.floor(raw % 30);
-
 // --- TRANSLATION DICTIONARY ---
 
 const CHART_TABS: ChartTab[] = ['D1', 'D9', 'Chalit', 'Chandra', 'Gochar', 'Details', 'Aspects', 'Dasha'];
 const subscribeToClient = () => () => {};
 
-const planetSymbols: Record<string, string> = {
-  Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
-  Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
+/** `ChartTab` values that correspond to a drawn kundli, mapped to `ChartView`. */
+const TAB_TO_VIEW: Partial<Record<ChartTab, ChartView>> = {
+  D1: 'lagna',
+  D9: 'd9',
+  Chalit: 'chalit',
+  Chandra: 'moon',
+  Gochar: 'gochar',
 };
 
 // --- FLUID ACCORDION COMPONENT ---
-const formatDashaDisplayDate = (value: string, lang: AppLanguage) => {
-  const parsed = new Date(value.replace(/(\d+) (\w+) (\d+)/, "$2 $1, $3"));
-  return Number.isNaN(parsed.getTime())
-    ? value
-    : new Intl.DateTimeFormat(lang, { year: "numeric", month: "short", day: "numeric" }).format(parsed);
-};
-
 const DashaNode = ({ dasha, level = 1, t, lang }: { dasha: Dasha, level?: number, t: ChartTranslations, lang: AppLanguage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasSubs = dasha.sub_dashas && dasha.sub_dashas.length > 0;
@@ -181,11 +166,6 @@ function ChartWorkspaceInner({
   
   const [chartStyle, setChartStyle] = useState<'North' | 'South'>('North');
   const [useSymbols, setUseSymbols] = useState(false);
-
-  const planetSymbols: Record<string, string> = {
-      Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃",
-      Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋"
-    };
 
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [activeTab, setActiveTab] = useState<ChartTab>(initialTab);
@@ -478,84 +458,21 @@ function ChartWorkspaceInner({
     finally { setIsLoading(false); }
   };
 
-  const getRenderData = () => {
-    if (!chartData) return { planets: [], transitPlanets: [], asc: "Aries" };
-    
-    // NEW: We added `customSign` so we can override the D1 sign for D9 and Chalit charts
-    const mappedPlanets = (p: Planet, house: number, customSign?: string) => ({ 
-      name: t.planets[p.name],
-      enName: p.name,
-      house, 
-      degree: getIntegerDegree(p.longitude),
-      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : Boolean(p.is_retrograde),
-      sign: customSign || p.sign // Map to the new sign if provided
-    });
-    
-    const mappedTransits = (p: TransitPlanet, house: number, customSign?: string) => ({ 
-      name: t.planets[p.name],
-      enName: p.name,
-      house, 
-      degree: getIntegerDegree(p.longitude),
-      isRetrograde: (p.name === 'Rahu' || p.name === 'Ketu') ? true : Boolean(p.is_retrograde),
-      sign: customSign || p.sign
-    });
-    
-    if (activeTab === 'D1') {
-      return { planets: chartData.planets.map(p => mappedPlanets(p, p.d1_house, p.sign)), transitPlanets: [], asc: chartData.ascendant_sign };
-    }
-
-    if (activeTab === 'D9') {
-      const ascNum = signToNumber[chartData.d9_ascendant_sign];
-      return { 
-        // Pass p.d9_sign so the South Indian chart moves them to Navamsha signs
-        planets: chartData.planets.map(p => mappedPlanets(p, ((signToNumber[p.d9_sign] - ascNum + 12) % 12) + 1, p.d9_sign)), 
-        transitPlanets: [], 
-        asc: chartData.d9_ascendant_sign 
+  // Byte-for-byte equivalent of the workspace's former private getRenderData,
+  // now the single shared projection also used by ChartPreviewResult and the
+  // tool panels. See chart-render.ts for the D9/Chalit customSign notes.
+  const view = TAB_TO_VIEW[activeTab];
+  const renderData = chartData && view
+    ? chartView(chartData, view, t.planets, {
+        gocharBase: gocharBase === 'Chandra' ? 'moon' : 'lagna',
+      })
+    : {
+        planets: [],
+        transitPlanets: [],
+        ascendantSign: 'Aries',
+        showAscendant: false,
+        ascendantDegree: 0,
       };
-    }
-
-    if (activeTab === 'Chalit') {
-      const ascNum = signToNumber[chartData.ascendant_sign];
-      const numToSign = ["", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-      
-      return { 
-        planets: chartData.planets.map(p => {
-          // Calculate which physical zodiac sign the new Chalit house falls into
-          let newSignNum = ascNum + (p.chalit_house - 1);
-          if (newSignNum > 12) newSignNum -= 12;
-          return mappedPlanets(p, p.chalit_house, numToSign[newSignNum]);
-        }), 
-        transitPlanets: [], 
-        asc: chartData.ascendant_sign 
-      };
-    }
-
-    if (activeTab === 'Chandra') {
-      const moon = chartData.planets.find(p => p.name === "Moon");
-      const moonHouse = moon ? moon.d1_house : 1;
-      return { 
-        // South Indian Chandra charts keep planets in D1 signs, but move the Ascendant marker
-        planets: chartData.planets.map(p => mappedPlanets(p, ((p.d1_house - moonHouse + 12) % 12) + 1, p.sign)), 
-        transitPlanets: [], 
-        asc: moon ? moon.sign : "Aries" 
-      };
-    }
-
-    if (activeTab === 'Gochar') {
-      let anchorSign = chartData.ascendant_sign;
-      if (gocharBase === 'Chandra') { const moon = chartData.planets.find(p => p.name === "Moon"); if (moon) anchorSign = moon.sign; }
-      const anchorNum = signToNumber[anchorSign] || 1;
-      return { 
-        planets: chartData.planets.map(p => mappedPlanets(p, ((signToNumber[p.sign] - anchorNum + 12) % 12) + 1, p.sign)), 
-        transitPlanets: chartData.transit_planets.map(p => mappedTransits(p, ((signToNumber[p.sign] - anchorNum + 12) % 12) + 1, p.sign)), 
-        asc: anchorSign 
-      };
-    }
-
-    return { planets: [], transitPlanets: [], asc: "Aries" };
-  };
-
-  const renderData = getRenderData();
 
   if (!isClient) return null;
 
@@ -805,9 +722,9 @@ function ChartWorkspaceInner({
                             <KundliChart 
                               planets={renderData.planets} 
                               transitPlanets={renderData.transitPlanets} 
-                              ascendantSign={renderData.asc}
-                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? t.ui.asc : undefined}
-                              ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
+                              ascendantSign={renderData.ascendantSign}
+                              ascLabel={renderData.showAscendant ? t.ui.asc : undefined}
+                              ascDegree={renderData.showAscendant ? renderData.ascendantDegree : undefined}
                               transitLabel={t.ui?.transitBadge}
                               accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
                               useSymbols={useSymbols}
@@ -816,9 +733,9 @@ function ChartWorkspaceInner({
                             <SouthKundliChart 
                               planets={renderData.planets} 
                               transitPlanets={renderData.transitPlanets} 
-                              ascendantSign={renderData.asc}
-                              ascLabel={(activeTab === 'D1' || activeTab === 'Gochar') ? t.ui.asc : undefined}
-                              ascDegree={(activeTab === 'D1' || activeTab === 'Gochar') ? getIntegerDegree(chartData.ascendant_longitude) : undefined} 
+                              ascendantSign={renderData.ascendantSign}
+                              ascLabel={renderData.showAscendant ? t.ui.asc : undefined}
+                              ascDegree={renderData.showAscendant ? renderData.ascendantDegree : undefined}
                               transitLabel={t.ui?.transitBadge}
                               accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
                               useSymbols={useSymbols}

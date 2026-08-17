@@ -5,6 +5,7 @@ import ChartSummaryCard from '@/components/chart/ChartSummaryCard';
 import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
 import AspectsGrid from '@/components/chart/AspectsGrid';
 import DashaTimeline from '@/components/chart/DashaTimeline';
+import YogaPanel from '@/components/chart/YogaPanel';
 import { SECTION_TO_VIEW, type ChartSectionId } from '@/lib/chart-sections';
 import type { ChartData } from '@/lib/chart-types';
 import type { ChartTranslations } from '@/lib/chart-i18n';
@@ -76,6 +77,8 @@ export default function ChartSectionBody({
       return <PlanetDetailsGrid planets={data.planets} t={t} lang={lang} />;
     case 'aspects':
       return <AspectsGrid planets={data.planets} t={t} />;
+    case 'yogas':
+      return <YogaPanel data={data} t={t} lang={lang} showHeading={showHeading} />;
     case 'dasha':
       return (
         <DashaTimeline

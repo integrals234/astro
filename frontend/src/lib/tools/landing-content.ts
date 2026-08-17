@@ -219,6 +219,70 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     ],
   },
   {
+    // High-intent search term across all four markets — the question
+    // usually arrives before marriage, driven by a family member or a
+    // previous reading rather than idle curiosity. The panel checks the
+    // other classical yogas too, but this page leads with Mangal Dosha
+    // since that's the specific query it answers.
+    slug: "mangal-dosha",
+    sections: ["yogas"],
+    chartHandoff: "generic",
+    title: {
+      en: "Mangal Dosha (Kuja Dosha) checker",
+      hi: "मंगल दोष (कुज दोष) जाँच",
+      ja: "マンガル・ドーシャ（クジャ・ドーシャ）チェック",
+      ko: "망갈 도샤(쿠자 도샤) 확인",
+    },
+    description: {
+      en: "Check whether Mars sits in a Mangal Dosha house in your chart, with the exact house shown — plus every other classical yoga this chart carries.",
+      hi: "जानें कि आपकी कुंडली में मंगल दोष है या नहीं, ठीक भाव के साथ — और इस कुंडली के अन्य सभी शास्त्रीय योग भी।",
+      ja: "あなたのチャートで火星がマンガル・ドーシャのハウスにあるかを、正確なハウスとともに確認できます。他の古典的ヨーガもあわせて表示します。",
+      ko: "화성이 차트에서 망갈 도샤 하우스에 있는지 정확한 하우스와 함께 확인하고, 이 차트가 가진 다른 고전 요가도 함께 확인하세요.",
+    },
+    useCase: {
+      en: "Run this before a marriage conversation starts — it's usually raised by someone else first, and it helps to already know what your own chart actually shows.",
+      hi: "विवाह की बातचीत शुरू होने से पहले इसे आज़माएँ — यह प्रश्न प्रायः कोई और पहले उठाता है, और पहले से अपनी कुंडली की वास्तविक स्थिति जानना मददगार होता है।",
+      ja: "結婚の話が始まる前に。この質問は多くの場合、先に他の誰かから出されるもので、自分のチャートが実際に何を示しているかを前もって知っておくと安心です。",
+      ko: "결혼 이야기가 시작되기 전에 확인해 보세요. 이 질문은 대개 다른 사람이 먼저 꺼내며, 자신의 차트가 실제로 무엇을 보여주는지 미리 아는 것이 도움이 됩니다.",
+    },
+    lead: {
+      en: "Mangal Dosha is read when Mars occupies one of six specific houses from the Lagna. This page shows whether your chart carries it, in which house, and what classical texts say cancels it — alongside every other yoga this chart shows evidence for.",
+      hi: "मंगल दोष तब पढ़ा जाता है जब मंगल लग्न से छह विशेष भावों में से किसी एक में हो। यह पृष्ठ बताता है कि आपकी कुंडली में यह है या नहीं, किस भाव में, और शास्त्रों के अनुसार इसका निरसन कैसे होता है — साथ ही अन्य सभी योग भी जिनके प्रमाण इस कुंडली में मिलते हैं।",
+      ja: "マンガル・ドーシャは、火星がラグナから特定の六つのハウスのいずれかにあるときに読まれます。当ページでは、あなたのチャートにこれがあるか、どのハウスにあるか、そして古典が何を相殺条件として挙げているかを示します。あわせて、このチャートに根拠が見つかった他のヨーガもすべて表示します。",
+      ko: "망갈 도샤는 화성이 라그나로부터 여섯 개의 특정 하우스 중 하나에 있을 때 읽습니다. 이 페이지는 당신의 차트에 이것이 있는지, 어느 하우스인지, 고전에서 무엇을 상쇄 조건으로 보는지 보여주며, 이 차트에서 근거가 발견된 다른 모든 요가도 함께 보여줍니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "Does Mangal Dosha always need to be cancelled before marriage?",
+          hi: "क्या विवाह से पहले मंगल दोष का निरसन हमेशा आवश्यक है?",
+          ja: "結婚前にマンガル・ドーシャは必ず相殺しなければなりませんか？",
+          ko: "결혼 전에 망갈 도샤를 반드시 상쇄해야 하나요?",
+        },
+        answer: {
+          en: "No — classical texts list several conditions that cancel or weaken it (Mars in its own sign, aspects from benefics, both charts carrying it), and traditions vary in how strictly they weigh it. This page shows the placement itself; what it means for a specific match is what a full reading covers.",
+          hi: "नहीं — शास्त्रों में इसके निरसन या कमजोर होने की कई शर्तें बताई गई हैं (मंगल का स्वराशि में होना, शुभ ग्रहों की दृष्टि, दोनों कुंडलियों में इसका होना), और परंपराएँ इसे कितनी सख्ती से मानती हैं यह भिन्न होता है।",
+          ja: "いいえ。古典には相殺・軽減の条件がいくつも挙げられており（火星が自身の星座にある、吉星からのアスペクトがある、双方のチャートにある、など）、これをどれほど厳格に見るかは流派によっても異なります。当ページは配置そのものを示すものです。",
+          ko: "아니요. 고전에는 상쇄 또는 약화 조건이 여러 가지 있으며(화성이 자신의 별자리에 있음, 길성의 아스펙트, 양쪽 차트 모두에 있음 등), 이를 얼마나 엄격하게 보는지는 전통마다 다릅니다. 이 페이지는 배치 자체를 보여줍니다.",
+        },
+      },
+      {
+        question: {
+          en: "What other combinations does this page check?",
+          hi: "यह पृष्ठ और कौन-कौन से संयोग जाँचता है?",
+          ja: "このページは他にどのような組み合わせを確認しますか？",
+          ko: "이 페이지는 다른 어떤 조합을 확인하나요?",
+        },
+        answer: {
+          en: "Kaal Sarp Dosha, Gaja Kesari, Budhaditya, Chandra-Mangala, Neecha Bhanga Raja Yoga, and the five Panchamahapurusha yogas — each shown only when your chart carries evidence for it, with the exact planet and house.",
+          hi: "कालसर्प दोष, गजकेसरी, बुधादित्य, चंद्र-मंगल, नीच भंग राजयोग, और पाँच पंचमहापुरुष योग — प्रत्येक केवल तभी दिखाया जाता है जब आपकी कुंडली में इसका प्रमाण मिलता है, ठीक ग्रह और भाव सहित।",
+          ja: "カーラ・サルパ・ドーシャ、ガジャ・ケサリ、ブダーディティヤ、チャンドラ・マンガラ、ニーチャ・バンガ・ラージャ・ヨーガ、そして五つのパンチャマハープルシャ・ヨーガです。それぞれ、あなたのチャートに根拠がある場合のみ、正確な惑星とハウスとともに表示されます。",
+          ko: "칼 사르프 도샤, 가자 케사리, 부다디티야, 찬드라 망갈라, 니차 방가 라자 요가, 그리고 다섯 판차마하푸루샤 요가입니다. 각각 당신의 차트에 근거가 있을 때만 정확한 행성과 하우스와 함께 표시됩니다.",
+        },
+      },
+    ],
+  },
+  {
     /*
      * 宿曜 is the strategic page on this site.
      *

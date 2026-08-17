@@ -5,6 +5,7 @@ import Link from "@/components/i18n/LocaleLink";
 import {
   ChevronDown,
   Compass,
+  Flame,
   Heart,
   Moon,
   Orbit,
@@ -54,6 +55,7 @@ const ICONS: Record<string, LucideIcon> = {
   "birth-chart": ScrollText,
   "dasha-calculator": Orbit,
   "nakshatra-finder": Moon,
+  "mangal-dosha": Flame,
   sukuyo: Compass,
   compatibility: Heart,
   "moon-sign": Waves,

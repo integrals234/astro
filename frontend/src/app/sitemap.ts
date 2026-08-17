@@ -58,7 +58,27 @@ function entry(
   };
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export interface SitemapOptions {
+  /**
+   * Whether to include the `learn-jyotish` article corpus.
+   *
+   * `/sitemap-core.xml` sets this false. The English originals of those
+   * articles are already `noindex` (see `isArticleNoindexed`), and the
+   * JA/HI/KO versions are translations of the same third-party source, so a
+   * variant that advertises only first-party pages is useful when submitting
+   * to a search console.
+   *
+   * Note this omits rather than blocks: the articles stay linked from their
+   * section hubs, which are in both sitemaps, so a crawler still reaches them.
+   * Omission lowers priority; it does not prevent indexing. `noindex` is the
+   * only directive that does that.
+   */
+  includeArticles?: boolean;
+}
+
+export function buildSitemap({
+  includeArticles = true,
+}: SitemapOptions = {}): MetadataRoute.Sitemap {
   const landing: Entry[] = [
     entry("/", { collection: "core", priority: 1, changeFrequency: "weekly" }),
     entry("/chart", {
@@ -126,5 +146,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // /legal/* is deliberately absent: those pages are noindex drafts.
   // /blogs and /premium are absent too: /blogs had no content and was removed,
   // and /premium is a noindex waitlist until it becomes the pricing page.
-  return [...landing, ...tools, ...sectionHubs, ...articles, ...entities];
+  return [
+    ...landing,
+    ...tools,
+    ...sectionHubs,
+    ...(includeArticles ? articles : []),
+    ...entities,
+  ];
+}
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return buildSitemap();
 }

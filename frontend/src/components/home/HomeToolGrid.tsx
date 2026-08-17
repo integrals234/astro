@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "@/components/i18n/LocaleLink";
 import {
   ChevronDown,
+  Clock,
   Compass,
   Flame,
   Hash,
@@ -25,6 +26,7 @@ import ChartSectionBody from "@/components/chart/ChartSectionBody";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
 import NumerologyPanel from "@/components/NumerologyPanel";
+import BirthTimeSensitivityPanel from "@/components/BirthTimeSensitivityPanel";
 import { trackEvent } from "@/lib/analytics/events";
 import { TOOL_LANDINGS } from "@/lib/tools/landing-content";
 import { homeToolsCopy } from "@/lib/home/tools-copy";
@@ -61,6 +63,7 @@ const ICONS: Record<string, LucideIcon> = {
   "mangal-dosha": Flame,
   numerology: Hash,
   "saturn-return": Hourglass,
+  "birth-time-check": Clock,
   sukuyo: Compass,
   compatibility: Heart,
   "moon-sign": Waves,
@@ -169,6 +172,7 @@ export default function HomeToolGrid() {
                         {tool.resultPanel === "sukuyo" && <SukuyoResult />}
                         {tool.resultPanel === "compatibility" && <CompatibilityResult />}
                         {tool.resultPanel === "numerology" && <NumerologyPanel />}
+                        {tool.resultPanel === "birthTimeSensitivity" && <BirthTimeSensitivityPanel />}
                         {tool.sections && chartData
                           ? tool.sections.map((id) => (
                               <ChartSectionBody key={id} id={id} data={chartData} t={t} lang={language} />

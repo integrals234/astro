@@ -36,10 +36,12 @@ export interface ToolLanding {
    * dedicated component reading the shared birth profile, so the answer
    * appears without re-entering anything. `sukuyo` also sets `sections` to
    * show the underlying chart below its own result. `numerology` needs no
-   * computed chart at all — only a birth date — so it's the one panel
-   * here that isn't backed by `ChartSectionBody`.
+   * computed chart at all — only a birth date — and `birthTimeSensitivity`
+   * needs a time *window*, not the one saved birth time — so both bring
+   * their own entry form rather than using `ChartDataProvider`/
+   * `ChartSectionBody` like the rest of this list.
    */
-  resultPanel?: "sukuyo" | "compatibility" | "numerology";
+  resultPanel?: "sukuyo" | "compatibility" | "numerology" | "birthTimeSensitivity";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool
@@ -691,6 +693,53 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "29, 59 और 88 सामान्यतः उद्धृत अनुमानित आयु हैं, क्योंकि शनि की परिक्रमा वर्षों की पूर्ण संख्या नहीं है और इसकी आभासी गति भिन्न होती है।",
           ja: "土星の公転は年数としてきりのよい数字ではなく、見かけの速度も変化するため、29歳・59歳・88歳は一般的に引用される目安の年齢です。出生時の土星度数に正確に再び到達する日付を求めるには、単一の年齢よりも実際の土星位置を解く、完全なトランジットチャートに近い計算が必要です。",
           ko: "토성의 공전은 딱 떨어지는 연수가 아니고 겉보기 속도도 달라지므로, 29세·59세·88세는 일반적으로 인용되는 대략적인 나이입니다. 출생 시 토성 도수에 정확히 다시 도달하는 날짜를 구하려면 단일 나이보다 실제 토성 위치를 계산하는, 완전한 트랜짓 차트에 가까운 계산이 필요합니다.",
+        },
+      },
+    ],
+  },
+  {
+    // The honest answer to "I don't know my exact birth time" isn't a
+    // disclaimer, it's showing whether that uncertainty actually changes
+    // anything — for some birth-date/place combinations it doesn't.
+    slug: "birth-time-check",
+    resultPanel: "birthTimeSensitivity",
+    title: {
+      en: "Birth time sensitivity checker",
+      hi: "जन्म समय संवेदनशीलता जाँचकर्ता",
+      ja: "出生時刻感度チェッカー",
+      ko: "출생 시각 민감도 확인기",
+    },
+    description: {
+      en: "Compute your chart across an uncertain time window and see exactly where — if anywhere — the ascendant sign actually changes.",
+      hi: "अपनी अनिश्चित समय सीमा में कुंडली की गणना करें और ठीक-ठीक देखें कि लग्न राशि कहाँ — यदि कहीं — वास्तव में बदलती है।",
+      ja: "不確かな時刻の範囲でチャートを計算し、アセンダントの星座が実際にどこで（もしあれば）変わるかを正確に確認します。",
+      ko: "불확실한 시간 범위로 차트를 계산하고 상승궁 별자리가 실제로 어디서(있다면) 바뀌는지 정확히 확인하세요.",
+    },
+    useCase: {
+      en: "Use this before treating an approximate birth time as exact — a two-hour uncertainty window sometimes changes nothing, and sometimes changes everything.",
+      hi: "किसी अनुमानित जन्म समय को सटीक मानने से पहले इसे आज़माएँ — दो घंटे की अनिश्चितता कभी कुछ नहीं बदलती, तो कभी सब कुछ बदल देती है।",
+      ja: "概算の出生時刻を正確なものとして扱う前に。2時間の不確かさが何も変えないこともあれば、すべてを変えてしまうこともあります。",
+      ko: "대략적인 출생 시각을 정확한 것으로 다루기 전에. 두 시간의 불확실성이 아무것도 바꾸지 않을 때도 있고, 모든 것을 바꿀 때도 있습니다.",
+    },
+    lead: {
+      en: "A birth certificate rounded to the nearest half hour, or a family member's best recollection, is common — and the ascendant changes roughly every two hours, so whether that uncertainty matters depends entirely on how close it sits to a sign boundary. This tool computes several charts across your stated window and shows exactly where, if anywhere, the ascendant sign moves.",
+      hi: "जन्म प्रमाण पत्र में निकटतम आधे घंटे तक पूर्णांकित समय, या परिवार के किसी सदस्य की स्मृति सामान्य है — और लग्न लगभग हर दो घंटे में बदलता है।",
+      ja: "出生証明書が最も近い30分単位に丸められている、あるいは家族の記憶に頼っているというのはよくあることです。アセンダントはおよそ2時間ごとに変わるため、その不確かさが影響するかどうかは、星座の境界にどれだけ近いかに完全に左右されます。このツールは、指定された範囲内で複数のチャートを計算し、アセンダントの星座が実際にどこで（もしあれば）動くかを正確に示します。",
+      ko: "출생 증명서가 가장 가까운 30분 단위로 반올림되어 있거나, 가족의 기억에 의존하는 경우는 흔합니다. 상승궁은 대략 두 시간마다 바뀌므로, 그 불확실성이 영향을 미치는지는 별자리 경계에 얼마나 가까운지에 전적으로 달려 있습니다. 이 도구는 지정된 범위 내에서 여러 차트를 계산하여 상승궁 별자리가 실제로 어디서(있다면) 움직이는지 정확히 보여줍니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What should I do if the ascendant sign does change within my window?",
+          hi: "यदि मेरी सीमा के भीतर लग्न राशि बदलती है तो मुझे क्या करना चाहिए?",
+          ja: "範囲内でアセンダントの星座が変わる場合、どうすればよいですか？",
+          ko: "범위 내에서 상승궁 별자리가 바뀌면 어떻게 해야 하나요?",
+        },
+        answer: {
+          en: "That's a sign your uncertainty genuinely matters, and narrowing the birth time further — a hospital record, a birth certificate, a family member who remembers more precisely — is worth doing before treating any single chart's house placements as settled. A live reading can also work through birth-time rectification using life events.",
+          hi: "यह इस बात का संकेत है कि आपकी अनिश्चितता वास्तव में मायने रखती है, और किसी भी एक कुंडली की भाव स्थिति को निश्चित मानने से पहले जन्म समय को और सीमित करना उचित है।",
+          ja: "それは、あなたの不確かさが実際に重要であることを示すサインです。どれか一つのチャートのハウス配置を確定したものとして扱う前に、病院の記録や出生証明書、より正確に覚えている家族など、出生時刻をさらに絞り込む価値があります。ライブ鑑定では、人生の出来事を用いた出生時刻の推定（レクティフィケーション）も行えます。",
+          ko: "이는 당신의 불확실성이 실제로 중요하다는 신호이며, 병원 기록이나 출생 증명서, 더 정확히 기억하는 가족 등으로 출생 시각을 더 좁히는 것이 어느 한 차트의 하우스 배치를 확정된 것으로 다루기 전에 해볼 가치가 있습니다. 라이브 감정에서는 인생 사건을 이용한 출생 시각 보정(렉티피케이션)도 다룹니다.",
         },
       },
     ],

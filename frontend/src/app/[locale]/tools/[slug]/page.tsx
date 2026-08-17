@@ -7,6 +7,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
 import NumerologyPanel from "@/components/NumerologyPanel";
+import BirthTimeSensitivityPanel from "@/components/BirthTimeSensitivityPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
@@ -139,6 +140,11 @@ export default async function ToolLandingPage({ params }: Params) {
         {tool.resultPanel === "numerology" ? (
           <div className="mt-10">
             <NumerologyPanel />
+          </div>
+        ) : null}
+        {tool.resultPanel === "birthTimeSensitivity" ? (
+          <div className="mt-10">
+            <BirthTimeSensitivityPanel />
           </div>
         ) : null}
         {tool.sections ? (

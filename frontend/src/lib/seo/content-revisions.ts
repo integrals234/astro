@@ -17,7 +17,7 @@ export const CONTENT_REVISIONS = {
   /** `src/lib/tools/landing-content.ts`. */
   tools: "2026-08-17",
   /** `src/lib/education/*-content.ts` long-form articles. */
-  articles: "2026-06-06",
+  articles: "2026-08-17",
   /** Nakshatra / rashi / graha entity corpus. */
   entities: "2026-08-17",
   /** `src/lib/education/horoscope-engine.ts` output rotates on a weekly cycle. */

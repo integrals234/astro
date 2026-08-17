@@ -4,10 +4,9 @@ import Link from "next/link";
 import PublicPageShell from "@/components/layout/PublicPageShell";
 import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
-import ToolWorkspace from "@/components/tools/ToolWorkspace";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
-import ChartPreviewResult from "@/components/tools/ChartPreviewResult";
+import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
   TOOL_LANDINGS,
@@ -29,8 +28,8 @@ import { localeUrl, SITE_NAME } from "@/lib/seo/site";
  * Intent-specific tool landing pages (Phase 3.6).
  *
  * The tool is embedded and working above the fold — that is what separates
- * these from doorway pages, along with per-page copy, a per-page FAQ, and a
- * different default tab each.
+ * these from doorway pages, along with per-page copy, a per-page FAQ, and
+ * only the chart section(s) each one actually needs.
  */
 type Params = { params: Promise<{ locale: string; slug: string }> };
 
@@ -136,19 +135,13 @@ export default async function ToolLandingPage({ params }: Params) {
             <CompatibilityResult />
           </div>
         ) : null}
-        {tool.resultPanel === "chart" && tool.chartViews ? (
-          <div className="mt-10">
-            <ChartPreviewResult
-              views={tool.chartViews}
+        {tool.sections ? (
+          <div className="mt-10" id="tool-form">
+            <ChartSectionResult
+              sections={tool.sections}
               toolSlug={tool.slug}
               handoffTool={tool.chartHandoff}
             />
-          </div>
-        ) : null}
-
-        {!tool.skipWorkspace ? (
-          <div className="mt-10" id="tool-form">
-            <ToolWorkspace initialTab={tool.defaultTab} />
           </div>
         ) : null}
 

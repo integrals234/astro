@@ -1,6 +1,5 @@
 import type { BilingualText } from "@/lib/education/types";
-import type { ChartTab } from "@/lib/chart-types";
-import type { ChartView } from "@/lib/chart-render";
+import type { ChartSectionId } from "@/lib/chart-sections";
 import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
 
 /**
@@ -10,8 +9,9 @@ import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
  * generator was the most underused asset on the site — one URL for everything.
  *
  * These are not doorway pages: each targets a distinct real query, carries its
- * own copy and FAQ, and opens the working tool on a *different* default tab, so
- * the page a visitor lands on actually answers the thing they searched for.
+ * own copy and FAQ, and renders only the chart section(s) that answer the
+ * thing a visitor searched for, so the page never makes them dig through
+ * eight tabs to find the one they came for.
  *
  * Script variation matters here (Phase 3.10). `インド占星術`, `ヴェーダ占星術`
  * and `ジョーティッシュ` are three different searches with different volumes and
@@ -28,30 +28,25 @@ export interface ToolLanding {
   title: BilingualText;
   description: BilingualText;
   lead: BilingualText;
-  /** Tab the embedded workspace opens on. */
-  defaultTab: ChartTab;
   faqs: ToolFaq[];
   /**
-   * A purpose-built result panel rendered above the chart workspace.
+   * A purpose-built result panel rendered above the chart sections.
    *
    * Tools that answer one specific question ("which mansion am I?") get a
-   * dedicated component reading the shared birth profile, so the answer appears
-   * without re-entering anything. The workspace stays below as the way to enter
-   * or change details, which is why this is additive rather than a replacement
-   * for "sukuyo"/"compatibility" — but "chart" tools (a single chart view: the
-   * Lagna, Moon or transit picture) skip the workspace entirely, per
-   * `skipWorkspace`, since embedding the full 949-line multi-tab workspace
-   * beneath a page whose whole point is "just show me this one chart" would
-   * reintroduce the redirect-and-redo-everything friction this was built to
-   * remove.
+   * dedicated component reading the shared birth profile, so the answer
+   * appears without re-entering anything. `sukuyo` also sets `sections` to
+   * show the underlying chart below its own result.
    */
-  resultPanel?: "sukuyo" | "compatibility" | "chart";
-  /** Which view(s) a `"chart"` panel draws — more than one renders as tabs. */
-  chartViews?: readonly ChartView[];
-  /** Which `BookingHandoff` copy a `"chart"` panel closes with. */
+  resultPanel?: "sukuyo" | "compatibility";
+  /**
+   * Chart section(s) this tool renders inline, stacked in this order, via
+   * `ChartSectionBody` — the same component the workspace uses, so a tool
+   * page never pulls in the full multi-tab workspace just to show one part
+   * of it.
+   */
+  sections?: readonly ChartSectionId[];
+  /** Which `BookingHandoff` copy the sections close with. */
   chartHandoff?: ToolHandoffId;
-  /** Omit the embedded `ToolWorkspace` below the result panel. */
-  skipWorkspace?: boolean;
   /**
    * One line on what this is actually used for — shown on the homepage grid,
    * where `description` alone reads as a feature list ("draws your kundli")
@@ -64,7 +59,8 @@ export interface ToolLanding {
 export const TOOL_LANDINGS: ToolLanding[] = [
   {
     slug: "free-horoscope",
-    defaultTab: "D1",
+    sections: ["lagna", "planets"],
+    chartHandoff: "generic",
     title: {
       en: "Free Vedic horoscope generator",
       hi: "निःशुल्क वैदिक कुंडली जनरेटर",
@@ -122,11 +118,8 @@ export const TOOL_LANDINGS: ToolLanding[] = [
   },
   {
     slug: "birth-chart",
-    defaultTab: "D1",
-    resultPanel: "chart",
-    chartViews: ["lagna"],
+    sections: ["lagna", "planets"],
     chartHandoff: "generic",
-    skipWorkspace: true,
     title: {
       en: "Vedic birth chart (kundli) calculator",
       hi: "वैदिक जन्म कुंडली कैलकुलेटर",
@@ -170,7 +163,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
   },
   {
     slug: "dasha-calculator",
-    defaultTab: "Dasha",
+    sections: ["dasha"],
     title: {
       en: "Vimshottari dasha calculator",
       hi: "विंशोत्तरी दशा कैलकुलेटर",
@@ -214,7 +207,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
   },
   {
     slug: "nakshatra-finder",
-    defaultTab: "Details",
+    sections: ["planets"],
     title: {
       en: "Nakshatra finder",
       hi: "नक्षत्र खोजें",
@@ -268,8 +261,8 @@ export const TOOL_LANDINGS: ToolLanding[] = [
      * lunar-calendar date; this derives it from the Moon's actual longitude.
      */
     slug: "sukuyo",
-    defaultTab: "D1",
     resultPanel: "sukuyo",
+    sections: ["lagna"],
     title: {
       en: "Sukuyō: find your birth mansion (27 nakshatras)",
       hi: "सुक्युō: अपना जन्म नक्षत्र जानें (27 नक्षत्र)",
@@ -346,7 +339,6 @@ export const TOOL_LANDINGS: ToolLanding[] = [
      * scoring is a pure function of two Moon positions, so no backend work.
      */
     slug: "compatibility",
-    defaultTab: "D1",
     resultPanel: "compatibility",
     title: {
       en: "Vedic compatibility calculator (Ashtakoot, 36 points)",
@@ -424,11 +416,8 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     // are actually used to, since tropical Sun-sign astrology is closer in
     // spirit to a Moon-anchored reading than to Vedic Lagna.
     slug: "moon-sign",
-    defaultTab: "Chandra",
-    resultPanel: "chart",
-    chartViews: ["moon"],
+    sections: ["moon"],
     chartHandoff: "moonSign",
-    skipWorkspace: true,
     title: {
       en: "Vedic Moon sign (Chandra Rashi) calculator",
       hi: "वैदिक चंद्र राशि कैलकुलेटर",
@@ -488,11 +477,8 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     // The transit (Gochar) chart, anchored on the ascendant by default —
     // where the sky is right now, laid over the birth chart's houses.
     slug: "transit-now",
-    defaultTab: "Gochar",
-    resultPanel: "chart",
-    chartViews: ["gochar"],
+    sections: ["gochar"],
     chartHandoff: "saturn",
-    skipWorkspace: true,
     title: {
       en: "Current planetary transits (Gochar) over your chart",
       hi: "आपकी कुंडली पर वर्तमान ग्रह गोचर",

@@ -39,9 +39,18 @@ export interface ToolLanding {
    * computed chart at all — only a birth date — and `birthTimeSensitivity`
    * needs a time *window*, not the one saved birth time — so both bring
    * their own entry form rather than using `ChartDataProvider`/
-   * `ChartSectionBody` like the rest of this list.
+   * `ChartSectionBody` like the rest of this list. `annualForecast` and
+   * `panchang` talk to backend endpoints written but not yet deployed
+   * (Phase 12) — both panels show an "unavailable" state rather than
+   * failing silently until that ships.
    */
-  resultPanel?: "sukuyo" | "compatibility" | "numerology" | "birthTimeSensitivity";
+  resultPanel?:
+    | "sukuyo"
+    | "compatibility"
+    | "numerology"
+    | "birthTimeSensitivity"
+    | "annualForecast"
+    | "panchang";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool

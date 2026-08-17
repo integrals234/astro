@@ -8,6 +8,8 @@ import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
 import NumerologyPanel from "@/components/NumerologyPanel";
 import BirthTimeSensitivityPanel from "@/components/BirthTimeSensitivityPanel";
+import AnnualForecastPanel from "@/components/AnnualForecastPanel";
+import PanchangPanel from "@/components/PanchangPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
@@ -145,6 +147,16 @@ export default async function ToolLandingPage({ params }: Params) {
         {tool.resultPanel === "birthTimeSensitivity" ? (
           <div className="mt-10">
             <BirthTimeSensitivityPanel />
+          </div>
+        ) : null}
+        {tool.resultPanel === "annualForecast" ? (
+          <div className="mt-10">
+            <AnnualForecastPanel />
+          </div>
+        ) : null}
+        {tool.resultPanel === "panchang" ? (
+          <div className="mt-10">
+            <PanchangPanel />
           </div>
         ) : null}
         {tool.sections ? (

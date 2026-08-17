@@ -361,4 +361,306 @@ async def compute_charts(payload: BirthDataRequest):
     except Exception as err:
         swe.close()
         raise HTTPException(status_code=500, detail=str(err))
-    
+
+
+# --- VARSHAPHALA (ANNUAL FORECAST / SOLAR RETURN) ---
+#
+# NOT YET DEPLOYED — written for review, not live. See the request/response
+# models and endpoint below for the full explanation of scope and the
+# solar-return root-finding approach.
+
+NAKSHATRA_ARC = 360.0 / 27.0
+
+TITHI_NAMES = [
+    "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami",
+    "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
+    "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi",
+]
+
+YOGA_NAMES = [
+    "Vishkambha", "Priti", "Ayushman", "Saubhagya", "Shobhana",
+    "Atiganda", "Sukarma", "Dhriti", "Shoola", "Ganda",
+    "Vriddhi", "Dhruva", "Vyaghata", "Harshana", "Vajra",
+    "Siddhi", "Vyatipata", "Variyana", "Parigha", "Shiva",
+    "Siddha", "Sadhya", "Shubha", "Shukla", "Brahma",
+    "Indra", "Vaidhriti",
+]
+
+KARANA_MOVABLE = ["Bava", "Balava", "Kaulava", "Taitila", "Garija", "Vanija", "Vishti"]
+KARANA_FIXED_END = ["Shakuni", "Chatushpada", "Naga"]
+
+
+class AnnualForecastRequest(BaseModel):
+    """Same natal birth data compute-charts takes, plus which year's
+    return to compute — the year is independent of the birth year so a
+    2027 return can be requested for someone born in 1990."""
+    year: int = Field(..., ge=1800, le=2100)
+    month: int = Field(..., ge=1, le=12)
+    day: int = Field(..., ge=1, le=31)
+    hour: int = Field(..., ge=0, le=23)
+    minute: int = Field(..., ge=0, le=59)
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
+    target_year: int = Field(..., ge=1800, le=2100)
+
+
+class AnnualForecastResponse(BaseModel):
+    """The Varshaphala (solar return) chart: planetary positions at the
+    exact moment transiting Sun returns to its natal sidereal degree,
+    cast for the birth location. Deliberately scoped to the D1 Rasi chart
+    only — Varshaphala traditionally uses its own Mudda Dasha system
+    rather than Vimshottari, and getting a second dasha system right
+    without the ability to test it is a separate, riskier piece of work
+    than reusing the planet/house math this file already computes
+    correctly for the natal chart. No dasha is returned."""
+    return_date: str
+    return_time: str
+    timezone_detected: str
+    ascendant_longitude: float
+    ascendant_sign: str
+    planets: List[PlanetData]
+    chalit_cusps: List[float]
+
+
+def find_solar_return_utc(natal_sun_lon: float, target_year: int, birth_month: int, birth_day: int, calc_flags: int) -> datetime:
+    """
+    The UTC moment within `target_year` when the transiting Sun's sidereal
+    longitude equals `natal_sun_lon`, found by bisection.
+
+    Correctness relies on one fact: as seen from Earth, the Sun's apparent
+    longitude never goes retrograde (unlike every other body this file
+    computes) — Earth's own orbit cannot lap or be lapped by itself, so the
+    Sun's ecliptic longitude increases monotonically at roughly 1 degree per
+    day, every day, without exception. That guarantees the wrapped
+    difference function below crosses zero exactly once per year, so a
+    single sign change brackets exactly one root — no local minima/maxima
+    to fool a naive bisection, which would be a real risk for any of the
+    other seven bodies.
+
+    The search window is anchored on the calendar anniversary of the birth
+    date and widened to +/-10 days (~10 degrees of solar motion, comfortably
+    wider than the sidereal/tropical year drift — about 20 minutes of arc
+    per year of age, so even 80 years of drift is under a day) rather than
+    assuming the return falls exactly on the anniversary.
+    """
+    anchor = datetime(target_year, birth_month, birth_day, 12, 0)
+
+    def sun_lon_diff(dt: datetime) -> float:
+        jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60.0 + dt.second / 3600.0)
+        result, _ = swe.calc_ut(jd, swe.SUN, calc_flags)
+        # Wrapped to (-180, 180] so a crossing of the natal degree is a
+        # single sign change regardless of where on the zodiac it falls.
+        return (result[0] - natal_sun_lon + 180) % 360 - 180
+
+    lo = anchor - timedelta(days=10)
+    hi = anchor + timedelta(days=10)
+    f_lo = sun_lon_diff(lo)
+    f_hi = sun_lon_diff(hi)
+
+    if f_lo * f_hi > 0:
+        raise ValueError("Could not bracket a solar return within +/-10 days of the anniversary")
+
+    # 40 halvings of a 20-day window converges to a fraction of a second —
+    # far past any precision this file's other timing math relies on, and
+    # cheap (each step is one ephemeris call).
+    for _ in range(40):
+        mid = lo + (hi - lo) / 2
+        f_mid = sun_lon_diff(mid)
+        if f_lo * f_mid <= 0:
+            hi, f_hi = mid, f_mid
+        else:
+            lo, f_lo = mid, f_mid
+        if (hi - lo).total_seconds() < 1:
+            break
+
+    return lo + (hi - lo) / 2
+
+
+@app.post("/api/v1/annual-forecast", response_model=AnnualForecastResponse)
+async def annual_forecast(payload: AnnualForecastRequest):
+    try:
+        tz_str = tf.timezone_at(lng=payload.longitude, lat=payload.latitude) or "UTC"
+        local_tz = pytz.timezone(tz_str)
+
+        swe.set_ephe_path('/usr/share/ephe')
+        swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
+        calc_flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL | swe.FLG_SPEED
+
+        # Natal Sun longitude only — the rest of the natal chart is
+        # irrelevant to finding the return moment.
+        natal_local = datetime(payload.year, payload.month, payload.day, payload.hour, payload.minute)
+        natal_utc = local_tz.localize(natal_local).astimezone(pytz.utc)
+        natal_jd = swe.julday(natal_utc.year, natal_utc.month, natal_utc.day, natal_utc.hour + natal_utc.minute / 60.0)
+        natal_sun_result, _ = swe.calc_ut(natal_jd, swe.SUN, calc_flags)
+        natal_sun_lon = natal_sun_result[0]
+
+        return_utc = find_solar_return_utc(natal_sun_lon, payload.target_year, payload.month, payload.day, calc_flags)
+        return_utc = pytz.utc.localize(return_utc)
+        return_local = return_utc.astimezone(local_tz)
+
+        return_jd = swe.julday(
+            return_utc.year, return_utc.month, return_utc.day,
+            return_utc.hour + return_utc.minute / 60.0 + return_utc.second / 3600.0,
+        )
+        cusps, ascmc = swe.houses_ex(return_jd, payload.latitude, payload.longitude, b'O', calc_flags)
+        asc_lon = ascmc[0]
+        asc_sign = get_sign(asc_lon)
+
+        planets = []
+        for name, internal_id in PLANET_MAP.items():
+            calc_result, _ = swe.calc_ut(return_jd, internal_id, calc_flags)
+            lon = calc_result[0]
+            speed = calc_result[3]
+            is_retro = speed < 0 if name not in ["Sun", "Moon", "Rahu"] else False
+            sign = get_sign(lon)
+            nak_name, pada = get_nakshatra_info(lon)
+            house = calculate_d1_house(lon, asc_lon)
+            planets.append(PlanetData(
+                name=name, longitude=round(lon, 6), sign=sign,
+                sign_lord=SIGN_LORDS[sign], nakshatra=nak_name, nakshatra_pada=pada,
+                is_retrograde=is_retro, dignity=get_dignity(name, sign),
+                d1_house=house, d9_sign=calculate_d9_sign(lon),
+                chalit_house=calculate_chalit_house(lon, cusps),
+                aspects_houses=get_vedic_aspects(name, house)
+            ))
+
+        rahu = next(p for p in planets if p.name == "Rahu")
+        ketu_lon = (rahu.longitude + 180.0) % 360.0
+        k_sign = get_sign(ketu_lon)
+        k_nak, k_pada = get_nakshatra_info(ketu_lon)
+        k_house = calculate_d1_house(ketu_lon, asc_lon)
+        planets.append(PlanetData(
+            name="Ketu", longitude=round(ketu_lon, 6), sign=k_sign,
+            sign_lord=SIGN_LORDS[k_sign], nakshatra=k_nak, nakshatra_pada=k_pada,
+            is_retrograde=True, dignity=get_dignity("Ketu", k_sign),
+            d1_house=k_house, d9_sign=calculate_d9_sign(ketu_lon),
+            chalit_house=calculate_chalit_house(ketu_lon, cusps),
+            aspects_houses=get_vedic_aspects("Ketu", k_house)
+        ))
+
+        swe.close()
+
+        return AnnualForecastResponse(
+            return_date=return_local.strftime("%d %b %Y"),
+            return_time=return_local.strftime("%H:%M:%S"),
+            timezone_detected=tz_str,
+            ascendant_longitude=round(asc_lon, 6),
+            ascendant_sign=asc_sign,
+            planets=planets,
+            chalit_cusps=[round(c, 6) for c in cusps],
+        )
+
+    except Exception as err:
+        swe.close()
+        raise HTTPException(status_code=500, detail=str(err))
+
+
+# --- PANCHANG (DAY-LEVEL ELEMENTS: TITHI / NAKSHATRA / YOGA / KARANA) ---
+#
+# NOT YET DEPLOYED — written for review, not live.
+#
+# Deliberately does not compute Rokuyo (Japanese six-day cycle). Rokuyo is
+# derived from the traditional Japanese lunisolar calendar's month and day
+# number, not from planetary angles — it needs a real lunisolar calendar
+# implementation (new-moon timing, leap-month rules) to get right, which is
+# a different and materially riskier problem than the angular math below,
+# and not something to write for the first time with no way to test it.
+# Left for follow-up work with an actual verification path.
+
+class PanchangRequest(BaseModel):
+    year: int = Field(..., ge=1800, le=2100)
+    month: int = Field(..., ge=1, le=12)
+    day: int = Field(..., ge=1, le=31)
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
+
+
+class PanchangResponse(BaseModel):
+    date: str
+    sunrise: Optional[str] = None
+    paksha: str  # "Shukla" (waxing) or "Krishna" (waning)
+    tithi_number: int  # 1-15 within the paksha
+    tithi_name: str
+    nakshatra: str
+    yoga_number: int  # 1-27
+    yoga_name: str
+    karana_number: int  # 1-60 across the lunar month
+    karana_name: str
+
+
+def get_karana_name(karana_index: int) -> str:
+    """karana_index is 1-60. Index 1 is the single fixed Kimstughna at the
+    start of the lunar month; indices 58-60 are the three fixed karanas at
+    its end (Shakuni, Chatushpada, Naga); everything between cycles through
+    the seven movable karanas (56 slots = 8 full cycles of 7)."""
+    if karana_index == 1:
+        return "Kimstughna"
+    if karana_index >= 58:
+        return KARANA_FIXED_END[karana_index - 58]
+    return KARANA_MOVABLE[(karana_index - 2) % 7]
+
+
+@app.post("/api/v1/panchang", response_model=PanchangResponse)
+async def panchang(payload: PanchangRequest):
+    try:
+        tz_str = tf.timezone_at(lng=payload.longitude, lat=payload.latitude) or "UTC"
+        sunrise_str, _ = get_solar_timings(
+            latitude=payload.latitude, longitude=payload.longitude,
+            year=payload.year, month=payload.month, day=payload.day, timezone_str=tz_str
+        )
+
+        # Classical panchang assigns one tithi/nakshatra/yoga/karana to a
+        # calendar day based on what prevails at that day's sunrise, since
+        # the Vedic day begins at sunrise rather than midnight. Falls back
+        # to local noon if sunrise couldn't be computed (e.g. polar
+        # latitudes, where astral's sunrise call can fail outright).
+        local_tz = pytz.timezone(tz_str)
+        if sunrise_str:
+            h, m, s = (int(x) for x in sunrise_str.split(":"))
+            moment_local = local_tz.localize(datetime(payload.year, payload.month, payload.day, h, m, s))
+        else:
+            moment_local = local_tz.localize(datetime(payload.year, payload.month, payload.day, 12, 0))
+        moment_utc = moment_local.astimezone(pytz.utc)
+
+        swe.set_ephe_path('/usr/share/ephe')
+        swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
+        calc_flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL | swe.FLG_SPEED
+
+        jd = swe.julday(moment_utc.year, moment_utc.month, moment_utc.day, moment_utc.hour + moment_utc.minute / 60.0 + moment_utc.second / 3600.0)
+        sun_result, _ = swe.calc_ut(jd, swe.SUN, calc_flags)
+        moon_result, _ = swe.calc_ut(jd, swe.MOON, calc_flags)
+        sun_lon = sun_result[0]
+        moon_lon = moon_result[0]
+        swe.close()
+
+        moon_sun_diff = (moon_lon - sun_lon) % 360.0
+
+        tithi_index = int(moon_sun_diff / 12.0)  # 0-29
+        paksha = "Shukla" if tithi_index < 15 else "Krishna"
+        tithi_in_paksha = (tithi_index % 15) + 1  # 1-15
+        tithi_name = "Purnima" if tithi_index == 14 else ("Amavasya" if tithi_index == 29 else TITHI_NAMES[tithi_index % 15])
+
+        nakshatra_name, _ = get_nakshatra_info(moon_lon)
+
+        yoga_index = int(((moon_lon + sun_lon) % 360.0) / NAKSHATRA_ARC)  # 0-26
+        yoga_name = YOGA_NAMES[yoga_index]
+
+        karana_index = int(moon_sun_diff / 6.0) + 1  # 1-60
+        karana_name = get_karana_name(karana_index)
+
+        return PanchangResponse(
+            date=f"{payload.day:02d} {['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][payload.month]} {payload.year}",
+            sunrise=sunrise_str,
+            paksha=paksha,
+            tithi_number=tithi_in_paksha,
+            tithi_name=tithi_name,
+            nakshatra=nakshatra_name,
+            yoga_number=yoga_index + 1,
+            yoga_name=yoga_name,
+            karana_number=karana_index,
+            karana_name=karana_name,
+        )
+
+    except Exception as err:
+        swe.close()
+        raise HTTPException(status_code=500, detail=str(err))

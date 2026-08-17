@@ -11,7 +11,7 @@
  */
 export const CONTENT_REVISIONS = {
   /** Home, about, and the standing marketing surfaces. */
-  core: "2026-08-16",
+  core: "2026-08-17",
   /** `src/lib/personal-appraisals/i18n/content.ts` — turnaround now 3–4 weeks. */
   appraisals: "2026-08-16",
   /** `src/lib/tools/landing-content.ts`. */
@@ -19,7 +19,7 @@ export const CONTENT_REVISIONS = {
   /** `src/lib/education/*-content.ts` long-form articles. */
   articles: "2026-06-06",
   /** Nakshatra / rashi / graha entity corpus. */
-  entities: "2026-06-06",
+  entities: "2026-08-17",
   /** `src/lib/education/horoscope-engine.ts` output rotates on a weekly cycle. */
   horoscope: "2026-08-16",
   /** `src/lib/vedic-course/`. */

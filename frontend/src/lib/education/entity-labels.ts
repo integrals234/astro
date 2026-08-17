@@ -29,13 +29,13 @@ export const entityLabels = {
   nakshatrasTitle: {
     en: "Nakshatras",
     hi: "नक्षत्र",
-    ja: "ナクシャトラ（月宿）",
+    ja: "ナクシャトラ一覧（27の月宿）",
     ko: "낙샤트라",
   },
   nakshatrasDescription: {
     en: "The 27 lunar mansions of Vedic astrology — meaning, ruler, deity, and symbolism for each.",
     hi: "वैदिक ज्योतिष के 27 चंद्र नक्षत्र — प्रत्येक का अर्थ, स्वामी, देवता और प्रतीक।",
-    ja: "インド占星術の27の月宿（ナクシャトラ）——それぞれの意味・支配星・神格・象徴。",
+    ja: "インド占星術の27の月宿（ナクシャトラ）一覧——それぞれの意味・支配星・神格・象徴。",
     ko: "베다 점성술의 27개 달의 별자리 — 각각의 의미, 지배 행성, 신격, 상징.",
   },
   rashisTitleLong: {
@@ -53,13 +53,13 @@ export const entityLabels = {
   grahasTitle: {
     en: "Grahas",
     hi: "ग्रह",
-    ja: "グラハ（9惑星）",
+    ja: "ナヴァグラハ一覧（9惑星）",
     ko: "그라하",
   },
   grahasDescription: {
     en: "The nine grahas of Jyotish — what each planet signifies and how it is read in a chart.",
     hi: "ज्योतिष के नवग्रह — प्रत्येक ग्रह का संकेत और कुंडली में उसका पठन।",
-    ja: "ジョーティッシュの9つのグラハ——各惑星の象意と、チャートでの読み方。",
+    ja: "ジョーティッシュの9つのグラハ（ナヴァグラハ）——各惑星の象意と、チャートでの読み方。",
     ko: "조티시의 아홉 그라하 — 각 행성의 의미와 차트에서 읽는 법.",
   },
   relatedEntities: {

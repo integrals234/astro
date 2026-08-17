@@ -83,7 +83,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     description: {
       en: "Draw your kundli in North or South Indian format, with planetary degrees, nakshatras, and house positions.",
       hi: "उत्तर या दक्षिण भारतीय प्रारूप में अपनी कुंडली बनाएँ — ग्रह अंश, नक्षत्र और भाव स्थिति सहित।",
-      ja: "北インド式・南インド式の出生図を作成。惑星の度数、ナクシャトラ、ハウス配置まで表示します。",
+      ja: "北インド式・南インド式の出生図（ネイタルチャート）を作成。惑星の度数、ナクシャトラ、ハウス配置まで、サイデリアル（恒星）方式で正確に表示します。",
       ko: "북인도식 또는 남인도식으로 쿤달리를 작성하고, 행성 도수·낙샤트라·하우스 위치를 확인하세요.",
     },
     useCase: {
@@ -167,7 +167,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     lead: {
       en: "Vimshottari dasha divides a life into planetary periods, calculated from the Moon's nakshatra at birth. This tool computes the full timeline down to four levels.",
       hi: "विंशोत्तरी दशा जीवन को ग्रह-कालों में विभाजित करती है, जिसकी गणना जन्म के समय चंद्रमा के नक्षत्र से होती है। यह उपकरण चार स्तरों तक पूरी समयरेखा निकालता है।",
-      ja: "ヴィムショッタリ・ダシャーは、出生時の月のナクシャトラをもとに人生を惑星の期間に分けるものです。本ツールでは4階層までの周期を計算します。",
+      ja: "ヴィムショッタリ・ダシャーは、出生時の月のナクシャトラをもとに人生を惑星の期間に分けるものです。土星期やラーフ期など、九惑星それぞれの期間を含め、本ツールでは4階層までの周期を計算します。",
       ko: "비쇼타리 다샤는 출생 시 달의 낙샤트라를 기준으로 삶을 행성 주기로 나눕니다. 이 도구는 4단계까지 전체 타임라인을 계산합니다.",
     },
     faqs: [
@@ -672,7 +672,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     lead: {
       en: "Saturn moves slowly — about two and a half years per sign — so its periods are read as long chapters rather than single events. This page shows two readings of the same planet: Sade Sati, the Vedic three-sign passage centred on your natal Moon, and Saturn return, the Western framing of Saturn's ~29.5-year orbit completing.",
       hi: "शनि धीरे चलता है — प्रति राशि लगभग ढाई वर्ष — इसलिए इसके काल एकल घटनाओं के बजाय लंबे अध्यायों के रूप में पढ़े जाते हैं। यह पृष्ठ एक ही ग्रह की दो पद्धतियाँ दिखाता है: साढ़े साती, जन्म चंद्रमा पर केंद्रित तीन-राशि पद्धति, और शनि की वापसी, शनि की लगभग 29.5 वर्षीय परिक्रमा।",
-      ja: "土星の動きは遅く、一つの星座を通過するのに約2年半かかるため、その周期は単発の出来事ではなく長い章として読まれます。当ページは同じ惑星の二つの読み方を示します。出生時の月を中心とした三星座にわたるヴェーダ式のサデ・サティと、約29.5年で一周する土星の公転という西洋式の土星回帰です。",
+      ja: "土星の動きは遅く、一つの星座を通過するのに約2年半かかるため、その周期は単発の出来事ではなく長い章として読まれます。当ページは同じ惑星の二つの読み方を示します。出生時の月を中心とした三星座にわたるヴェーダ式のサデ・サティ（サディサティ）と、約29.5年で一周する土星の公転という西洋式の土星回帰です。",
       ko: "토성은 천천히 움직이며 — 한 별자리를 지나는 데 약 2년 반이 걸립니다 — 그래서 그 주기는 단일 사건이 아니라 긴 장(章)으로 읽힙니다. 이 페이지는 같은 행성의 두 가지 해석을 보여줍니다. 출생 달을 중심으로 한 세 별자리에 걸친 베다식 사데 사티와, 약 29.5년 만에 한 바퀴 도는 토성의 공전이라는 서양식 토성 회귀입니다.",
     },
     faqs: [

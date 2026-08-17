@@ -63,8 +63,8 @@ export interface SharedCopy {
 export const sharedCopy: Record<AppLanguage, SharedCopy> = {
   en: {
     metadata: {
-      title: "Jyotish Life",
-      description: "Vedic astrology charts, learning, and horoscopes.",
+      title: "Jyotish Life — Free Vedic Astrology Birth Chart & Horoscope",
+      description: "Generate a free Vedic astrology birth chart (kundli), horoscope, dasha timeline, and compatibility check — precise sidereal calculations, explained in plain language.",
     },
     navigation: {
       home: "Home",
@@ -132,8 +132,8 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
   },
   hi: {
     metadata: {
-      title: "ज्योतिष लाइफ़",
-      description: "वैदिक ज्योतिष कुंडलियाँ, अध्ययन और राशिफल।",
+      title: "Jyotish Life — निःशुल्क वैदिक ज्योतिष कुंडली और होरोस्कोप",
+      description: "जन्म तिथि से निःशुल्क कुंडली (जन्म कुंडली), होरोस्कोप, दशा और अनुकूलता जाँच बनाएं — सटीक निरयण गणना, सरल भाषा में समझाई गई।",
     },
     navigation: {
       home: "मुखपृष्ठ",
@@ -201,8 +201,8 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
   },
   ja: {
     metadata: {
-      title: "Jyotish Life",
-      description: "ヴェーダ占星術のチャート、学習、ホロスコープ。",
+      title: "インド占星術で出生図・ホロスコープを無料作成｜Jyotish Life",
+      description: "生年月日から出生図・ホロスコープを無料作成。ダシャー、ナクシャトラ、相性診断まで、正確なスイス天体暦によるインド占星術（ヴェーダ占星術）ツール。",
     },
     navigation: {
       home: "ホーム",
@@ -270,8 +270,8 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
   },
   ko: {
     metadata: {
-      title: "Jyotish Life",
-      description: "베다 점성술 차트, 학습 및 운세.",
+      title: "베다 점성술 무료 출생 차트·호로스코프 | Jyotish Life",
+      description: "생년월일로 무료 출생 차트(쿤달리)와 호로스코프를 작성하세요. 다샤, 낙샤트라, 궁합 확인까지 — 정밀한 항성 계산을 쉬운 말로.",
     },
     navigation: {
       home: "홈",

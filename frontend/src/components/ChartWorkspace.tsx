@@ -6,14 +6,11 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { m, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
-import { Search, MapPin, Sparkles, Eye, Download, Bookmark, BookmarkCheck, LayoutDashboard } from 'lucide-react';
+import { Search, MapPin, Sparkles, Eye, LayoutDashboard } from 'lucide-react';
 import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
-import KundliChart from '@/components/KundliChart';
-import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import type {
-  Dasha,
   ChartData,
   ChartFormData,
   LocationResult,
@@ -25,13 +22,13 @@ import { useToast } from '@/components/ui/Toaster';
 import { popPresence, hoverLift, tapPress } from '@/lib/motion/tokens';
 import { parseChartPrefill } from '@/lib/chart-prefill';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
-import type { AppLanguage } from '@/lib/i18n/language';
-import { chartView, type ChartView } from '@/lib/chart-render';
-import {
-  formatDMS,
-  formatDashaDisplayDate,
-  planetSymbols,
-} from '@/lib/chart-format';
+import type { ChartView } from '@/lib/chart-render';
+import ChartFigure from '@/components/chart/ChartFigure';
+import ChartMetaStrip from '@/components/chart/ChartMetaStrip';
+import ChartResultHeader from '@/components/chart/ChartResultHeader';
+import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
+import AspectsGrid from '@/components/chart/AspectsGrid';
+import DashaTimeline from '@/components/chart/DashaTimeline';
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
@@ -58,61 +55,6 @@ const TAB_TO_VIEW: Partial<Record<ChartTab, ChartView>> = {
   Chandra: 'moon',
   Gochar: 'gochar',
 };
-
-// --- FLUID ACCORDION COMPONENT ---
-const DashaNode = ({ dasha, level = 1, t, lang }: { dasha: Dasha, level?: number, t: ChartTranslations, lang: AppLanguage }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const hasSubs = dasha.sub_dashas && dasha.sub_dashas.length > 0;
-  
-  const levelStyles: Record<number, string> = {
-    1: "bg-washi-elevated border-border text-ink font-body font-semibold text-lg p-4",
-    2: "bg-washi-elevated border-border text-ink font-body font-medium text-md p-3 ml-4",
-    3: "bg-washi border-border text-text font-body font-medium text-sm p-2 ml-8",
-    4: "bg-transparent border-transparent text-text-muted font-body font-normal text-xs p-1.5 ml-12",
-  };
-
-  return (
-    <div className="w-full">
-      <div onClick={() => hasSubs && setIsOpen(!isOpen)} className={`flex justify-between items-center rounded-md border cursor-pointer transition-colors duration-200 mb-1 ${levelStyles[level]}`}>
-        <div className="flex items-center gap-2">
-          {hasSubs && <m.span animate={{ rotate: isOpen ? 90 : 0 }} className="text-[10px] text-moss">▶</m.span>}
-          {!hasSubs && <span className="w-3"></span>} 
-          <span>
-            <span className="mr-2 text-terracotta font-chart">{planetSymbols[dasha.lord]}</span>
-            {t.planets[dasha.lord]}
-          </span>
-        </div>
-        <div className="text-right flex gap-4 font-chart text-xs text-text-muted tabular-nums">
-          <span>{formatDashaDisplayDate(dasha.start_date, lang)}</span>
-          <span className="text-border">|</span>
-          <span>{formatDashaDisplayDate(dasha.end_date, lang)}</span>
-        </div>
-      </div>
-      <AnimatePresence>
-        {isOpen && hasSubs && (
-          <m.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }} className="overflow-hidden border-l border-border ml-4 pl-2">
-            {dasha.sub_dashas!.map((sub, i) => <DashaNode key={i} dasha={sub} level={level + 1} t={t} lang={lang} />)}
-          </m.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
-// --- DIGNITY BADGE COMPONENT ---
-const DignityBadge = ({ dignity, t }: { dignity: string, t: ChartTranslations }) => {
-  const styles: Record<string, string> = {
-    "Exalted": "washi-status-positive",
-    "Debilitated": "washi-status-caution",
-    "Own Sign": "washi-status-positive",
-    "Neutral": "washi-status-neutral",
-  };
-  return (
-    <span className={`text-[10px] px-2 py-0.5 border-0 font-body font-semibold uppercase tracking-wider ${styles[dignity] || styles["Neutral"]}`}>
-      {t.ui.dignity[dignity] ?? dignity}
-    </span>
-  );
-}
 
 // --- MAIN DASHBOARD ---
 function ChartWorkspaceInner({
@@ -458,21 +400,11 @@ function ChartWorkspaceInner({
     finally { setIsLoading(false); }
   };
 
-  // Byte-for-byte equivalent of the workspace's former private getRenderData,
-  // now the single shared projection also used by ChartPreviewResult and the
-  // tool panels. See chart-render.ts for the D9/Chalit customSign notes.
+  // Which of the five projections the active tab needs, if any (Details,
+  // Aspects and Dasha don't draw a kundli). ChartFigure computes the actual
+  // projection itself via chartView() — see chart-render.ts for the D9/Chalit
+  // customSign notes.
   const view = TAB_TO_VIEW[activeTab];
-  const renderData = chartData && view
-    ? chartView(chartData, view, t.planets, {
-        gocharBase: gocharBase === 'Chandra' ? 'moon' : 'lagna',
-      })
-    : {
-        planets: [],
-        transitPlanets: [],
-        ascendantSign: 'Aries',
-        showAscendant: false,
-        ascendantDegree: 0,
-      };
 
   if (!isClient) return null;
 
@@ -623,37 +555,16 @@ function ChartWorkspaceInner({
             {chartData ? (
               <m.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="washi-card text-text overflow-hidden">
                 
-                <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-border bg-washi">
-                  <div>
-                    <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">{t.subject}</div>
-                    <div className="font-header text-lg text-ink">{personName.trim() || '—'}</div>
-                  </div>
-                  <div className="flex flex-wrap items-center justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={handleDownloadPdf}
-                      className="washi-btn-secondary flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-wider transition-colors hover:bg-terracotta/10"
-                    >
-                      <Download size={14} />
-                      {t.downloadPdf}
-                    </button>
-                    {enablePersistence && currentChartId && (
-                      <button
-                        type="button"
-                        onClick={() => handleToggleSave()}
-                        disabled={isSavingChart}
-                        className={`flex items-center gap-2 px-4 py-2 text-xs font-body font-semibold uppercase tracking-wider rounded-md border transition-colors ${
-                          isCurrentSaved
-                            ? 'border-terracotta bg-terracotta/10 text-terracotta'
-                            : 'border-terracotta bg-transparent text-terracotta hover:bg-terracotta/10'
-                        }`}
-                      >
-                        {isCurrentSaved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-                        {isSavingChart ? t.savingChart : isCurrentSaved ? t.savedChart : t.saveChart}
-                      </button>
-                    )}
-                  </div>
-                </div>
+                <ChartResultHeader
+                  subject={personName}
+                  t={t}
+                  onDownloadPdf={handleDownloadPdf}
+                  save={
+                    enablePersistence && currentChartId
+                      ? { isSaved: isCurrentSaved, isBusy: isSavingChart, onToggle: () => handleToggleSave() }
+                      : undefined
+                  }
+                />
 
                 {/* NEW TABS NAVIGATION */}
                 <div className="flex border-b border-border overflow-x-auto no-scrollbar">
@@ -666,83 +577,24 @@ function ChartWorkspaceInner({
 
                 <div className="p-8 md:p-12 min-h-[600px]">
                   
-                  {/* Top Grid Info */}
-                  <div className="flex justify-between items-start mb-10 pb-6 border-b border-border">
-                    <div className="space-y-5">
-                      <div>
-                        <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest mb-1">{t.timezone}</div>
-                        <div className="font-chart text-sm text-ink">{chartData.timezone_detected}</div>
-                      </div>
-                      {chartData.sunrise && (
-                        <div>
-                          <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest mb-1">{t.sunrise}</div>
-                          <div className="font-chart text-sm text-text font-medium">{chartData.sunrise}</div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-5 text-right">
-                      <div>
-                        <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest mb-1">{t.absoluteLagna}</div>
-                        <div className="font-chart text-sm text-terracotta font-semibold">{formatDMS(chartData.ascendant_longitude)}</div>
-                      </div>
-                      {chartData.sunset && (
-                        <div>
-                          <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest mb-1">{t.sunset}</div>
-                          <div className="font-chart text-sm text-text font-medium">{chartData.sunset}</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <ChartMetaStrip data={chartData} t={t} />
 
                   <AnimatePresence mode="wait">
                     <m.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
                       
                       {/* STANDARD CHARTS */}
-                      {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
-                        <div className="flex flex-col items-center">
-                          <h2 className={`font-header text-ink mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
-                            {t.tabTitles[activeTab]}
-                          </h2>
-                          
-                          {activeTab === 'Gochar' && (
-                            <div className="flex flex-col items-center gap-3 mb-8">
-                              <div className="washi-segmented">
-                                <button onClick={() => setGocharBase('Lagna')} className={`px-5 py-2 font-body uppercase tracking-wider transition-colors ${gocharBase === 'Lagna' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.lagnaBase}</button>
-                                <button onClick={() => setGocharBase('Chandra')} className={`px-5 py-2 font-body uppercase tracking-wider transition-colors ${gocharBase === 'Chandra' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>{t.chandraBase}</button>
-                              </div>
-                              <div className="inline-flex items-center gap-4 text-[11px] font-body text-text-muted">
-                                <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-terracotta" />{t.tabTitles.D1}</span>
-                                <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-moss" />{t.ui.transitBadge}</span>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Conditional Chart Rendering */}
-                          {chartStyle === 'North' ? (
-                            <KundliChart 
-                              planets={renderData.planets} 
-                              transitPlanets={renderData.transitPlanets} 
-                              ascendantSign={renderData.ascendantSign}
-                              ascLabel={renderData.showAscendant ? t.ui.asc : undefined}
-                              ascDegree={renderData.showAscendant ? renderData.ascendantDegree : undefined}
-                              transitLabel={t.ui?.transitBadge}
-                              accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
-                              useSymbols={useSymbols}
-                            />
-                          ) : (
-                            <SouthKundliChart 
-                              planets={renderData.planets} 
-                              transitPlanets={renderData.transitPlanets} 
-                              ascendantSign={renderData.ascendantSign}
-                              ascLabel={renderData.showAscendant ? t.ui.asc : undefined}
-                              ascDegree={renderData.showAscendant ? renderData.ascendantDegree : undefined}
-                              transitLabel={t.ui?.transitBadge}
-                              accessibility={{ planetAt: t.planetAt, transitPlanet: t.transitPlanet, retrograde: t.retrogradeLong }}
-                              useSymbols={useSymbols}
-                            />
-                          )}
-
-                        </div>
+                      {view && (
+                        <ChartFigure
+                          data={chartData}
+                          view={view}
+                          t={t}
+                          lang={lang}
+                          chartStyle={chartStyle}
+                          useSymbols={useSymbols}
+                          gocharBase={gocharBase}
+                          onGocharBaseChange={setGocharBase}
+                          controls="none"
+                        />
                       )}
 
                       {/* NEW: PLANETARY DETAILS TAB */}
@@ -751,54 +603,7 @@ function ChartWorkspaceInner({
                             <h2 className={`font-header text-ink mb-8 flex items-center gap-2 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
                               <Sparkles className="text-terracotta" size={24} /> {t.tabTitles?.Details}
                             </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                              {chartData.planets.map((p, idx) => {
-                                // Force Rahu/Ketu Retrograde locally for the details cards
-                                const isRetro = p.name === 'Rahu' || p.name === 'Ketu' ? true : p.is_retrograde;
-                                
-                                return (
-                                <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card p-5">
-                                  <div className="flex justify-between items-start mb-3">
-                                    <div className="flex items-center gap-2">
-                                      <h3 className={`font-body font-semibold text-ink ${lang === 'hi' ? 'text-xl' : 'text-lg'}`}>
-                                        <span className="mr-2 font-chart text-terracotta">{planetSymbols[p.name]}</span>
-                                        {t.planets[p.name]}
-                                      </h3>
-                                      {isRetro && (
-                                        <span className={`font-body font-semibold washi-status-caution px-2 py-0.5 uppercase tracking-wider ${lang === 'hi' ? 'text-xs' : 'text-[10px]'}`}>
-                                          {t.ui.retrograde}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <DignityBadge dignity={p.dignity} t={t} />
-                                  </div>
-                                  <div className="space-y-2 text-sm text-text-muted">
-                                    <div className="flex justify-between">
-                                      <span className={lang === 'hi' ? 'text-base' : ''}>{t.ui?.house} {p.d1_house}</span> 
-                                      <span className="font-chart text-ink">{t.signs[p.sign]} {formatDMS(p.longitude)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <span className={lang === 'hi' ? 'text-base' : ''}>{t.ui?.lord}</span> 
-                                      <span className={`font-medium text-ink ${lang === 'hi' ? 'text-base' : ''}`}>{t.planets[p.sign_lord]}</span>
-                                    </div>
-                                    <div className="pt-2 mt-2 border-t border-border">
-                                      <div className="flex justify-between items-center">
-                                        <span className={`font-body font-semibold text-terracotta uppercase tracking-widest ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}>
-                                        {t.ui.nakshatraLabel}
-                                        </span> 
-                                        <span className={`font-semibold text-ink ${lang === 'hi' ? 'text-base' : 'text-sm'}`}>
-                                          {t.nakshatras[p.nakshatra]}
-                                        </span>
-                                      </div>
-                                      <div className="flex justify-between items-center mt-1">
-                                        <span className="text-[10px] text-text-muted uppercase tracking-widest">{t.ui?.pada}</span> 
-                                        <span className="font-chart text-xs text-text-muted">{p.nakshatra_pada}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </m.div>
-                              )})}
-                            </div>
+                            <PlanetDetailsGrid planets={chartData.planets} t={t} lang={lang} />
                         </div>
                       )}
 
@@ -806,39 +611,13 @@ function ChartWorkspaceInner({
                       {activeTab === 'Aspects' && (
                         <div className="space-y-6">
                            <h2 className="text-2xl font-header text-ink mb-8 flex items-center gap-2"><Eye className="text-terracotta" size={24} /> {t.tabTitles?.Aspects}</h2>
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             {chartData.planets.filter(p => p.aspects_houses.length > 0).map((p, idx) => (
-                               <m.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }} key={idx} className="washi-card flex flex-col p-5">
-                                  <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-full washi-icon-chip font-chart text-base">{planetSymbols[p.name]}</div>
-                                    <span className="font-body font-semibold text-ink">{t.planets[p.name]}</span>
-                                    <span className="text-xs text-text-muted">{t.inHouse} {p.d1_house}</span>
-                                  </div>
-                                  <div>
-                                    <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest mb-2">{t.ui?.aspects}</div>
-                                    <div className="flex flex-wrap gap-2">
-                                      {p.aspects_houses.map(h => (
-                                        <div key={h} className="border border-border px-3 py-1.5 rounded text-sm font-body font-medium text-text">
-                                          {t.ui?.house} {h}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                               </m.div>
-                             ))}
-                           </div>
+                           <AspectsGrid planets={chartData.planets} t={t} />
                         </div>
                       )}
 
                       {/* DASHA TAB */}
                       {activeTab === 'Dasha' && (
-                        <div className="max-w-3xl mx-auto">
-                          <h2 className="text-2xl font-header text-ink mb-2 text-center">{t.dashaTimeline}</h2>
-                          <p className="text-center text-[10px] text-text-muted uppercase tracking-widest font-body font-semibold mb-10">{t.dashaSub}</p>
-                          <div className="space-y-1">
-                            {chartData.vimshottari_dashas.map((dasha, i) => <DashaNode key={i} dasha={dasha} t={t} lang={lang} />)}
-                          </div>
-                        </div>
+                        <DashaTimeline dashas={chartData.vimshottari_dashas} t={t} lang={lang} />
                       )}
 
                     </m.div>

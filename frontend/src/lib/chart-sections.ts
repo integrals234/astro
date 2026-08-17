@@ -7,10 +7,10 @@ import type { ChartView } from "@/lib/chart-render";
  * A superset of `ChartView`: the five projections, the three non-drawing
  * tabs (planetary details, aspects, dasha) `ChartWorkspace` also renders,
  * `summary` — a 4-up "the answer, before the diagrams" card
- * (`ChartSummaryCard`) the vertical report leads with — and `yogas`, the
- * planetary-combination panel (`YogaPanel`). Grows again once
- * ashtakavarga/numerology land, kept to only what has a component behind
- * it today.
+ * (`ChartSummaryCard`) the vertical report leads with — `yogas`, the
+ * planetary-combination panel (`YogaPanel`) — and `ashtakavarga`, the
+ * bindu-table panel (`AshtakavargaPanel`). Grows again once numerology
+ * lands, kept to only what has a component behind it today.
  */
 export type ChartSectionId =
   | "summary"
@@ -22,7 +22,8 @@ export type ChartSectionId =
   | "planets"
   | "aspects"
   | "dasha"
-  | "yogas";
+  | "yogas"
+  | "ashtakavarga";
 
 /** The five sections that draw a chart figure, mapped to their projection. */
 export const SECTION_TO_VIEW: Partial<Record<ChartSectionId, ChartView>> = {

@@ -15,7 +15,7 @@ export const CONTENT_REVISIONS = {
   /** `src/lib/personal-appraisals/i18n/content.ts` — turnaround now 3–4 weeks. */
   appraisals: "2026-08-16",
   /** `src/lib/tools/landing-content.ts`. */
-  tools: "2026-06-06",
+  tools: "2026-08-17",
   /** `src/lib/education/*-content.ts` long-form articles. */
   articles: "2026-06-06",
   /** Nakshatra / rashi / graha entity corpus. */

@@ -58,73 +58,14 @@ export interface ToolLanding {
 
 export const TOOL_LANDINGS: ToolLanding[] = [
   {
-    slug: "free-horoscope",
-    sections: ["lagna", "planets"],
-    chartHandoff: "generic",
-    title: {
-      en: "Free Vedic horoscope generator",
-      hi: "निःशुल्क वैदिक कुंडली जनरेटर",
-      ja: "無料ホロスコープ作成",
-      ko: "무료 베다 호로스코프 생성",
-    },
-    description: {
-      en: "Generate a precise Vedic birth chart from your date, time, and place of birth. Free, no account required.",
-      hi: "अपनी जन्म तिथि, समय और स्थान से सटीक वैदिक जन्म कुंडली बनाएँ। निःशुल्क, खाते की आवश्यकता नहीं।",
-      ja: "生年月日・出生時刻・出生地から、精密なヴェーダ式ホロスコープを作成します。無料、登録不要です。",
-      ko: "생년월일, 출생 시각, 출생지로 정확한 베다 출생 차트를 생성합니다. 무료이며 가입이 필요 없습니다.",
-    },
-    useCase: {
-      en: "Use this before booking anything: see your chart's shape for free, then decide if a full reading is worth it.",
-      hi: "कुछ भी बुक करने से पहले इसे आज़माएँ: पहले निःशुल्क अपनी कुंडली की बनावट देखें, फिर तय करें कि पूर्ण परामर्श लेना है या नहीं।",
-      ja: "鑑定を予約する前に。まず無料でチャートの全体像を見て、本格的な鑑定が必要かどうかご判断ください。",
-      ko: "무엇이든 예약하기 전에. 먼저 무료로 차트의 전체 모습을 보고, 정식 감정이 필요한지 판단해 보세요.",
-    },
-    lead: {
-      en: "Enter your birth details below to draw a full Vedic birth chart. The calculation uses the sidereal zodiac and real ephemeris data, and nothing is stored unless you sign in.",
-      hi: "पूर्ण वैदिक जन्म कुंडली बनाने के लिए नीचे अपना जन्म विवरण दर्ज करें। गणना निरयण राशिचक्र और वास्तविक ऐफ़ेमेरिस डेटा पर आधारित है, और साइन इन किए बिना कुछ भी संग्रहीत नहीं होता।",
-      ja: "以下に出生データを入力すると、ヴェーダ式の出生図を作成します。計算にはサイデリアル黄道と実測の天体暦データを用います。ログインしない限り、データは保存されません。",
-      ko: "아래에 출생 정보를 입력하면 베다 출생 차트를 작성합니다. 계산에는 항성 황도와 실제 천체력 데이터를 사용하며, 로그인하지 않으면 아무것도 저장되지 않습니다.",
-    },
-    faqs: [
-      {
-        question: {
-          en: "Is the chart generator really free?",
-          hi: "क्या कुंडली जनरेटर वास्तव में निःशुल्क है?",
-          ja: "ホロスコープ作成は本当に無料ですか？",
-          ko: "차트 생성기는 정말 무료인가요?",
-        },
-        answer: {
-          en: "Yes. Generating and viewing a chart is free and does not require an account. Signing in only adds the ability to save charts to your library.",
-          hi: "हाँ। कुंडली बनाना और देखना निःशुल्क है और इसके लिए खाते की आवश्यकता नहीं है। साइन इन करने पर केवल कुंडलियाँ सहेजने की सुविधा मिलती है।",
-          ja: "はい。チャートの作成と閲覧は無料で、アカウントも不要です。ログインすると、作成したチャートを保存できるようになります。",
-          ko: "네. 차트 생성과 열람은 무료이며 계정이 필요하지 않습니다. 로그인하면 차트를 저장할 수 있습니다.",
-        },
-      },
-      {
-        question: {
-          en: "What if I do not know my exact birth time?",
-          hi: "यदि मुझे अपना सटीक जन्म समय नहीं पता तो क्या करूँ?",
-          ja: "正確な出生時刻がわからない場合はどうすればよいですか？",
-          ko: "정확한 출생 시각을 모르면 어떻게 하나요?",
-        },
-        answer: {
-          en: "The ascendant and house positions depend on birth time, so an approximate time gives approximate houses. Planetary sign positions other than the Moon change slowly and stay broadly reliable.",
-          hi: "लग्न और भाव जन्म समय पर निर्भर करते हैं, इसलिए अनुमानित समय से भाव भी अनुमानित होंगे। चंद्रमा को छोड़कर अन्य ग्रहों की राशि-स्थिति धीरे बदलती है और मोटे तौर पर विश्वसनीय रहती है।",
-          ja: "アセンダントとハウスの位置は出生時刻に依存するため、時刻が概算であればハウスも概算になります。月以外の惑星の星座位置はゆっくり変化するため、おおむね信頼できます。",
-          ko: "상승궁과 하우스 위치는 출생 시각에 좌우되므로, 시각이 대략적이면 하우스도 대략적입니다. 달을 제외한 행성의 별자리 위치는 천천히 변하므로 대체로 신뢰할 수 있습니다.",
-        },
-      },
-    ],
-  },
-  {
     slug: "birth-chart",
     sections: ["lagna", "planets"],
     chartHandoff: "generic",
     title: {
-      en: "Vedic birth chart (kundli) calculator",
-      hi: "वैदिक जन्म कुंडली कैलकुलेटर",
-      ja: "インド占星術 出生図（クンダリ）作成",
-      ko: "베다 출생 차트(쿤달리) 계산기",
+      en: "Free Vedic birth chart (kundli) calculator",
+      hi: "निःशुल्क वैदिक जन्म कुंडली कैलकुलेटर",
+      ja: "無料インド占星術 出生図（クンダリ）作成",
+      ko: "무료 베다 출생 차트(쿤달리) 계산기",
     },
     description: {
       en: "Draw your kundli in North or South Indian format, with planetary degrees, nakshatras, and house positions.",
@@ -157,6 +98,34 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "दोनों एक ही कुंडली को अलग विन्यास में दिखाते हैं। उत्तर भारतीय प्रारूप में भाव स्थिर रहते हैं और राशियाँ बदलती हैं; दक्षिण भारतीय में राशियाँ स्थिर रहती हैं और लग्न चिह्नित होता है।",
           ja: "同じチャートを異なる配置で表したものです。北インド式ではハウスが固定され星座が動き、南インド式では星座が固定されアセンダントが印で示されます。",
           ko: "같은 차트를 다른 배치로 보여줍니다. 북인도식은 하우스가 고정되고 별자리가 움직이며, 남인도식은 별자리가 고정되고 상승궁을 표시합니다.",
+        },
+      },
+      {
+        question: {
+          en: "Is the chart generator really free?",
+          hi: "क्या कुंडली जनरेटर वास्तव में निःशुल्क है?",
+          ja: "ホロスコープ作成は本当に無料ですか？",
+          ko: "차트 생성기는 정말 무료인가요?",
+        },
+        answer: {
+          en: "Yes. Generating and viewing a chart is free and does not require an account. Signing in only adds the ability to save charts to your library.",
+          hi: "हाँ। कुंडली बनाना और देखना निःशुल्क है और इसके लिए खाते की आवश्यकता नहीं है। साइन इन करने पर केवल कुंडलियाँ सहेजने की सुविधा मिलती है।",
+          ja: "はい。チャートの作成と閲覧は無料で、アカウントも不要です。ログインすると、作成したチャートを保存できるようになります。",
+          ko: "네. 차트 생성과 열람은 무료이며 계정이 필요하지 않습니다. 로그인하면 차트를 저장할 수 있습니다.",
+        },
+      },
+      {
+        question: {
+          en: "What if I do not know my exact birth time?",
+          hi: "यदि मुझे अपना सटीक जन्म समय नहीं पता तो क्या करूँ?",
+          ja: "正確な出生時刻がわからない場合はどうすればよいですか？",
+          ko: "정확한 출생 시각을 모르면 어떻게 하나요?",
+        },
+        answer: {
+          en: "The ascendant and house positions depend on birth time, so an approximate time gives approximate houses. Planetary sign positions other than the Moon change slowly and stay broadly reliable.",
+          hi: "लग्न और भाव जन्म समय पर निर्भर करते हैं, इसलिए अनुमानित समय से भाव भी अनुमानित होंगे। चंद्रमा को छोड़कर अन्य ग्रहों की राशि-स्थिति धीरे बदलती है और मोटे तौर पर विश्वसनीय रहती है।",
+          ja: "アセンダントとハウスの位置は出生時刻に依存するため、時刻が概算であればハウスも概算になります。月以外の惑星の星座位置はゆっくり変化するため、おおむね信頼できます。",
+          ko: "상승궁과 하우스 위치는 출생 시각에 좌우되므로, 시각이 대략적이면 하우스도 대략적입니다. 달을 제외한 행성의 별자리 위치는 천천히 변하므로 대체로 신뢰할 수 있습니다.",
         },
       },
     ],

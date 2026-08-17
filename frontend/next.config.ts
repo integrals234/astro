@@ -13,6 +13,10 @@ const LEGACY_PATHS: Array<{ from: string; to: string }> = [
   // /blogs shipped with no posts and was removed. It was in the sitemap, so it
   // is indexed — 301 to the article corpus rather than serving a 404.
   { from: "/blogs", to: "/learn-jyotish" },
+  // free-horoscope duplicated birth-chart almost exactly (both drew the
+  // Lagna chart + planetary details); its FAQs and "free" framing moved
+  // into birth-chart rather than being lost.
+  { from: "/tools/free-horoscope", to: "/tools/birth-chart" },
 ];
 
 const nextConfig: NextConfig = {

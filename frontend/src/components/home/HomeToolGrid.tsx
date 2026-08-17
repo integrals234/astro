@@ -51,7 +51,6 @@ import { springDrawer } from "@/lib/motion/tokens";
  * copy and FAQ schema this grid shouldn't repeat eight times over.
  */
 const ICONS: Record<string, LucideIcon> = {
-  "free-horoscope": Sparkles,
   "birth-chart": ScrollText,
   "dasha-calculator": Orbit,
   "nakshatra-finder": Moon,

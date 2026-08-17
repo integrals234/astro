@@ -28,10 +28,10 @@ export default function BookingHandoff({
   const copy = toolHandoffCopy[language][tool];
 
   return (
-    <aside className="washi-card mt-10 p-6 md:p-7">
+    <aside className="washi-card mt-10 p-6 text-center md:p-7">
       <p className="washi-eyebrow mb-2">{copy.eyebrow}</p>
       <h3 className="font-body text-lg text-ink">{copy.heading}</h3>
-      <p className="washi-measure mt-3 text-sm leading-relaxed text-text-muted">
+      <p className="washi-measure mx-auto mt-3 text-sm leading-relaxed text-text-muted">
         {copy.body}
       </p>
       <Link

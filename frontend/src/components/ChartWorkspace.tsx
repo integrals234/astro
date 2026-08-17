@@ -47,6 +47,22 @@ interface ChartWorkspaceProps {
 const CHART_TABS: ChartTab[] = ['D1', 'D9', 'Chalit', 'Chandra', 'Gochar', 'Details', 'Aspects', 'Dasha'];
 const subscribeToClient = () => () => {};
 
+function getDefaultFormData(): ChartFormData {
+  const now = new Date();
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    hour: now.getHours(),
+    minute: now.getMinutes(),
+    latitude: 25.4488,
+    longitude: 78.5698,
+    transit_year: now.getFullYear(),
+    transit_month: now.getMonth() + 1,
+    transit_day: now.getDate(),
+  };
+}
+
 /** `ChartTab` values that correspond to a drawn kundli, mapped to `ChartView`. */
 const TAB_TO_VIEW: Partial<Record<ChartTab, ChartView>> = {
   D1: 'lagna',
@@ -80,22 +96,10 @@ function ChartWorkspaceInner({
   const prefill = parseChartPrefill(searchParams);
 
   const [personName, setPersonName] = useState(() => prefill?.name ?? '');
-  const [formData, setFormData] = useState<ChartFormData>(() => {
-    const now = new Date();
-    return {
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
-      hour: now.getHours(),
-      minute: now.getMinutes(),
-      latitude: 25.4488,
-      longitude: 78.5698,
-      transit_year: now.getFullYear(),
-      transit_month: now.getMonth() + 1,
-      transit_day: now.getDate(),
-      ...prefill?.formPatch,
-    };
-  });
+  const [formData, setFormData] = useState<ChartFormData>(() => ({
+    ...getDefaultFormData(),
+    ...prefill?.formPatch,
+  }));
   
   const [locationQuery, setLocationQuery] = useState("");
   const [debouncedQuery] = useDebounce(locationQuery, 500); 
@@ -118,6 +122,13 @@ function ChartWorkspaceInner({
   const [recentCharts, setRecentCharts] = useState<SavedChartRecord[]>([]);
   const [savedCharts, setSavedCharts] = useState<SavedChartRecord[]>([]);
   const [isSavingChart, setIsSavingChart] = useState(false);
+  /**
+   * Set once "New chart" is clicked. Blocks the primary-profile prefill
+   * below for the rest of this mount — without it, clearing
+   * `selectedLocationName` on reset would make that block's guard true
+   * again and it would silently refill the form with the same person.
+   */
+  const [overrideEntry, setOverrideEntry] = useState(false);
 
   const {
     upsertProfile,
@@ -142,7 +153,8 @@ function ChartWorkspaceInner({
     primaryProfile &&
     appliedProfileId !== primaryProfile.id &&
     !prefill &&
-    !selectedLocationName
+    !selectedLocationName &&
+    !overrideEntry
   ) {
     // Adjusting state during render rather than in an effect: React re-runs
     // this component before touching the DOM, so there is no cascading render
@@ -279,6 +291,23 @@ function ChartWorkspaceInner({
       console.error(error);
       toast(t.deleteError);
     }
+  };
+
+  /**
+   * Clears the displayed chart so the form is ready for a new person.
+   * Deliberately local-only: the `SavedChart` row already written by
+   * `persistChart` is untouched, so this never deletes anything from a
+   * visitor's saved or recent list.
+   */
+  const handleReset = () => {
+    setChartData(null);
+    setCurrentChartId(null);
+    setIsCurrentSaved(false);
+    setPersonName('');
+    setSelectedLocationName('');
+    setFormData(getDefaultFormData());
+    setActiveTab('D1');
+    setOverrideEntry(true);
   };
 
   const handleDownloadPdf = async () => {
@@ -559,6 +588,7 @@ function ChartWorkspaceInner({
                   subject={personName}
                   t={t}
                   onDownloadPdf={handleDownloadPdf}
+                  onReset={handleReset}
                   save={
                     enablePersistence && currentChartId
                       ? { isSaved: isCurrentSaved, isBusy: isSavingChart, onToggle: () => handleToggleSave() }

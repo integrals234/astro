@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { RotateCcw } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useBirthProfile } from "@/components/profile/ProfileProvider";
@@ -52,6 +53,9 @@ export default function ChartPreviewResult({
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [entry, setEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
   const [computedFor, setComputedFor] = useState<string | null>(null);
+  /** Set by "New chart" — blocks the auto-compute effect below so clearing
+   * `chartData` doesn't just recompute the same remembered person again. */
+  const [overrideEntry, setOverrideEntry] = useState(false);
 
   const runCompute = async (
     formData: ReturnType<typeof natalToChartFormData>,
@@ -80,14 +84,21 @@ export default function ChartPreviewResult({
   // in the effect body, which would otherwise be a bare setState call in the
   // effect's own synchronous path.
   useEffect(() => {
-    if (!isLoaded || !primary || computedFor === primary.id) return;
+    if (!isLoaded || !primary || computedFor === primary.id || overrideEntry) return;
     void (async () => {
       setComputedFor(primary.id);
       trackEvent("tool_opened", { slug: toolSlug, locale: language });
       await runCompute(toChartFormData(primary));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, primary, computedFor]);
+  }, [isLoaded, primary, computedFor, overrideEntry]);
+
+  const handleReset = () => {
+    setChartData(null);
+    setComputedFor(null);
+    setOverrideEntry(true);
+    setEntry(EMPTY_BIRTH_DETAILS);
+  };
 
   const handleEntrySubmit = async () => {
     if (!isBirthDetailsComplete(entry) || !entry.location) return;
@@ -116,7 +127,7 @@ export default function ChartPreviewResult({
     return <div className="washi-card h-72 animate-pulse" aria-hidden />;
   }
 
-  if (!chartData && !primary && status !== "loading") {
+  if (!chartData && (!primary || overrideEntry) && status !== "loading") {
     return (
       <div className="washi-card p-6 md:p-7">
         <p className="mb-4 font-body text-text">{copy.needDetails}</p>
@@ -155,26 +166,38 @@ export default function ChartPreviewResult({
 
   return (
     <div className="space-y-4">
-      {views.length > 1 && (
-        <div className="flex gap-2" role="tablist">
-          {views.map((v) => (
-            <button
-              key={v}
-              type="button"
-              role="tab"
-              aria-selected={activeView === v}
-              onClick={() => setActiveView(v)}
-              className={`washi-badge transition-colors ${
-                activeView === v
-                  ? "border-terracotta text-ink"
-                  : "text-text-muted hover:text-ink"
-              }`}
-            >
-              {copy.viewLabels[v]}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="flex items-center justify-between gap-3">
+        {views.length > 1 ? (
+          <div className="flex gap-2" role="tablist">
+            {views.map((v) => (
+              <button
+                key={v}
+                type="button"
+                role="tab"
+                aria-selected={activeView === v}
+                onClick={() => setActiveView(v)}
+                className={`washi-badge transition-colors ${
+                  activeView === v
+                    ? "border-terracotta text-ink"
+                    : "text-text-muted hover:text-ink"
+                }`}
+              >
+                {copy.viewLabels[v]}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <span />
+        )}
+        <button
+          type="button"
+          onClick={handleReset}
+          className="washi-btn-tertiary flex items-center gap-1.5 px-2 py-2 text-[10px] uppercase tracking-wider"
+        >
+          <RotateCcw size={13} />
+          {t.ui?.resetChart}
+        </button>
+      </div>
 
       <KundliChart
         planets={rendered.planets}

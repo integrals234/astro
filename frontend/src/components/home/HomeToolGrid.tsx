@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Compass,
   Flame,
+  Hash,
   Heart,
   Moon,
   Orbit,
@@ -22,6 +23,7 @@ import { useChartData } from "@/components/chart/ChartDataProvider";
 import ChartSectionBody from "@/components/chart/ChartSectionBody";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
+import NumerologyPanel from "@/components/NumerologyPanel";
 import { trackEvent } from "@/lib/analytics/events";
 import { TOOL_LANDINGS } from "@/lib/tools/landing-content";
 import { homeToolsCopy } from "@/lib/home/tools-copy";
@@ -56,6 +58,7 @@ const ICONS: Record<string, LucideIcon> = {
   "dasha-calculator": Orbit,
   "nakshatra-finder": Moon,
   "mangal-dosha": Flame,
+  numerology: Hash,
   sukuyo: Compass,
   compatibility: Heart,
   "moon-sign": Waves,
@@ -90,7 +93,13 @@ export default function HomeToolGrid() {
       <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {TOOL_LANDINGS.map((tool) => {
           const Icon = ICONS[tool.slug] ?? Sparkles;
-          const expandable = Boolean(chartData) && Boolean(tool.sections || tool.resultPanel);
+          // `sections` renders through ChartSectionBody, which needs a
+          // computed chart. `resultPanel` components (sukuyo,
+          // compatibility, numerology) read the birth profile directly
+          // and don't — numerology specifically is meant to still work
+          // when /api/charts/compute has failed, so gating it on
+          // `chartData` would defeat that.
+          const expandable = tool.sections ? Boolean(chartData) : tool.resultPanel ? Boolean(primary) : false;
           const isOpen = openSlug === tool.slug;
 
           const cardInner = (
@@ -146,7 +155,7 @@ export default function HomeToolGrid() {
                 )}
 
                 <AnimatePresence initial={false}>
-                  {expandable && isOpen && chartData && (
+                  {expandable && isOpen && (
                     <m.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -157,9 +166,12 @@ export default function HomeToolGrid() {
                       <div className="space-y-6 border-t border-border p-4">
                         {tool.resultPanel === "sukuyo" && <SukuyoResult />}
                         {tool.resultPanel === "compatibility" && <CompatibilityResult />}
-                        {tool.sections?.map((id) => (
-                          <ChartSectionBody key={id} id={id} data={chartData} t={t} lang={language} />
-                        ))}
+                        {tool.resultPanel === "numerology" && <NumerologyPanel />}
+                        {tool.sections && chartData
+                          ? tool.sections.map((id) => (
+                              <ChartSectionBody key={id} id={id} data={chartData} t={t} lang={language} />
+                            ))
+                          : null}
                         <Link
                           href={`/tools/${tool.slug}`}
                           className="washi-btn-secondary inline-block text-xs"

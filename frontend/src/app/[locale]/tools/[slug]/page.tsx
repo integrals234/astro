@@ -6,6 +6,7 @@ import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import SukuyoResult from "@/components/tools/SukuyoResult";
 import CompatibilityResult from "@/components/tools/CompatibilityResult";
+import NumerologyPanel from "@/components/NumerologyPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
@@ -133,6 +134,11 @@ export default async function ToolLandingPage({ params }: Params) {
         {tool.resultPanel === "compatibility" ? (
           <div className="mt-10">
             <CompatibilityResult />
+          </div>
+        ) : null}
+        {tool.resultPanel === "numerology" ? (
+          <div className="mt-10">
+            <NumerologyPanel />
           </div>
         ) : null}
         {tool.sections ? (

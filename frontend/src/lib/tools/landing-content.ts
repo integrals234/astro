@@ -35,9 +35,11 @@ export interface ToolLanding {
    * Tools that answer one specific question ("which mansion am I?") get a
    * dedicated component reading the shared birth profile, so the answer
    * appears without re-entering anything. `sukuyo` also sets `sections` to
-   * show the underlying chart below its own result.
+   * show the underlying chart below its own result. `numerology` needs no
+   * computed chart at all — only a birth date — so it's the one panel
+   * here that isn't backed by `ChartSectionBody`.
    */
-  resultPanel?: "sukuyo" | "compatibility";
+  resultPanel?: "sukuyo" | "compatibility" | "numerology";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool
@@ -278,6 +280,68 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "कालसर्प दोष, गजकेसरी, बुधादित्य, चंद्र-मंगल, नीच भंग राजयोग, और पाँच पंचमहापुरुष योग — प्रत्येक केवल तभी दिखाया जाता है जब आपकी कुंडली में इसका प्रमाण मिलता है, ठीक ग्रह और भाव सहित।",
           ja: "カーラ・サルパ・ドーシャ、ガジャ・ケサリ、ブダーディティヤ、チャンドラ・マンガラ、ニーチャ・バンガ・ラージャ・ヨーガ、そして五つのパンチャマハープルシャ・ヨーガです。それぞれ、あなたのチャートに根拠がある場合のみ、正確な惑星とハウスとともに表示されます。",
           ko: "칼 사르프 도샤, 가자 케사리, 부다디티야, 찬드라 망갈라, 니차 방가 라자 요가, 그리고 다섯 판차마하푸루샤 요가입니다. 각각 당신의 차트에 근거가 있을 때만 정확한 행성과 하우스와 함께 표시됩니다.",
+        },
+      },
+    ],
+  },
+  {
+    // Adjacent to Jyotish, not part of it — its own page says so rather
+    // than presenting it as Vedic astrology. 数秘術 carries real Japanese
+    // search volume this site ranks nothing for today, and it needs only
+    // the birth date already on file, no ephemeris call.
+    slug: "numerology",
+    resultPanel: "numerology",
+    title: {
+      en: "Numerology: Mulank, Bhagyank & name number",
+      hi: "अंक ज्योतिष: मूलांक, भाग्यांक और नाम अंक",
+      ja: "数秘術｜ムーランク・バギャーンク・名前の数",
+      ko: "수비학: 물랑크, 바갼크, 이름 수",
+    },
+    description: {
+      en: "Your birth number, destiny number, and — for Latin-script names — a Chaldean name number, each with its ruling planet.",
+      hi: "आपका जन्म अंक, भाग्य अंक, और — रोमन लिपि नामों के लिए — एक कैल्डियन नाम अंक, प्रत्येक के स्वामी ग्रह सहित।",
+      ja: "生年月日から算出するムーランク（誕生数）とバギャーンク（運命数）、ローマ字のお名前があればカルデア式の名前の数も。それぞれの支配星つきです。",
+      ko: "생년월일로 계산하는 물랑크(출생수)와 바갼크(운명수), 로마자 이름이 있다면 칼데아식 이름 수까지, 각각의 지배 행성과 함께 확인하세요.",
+    },
+    useCase: {
+      en: "A quick second read alongside your chart — the birth date you've already entered is all this needs.",
+      hi: "आपकी कुंडली के साथ एक त्वरित अतिरिक्त दृष्टिकोण — इसके लिए बस वही जन्म तिथि चाहिए जो आपने पहले ही दर्ज की है।",
+      ja: "チャートと合わせて手軽に見られる、もう一つの視点です。すでに入力した生年月日があれば十分です。",
+      ko: "차트와 함께 가볍게 볼 수 있는 또 하나의 관점입니다. 이미 입력한 생년월일만 있으면 충분합니다.",
+    },
+    lead: {
+      en: "Numerology reduces a birth date — and optionally a name — to single-digit numbers, each read through a ruling planet. It's a related tradition, not part of Vedic astrology itself, shown here because the same birth date you've entered elsewhere already answers it.",
+      hi: "अंक ज्योतिष जन्म तिथि — और वैकल्पिक रूप से नाम — को एकल अंकों में बदलता है, प्रत्येक को एक स्वामी ग्रह के माध्यम से पढ़ा जाता है। यह वैदिक ज्योतिष का हिस्सा नहीं, एक संबंधित परंपरा है।",
+      ja: "数秘術は、生年月日（および任意でお名前）を一桁の数に還元し、それぞれを支配星を通じて読み解くものです。インド占星術そのものではなく、隣接する伝統です。他の場所ですでに入力した生年月日があれば、ここで算出できます。",
+      ko: "수비학은 생년월일(선택적으로 이름)을 한 자리 숫자로 환원하여 각각을 지배 행성을 통해 읽는 것입니다. 베다 점성술 자체는 아니며 관련된 전통입니다. 다른 곳에서 이미 입력한 생년월일이 있으면 여기서 계산할 수 있습니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "Is numerology part of Vedic astrology?",
+          hi: "क्या अंक ज्योतिष वैदिक ज्योतिष का हिस्सा है?",
+          ja: "数秘術はインド占星術の一部ですか？",
+          ko: "수비학은 베다 점성술의 일부인가요?",
+        },
+        answer: {
+          en: "No — they're related traditions that share the idea of planetary rulership, but numerology works from a birth date's digits rather than the sky at the moment of birth. This page keeps them separate rather than presenting one as the other.",
+          hi: "नहीं — ये संबंधित परंपराएँ हैं जो ग्रह-स्वामित्व का विचार साझा करती हैं, पर अंक ज्योतिष जन्म तिथि के अंकों से काम करता है, जन्म के समय आकाश से नहीं।",
+          ja: "いいえ。両者は支配星という考え方を共有する関連伝統ですが、数秘術は出生時の天空ではなく、生年月日の数字から算出します。当ページは両者を混同せず、別のものとして扱います。",
+          ko: "아니요. 두 전통은 지배 행성이라는 개념을 공유하지만, 수비학은 출생 순간의 하늘이 아니라 생년월일의 숫자로 계산합니다. 이 페이지는 둘을 혼동하지 않고 별개로 다룹니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why is there no name number for some names?",
+          hi: "कुछ नामों के लिए नाम अंक क्यों नहीं दिखता?",
+          ja: "名前の数が表示されない場合があるのはなぜですか？",
+          ko: "일부 이름에는 왜 이름 수가 표시되지 않나요?",
+        },
+        answer: {
+          en: "The Chaldean name-number table assigns values to Latin letters only. Running a name written in kana or hangul through it would produce a number that's wrong under every numerology system, not an approximation of a real one — so this page asks for a Latin spelling instead of guessing.",
+          hi: "कैल्डियन नाम-अंक तालिका केवल रोमन अक्षरों को मान देती है। कोई भी अन्य लिपि गलत परिणाम देगी, इसलिए यह पृष्ठ अनुमान लगाने के बजाय रोमन वर्तनी माँगता है।",
+          ja: "カルデア式の名前の数表は、ラテン文字にのみ数値を割り当てます。かなやハングルの名前をそのまま計算すると、どの数秘術方式でも誤った数になってしまうため、当ページは推測せずローマ字表記を求めます。",
+          ko: "칼데아식 이름 수 표는 라틴 문자에만 값을 부여합니다. 가나나 한글 이름을 그대로 계산하면 어떤 수비학 방식으로도 잘못된 숫자가 나오므로, 이 페이지는 추측 대신 로마자 표기를 요청합니다.",
         },
       },
     ],

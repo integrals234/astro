@@ -1,4 +1,5 @@
 import type { AppLanguage } from "@/lib/i18n/language";
+import type { Dasha } from "@/lib/chart-types";
 
 /**
  * Chart formatting helpers, lifted out of `ChartWorkspace.tsx`.
@@ -80,4 +81,18 @@ export function formatDashaDisplayDate(value: string, lang: AppLanguage): string
         month: "short",
         day: "numeric",
       }).format(parsed);
+}
+
+/** True while `now` falls within `[dasha.start_date, dasha.end_date)`. */
+export function isDashaRunning(dasha: Dasha, now: Date): boolean {
+  const start = new Date(dasha.start_date.replace(/(\d+) (\w+) (\d+)/, "$2 $1, $3"));
+  const end = new Date(dasha.end_date.replace(/(\d+) (\w+) (\d+)/, "$2 $1, $3"));
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
+  return now >= start && now < end;
+}
+
+/** The currently-running mahadasha, or `null` if none matches (shouldn't
+ * happen for a real chart, but dates are string-parsed, not guaranteed). */
+export function findRunningDasha(dashas: readonly Dasha[], now: Date = new Date()): Dasha | null {
+  return dashas.find((d) => isDashaRunning(d, now)) ?? null;
 }

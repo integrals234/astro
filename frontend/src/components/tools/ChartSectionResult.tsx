@@ -26,12 +26,10 @@ import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
  * The tools that used to embed the full chart workspace for this — a
  * component built for someone who wants every tab, every save/load control,
  * and a PDF export — get only the section(s) that answer what they searched
- * for, stacked vertically. Same entry-and-compute flow as
- * `ChartPreviewResult` (birth details once, remembered for every other
- * tool), generalised to any `ChartSectionId` rather than only the three
- * drawable views, and rendered through `ChartSectionBody` so it shares
- * markup with every other section consumer instead of calling `KundliChart`
- * directly.
+ * for, stacked vertically. Same entry-and-compute flow used elsewhere for
+ * this (birth details once, remembered for every other tool), rendered
+ * through `ChartSectionBody` so it shares markup with every other section
+ * consumer instead of calling `KundliChart` directly.
  */
 export default function ChartSectionResult({
   sections,

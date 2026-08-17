@@ -1,6 +1,7 @@
 'use client';
 
 import ChartFigure from '@/components/chart/ChartFigure';
+import ChartSummaryCard from '@/components/chart/ChartSummaryCard';
 import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
 import AspectsGrid from '@/components/chart/AspectsGrid';
 import DashaTimeline from '@/components/chart/DashaTimeline';
@@ -69,6 +70,8 @@ export default function ChartSectionBody({
   }
 
   switch (id) {
+    case 'summary':
+      return <ChartSummaryCard data={data} t={t} lang={lang} />;
     case 'planets':
       return <PlanetDetailsGrid planets={data.planets} t={t} lang={lang} />;
     case 'aspects':

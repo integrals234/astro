@@ -3,12 +3,12 @@ import type { ChartFormData } from "./chart-types";
 /**
  * Prefill contract for handing birth details to /chart as query params.
  *
- * The homepage and the single-view tool pages (`ChartPreviewResult`) each
- * compute and draw their own chart inline now, so this is no longer the
- * primary path into /chart — it survives as the "open the full workspace"
- * link from those pages, and for any other shareable prefilled link. Keeping
- * the param names in one module means every producer and the one consumer
- * cannot drift apart.
+ * The homepage's vertical report and the tool landing pages
+ * (`VerticalChartReport`, `ChartSectionResult`) each compute and draw their
+ * own chart inline now, so this is no longer the primary path into /chart —
+ * it survives as the "open the full workspace" link from those pages, and
+ * for any other shareable prefilled link. Keeping the param names in one
+ * module means every producer and the one consumer cannot drift apart.
  */
 export const CHART_PREFILL_KEYS = {
   name: "name",

@@ -14,7 +14,8 @@ import {
 import SiteFooter from "@/components/layout/SiteFooter";
 import PublicHeader from "@/components/layout/PublicHeader";
 import HomeInstagramStrip from "@/components/home/HomeInstagramStrip";
-import ChartPreviewResult from "@/components/tools/ChartPreviewResult";
+import { ChartDataProvider } from "@/components/chart/ChartDataProvider";
+import VerticalChartReport from "@/components/chart/VerticalChartReport";
 import HomeToolGrid from "@/components/home/HomeToolGrid";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
 import { TrustBadges, Testimonials } from "@/components/home/TrustSignals";
@@ -160,16 +161,16 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
         </section>
 
         {/*
-          Inline birth-details form — the highest-conversion surface.
-          Previously this collected details and redirected to /chart, which
-          meant a second wait, a second load, and the whole form re-appearing
-          before anything was visible. It now computes and draws the chart
-          right here — Lagna by default, with Moon and transit as tabs on the
-          same data — and only links out to the full workspace for whoever
-          wants every tab, not as the only way to see a result.
+          Inline birth-details form and full vertical report — the
+          highest-conversion surface. Previously this collected details and
+          redirected to /chart, then later computed a 3-view preview in
+          place. It now draws the same report /chart shows (summary, every
+          chart, planets, aspects, dasha, transits) right here, and the tool
+          grid below reuses the same computed chart via `ChartDataProvider`
+          rather than each card firing its own compute.
         */}
-        <Reveal className="mb-16 md:mb-20">
-          <div className="washi-deckle relative mx-auto max-w-3xl px-6 py-8 sm:px-9">
+        <ChartDataProvider toolSlug="home">
+          <Reveal className="mb-16 md:mb-20">
             <p className="washi-eyebrow washi-eyebrow-flanked mb-3 justify-center">
               {welcomeText(welcomeContent.quickChart.eyebrow, lang)}
             </p>
@@ -179,22 +180,20 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
             <p className="mb-7 text-center text-sm text-text-muted">
               {welcomeText(welcomeContent.quickChart.lead, lang)}
             </p>
-            <ChartPreviewResult
-              views={["lagna", "moon", "gochar"]}
-              toolSlug="home"
-              handoffTool="generic"
-            />
-          </div>
-        </Reveal>
+            <div className="washi-card p-6 md:p-12">
+              <VerticalChartReport />
+            </div>
+          </Reveal>
 
-        {/*
-          Tool grid directly under the form. Density near the top of the
-          homepage is what turns a single-purpose visit into an exploring one,
-          and every card below reuses the details just entered above.
-        */}
-        <Reveal className="mb-16 md:mb-20">
-          <HomeToolGrid />
-        </Reveal>
+          {/*
+            Tool grid directly under the report. Density near the top of the
+            homepage is what turns a single-purpose visit into an exploring
+            one, and every card below expands using the same computed chart.
+          */}
+          <Reveal className="mb-16 md:mb-20">
+            <HomeToolGrid />
+          </Reveal>
+        </ChartDataProvider>
 
         <hr className="washi-hairline mb-14" />
 

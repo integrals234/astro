@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import type { Dasha } from '@/lib/chart-types';
 import type { ChartTranslations } from '@/lib/chart-i18n';
-import { formatDashaDisplayDate, planetSymbols } from '@/lib/chart-format';
+import { formatDashaDisplayDate, isDashaRunning, planetSymbols } from '@/lib/chart-format';
 import type { AppLanguage } from '@/lib/i18n/language';
 
 function DashaNode({
@@ -73,14 +73,6 @@ function DashaNode({
   );
 }
 
-/** True while `now` falls within `[start_date, end_date)`. */
-function isRunning(dasha: Dasha, now: Date): boolean {
-  const start = new Date(dasha.start_date.replace(/(\d+) (\w+) (\d+)/, '$2 $1, $3'));
-  const end = new Date(dasha.end_date.replace(/(\d+) (\w+) (\d+)/, '$2 $1, $3'));
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
-  return now >= start && now < end;
-}
-
 export interface DashaTimelineProps {
   dashas: Dasha[];
   t: ChartTranslations;
@@ -126,7 +118,7 @@ export default function DashaTimeline({
             dasha={dasha}
             t={t}
             lang={lang}
-            defaultOpen={openCurrent && isRunning(dasha, now)}
+            defaultOpen={openCurrent && isDashaRunning(dasha, now)}
           />
         ))}
       </div>

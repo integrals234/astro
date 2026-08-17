@@ -37,7 +37,7 @@ export default function AshtakavargaPanel({ data, t, lang, showHeading = true }:
 
   return (
     <div>
-      {showHeading && <h2 className="font-header text-2xl text-ink mb-6">{copy.heading}</h2>}
+      {showHeading && <h2 className="font-header text-2xl text-ink mb-6 text-center">{copy.heading}</h2>}
       <p className="washi-measure mb-6 font-body text-sm text-text-muted">{copy.intro}</p>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-sm">

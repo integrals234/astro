@@ -46,7 +46,7 @@ export default function DeferredSection({ id, title, children, minHeight = 560 }
 
   return (
     <section id={id} className="scroll-mt-24">
-      <h2 className="font-header text-2xl text-ink mb-8">{title}</h2>
+      <h2 className="font-header text-2xl text-ink mb-8 text-center">{title}</h2>
       <div ref={ref} style={shouldMount ? undefined : { minHeight }}>
         {shouldMount ? children : null}
       </div>

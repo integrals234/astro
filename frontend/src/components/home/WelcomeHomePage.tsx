@@ -170,29 +170,46 @@ function WelcomeHomeInner({ embedded }: { embedded?: boolean }) {
           rather than each card firing its own compute.
         */}
         <ChartDataProvider toolSlug="home">
-          <Reveal className="mb-16 md:mb-20">
+          {/*
+            Reveal wraps only the short intro line, not the report itself.
+            `[data-reveal]`'s scroll-driven fade/scale resolves over a
+            range computed from the *wrapped element's own height*
+            (`animation-range: entry 10% cover 32%`) — fine for a few
+            lines of copy, but the full report below is thousands of
+            pixels tall, so wrapping it in the same element meant the
+            animation didn't finish resolving to full opacity/scale until
+            deep into the page (reading as a lingering blur). The report
+            is also an interactive tool someone needs to read and use
+            immediately, not decorative copy, so it renders plainly.
+          */}
+          <Reveal className="mb-8">
             <p className="washi-eyebrow washi-eyebrow-flanked mb-3 justify-center">
               {welcomeText(welcomeContent.quickChart.eyebrow, lang)}
             </p>
             <h2 className="mb-2 text-center font-header text-[length:var(--step-2)] text-ink">
               {welcomeText(welcomeContent.quickChart.heading, lang)}
             </h2>
-            <p className="mb-7 text-center text-sm text-text-muted">
+            <p className="text-center text-sm text-text-muted">
               {welcomeText(welcomeContent.quickChart.lead, lang)}
             </p>
-            <div className="washi-card p-6 md:p-12">
-              <VerticalChartReport />
-            </div>
           </Reveal>
+          <div className="washi-card mb-16 p-6 md:mb-20 md:p-12">
+            <VerticalChartReport />
+          </div>
 
           {/*
             Tool grid directly under the report. Density near the top of the
             homepage is what turns a single-purpose visit into an exploring
             one, and every card below expands using the same computed chart.
+            Not Reveal-wrapped, same reasoning as the report above: its
+            cards are interactive (they expand in place), not decorative
+            copy, and Reveal's scroll-driven fade/scale range is sized to
+            the wrapped element's own height, which reads as a lingering
+            blur on anything much taller than a couple of text lines.
           */}
-          <Reveal className="mb-16 md:mb-20">
+          <div className="mb-16 md:mb-20">
             <HomeToolGrid />
-          </Reveal>
+          </div>
         </ChartDataProvider>
 
         <hr className="washi-hairline mb-14" />

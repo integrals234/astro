@@ -684,7 +684,7 @@ function ChartWorkspaceInner({
                     {/* Shared display controls — one flip updates every
                         chart-figure section below, since ChartFigure is
                         fully controlled and never owns this state itself. */}
-                    <div className="flex flex-wrap items-center gap-4 pb-6 border-b border-border">
+                    <div className="flex flex-wrap items-center justify-center gap-4 pb-6 border-b border-border">
                       <div className="washi-segmented">
                         <button
                           onClick={() => setUseSymbols(false)}

@@ -32,7 +32,7 @@ export default function YogaPanel({ data, t, lang, showHeading = true }: YogaPan
   const hits = detectYogas(data);
   const copy = yogasCopy[lang];
   const heading = showHeading && (
-    <h2 className="font-header text-2xl text-ink mb-6">{copy.heading}</h2>
+    <h2 className="font-header text-2xl text-ink mb-6 text-center">{copy.heading}</h2>
   );
 
   if (hits.length === 0) {

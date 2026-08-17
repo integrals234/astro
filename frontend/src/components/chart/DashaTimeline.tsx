@@ -91,6 +91,9 @@ export interface DashaTimelineProps {
    * keeps its exact original all-collapsed behaviour.
    */
   openCurrent?: boolean;
+  /** `false` when a caller (e.g. `DeferredSection`) already renders its own
+   * heading for this timeline — otherwise this and the caller's would double up. */
+  showHeading?: boolean;
 }
 
 /**
@@ -103,14 +106,19 @@ export default function DashaTimeline({
   t,
   lang,
   openCurrent = false,
+  showHeading = true,
 }: DashaTimelineProps) {
   const now = new Date();
   return (
     <div className="max-w-3xl mx-auto">
-      <h2 className="text-2xl font-header text-ink mb-2 text-center">{t.dashaTimeline}</h2>
-      <p className="text-center text-[10px] text-text-muted uppercase tracking-widest font-body font-semibold mb-10">
-        {t.dashaSub}
-      </p>
+      {showHeading && (
+        <>
+          <h2 className="text-2xl font-header text-ink mb-2 text-center">{t.dashaTimeline}</h2>
+          <p className="text-center text-[10px] text-text-muted uppercase tracking-widest font-body font-semibold mb-10">
+            {t.dashaSub}
+          </p>
+        </>
+      )}
       <div className="space-y-1">
         {dashas.map((dasha, i) => (
           <DashaNode

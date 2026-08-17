@@ -14,20 +14,42 @@ export interface ChartSectionBodyProps {
   data: ChartData;
   t: ChartTranslations;
   lang: AppLanguage;
+  /**
+   * Figure display state. Optional and defaulted (North, text, no toggle)
+   * for callers with a single section and nowhere to put a shared toggle —
+   * a caller stacking several figure sections at once (the workspace) passes
+   * its own state through here so one flip of "South Indian" updates every
+   * figure at once, matching `ChartFigure`'s fully-controlled design.
+   */
+  chartStyle?: 'North' | 'South';
+  useSymbols?: boolean;
+  gocharBase?: 'Lagna' | 'Chandra';
+  onGocharBaseChange?: (base: 'Lagna' | 'Chandra') => void;
+  /** Opens the running mahadasha by default, for `id === 'dasha'`. */
+  openCurrentDasha?: boolean;
+  /** `false` when the caller (e.g. `DeferredSection`) renders its own
+   * heading for this section already. */
+  showHeading?: boolean;
 }
 
 /**
  * One chart section, dispatched by id to the Phase 2 display components.
  * This is the single place that maps a `ChartSectionId` to a component, so
- * every consumer — tool landing pages now, the workspace and vertical
- * report in later phases — renders sections the same way.
- *
- * Fixed North style, text (not symbols), no external toggle: these are the
- * defaults every prior consumer of this data already rendered with, and a
- * page that only asks for one or two sections has nowhere to put a shared
- * toggle anyway.
+ * every consumer — tool landing pages, the workspace, the vertical report
+ * in a later phase — renders sections the same way.
  */
-export default function ChartSectionBody({ id, data, t, lang }: ChartSectionBodyProps) {
+export default function ChartSectionBody({
+  id,
+  data,
+  t,
+  lang,
+  chartStyle = 'North',
+  useSymbols = false,
+  gocharBase,
+  onGocharBaseChange,
+  openCurrentDasha = false,
+  showHeading = true,
+}: ChartSectionBodyProps) {
   const view = SECTION_TO_VIEW[id];
   if (view) {
     return (
@@ -36,9 +58,12 @@ export default function ChartSectionBody({ id, data, t, lang }: ChartSectionBody
         view={view}
         t={t}
         lang={lang}
-        chartStyle="North"
-        useSymbols={false}
+        chartStyle={chartStyle}
+        useSymbols={useSymbols}
+        gocharBase={gocharBase}
+        onGocharBaseChange={onGocharBaseChange}
         controls="none"
+        showHeading={showHeading}
       />
     );
   }
@@ -49,7 +74,15 @@ export default function ChartSectionBody({ id, data, t, lang }: ChartSectionBody
     case 'aspects':
       return <AspectsGrid planets={data.planets} t={t} />;
     case 'dasha':
-      return <DashaTimeline dashas={data.vimshottari_dashas} t={t} lang={lang} />;
+      return (
+        <DashaTimeline
+          dashas={data.vimshottari_dashas}
+          t={t}
+          lang={lang}
+          openCurrent={openCurrentDasha}
+          showHeading={showHeading}
+        />
+      );
     default:
       return null;
   }

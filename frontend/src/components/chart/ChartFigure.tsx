@@ -29,6 +29,9 @@ export interface ChartFigureProps {
   onUseSymbolsChange?: (value: boolean) => void;
   /** Overrides the default `t.tabTitles[view]` heading. */
   title?: string;
+  /** `false` when a caller (e.g. `DeferredSection`) already renders its own
+   * heading for this figure — otherwise this and the caller's would double up. */
+  showHeading?: boolean;
 }
 
 const VIEW_TO_TAB_TITLE_KEY: Record<ChartView, keyof ChartTranslations['tabTitles']> = {
@@ -57,6 +60,7 @@ export default function ChartFigure({
   onChartStyleChange,
   onUseSymbolsChange,
   title,
+  showHeading = true,
 }: ChartFigureProps) {
   const rendered = chartView(data, view, t.planets, {
     gocharBase: gocharBase === 'Chandra' ? 'moon' : 'lagna',
@@ -64,9 +68,11 @@ export default function ChartFigure({
 
   return (
     <div className="flex flex-col items-center">
-      <h2 className={`font-header text-ink mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
-        {title ?? t.tabTitles[VIEW_TO_TAB_TITLE_KEY[view]]}
-      </h2>
+      {showHeading && (
+        <h2 className={`font-header text-ink mb-8 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
+          {title ?? t.tabTitles[VIEW_TO_TAB_TITLE_KEY[view]]}
+        </h2>
+      )}
 
       {view === 'gochar' && (
         <div className="flex flex-col items-center gap-3 mb-8">
@@ -97,6 +103,13 @@ export default function ChartFigure({
         </div>
       )}
 
+      {/* Width lives here, not on KundliChart/SouthKundliChart themselves —
+          they used to cap at a bare `max-w-md`, which doesn't shrink below
+          its own value even when a narrower parent (a 7/12 grid column,
+          say) has less room than that, and AppShell's <main> clips overflow
+          rather than scrolling it. `min(28rem,100%)` never exceeds the
+          parent's actual width. */}
+      <div className="w-full max-w-[min(28rem,100%)]">
       {chartStyle === 'North' ? (
         <KundliChart
           planets={rendered.planets}
@@ -120,6 +133,7 @@ export default function ChartFigure({
           useSymbols={useSymbols}
         />
       )}
+      </div>
 
       {controls === 'full' && (
         <div className="mt-6 flex flex-col items-center gap-4">

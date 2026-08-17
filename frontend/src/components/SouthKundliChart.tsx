@@ -46,7 +46,7 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="kundli-chart-surface w-full max-w-md mx-auto p-2 rounded-lg border relative"
+      className="kundli-chart-surface w-full mx-auto p-2 rounded-lg border relative"
     >
       {isGocharChart && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 text-[10px] uppercase font-body font-semibold text-text-muted bg-washi-elevated px-3 py-1.5 rounded-md border border-border">

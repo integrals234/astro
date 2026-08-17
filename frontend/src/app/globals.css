@@ -570,6 +570,11 @@ summary {
   border-bottom: 2px solid var(--color-terracotta);
 }
 
+.washi-tab-active[data-orientation="vertical"] {
+  border-bottom: none;
+  border-left: 2px solid var(--color-terracotta);
+}
+
 .washi-tab-inactive {
   color: var(--color-text-muted);
 }
@@ -1200,14 +1205,20 @@ html[lang="en"] .washi-measure {
     /* #7 — reading progress hairline on long articles. */
     [data-scroll="progress"] {
       animation: progress-scale linear both;
-      animation-timeline: scroll(root);
+      /* `nearest`, not `root`: inside AppShell's <main>, the document root
+         never scrolls, so `scroll(root)` would never advance this. `nearest`
+         resolves to `<main>` there and to the document elsewhere. */
+      animation-timeline: scroll(nearest);
       transform-origin: left center;
     }
 
     /* #8 — nav condenses on scroll. */
     [data-scroll="condense"] {
       animation: nav-condense linear both;
-      animation-timeline: scroll(root);
+      /* `nearest`, not `root`: inside AppShell's <main>, the document root
+         never scrolls, so `scroll(root)` would never advance this. `nearest`
+         resolves to `<main>` there and to the document elsewhere. */
+      animation-timeline: scroll(nearest);
       animation-range: 0 160px;
     }
   }
@@ -1313,6 +1324,13 @@ html[lang="en"] .washi-measure {
   [data-scroll="draw"] :where(line, polygon, path, rect) {
     stroke-dashoffset: 0 !important;
     stroke-dasharray: none !important;
+  }
+
+  /* The [data-scroll] rule above resolves scaleX(0) to `transform: none`,
+     i.e. full width — a progress bar that reads as permanently complete
+     rather than reflecting real scroll position. Hide it instead. */
+  .washi-progress-bar {
+    opacity: 0 !important;
   }
 
   ::view-transition-old(root),

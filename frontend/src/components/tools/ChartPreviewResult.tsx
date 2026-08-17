@@ -199,23 +199,25 @@ export default function ChartPreviewResult({
         </button>
       </div>
 
-      <KundliChart
-        planets={rendered.planets}
-        transitPlanets={rendered.transitPlanets}
-        ascendantSign={rendered.ascendantSign}
-        ascLabel={activeView !== "moon" ? t.ui.asc : undefined}
-        ascDegree={
-          activeView !== "moon"
-            ? Math.floor(chartData.ascendant_longitude % 30)
-            : undefined
-        }
-        transitLabel={t.transitPlanet}
-        accessibility={{
-          planetAt: t.planetAt,
-          transitPlanet: t.transitPlanet,
-          retrograde: t.retrogradeLong,
-        }}
-      />
+      <div className="w-full max-w-[min(28rem,100%)]">
+        <KundliChart
+          planets={rendered.planets}
+          transitPlanets={rendered.transitPlanets}
+          ascendantSign={rendered.ascendantSign}
+          ascLabel={activeView !== "moon" ? t.ui.asc : undefined}
+          ascDegree={
+            activeView !== "moon"
+              ? Math.floor(chartData.ascendant_longitude % 30)
+              : undefined
+          }
+          transitLabel={t.transitPlanet}
+          accessibility={{
+            planetAt: t.planetAt,
+            transitPlanet: t.transitPlanet,
+            retrograde: t.retrogradeLong,
+          }}
+        />
+      </div>
 
       <Link
         href={prefillQuery ? `/chart?${prefillQuery}` : "/chart"}

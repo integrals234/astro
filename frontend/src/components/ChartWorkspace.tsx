@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { m, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
-import { Search, MapPin, Sparkles, Eye, LayoutDashboard } from 'lucide-react';
+import { Search, MapPin, ChevronDown, LayoutDashboard } from 'lucide-react';
 import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
@@ -14,7 +14,6 @@ import type {
   ChartData,
   ChartFormData,
   LocationResult,
-  ChartTab,
   SavedChartRecord,
 } from '@/lib/chart-types';
 import { getChartUi, chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
@@ -22,30 +21,30 @@ import { useToast } from '@/components/ui/Toaster';
 import { popPresence, hoverLift, tapPress } from '@/lib/motion/tokens';
 import { parseChartPrefill } from '@/lib/chart-prefill';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
-import type { ChartView } from '@/lib/chart-render';
-import ChartFigure from '@/components/chart/ChartFigure';
+import type { ChartSectionId } from '@/lib/chart-sections';
 import ChartMetaStrip from '@/components/chart/ChartMetaStrip';
 import ChartResultHeader from '@/components/chart/ChartResultHeader';
-import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
-import AspectsGrid from '@/components/chart/AspectsGrid';
-import DashaTimeline from '@/components/chart/DashaTimeline';
+import ChartSectionBody from '@/components/chart/ChartSectionBody';
+import ChartSectionRail from '@/components/chart/ChartSectionRail';
+import DeferredSection from '@/components/chart/DeferredSection';
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
   showAuthNav?: boolean;
   embedded?: boolean;
-  /**
-   * Tab the workspace opens on. Tool landing pages (Phase 3.6) each emphasise
-   * a different output, so a visitor who searched for "ダシャー計算" lands on
-   * the dasha timeline rather than the natal chart.
-   */
-  initialTab?: ChartTab;
 }
 
 // --- TRANSLATION DICTIONARY ---
 
-const CHART_TABS: ChartTab[] = ['D1', 'D9', 'Chalit', 'Chandra', 'Gochar', 'Details', 'Aspects', 'Dasha'];
 const subscribeToClient = () => () => {};
+
+/** Scrolls the actual scroll root back to the top — `[data-education-scroll-root]`
+ * (AppShell's `<main>`) when signed in, the document otherwise. */
+function scrollWorkspaceToTop() {
+  const root = document.querySelector('[data-education-scroll-root]');
+  if (root) root.scrollTo({ top: 0, behavior: 'smooth' });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function getDefaultFormData(): ChartFormData {
   const now = new Date();
@@ -63,21 +62,30 @@ function getDefaultFormData(): ChartFormData {
   };
 }
 
-/** `ChartTab` values that correspond to a drawn kundli, mapped to `ChartView`. */
-const TAB_TO_VIEW: Partial<Record<ChartTab, ChartView>> = {
-  D1: 'lagna',
-  D9: 'd9',
-  Chalit: 'chalit',
-  Chandra: 'moon',
-  Gochar: 'gochar',
-};
+/**
+ * Every section the workspace draws, in reading order, with the
+ * `chartFormCopy` tab keys used to look up their short (rail) and long
+ * (section heading) labels. `ChartTranslations`'s `tabs`/`tabTitles` widen
+ * to `Record<string, string>` (see `WidenTranslation` in chart-i18n.ts), so
+ * these keys don't need to be typed against the old `ChartTab` union — a
+ * plain string indexes them fine.
+ */
+const WORKSPACE_SECTIONS: readonly { id: ChartSectionId; tabKey: string }[] = [
+  { id: 'lagna', tabKey: 'D1' },
+  { id: 'navamsha', tabKey: 'D9' },
+  { id: 'chalit', tabKey: 'Chalit' },
+  { id: 'moon', tabKey: 'Chandra' },
+  { id: 'gochar', tabKey: 'Gochar' },
+  { id: 'planets', tabKey: 'Details' },
+  { id: 'aspects', tabKey: 'Aspects' },
+  { id: 'dasha', tabKey: 'Dasha' },
+];
 
 // --- MAIN DASHBOARD ---
 function ChartWorkspaceInner({
   enablePersistence = false,
   showAuthNav = false,
   embedded = false,
-  initialTab = 'D1',
 }: ChartWorkspaceProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -114,7 +122,6 @@ function ChartWorkspaceInner({
   const [useSymbols, setUseSymbols] = useState(false);
 
   const [chartData, setChartData] = useState<ChartData | null>(null);
-  const [activeTab, setActiveTab] = useState<ChartTab>(initialTab);
   const [gocharBase, setGocharBase] = useState<'Lagna' | 'Chandra'>('Lagna');
   const [isLoading, setIsLoading] = useState(false);
   const [currentChartId, setCurrentChartId] = useState<string | null>(null);
@@ -129,6 +136,14 @@ function ChartWorkspaceInner({
    * again and it would silently refill the form with the same person.
    */
   const [overrideEntry, setOverrideEntry] = useState(false);
+  /**
+   * The entry form collapses into a disclosure once a chart exists, so the
+   * vertical section stack gets the full width instead of sharing it with a
+   * permanently-open form column. Closed by default — "auto-closes after a
+   * successful compute" needs no extra transition when closed is already
+   * where a freshly-appeared disclosure starts.
+   */
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const {
     upsertProfile,
@@ -229,7 +244,8 @@ function ChartWorkspaceInner({
     setChartData(chart.chartData);
     setCurrentChartId(chart.id);
     setIsCurrentSaved(chart.isSaved);
-    setActiveTab('D1');
+    setIsFormOpen(false);
+    scrollWorkspaceToTop();
   };
 
   useEffect(() => {
@@ -306,7 +322,7 @@ function ChartWorkspaceInner({
     setPersonName('');
     setSelectedLocationName('');
     setFormData(getDefaultFormData());
-    setActiveTab('D1');
+    setIsFormOpen(false);
     setOverrideEntry(true);
   };
 
@@ -393,6 +409,7 @@ function ChartWorkspaceInner({
 
       setCurrentChartId(null);
       setIsCurrentSaved(false);
+      setIsFormOpen(false);
 
       const birth = {
         year: formData.year,
@@ -429,13 +446,112 @@ function ChartWorkspaceInner({
     finally { setIsLoading(false); }
   };
 
-  // Which of the five projections the active tab needs, if any (Details,
-  // Aspects and Dasha don't draw a kundli). ChartFigure computes the actual
-  // projection itself via chartView() — see chart-render.ts for the D9/Chalit
-  // customSign notes.
-  const view = TAB_TO_VIEW[activeTab];
-
   if (!isClient) return null;
+
+  /*
+   * The location search + natal/gochar fields + submit button. Shared,
+   * unmodified, between the always-open card shown before a chart exists
+   * and the disclosure shown after — only the surrounding chrome differs.
+   */
+  const formFields = (
+    <>
+      <div className="mb-8 relative">
+        <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.birthCity}</label>
+        <div
+          onClick={() => setIsCommandOpen(true)}
+          className="washi-field flex items-center gap-3 w-full p-3.5 text-sm cursor-text transition-colors hover:border-terracotta/50"
+        >
+          <Search size={16} className="text-text-muted" />
+          <span className={selectedLocationName ? "text-ink" : "text-text-muted"}>
+            {selectedLocationName || t.searchPlaceholder}
+          </span>
+        </div>
+
+        <AnimatePresence>
+          {isCommandOpen && (
+            <>
+              <button type="button" aria-label={t.closeDialog} className="fixed inset-0 z-40 cursor-default" onClick={() => setIsCommandOpen(false)} />
+              <m.div
+                role="dialog"
+                aria-label={t.locationDialog}
+                {...popPresence}
+                className="washi-card absolute top-0 left-0 w-full z-50 text-text overflow-hidden"
+              >
+                <Command className="w-full" shouldFilter={false}>
+                  <div className="flex items-center px-3 border-b border-border">
+                    <Search size={16} className="text-terracotta mr-2" />
+                    <Command.Input
+                      autoFocus
+                      value={locationQuery}
+                      onValueChange={setLocationQuery}
+                      placeholder={t.searchPlaceholder}
+                      className="w-full py-4 text-sm outline-none bg-transparent text-ink placeholder:text-text-muted"
+                    />
+                  </div>
+                  <Command.List className="max-h-60 overflow-y-auto p-2 relative z-50">
+                    {isSearching && <div className="p-4 text-sm text-center text-text-muted">{t.searching}</div>}
+                    {!isSearching && locationResults.length === 0 && locationQuery && <div className="p-4 text-sm text-center text-text-muted">{t.noLocations}</div>}
+                    {!isSearching && locationResults.map((loc, i) => (
+                      <Command.Item
+                        key={i}
+                        value={loc.display_name}
+                        onSelect={() => selectLocation(loc)}
+                        className="flex items-center gap-2 p-3 text-sm rounded-md hover:bg-neutral-tag cursor-pointer text-text data-[selected=true]:bg-neutral-tag"
+                      >
+                        <MapPin size={14} className="text-terracotta shrink-0" />
+                        <span className="truncate">{loc.display_name}</span>
+                      </Command.Item>
+                    ))}
+                  </Command.List>
+                </Command>
+              </m.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <form onSubmit={generateCharts} className="space-y-6">
+        <div>
+          <h3 className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest border-b border-border pb-2 mb-4">{t.natalParams}</h3>
+          <div className="mb-4">
+            <label className="block text-[10px] text-text-muted mb-1.5 ml-1">
+              {t.personName}
+              {enablePersistence && <span className="text-terracotta"> *</span>}
+            </label>
+            <input
+              type="text"
+              value={personName}
+              onChange={(e) => setPersonName(e.target.value)}
+              placeholder={t.personNamePlaceholder || ''}
+              className="washi-field w-full p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all text-ink placeholder:text-text-muted"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="min-w-0">
+              <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.dob}</label>
+              <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
+            </div>
+            <div className="min-w-0">
+              <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.tob}</label>
+              <input type="time" value={natalTimeString} onChange={handleTimeChange} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest border-b border-border pb-2 mb-4">{t.gocharOverlay}</h3>
+          <div className="w-full">
+            <label className="block text-[10px] text-moss mb-1.5 ml-1">{t.transitDate}</label>
+            <input type="date" value={transitDateString} onChange={(e) => handleDateChange(e, 'transit')} className="w-full p-3 rounded-md border border-moss/40 bg-moss/5 text-sm text-ink focus:border-moss focus:ring-1 focus:ring-moss outline-none transition-all cursor-pointer" />
+          </div>
+        </div>
+
+        <m.button whileHover={hoverLift} whileTap={tapPress} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="washi-btn-primary w-full py-4 text-sm disabled:opacity-50 transition-all">
+          {isLoading ? t.computingBtn : t.generateBtn}
+        </m.button>
+      </form>
+    </>
+  );
 
   const shellContent = (
     <>
@@ -456,134 +572,85 @@ function ChartWorkspaceInner({
         </div>
       )}
 
-      <div className={`max-w-7xl mx-auto grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8 flex-grow w-full`}>
-        
-        {/* LEFT COLUMN: Form */}
-        <m.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
-          <div className="washi-card p-8">
-            
-            <div className="mb-8">
-              <h1 className="text-3xl font-header font-medium text-ink tracking-tight">{chartCopy.appTitle}</h1>
-            </div>
-
-            {/* CMDK Autocomplete */}
-            <div className="mb-8 relative">
-              <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.birthCity}</label>
-              <div 
-                onClick={() => setIsCommandOpen(true)}
-                className="washi-field flex items-center gap-3 w-full p-3.5 text-sm cursor-text transition-colors hover:border-terracotta/50"
-              >
-                <Search size={16} className="text-text-muted" />
-                <span className={selectedLocationName ? "text-ink" : "text-text-muted"}>
-                  {selectedLocationName || t.searchPlaceholder}
-                </span>
+      <div className="max-w-7xl mx-auto w-full flex-grow">
+        {!chartData ? (
+          <div className={`grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8`}>
+            {/* LEFT COLUMN: Form */}
+            <m.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
+              <div className="washi-card p-8">
+                <div className="mb-8">
+                  <h1 className="text-3xl font-header font-medium text-ink tracking-tight">{chartCopy.appTitle}</h1>
+                </div>
+                {formFields}
               </div>
 
-              <AnimatePresence>
-                {isCommandOpen && (
-                  <>
-                    <button type="button" aria-label={t.closeDialog} className="fixed inset-0 z-40 cursor-default" onClick={() => setIsCommandOpen(false)} />
-                    <m.div 
-                      role="dialog"
-                      aria-label={t.locationDialog}
-                      {...popPresence}
-                      className="washi-card absolute top-0 left-0 w-full z-50 text-text overflow-hidden"
-                    >
-                      <Command className="w-full" shouldFilter={false}>
-                        <div className="flex items-center px-3 border-b border-border">
-                          <Search size={16} className="text-terracotta mr-2" />
-                          <Command.Input 
-                            autoFocus
-                            value={locationQuery} 
-                            onValueChange={setLocationQuery} 
-                            placeholder={t.searchPlaceholder} 
-                            className="w-full py-4 text-sm outline-none bg-transparent text-ink placeholder:text-text-muted"
-                          />
-                        </div>
-                        <Command.List className="max-h-60 overflow-y-auto p-2 relative z-50">
-                          {isSearching && <div className="p-4 text-sm text-center text-text-muted">{t.searching}</div>}
-                          {!isSearching && locationResults.length === 0 && locationQuery && <div className="p-4 text-sm text-center text-text-muted">{t.noLocations}</div>}
-                          {!isSearching && locationResults.map((loc, i) => (
-                            <Command.Item 
-                              key={i} 
-                              value={loc.display_name}
-                              onSelect={() => selectLocation(loc)}
-                              className="flex items-center gap-2 p-3 text-sm rounded-md hover:bg-neutral-tag cursor-pointer text-text data-[selected=true]:bg-neutral-tag"
-                            >
-                              <MapPin size={14} className="text-terracotta shrink-0" />
-                              <span className="truncate">{loc.display_name}</span>
-                            </Command.Item>
-                          ))}
-                        </Command.List>
-                      </Command>
-                    </m.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
+              {enablePersistence && (
+                <ChartLibraryPanel
+                  recentCharts={recentCharts}
+                  savedCharts={savedCharts}
+                  activeChartId={currentChartId}
+                  onLoadChart={loadChart}
+                  onToggleSave={handleToggleSave}
+                  onDeleteChart={handleDeleteChart}
+                />
+              )}
+            </m.div>
 
-            <form onSubmit={generateCharts} className="space-y-6">
-              {/* --- NATAL PARAMETERS --- */}
-              <div>
-                <h3 className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest border-b border-border pb-2 mb-4">{t.natalParams}</h3>
-                <div className="mb-4">
-                  <label className="block text-[10px] text-text-muted mb-1.5 ml-1">
-                    {t.personName}
-                    {enablePersistence && <span className="text-terracotta"> *</span>}
-                  </label>
-                  <input
-                    type="text"
-                    value={personName}
-                    onChange={(e) => setPersonName(e.target.value)}
-                    placeholder={t.personNamePlaceholder || ''}
-                    className="washi-field w-full p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all text-ink placeholder:text-text-muted"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="min-w-0">
-                    <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.dob}</label>
-                    <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
+            {/* RIGHT COLUMN: Empty state */}
+            <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
+              <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
+                <div className="text-center text-text-muted p-8 max-w-sm">
+                  <div className="washi-icon-chip w-16 h-16 mx-auto mb-6">
+                    <MapPin size={24} />
                   </div>
-                  <div className="min-w-0">
-                    <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.tob}</label>
-                    <input type="time" value={natalTimeString} onChange={handleTimeChange} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
-                  </div>
+                  <h3 className="text-lg font-header text-ink mb-2">{t.awaitingTitle}</h3>
+                  <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
-              </div>
-
-              {/* --- GOCHAR OVERLAY --- */}
-              <div>
-                <h3 className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest border-b border-border pb-2 mb-4">{t.gocharOverlay}</h3>
-                <div className="w-full">
-                  <label className="block text-[10px] text-moss mb-1.5 ml-1">{t.transitDate}</label>
-                  <input type="date" value={transitDateString} onChange={(e) => handleDateChange(e, 'transit')} className="w-full p-3 rounded-md border border-moss/40 bg-moss/5 text-sm text-ink focus:border-moss focus:ring-1 focus:ring-moss outline-none transition-all cursor-pointer" />
-                </div>
-              </div>
-
-              <m.button whileHover={hoverLift} whileTap={tapPress} type="submit" disabled={isLoading || !selectedLocationName || (enablePersistence && !personName.trim())} className="washi-btn-primary w-full py-4 text-sm disabled:opacity-50 transition-all">
-                {isLoading ? t.computingBtn : t.generateBtn}
-              </m.button>
-            </form>
+              </m.div>
+            </div>
           </div>
+        ) : (
+          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }} className="space-y-6">
+            {/* Entry form, collapsed once a chart exists — the vertical
+                section stack below gets the full width instead of sharing
+                it with a permanently-open form column. */}
+            <div className="washi-card overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setIsFormOpen((v) => !v)}
+                aria-expanded={isFormOpen}
+                className="flex w-full items-center justify-between gap-3 p-5 text-left"
+              >
+                <span className="min-w-0">
+                  <span className="block text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">{t.natalParams}</span>
+                  <span className="block truncate font-chart text-sm text-ink">
+                    {personName.trim() || t.personNamePlaceholder} — {selectedLocationName || t.birthCity}
+                  </span>
+                </span>
+                <ChevronDown size={18} className={`shrink-0 text-text-muted transition-transform ${isFormOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isFormOpen && <div className="border-t border-border p-8 pt-6">{formFields}</div>}
+            </div>
 
-          {enablePersistence && (
-            <ChartLibraryPanel
-              recentCharts={recentCharts}
-              savedCharts={savedCharts}
-              activeChartId={currentChartId}
-              onLoadChart={loadChart}
-              onToggleSave={handleToggleSave}
-              onDeleteChart={handleDeleteChart}
-            />
-          )}
-        </m.div>
+            {enablePersistence && (
+              <ChartLibraryPanel
+                recentCharts={recentCharts}
+                savedCharts={savedCharts}
+                activeChartId={currentChartId}
+                onLoadChart={loadChart}
+                onToggleSave={handleToggleSave}
+                onDeleteChart={handleDeleteChart}
+              />
+            )}
 
-        {/* RIGHT COLUMN: Output Dashboard */}
-        <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
-          <AnimatePresence mode="wait">
-            {chartData ? (
-              <m.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }} className="washi-card text-text overflow-hidden">
-                
+            {/* No `overflow-hidden` on this card: the sticky rail below is a
+                descendant, and an ancestor with any `overflow` other than
+                `visible` becomes its scroll-containing block, breaking
+                `position: sticky` entirely. Corner-rounding for the header
+                (which sits flush at the top with its own background) is
+                scoped to just that wrapper instead. */}
+            <div className="washi-card text-text">
+              <div className="overflow-hidden rounded-t-[var(--radius-card)]">
                 <ChartResultHeader
                   subject={personName}
                   t={t}
@@ -595,120 +662,76 @@ function ChartWorkspaceInner({
                       : undefined
                   }
                 />
+              </div>
 
-                {/* NEW TABS NAVIGATION */}
-                <div className="flex border-b border-border overflow-x-auto no-scrollbar">
-                  {CHART_TABS.map((tab) => (
-                    <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-5 text-xs tracking-widest uppercase font-body font-medium border-b-2 transition-colors whitespace-nowrap px-6 ${activeTab === tab ? 'border-terracotta text-ink' : 'border-transparent text-text-muted hover:text-text'}`}>
-                      {t.tabs[tab]}
-                    </button>
-                  ))}
-                </div>
+              <div className="p-8 md:p-12">
+                <ChartMetaStrip data={chartData} t={t} />
 
-                <div className="p-8 md:p-12 min-h-[600px]">
-                  
-                  <ChartMetaStrip data={chartData} t={t} />
+                <div className="flex flex-col lg:flex-row lg:gap-12">
+                  <ChartSectionRail
+                    items={WORKSPACE_SECTIONS.map(({ id, tabKey }) => ({ id, label: t.tabs[tabKey] }))}
+                    ariaLabel={t.ui.sectionsNavAria}
+                  />
 
-                  <AnimatePresence mode="wait">
-                    <m.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
-                      
-                      {/* STANDARD CHARTS */}
-                      {view && (
-                        <ChartFigure
+                  <div className="min-w-0 flex-1 space-y-16">
+                    {/* Shared display controls — one flip updates every
+                        chart-figure section below, since ChartFigure is
+                        fully controlled and never owns this state itself. */}
+                    <div className="flex flex-wrap items-center gap-4 pb-6 border-b border-border">
+                      <div className="washi-segmented">
+                        <button
+                          onClick={() => setUseSymbols(false)}
+                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${!useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                        >
+                          {t.ui.textToggle}
+                        </button>
+                        <button
+                          onClick={() => setUseSymbols(true)}
+                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
+                        >
+                          {t.ui.symbolToggle}
+                        </button>
+                      </div>
+                      <div className="washi-segmented">
+                        <button
+                          onClick={() => setChartStyle('North')}
+                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'North' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                        >
+                          {t.ui.northStyle}
+                        </button>
+                        <button
+                          onClick={() => setChartStyle('South')}
+                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'South' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
+                        >
+                          {t.ui.southStyle}
+                        </button>
+                      </div>
+                    </div>
+
+                    {WORKSPACE_SECTIONS.map(({ id, tabKey }) => (
+                      <DeferredSection key={id} id={id} title={t.tabTitles?.[tabKey] ?? t.tabs[tabKey]}>
+                        <ChartSectionBody
+                          id={id}
                           data={chartData}
-                          view={view}
                           t={t}
                           lang={lang}
                           chartStyle={chartStyle}
                           useSymbols={useSymbols}
                           gocharBase={gocharBase}
                           onGocharBaseChange={setGocharBase}
-                          controls="none"
+                          openCurrentDasha={id === 'dasha'}
+                          showHeading={false}
                         />
-                      )}
-
-                      {/* NEW: PLANETARY DETAILS TAB */}
-                      {activeTab === 'Details' && (
-                        <div className="space-y-6">
-                            <h2 className={`font-header text-ink mb-8 flex items-center gap-2 ${lang === 'hi' ? 'text-3xl' : 'text-2xl'}`}>
-                              <Sparkles className="text-terracotta" size={24} /> {t.tabTitles?.Details}
-                            </h2>
-                            <PlanetDetailsGrid planets={chartData.planets} t={t} lang={lang} />
-                        </div>
-                      )}
-
-                      {/* NEW: VEDIC ASPECTS TAB */}
-                      {activeTab === 'Aspects' && (
-                        <div className="space-y-6">
-                           <h2 className="text-2xl font-header text-ink mb-8 flex items-center gap-2"><Eye className="text-terracotta" size={24} /> {t.tabTitles?.Aspects}</h2>
-                           <AspectsGrid planets={chartData.planets} t={t} />
-                        </div>
-                      )}
-
-                      {/* DASHA TAB */}
-                      {activeTab === 'Dasha' && (
-                        <DashaTimeline dashas={chartData.vimshottari_dashas} t={t} lang={lang} />
-                      )}
-
-                    </m.div>
-                  </AnimatePresence>
-                </div>
-                {/* --- GLOBAL CONTROLS AREA --- */}
-                  <div className="mt-2 pb-10 flex flex-col items-center gap-4">
-                    
-                    {/* 1. Symbol Switcher (Visible on all tabs EXCEPT Aspects) */}
-                    {!['Aspects', 'Details', 'Dasha'].includes(activeTab) && (
-                      <div className="washi-segmented">
-                        <button 
-                          onClick={() => setUseSymbols(false)} 
-                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${!useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-                        >
-                          {t.ui.textToggle}
-                        </button>
-                        <button 
-                          onClick={() => setUseSymbols(true)} 
-                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-                        >
-                          {t.ui.symbolToggle}
-                        </button>
-                      </div>
-                    )}
-
-                    {/* 2. Chart Style Switcher (Only visible when viewing a Chart tab) */}
-                    {['D1', 'D9', 'Chalit', 'Chandra', 'Gochar'].includes(activeTab) && (
-                      <div className="washi-segmented">
-                        <button 
-                          onClick={() => setChartStyle('North')} 
-                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'North' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-                        >
-                          {t.ui.northStyle}
-                        </button>
-                        <button 
-                          onClick={() => setChartStyle('South')} 
-                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'South' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-                        >
-                          {t.ui.southStyle}
-                        </button>
-                      </div>
-                    )}
+                      </DeferredSection>
+                    ))}
                   </div>
-              </m.div>
-            ) : (
-              // Empty State
-              <m.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
-                <div className="text-center text-text-muted p-8 max-w-sm">
-                  <div className="washi-icon-chip w-16 h-16 mx-auto mb-6">
-                    <MapPin size={24} />
-                  </div>
-                  <h3 className="text-lg font-header text-ink mb-2">{t.awaitingTitle}</h3>
-                  <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
-              </m.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+            </div>
+          </m.div>
+        )}
       </div>
-      
+
       {/* Footer Watermark */}
       <div className="w-full mt-12 pb-4 text-center opacity-40 pointer-events-none">
         <span className="text-[10px] text-text-muted font-body font-semibold tracking-[0.3em] uppercase">

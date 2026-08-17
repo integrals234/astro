@@ -65,16 +65,6 @@ export interface LocationResult {
 
 export type LanguageCode = "en" | "hi" | "ja" | "ko";
 
-export type ChartTab =
-  | "D1"
-  | "D9"
-  | "Chalit"
-  | "Chandra"
-  | "Gochar"
-  | "Details"
-  | "Aspects"
-  | "Dasha";
-
 export interface SavedChartRecord {
   id: string;
   name: string; // person's name whose chart was generated

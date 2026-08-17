@@ -22,6 +22,7 @@ import { popPresence, hoverLift, tapPress } from '@/lib/motion/tokens';
 import { parseChartPrefill } from '@/lib/chart-prefill';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
 import type { ChartSectionId } from '@/lib/chart-sections';
+import { sectionLabel, sectionHeading } from '@/lib/chart-sections';
 import ChartMetaStrip from '@/components/chart/ChartMetaStrip';
 import ChartResultHeader from '@/components/chart/ChartResultHeader';
 import ChartSectionBody from '@/components/chart/ChartSectionBody';
@@ -69,8 +70,12 @@ function getDefaultFormData(): ChartFormData {
  * to `Record<string, string>` (see `WidenTranslation` in chart-i18n.ts), so
  * these keys don't need to be typed against the old `ChartTab` union — a
  * plain string indexes them fine.
+ *
+ * `yogas`/`ashtakavarga` have no `chartFormCopy` tab key (they're newer
+ * than the old 8-tab set) — `tabKey` is omitted for them and `chart-sections.ts`'s
+ * `sectionLabel`/`sectionHeading` fall back to their own copy module instead.
  */
-const WORKSPACE_SECTIONS: readonly { id: ChartSectionId; tabKey: string }[] = [
+const WORKSPACE_SECTIONS: readonly { id: ChartSectionId; tabKey?: string }[] = [
   { id: 'lagna', tabKey: 'D1' },
   { id: 'navamsha', tabKey: 'D9' },
   { id: 'chalit', tabKey: 'Chalit' },
@@ -79,6 +84,8 @@ const WORKSPACE_SECTIONS: readonly { id: ChartSectionId; tabKey: string }[] = [
   { id: 'planets', tabKey: 'Details' },
   { id: 'aspects', tabKey: 'Aspects' },
   { id: 'dasha', tabKey: 'Dasha' },
+  { id: 'yogas' },
+  { id: 'ashtakavarga' },
 ];
 
 // --- MAIN DASHBOARD ---
@@ -669,7 +676,7 @@ function ChartWorkspaceInner({
 
                 <div className="flex flex-col lg:flex-row lg:gap-12">
                   <ChartSectionRail
-                    items={WORKSPACE_SECTIONS.map(({ id, tabKey }) => ({ id, label: t.tabs[tabKey] }))}
+                    items={WORKSPACE_SECTIONS.map((entry) => ({ id: entry.id, label: sectionLabel(entry, t, lang) }))}
                     ariaLabel={t.ui.sectionsNavAria}
                   />
 
@@ -708,10 +715,10 @@ function ChartWorkspaceInner({
                       </div>
                     </div>
 
-                    {WORKSPACE_SECTIONS.map(({ id, tabKey }) => (
-                      <DeferredSection key={id} id={id} title={t.tabTitles?.[tabKey] ?? t.tabs[tabKey]}>
+                    {WORKSPACE_SECTIONS.map((entry) => (
+                      <DeferredSection key={entry.id} id={entry.id} title={sectionHeading(entry, t, lang)}>
                         <ChartSectionBody
-                          id={id}
+                          id={entry.id}
                           data={chartData}
                           t={t}
                           lang={lang}
@@ -719,7 +726,7 @@ function ChartWorkspaceInner({
                           useSymbols={useSymbols}
                           gocharBase={gocharBase}
                           onGocharBaseChange={setGocharBase}
-                          openCurrentDasha={id === 'dasha'}
+                          openCurrentDasha={entry.id === 'dasha'}
                           showHeading={false}
                         />
                       </DeferredSection>

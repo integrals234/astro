@@ -18,20 +18,23 @@ import BirthDetailsFields, {
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { buildChartPrefillQuery } from '@/lib/chart-prefill';
 import { chartPreviewCopy } from '@/lib/tools/chart-preview-copy';
-import type { ChartSectionId } from '@/lib/chart-sections';
+import { sectionLabel, sectionHeading, type ChartSectionId } from '@/lib/chart-sections';
 
 /**
  * Every section in reading order — "the answer" first, the diagrams after,
  * Chalit set aside since it's the least legible one to a first-time visitor,
- * transits last as the reason to come back tomorrow.
+ * yogas/ashtakavarga after dasha since they read *from* the placements
+ * shown above them, transits last as the reason to come back tomorrow.
  */
-const REPORT_SECTIONS: readonly { id: ChartSectionId; tabKey: string }[] = [
+const REPORT_SECTIONS: readonly { id: ChartSectionId; tabKey?: string }[] = [
   { id: 'lagna', tabKey: 'D1' },
   { id: 'planets', tabKey: 'Details' },
   { id: 'moon', tabKey: 'Chandra' },
   { id: 'navamsha', tabKey: 'D9' },
   { id: 'aspects', tabKey: 'Aspects' },
   { id: 'dasha', tabKey: 'Dasha' },
+  { id: 'yogas' },
+  { id: 'ashtakavarga' },
   { id: 'gochar', tabKey: 'Gochar' },
 ];
 
@@ -130,20 +133,20 @@ export default function VerticalChartReport() {
         <ChartSectionRail
           items={[
             { id: 'summary', label: t.ui.summaryTitle },
-            ...REPORT_SECTIONS.map(({ id, tabKey }) => ({ id, label: t.tabs[tabKey] })),
+            ...REPORT_SECTIONS.map((section) => ({ id: section.id, label: sectionLabel(section, t, lang) })),
           ]}
           ariaLabel={t.ui.sectionsNavAria}
         />
 
         <div className="min-w-0 flex-1 space-y-16">
-          {REPORT_SECTIONS.map(({ id, tabKey }) => (
-            <DeferredSection key={id} id={id} title={t.tabTitles?.[tabKey] ?? t.tabs[tabKey]}>
+          {REPORT_SECTIONS.map((section) => (
+            <DeferredSection key={section.id} id={section.id} title={sectionHeading(section, t, lang)}>
               <ChartSectionBody
-                id={id}
+                id={section.id}
                 data={data}
                 t={t}
                 lang={lang}
-                openCurrentDasha={id === 'dasha'}
+                openCurrentDasha={section.id === 'dasha'}
                 showHeading={false}
               />
             </DeferredSection>

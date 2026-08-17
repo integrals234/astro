@@ -26,9 +26,10 @@ const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR + 1, CURRENT_YEAR + 2];
  * PlanetData shape as the natal chart, so the same display component
  * applies unchanged.
  *
- * Talks to /api/annual-forecast, which proxies to a backend endpoint that
- * is written but not yet deployed (see backend/server.py) — this will show
- * `unavailable` rather than a silent failure until that ships.
+ * Talks to /api/annual-forecast, which proxies to the backend's
+ * /api/v1/annual-forecast endpoint (see backend/server.py) — shows
+ * `unavailable` rather than a silent failure if that service is
+ * unreachable (a free-tier Render cold start, most commonly).
  */
 export default function AnnualForecastPanel() {
   const { language } = useLanguage();

@@ -31,9 +31,10 @@ function todayIsoDate(): string {
  * calendar implementation rather than the angular math the rest of this
  * uses.
  *
- * Talks to /api/panchang, which proxies to a backend endpoint that is
- * written but not yet deployed (see backend/server.py) — this will show
- * `unavailable` rather than a silent failure until that ships.
+ * Talks to /api/panchang, which proxies to the backend's /api/v1/panchang
+ * endpoint (see backend/server.py) — shows `unavailable` rather than a
+ * silent failure if that service is unreachable (a free-tier Render cold
+ * start, most commonly).
  *
  * Tithi/yoga/karana names are shown as their Sanskrit transliterations,
  * the same across all four locales — chartFormCopy already has a

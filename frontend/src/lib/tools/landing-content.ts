@@ -40,9 +40,9 @@ export interface ToolLanding {
    * needs a time *window*, not the one saved birth time — so both bring
    * their own entry form rather than using `ChartDataProvider`/
    * `ChartSectionBody` like the rest of this list. `annualForecast` and
-   * `panchang` talk to backend endpoints written but not yet deployed
-   * (Phase 12) — both panels show an "unavailable" state rather than
-   * failing silently until that ships.
+   * `panchang` talk to backend endpoints (Phase 12) — both panels still
+   * show an "unavailable" state on a 502/503 rather than failing silently,
+   * since the free-tier Render service can cold-start or blip.
    */
   resultPanel?:
     | "sukuyo"
@@ -749,6 +749,128 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "यह इस बात का संकेत है कि आपकी अनिश्चितता वास्तव में मायने रखती है, और किसी भी एक कुंडली की भाव स्थिति को निश्चित मानने से पहले जन्म समय को और सीमित करना उचित है।",
           ja: "それは、あなたの不確かさが実際に重要であることを示すサインです。どれか一つのチャートのハウス配置を確定したものとして扱う前に、病院の記録や出生証明書、より正確に覚えている家族など、出生時刻をさらに絞り込む価値があります。ライブ鑑定では、人生の出来事を用いた出生時刻の推定（レクティフィケーション）も行えます。",
           ko: "이는 당신의 불확실성이 실제로 중요하다는 신호이며, 병원 기록이나 출생 증명서, 더 정확히 기억하는 가족 등으로 출생 시각을 더 좁히는 것이 어느 한 차트의 하우스 배치를 확정된 것으로 다루기 전에 해볼 가치가 있습니다. 라이브 감정에서는 인생 사건을 이용한 출생 시각 보정(렉티피케이션)도 다룹니다.",
+        },
+      },
+    ],
+  },
+  {
+    // Tajik-system annual chart — a genuine second computation (a
+    // solar-return ephemeris solve), not a rehash of the birth chart, and
+    // the natural yearly-return reason to come back once a year.
+    slug: "annual-forecast",
+    resultPanel: "annualForecast",
+    title: {
+      en: "Varshaphala: annual solar return chart",
+      hi: "वर्षफल: वार्षिक सूर्य वापसी कुंडली",
+      ja: "ヴァルシャファラ｜年間の太陽回帰チャート",
+      ko: "바르샤팔라: 연간 태양 회귀 차트",
+    },
+    description: {
+      en: "Cast the chart for the exact moment transiting Sun returns to its natal degree this year — a distinct annual chart read alongside the birth chart, not instead of it.",
+      hi: "इस वर्ष गोचर सूर्य के जन्म अंश पर लौटने के ठीक क्षण की कुंडली बनाएं — जन्म कुंडली के साथ पढ़ी जाने वाली एक अलग वार्षिक कुंडली, उसकी जगह नहीं।",
+      ja: "今年、トランジットの太陽が出生時の度数に戻る正確な瞬間のチャートを作成します。出生図の代わりではなく、それと合わせて読む別個の年間チャートです。",
+      ko: "올해 트랜짓 태양이 출생 시 도수로 돌아오는 정확한 순간의 차트를 작성합니다. 출생 차트를 대신하는 것이 아니라 함께 읽는 별도의 연간 차트입니다.",
+    },
+    useCase: {
+      en: "Run this once a year, around your birthday, for a fresh read on the twelve months ahead rather than relying on the natal chart alone.",
+      hi: "अपने जन्मदिन के आसपास वर्ष में एक बार इसे आज़माएँ — केवल जन्म कुंडली पर निर्भर रहने के बजाय आगामी बारह महीनों की एक ताज़ा दृष्टि के लिए।",
+      ja: "誕生日の頃、年に一度お試しください。出生図だけに頼らず、これからの12か月を新たな視点で見ることができます。",
+      ko: "생일 즈음에 매년 한 번씩 사용해 보세요. 출생 차트에만 의존하지 않고 앞으로의 12개월을 새롭게 살펴볼 수 있습니다.",
+    },
+    lead: {
+      en: "Varshaphala is the Tajik system's annual chart, cast for the precise moment the transiting Sun returns to the exact degree it held at birth. It doesn't replace the birth chart — it's read alongside it, as a separate lens on the year ahead.",
+      hi: "वर्षफल ताजिक पद्धति की वार्षिक कुंडली है, जो उस ठीक क्षण के लिए बनाई जाती है जब गोचर सूर्य जन्म के समय के अंश पर लौटता है। यह जन्म कुंडली की जगह नहीं लेती — इसे उसके साथ, आगामी वर्ष पर एक अलग दृष्टिकोण के रूप में पढ़ा जाता है।",
+      ja: "ヴァルシャファラは、タージク方式の年間チャートで、トランジットの太陽が出生時と全く同じ度数に戻る正確な瞬間のために作成されます。出生図に取って代わるものではなく、これからの一年を見るもう一つの視点として、出生図と合わせて読みます。",
+      ko: "바르샤팔라는 타지크 체계의 연간 차트로, 트랜짓 태양이 출생 시와 정확히 같은 도수로 돌아오는 순간을 위해 작성됩니다. 출생 차트를 대체하지 않으며, 다가오는 한 해를 보는 또 다른 관점으로 출생 차트와 함께 읽습니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "How is Varshaphala different from the birth chart itself?",
+          hi: "वर्षफल जन्म कुंडली से किस प्रकार भिन्न है?",
+          ja: "ヴァルシャファラは出生図とどう違いますか？",
+          ko: "바르샤팔라는 출생 차트와 어떻게 다른가요?",
+        },
+        answer: {
+          en: "The birth chart is cast once, for the moment of birth, and describes the whole life. Varshaphala is cast fresh each year, for the moment the Sun returns to its natal degree, and describes that specific year — its own ascendant and planetary placements, read as a chapter within the larger chart rather than apart from it.",
+          hi: "जन्म कुंडली केवल एक बार, जन्म के क्षण के लिए बनती है और पूरे जीवन का वर्णन करती है। वर्षफल हर वर्ष नए सिरे से, सूर्य के जन्म अंश पर लौटने के क्षण के लिए बनता है, और उस विशिष्ट वर्ष का वर्णन करता है — अपना लग्न, अपनी ग्रह स्थिति, जिसे बड़ी कुंडली से अलग नहीं बल्कि उसके भीतर एक अध्याय के रूप में पढ़ा जाता है।",
+          ja: "出生図は誕生の瞬間に一度だけ作成され、生涯全体を描きます。ヴァルシャファラは毎年新たに、太陽が出生時の度数に戻る瞬間のために作成され、その特定の一年を描きます——独自のアセンダントと惑星配置を持ち、大きな出生図から切り離してではなく、その中の一章として読まれます。",
+          ko: "출생 차트는 태어난 순간에 단 한 번 작성되며 생애 전체를 설명합니다. 바르샤팔라는 매년 새롭게, 태양이 출생 시 도수로 돌아오는 순간을 위해 작성되며, 그 특정한 해를 설명합니다 — 고유한 상승궁과 행성 배치를 가지며, 큰 출생 차트와 별개가 아니라 그 안의 한 장(章)으로 읽힙니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why does the exact moment of the return matter?",
+          hi: "वापसी के ठीक क्षण का महत्व क्यों है?",
+          ja: "回帰の正確な瞬間が重要なのはなぜですか？",
+          ko: "회귀의 정확한 순간이 왜 중요한가요?",
+        },
+        answer: {
+          en: "The ascendant changes roughly every two hours, so the annual chart's houses depend on solving for the precise minute the Sun crosses its natal degree, not an approximate date. This tool searches for that exact moment using the same Swiss Ephemeris calculation behind the birth chart, rather than approximating from the calendar date alone.",
+          hi: "लग्न लगभग हर दो घंटे में बदलता है, इसलिए वार्षिक कुंडली के भाव सूर्य के जन्म अंश को पार करने के ठीक मिनट पर निर्भर करते हैं, केवल अनुमानित तिथि पर नहीं। यह उपकरण जन्म कुंडली के पीछे उसी स्विस एफिमेरिस गणना का उपयोग करके उस ठीक क्षण को खोजता है।",
+          ja: "アセンダントはおよそ2時間ごとに変わるため、年間チャートのハウスは、太陽が出生時の度数を通過する正確な分に依存し、おおよその日付だけでは決まりません。このツールは、出生図の背後にあるのと同じスイス天体暦計算を用いて、その正確な瞬間を探索します。",
+          ko: "상승궁은 대략 두 시간마다 바뀌므로, 연간 차트의 하우스는 태양이 출생 시 도수를 통과하는 정확한 분에 좌우되며 대략적인 날짜만으로는 정해지지 않습니다. 이 도구는 출생 차트의 배경이 되는 것과 동일한 스위스 에페메리스 계산을 사용하여 그 정확한 순간을 찾습니다.",
+        },
+      },
+    ],
+  },
+  {
+    // Native calendar-almanac search intent across all four markets — the
+    // day-selection question that precedes a move, an opening, or a
+    // ceremony. Computed from real angular positions, not a printed table.
+    slug: "panchang",
+    resultPanel: "panchang",
+    title: {
+      en: "Panchang: tithi, nakshatra, yoga & karana for any date",
+      hi: "पंचांग: किसी भी तिथि के लिए तिथि, नक्षत्र, योग और करण",
+      ja: "パンチャーンガ｜任意の日付のティティ・ナクシャトラ・ヨーガ・カラナ",
+      ko: "판창가: 원하는 날짜의 티티·낙샤트라·요가·카라나",
+    },
+    description: {
+      en: "Compute the five classical elements of any calendar day — tithi, nakshatra, yoga, karana, and paksha — for your saved location's sunrise.",
+      hi: "किसी भी कैलेंडर तिथि के पाँच शास्त्रीय तत्व — तिथि, नक्षत्र, योग, करण और पक्ष — अपने सहेजे गए स्थान के सूर्योदय के लिए गणना करें।",
+      ja: "任意の暦日の五つの古典的要素——ティティ、ナクシャトラ、ヨーガ、カラナ、パクシャ——を、保存された出生地の日の出時刻で計算します。",
+      ko: "원하는 달력 날짜의 다섯 가지 고전 요소 — 티티, 낙샤트라, 요가, 카라나, 팍샤 — 를 저장된 위치의 일출을 기준으로 계산합니다.",
+    },
+    useCase: {
+      en: "Check before scheduling something that traditionally wants a favourable day — a move, an opening, a ceremony — rather than guessing from a printed calendar alone.",
+      hi: "किसी ऐसे कार्य को निर्धारित करने से पहले जाँचें जिसके लिए परंपरागत रूप से शुभ दिन चाहिए — जैसे स्थानांतरण, उद्घाटन, या समारोह — केवल छपे कैलेंडर से अनुमान लगाने के बजाय।",
+      ja: "引っ越し、開業、儀式など、伝統的に吉日を選ぶべき予定を立てる前に。印刷されたカレンダーだけで推測するのではなく。",
+      ko: "이사, 개업, 의식처럼 전통적으로 길일을 고려하는 일정을 잡기 전에 확인하세요. 인쇄된 달력만으로 추측하는 대신에요.",
+    },
+    lead: {
+      en: "Panchang means ‘five limbs’ — the five elements that describe a calendar day in Vedic timekeeping: tithi (lunar day), nakshatra, yoga, karana, and paksha. This tool computes all five for any date at your saved location, from the Moon and Sun's actual positions rather than a printed table.",
+      hi: "पंचांग का अर्थ है 'पाँच अंग' — वैदिक कालगणना में किसी कैलेंडर दिन का वर्णन करने वाले पाँच तत्व: तिथि, नक्षत्र, योग, करण और पक्ष। यह उपकरण आपके सहेजे गए स्थान पर किसी भी तिथि के लिए इन पाँचों की गणना, चंद्रमा और सूर्य की वास्तविक स्थिति से करता है, किसी छपी तालिका से नहीं।",
+      ja: "パンチャーンガとは「五つの肢体」を意味し、ヴェーダの時間計算における暦日を記述する五つの要素——ティティ（太陰日）、ナクシャトラ、ヨーガ、カラナ、パクシャ——を指します。このツールは、保存された出生地の任意の日付について、印刷された表ではなく月と太陽の実際の位置からこの五つすべてを計算します。",
+      ko: "판창가는 '다섯 개의 지체'를 의미하며, 베다 시간 계산에서 달력의 하루를 설명하는 다섯 가지 요소인 티티(태음일), 낙샤트라, 요가, 카라나, 팍샤를 가리킵니다. 이 도구는 저장된 위치의 원하는 날짜에 대해 인쇄된 표가 아닌 달과 태양의 실제 위치로 이 다섯 가지를 모두 계산합니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What is a tithi?",
+          hi: "तिथि क्या है?",
+          ja: "ティティとは何ですか？",
+          ko: "티티란 무엇인가요?",
+        },
+        answer: {
+          en: "A tithi is a lunar day — the time it takes the Moon to gain twelve degrees on the Sun, close to but not exactly one calendar day. A lunar month holds thirty tithis: fifteen in the waxing Shukla Paksha, fifteen in the waning Krishna Paksha, each with its own classical character and use.",
+          hi: "तिथि एक चंद्र दिवस है — वह समय जो चंद्रमा को सूर्य पर बारह अंश की बढ़त बनाने में लगता है, जो लगभग किंतु ठीक एक कैलेंडर दिन के बराबर नहीं होता। एक चंद्र मास में तीस तिथियाँ होती हैं: शुक्ल पक्ष में पंद्रह और कृष्ण पक्ष में पंद्रह, प्रत्येक का अपना शास्त्रीय स्वभाव और उपयोग है।",
+          ja: "ティティとは太陰日のことで、月が太陽に対して十二度進むのにかかる時間を指し、暦の一日にほぼ近いものの正確には一致しません。太陰月には三十のティティがあり、上弦のシュクラ・パクシャに十五、下弦のクリシュナ・パクシャに十五あります。それぞれに固有の古典的性質と用途があります。",
+          ko: "티티는 태음일로, 달이 태양보다 12도 앞서 나가는 데 걸리는 시간을 말하며 달력의 하루와 거의 비슷하지만 정확히 일치하지는 않습니다. 태음월에는 서른 개의 티티가 있으며, 상현의 슈클라 팍샤에 열다섯, 하현의 크리슈나 팍샤에 열다섯 개가 있고, 각각 고유한 고전적 성격과 용도를 지닙니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why doesn't this show Rokuyō (六曜)?",
+          hi: "इसमें रोकुयो (六曜) क्यों नहीं दिखाया गया है?",
+          ja: "六曜（ろくよう）が表示されないのはなぜですか？",
+          ko: "왜 로쿠요(六曜)는 표시되지 않나요?",
+        },
+        answer: {
+          en: "Rokuyō is a Japanese lunisolar calendar cycle with its own counting rules, not derived from the Sun and Moon's angular positions the way tithi and nakshatra are. Showing it correctly needs a lunisolar calendar implementation rather than the ephemeris-based angular math this tool is built on — so it's left out here rather than approximated and risk being wrong.",
+          hi: "रोकुयो एक जापानी चंद्र-सौर कैलेंडर चक्र है जिसके अपने गणना नियम हैं, यह सूर्य और चंद्रमा की कोणीय स्थितियों से व्युत्पन्न नहीं है जैसे तिथि और नक्षत्र होते हैं। इसे सही ढंग से दिखाने के लिए एक चंद्र-सौर कैलेंडर कार्यान्वयन चाहिए — इसलिए इसे गलत अनुमान लगाने के बजाय यहाँ छोड़ दिया गया है।",
+          ja: "六曜は独自の数え方を持つ日本の太陰太陽暦の周期であり、ティティやナクシャトラのように太陽と月の角度位置から導かれるものではありません。正しく表示するには太陰太陽暦の実装が必要であり、このツールが基盤とする天体暦ベースの角度計算とは異なるため、誤って近似するのではなく、ここでは扱っていません。",
+          ko: "로쿠요는 고유한 계산 규칙을 가진 일본의 태음태양력 주기로, 티티나 낙샤트라처럼 태양과 달의 각도 위치에서 도출되지 않습니다. 이를 올바르게 표시하려면 태음태양력 구현이 필요하며, 이 도구가 기반으로 하는 에페메리스 기반 각도 계산과는 다르기 때문에 잘못 근사하기보다 여기서는 다루지 않습니다.",
         },
       },
     ],

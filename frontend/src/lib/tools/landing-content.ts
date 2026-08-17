@@ -631,6 +631,70 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       },
     ],
   },
+  {
+    // サターンリターン has real Japanese search volume as a Western-astrology
+    // loanword, and 30歳の壁/厄年-adjacent life-transition searches cluster
+    // around the same ages this computes. Sade Sati is the Vedic-native
+    // framing of the same planet; showing both on one page is the honest
+    // answer to "what is Saturn doing to me right now."
+    slug: "saturn-return",
+    sections: ["sadeSati"],
+    chartHandoff: "saturn",
+    title: {
+      en: "Saturn return & Sade Sati calculator",
+      hi: "शनि की वापसी और साढ़े साती कैलकुलेटर",
+      ja: "土星回帰・サデ・サティ計算",
+      ko: "토성 회귀 및 사데 사티 계산기",
+    },
+    description: {
+      en: "See whether transiting Saturn is currently in a Sade Sati or Dhaiya period against your natal Moon, and when your next Saturn return falls.",
+      hi: "जानें कि गोचर शनि आपके जन्म चंद्रमा के सापेक्ष वर्तमान में साढ़े साती या ढैया काल में है या नहीं, और आपकी अगली शनि वापसी कब है।",
+      ja: "トランジットの土星が、出生時の月に対して現在サデ・サティやダイヤの期間にあるかどうか、そして次の土星回帰がいつ訪れるかを確認できます。",
+      ko: "트랜짓 토성이 출생 달 대비 현재 사데 사티나 다이야 시기에 있는지, 그리고 다음 토성 회귀가 언제인지 확인하세요.",
+    },
+    useCase: {
+      en: "Check this during a difficult stretch, or ahead of a milestone birthday — Saturn's periods are long, and knowing which one you're in changes how a season should be read.",
+      hi: "किसी कठिन दौर में या किसी विशेष जन्मदिन से पहले इसे देखें — शनि के काल लंबे होते हैं, और आप किस काल में हैं यह जानने से किसी दौर को समझने का तरीका बदल जाता है।",
+      ja: "つらい時期や、節目の誕生日を前にして確認を。土星の周期は長く、今どの期間にいるかを知ることで、その時期の読み方が変わります。",
+      ko: "힘든 시기나 특별한 생일을 앞두고 확인해 보세요. 토성의 주기는 길며, 지금이 어느 시기인지 아는 것이 그 계절을 읽는 방식을 바꿉니다.",
+    },
+    lead: {
+      en: "Saturn moves slowly — about two and a half years per sign — so its periods are read as long chapters rather than single events. This page shows two readings of the same planet: Sade Sati, the Vedic three-sign passage centred on your natal Moon, and Saturn return, the Western framing of Saturn's ~29.5-year orbit completing.",
+      hi: "शनि धीरे चलता है — प्रति राशि लगभग ढाई वर्ष — इसलिए इसके काल एकल घटनाओं के बजाय लंबे अध्यायों के रूप में पढ़े जाते हैं। यह पृष्ठ एक ही ग्रह की दो पद्धतियाँ दिखाता है: साढ़े साती, जन्म चंद्रमा पर केंद्रित तीन-राशि पद्धति, और शनि की वापसी, शनि की लगभग 29.5 वर्षीय परिक्रमा।",
+      ja: "土星の動きは遅く、一つの星座を通過するのに約2年半かかるため、その周期は単発の出来事ではなく長い章として読まれます。当ページは同じ惑星の二つの読み方を示します。出生時の月を中心とした三星座にわたるヴェーダ式のサデ・サティと、約29.5年で一周する土星の公転という西洋式の土星回帰です。",
+      ko: "토성은 천천히 움직이며 — 한 별자리를 지나는 데 약 2년 반이 걸립니다 — 그래서 그 주기는 단일 사건이 아니라 긴 장(章)으로 읽힙니다. 이 페이지는 같은 행성의 두 가지 해석을 보여줍니다. 출생 달을 중심으로 한 세 별자리에 걸친 베다식 사데 사티와, 약 29.5년 만에 한 바퀴 도는 토성의 공전이라는 서양식 토성 회귀입니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "Is Sade Sati always a difficult period?",
+          hi: "क्या साढ़े साती हमेशा एक कठिन काल होता है?",
+          ja: "サデ・サティは必ず困難な時期になりますか？",
+          ko: "사데 사티는 항상 힘든 시기인가요?",
+        },
+        answer: {
+          en: "No — classical texts describe it as a period of restructuring and consequence rather than uniform hardship, and its effect depends heavily on Saturn's condition and role in the individual chart, not the phase alone. Everyone experiences three Sade Sati passages roughly every 30 years; treating each as automatically difficult overstates what the placement alone says.",
+          hi: "नहीं — शास्त्रों में इसे पुनर्गठन और परिणाम का काल बताया गया है, समान रूप से कठिनाई का नहीं, और इसका प्रभाव कुंडली में शनि की स्थिति और भूमिका पर बहुत निर्भर करता है।",
+          ja: "いいえ。古典はこれを、一様な困難というより再編成と結果の時期として描写しており、その影響は個々のチャートにおける土星の状態と役割に大きく左右され、この段階だけで決まるものではありません。",
+          ko: "아니요. 고전에서는 이를 균일한 고난이 아니라 재편성과 결과의 시기로 설명하며, 그 영향은 개인 차트에서 토성의 상태와 역할에 크게 좌우되고 이 단계만으로 결정되지 않습니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why do the Saturn return ages shown here not account for my exact birth date?",
+          hi: "यहाँ दिखाई गई शनि वापसी की आयु मेरी सटीक जन्म तिथि को ध्यान में क्यों नहीं रखती?",
+          ja: "ここに表示される土星回帰の年齢は、なぜ正確な生年月日を考慮していないのですか？",
+          ko: "여기 표시된 토성 회귀 나이는 왜 정확한 생년월일을 반영하지 않나요?",
+        },
+        answer: {
+          en: "29, 59 and 88 are the commonly cited approximate ages, since Saturn's orbit isn't a round number of years and its apparent speed varies. The precise date a natal Saturn degree is met again requires solving for Saturn's actual position, which is closer to a full transit chart than a single age.",
+          hi: "29, 59 और 88 सामान्यतः उद्धृत अनुमानित आयु हैं, क्योंकि शनि की परिक्रमा वर्षों की पूर्ण संख्या नहीं है और इसकी आभासी गति भिन्न होती है।",
+          ja: "土星の公転は年数としてきりのよい数字ではなく、見かけの速度も変化するため、29歳・59歳・88歳は一般的に引用される目安の年齢です。出生時の土星度数に正確に再び到達する日付を求めるには、単一の年齢よりも実際の土星位置を解く、完全なトランジットチャートに近い計算が必要です。",
+          ko: "토성의 공전은 딱 떨어지는 연수가 아니고 겉보기 속도도 달라지므로, 29세·59세·88세는 일반적으로 인용되는 대략적인 나이입니다. 출생 시 토성 도수에 정확히 다시 도달하는 날짜를 구하려면 단일 나이보다 실제 토성 위치를 계산하는, 완전한 트랜짓 차트에 가까운 계산이 필요합니다.",
+        },
+      },
+    ],
+  },
 ];
 
 export function findToolLanding(slug: string): ToolLanding | undefined {

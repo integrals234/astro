@@ -51,7 +51,8 @@ export interface ToolLanding {
     | "birthTimeSensitivity"
     | "annualForecast"
     | "panchang"
-    | "babyNames";
+    | "babyNames"
+    | "nakshatraFinder";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool
@@ -190,7 +191,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
   },
   {
     slug: "nakshatra-finder",
-    sections: ["planets"],
+    resultPanel: "nakshatraFinder",
     title: {
       en: "Nakshatra finder",
       hi: "नक्षत्र खोजें",

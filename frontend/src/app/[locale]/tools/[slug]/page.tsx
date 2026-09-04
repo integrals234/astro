@@ -11,6 +11,7 @@ import BirthTimeSensitivityPanel from "@/components/BirthTimeSensitivityPanel";
 import AnnualForecastPanel from "@/components/AnnualForecastPanel";
 import PanchangPanel from "@/components/PanchangPanel";
 import BabyNamesPanel from "@/components/BabyNamesPanel";
+import NakshatraFinderPanel from "@/components/NakshatraFinderPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
@@ -163,6 +164,11 @@ export default async function ToolLandingPage({ params }: Params) {
         {tool.resultPanel === "babyNames" ? (
           <div className="mt-10">
             <BabyNamesPanel />
+          </div>
+        ) : null}
+        {tool.resultPanel === "nakshatraFinder" ? (
+          <div className="mt-10">
+            <NakshatraFinderPanel />
           </div>
         ) : null}
         {tool.sections ? (

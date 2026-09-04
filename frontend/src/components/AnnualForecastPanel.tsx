@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
+import NeedsBirthDetails from '@/components/shared/NeedsBirthDetails';
 import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { annualForecastCopy } from '@/lib/annual-forecast-copy';
@@ -77,11 +78,7 @@ export default function AnnualForecastPanel() {
   }
 
   if (!primary) {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="font-body text-text">{copy.needProfile}</p>
-      </div>
-    );
+    return <NeedsBirthDetails idPrefix="annual-forecast" />;
   }
 
   return (

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
+import NeedsBirthDetails from '@/components/shared/NeedsBirthDetails';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { panchangCopy } from '@/lib/panchang-copy';
 
@@ -85,11 +86,7 @@ export default function PanchangPanel() {
   }
 
   if (!primary) {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="font-body text-text">{copy.needProfile}</p>
-      </div>
-    );
+    return <NeedsBirthDetails idPrefix="panchang" />;
   }
 
   return (

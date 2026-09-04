@@ -2,6 +2,7 @@ import { compatibilityLongForm } from "./compatibility";
 import { sukuyoLongForm } from "./sukuyo";
 import { birthChartLongForm } from "./birth-chart";
 import { mangalDoshaLongForm } from "./mangal-dosha";
+import { babyNamesLongForm } from "./baby-names";
 import type { ToolLongForm } from "./types";
 
 /**
@@ -20,6 +21,7 @@ const ALL: ToolLongForm[] = [
   compatibilityLongForm,
   birthChartLongForm,
   mangalDoshaLongForm,
+  babyNamesLongForm,
 ];
 
 export function findToolLongForm(slug: string): ToolLongForm | undefined {

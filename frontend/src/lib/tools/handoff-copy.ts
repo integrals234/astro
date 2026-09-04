@@ -13,7 +13,8 @@ export type ToolHandoffId =
   | "compatibility"
   | "saturn"
   | "moonSign"
-  | "generic";
+  | "generic"
+  | "babyNames";
 
 interface HandoffCopy {
   eyebrow: string;
@@ -57,6 +58,12 @@ export const toolHandoffCopy: Record<
       body: "この計算は正確ですが、結果が示すのは配置であって、人生ではありません。ご自身の状況に即した読み解きは、鑑定士が一件ずつ手作業で準備いたします。",
       cta: "個人鑑定について見る",
     },
+    babyNames: {
+      eyebrow: "ここから先は鑑定の領域です",
+      heading: "音節と数秘術は、名づけの出発点です",
+      body: "パダの頭音と数秘術スコアはどちらも機械的に導けますが、実際に名前を選ぶ決め手にはなりません。家族の思い、姓との響き、実際に呼んだときの印象——そうしたことは計算の外にあります。",
+      cta: "個人鑑定について見る",
+    },
   },
   en: {
     sukuyo: {
@@ -87,6 +94,12 @@ export const toolHandoffCopy: Record<
       eyebrow: "Next step",
       heading: "Beyond the calculation",
       body: "This calculation is precise, but what it returns is a configuration, not a life. Interpreting it against your circumstances is what our astrologers prepare by hand, one reading at a time.",
+      cta: "See personal appraisals",
+    },
+    babyNames: {
+      eyebrow: "Where calculation stops",
+      heading: "The syllable and the score are a starting point",
+      body: "The pada's starting sound and the numerology score are both mechanical. Choosing an actual name isn't — how it sounds with your family name, what it means to you, how it feels to say out loud, sit outside what any calculator can settle.",
       cta: "See personal appraisals",
     },
   },
@@ -121,6 +134,12 @@ export const toolHandoffCopy: Record<
       body: "यह गणना सटीक है, पर जो मिलता है वह एक स्थिति है, जीवन नहीं। आपकी परिस्थितियों के अनुसार उसकी व्याख्या हमारे ज्योतिषी एक-एक करके हाथ से तैयार करते हैं।",
       cta: "व्यक्तिगत परामर्श देखें",
     },
+    babyNames: {
+      eyebrow: "जहाँ गणना समाप्त होती है",
+      heading: "अक्षर और अंक-स्कोर केवल शुरुआत हैं",
+      body: "पाद का प्रारंभिक अक्षर और अंक ज्योतिष स्कोर, दोनों यंत्रवत निकाले जाते हैं। असली नाम चुनना ऐसा नहीं है — परिवार के उपनाम के साथ इसकी ध्वनि, इसका आपके लिए अर्थ, बोलने पर इसका एहसास — यह सब किसी भी गणना की सीमा से बाहर है।",
+      cta: "व्यक्तिगत परामर्श देखें",
+    },
   },
   ko: {
     sukuyo: {
@@ -151,6 +170,12 @@ export const toolHandoffCopy: Record<
       eyebrow: "다음 단계",
       heading: "계산 너머",
       body: "이 계산은 정확하지만, 결과가 보여주는 것은 배치이지 삶이 아닙니다. 상황에 맞는 해석은 점성술사가 한 건씩 직접 준비합니다.",
+      cta: "개인 상담 살펴보기",
+    },
+    babyNames: {
+      eyebrow: "계산이 멈추는 지점",
+      heading: "음절과 점수는 시작일 뿐입니다",
+      body: "파다의 시작 음절과 수비학 점수는 모두 기계적으로 도출됩니다. 실제로 이름을 정하는 일은 그렇지 않습니다 — 성과 어울리는 소리, 그 이름이 지니는 의미, 실제로 불러보았을 때의 느낌은 어떤 계산으로도 정해지지 않습니다.",
       cta: "개인 상담 살펴보기",
     },
   },

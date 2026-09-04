@@ -50,7 +50,8 @@ export interface ToolLanding {
     | "numerology"
     | "birthTimeSensitivity"
     | "annualForecast"
-    | "panchang";
+    | "panchang"
+    | "babyNames";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool
@@ -871,6 +872,111 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "रोकुयो एक जापानी चंद्र-सौर कैलेंडर चक्र है जिसके अपने गणना नियम हैं, यह सूर्य और चंद्रमा की कोणीय स्थितियों से व्युत्पन्न नहीं है जैसे तिथि और नक्षत्र होते हैं। इसे सही ढंग से दिखाने के लिए एक चंद्र-सौर कैलेंडर कार्यान्वयन चाहिए — इसलिए इसे गलत अनुमान लगाने के बजाय यहाँ छोड़ दिया गया है।",
           ja: "六曜は独自の数え方を持つ日本の太陰太陽暦の周期であり、ティティやナクシャトラのように太陽と月の角度位置から導かれるものではありません。正しく表示するには太陰太陽暦の実装が必要であり、このツールが基盤とする天体暦ベースの角度計算とは異なるため、誤って近似するのではなく、ここでは扱っていません。",
           ko: "로쿠요는 고유한 계산 규칙을 가진 일본의 태음태양력 주기로, 티티나 낙샤트라처럼 태양과 달의 각도 위치에서 도출되지 않습니다. 이를 올바르게 표시하려면 태음태양력 구현이 필요하며, 이 도구가 기반으로 하는 에페메리스 기반 각도 계산과는 다르기 때문에 잘못 근사하기보다 여기서는 다루지 않습니다.",
+        },
+      },
+    ],
+  },
+  {
+    // Naam Karan (nakshatra-pada naming) carries real search volume across
+    // the Hindi/English markets, but this site's audience is Japanese —
+    // so the naming *rule* stays classical while the candidate names are
+    // real, current Japanese given names bridged to the nearest Japanese
+    // onset for each pada's akshara (see `naam-akshar.ts`).
+    slug: "baby-names",
+    resultPanel: "babyNames",
+    title: {
+      en: "Baby names by nakshatra",
+      hi: "नक्षत्र अनुसार बच्चे के नाम",
+      ja: "ナクシャトラで選ぶ赤ちゃんの名前",
+      ko: "낙샤트라로 찾는 아기 이름",
+    },
+    description: {
+      en: "Find your baby's Janma Nakshatra and pada, then browse real Japanese given names starting with the traditional syllable for that pada — scored for numerology harmony with their Mulank and Bhagyank.",
+      hi: "अपने बच्चे का जन्म नक्षत्र और पाद जानें, फिर उस पाद के पारंपरिक अक्षर से शुरू होने वाले वास्तविक जापानी नाम देखें — मूलांक और भाग्यांक के साथ अंक ज्योतिष सामंजस्य के अनुसार स्कोर किए गए।",
+      ja: "赤ちゃんの生まれナクシャトラとパダを調べ、そのパダの伝統的な音節から始まる実在の日本人名を、ムーランク・バギャンクとの数秘術的な相性スコアとともに閲覧できます。",
+      ko: "아기의 출생 낙샤트라와 파다를 확인하고, 그 파다의 전통 음절로 시작하는 실제 일본 이름을 물랑크·바갼크와의 수비학적 조화 점수와 함께 살펴보세요.",
+    },
+    useCase: {
+      en: "For a Japanese family naming a child under a Vedic birth star — a way to bring the traditional syllable rule and a real, usable Japanese name together, rather than choosing one system and ignoring the other.",
+      hi: "वैदिक जन्म नक्षत्र के अनुसार बच्चे का नामकरण करने वाले जापानी परिवार के लिए — पारंपरिक अक्षर नियम और एक वास्तविक, प्रयोग योग्य जापानी नाम को एक साथ लाने का तरीका।",
+      ja: "ヴェーダの生まれ星のもとで子どもに名前をつける日本のご家族のために。どちらか一方の体系だけに頼るのではなく、伝統的な音節の規則と実際に使える日本人名を両立させる方法です。",
+      ko: "베다 출생성 아래 아이 이름을 짓는 일본 가정을 위해 — 한 체계만 따르는 대신 전통 음절 규칙과 실제로 쓸 수 있는 일본 이름을 함께 고려하는 방법입니다.",
+    },
+    lead: {
+      en: "Naam Karan is the classical Hindu naming tradition: your baby's Janma Nakshatra and pada determine a specific starting syllable. This tool finds that syllable from your baby's birth details, then shows real Japanese given names built around it, each scored for numerology harmony with the Mulank and Bhagyank derived from the same birth date.",
+      hi: "नामकरण एक शास्त्रीय हिंदू नामकरण परंपरा है: आपके बच्चे का जन्म नक्षत्र और पाद एक विशिष्ट प्रारंभिक अक्षर निर्धारित करते हैं। यह उपकरण आपके बच्चे के जन्म विवरण से वह अक्षर खोजता है, फिर उसी जन्म तिथि से निकाले गए मूलांक और भाग्यांक के साथ अंक ज्योतिष सामंजस्य के अनुसार स्कोर किए गए, उसके इर्द-गिर्द बने वास्तविक जापानी नाम दिखाता है।",
+      ja: "ナームカランは古典的なヒンドゥーの命名伝統です。赤ちゃんの生まれナクシャトラとパダによって、特定の頭音が決まります。このツールは赤ちゃんの出生データからその音節を求め、同じ生年月日から導いたムーランクとバギャンクとの数秘術的な相性でスコア付けした、実在の日本人名を表示します。",
+      ko: "남카란은 고전 힌두 작명 전통입니다. 아기의 출생 낙샤트라와 파다가 특정한 시작 음절을 정합니다. 이 도구는 아기의 출생 정보로 그 음절을 찾은 뒤, 같은 생년월일에서 도출한 물랑크·바갼크와의 수비학적 조화로 점수를 매긴 실제 일본 이름을 보여줍니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "How does the nakshatra naming rule actually work?",
+          hi: "नक्षत्र नामकरण नियम वास्तव में कैसे काम करता है?",
+          ja: "ナクシャトラの命名規則は実際どのように機能しますか？",
+          ko: "낙샤트라 작명 규칙은 실제로 어떻게 작동하나요?",
+        },
+        answer: {
+          en: "Each of the 27 nakshatras is divided into 4 padas, and classical Jyotish assigns a specific Sanskrit akshara (syllable) to each of the 108 resulting padas. Your baby's Moon position at birth determines which pada applies, which in turn gives the traditional starting sound for the name.",
+          hi: "27 नक्षत्रों में से प्रत्येक को 4 पादों में बांटा गया है, और शास्त्रीय ज्योतिष इन 108 पादों में से प्रत्येक को एक विशिष्ट संस्कृत अक्षर देता है। जन्म के समय आपके बच्चे की चंद्र स्थिति तय करती है कि कौन-सा पाद लागू होता है, जो बदले में नाम के लिए पारंपरिक प्रारंभिक ध्वनि देता है।",
+          ja: "27のナクシャトラはそれぞれ4つのパダに分かれ、古典ジョーティッシュはこの108のパダそれぞれに特定のサンスクリット音節（アクシャラ）を割り当てます。出生時の赤ちゃんの月の位置によってどのパダに当たるかが決まり、それが名前の伝統的な頭音になります。",
+          ko: "27개의 낙샤트라는 각각 4개의 파다로 나뉘며, 고전 조티시는 이렇게 생긴 108개의 파다 각각에 특정한 산스크리트 음절(악샤라)을 배정합니다. 출생 시 아기의 달 위치가 어느 파다에 해당하는지를 정하고, 이것이 이름의 전통적인 시작 소리가 됩니다.",
+        },
+      },
+      {
+        question: {
+          en: "What if I don't know the exact birth time?",
+          hi: "अगर मुझे सटीक जन्म समय नहीं पता तो?",
+          ja: "正確な出生時刻がわからない場合はどうすればよいですか？",
+          ko: "정확한 출생 시각을 모른다면 어떻게 하나요?",
+        },
+        answer: {
+          en: "Pada needs a precise Moon position, which needs a birth time. Without one, this tool lets you choose the nakshatra and pada directly instead of blocking you — you lose the precision of a computed chart, but the naming rule itself still applies exactly the same way.",
+          hi: "पाद के लिए चंद्रमा की सटीक स्थिति चाहिए, जिसके लिए जन्म समय आवश्यक है। समय के बिना, यह उपकरण आपको रोकने के बजाय सीधे नक्षत्र और पाद चुनने देता है — आप गणना की गई कुंडली की सटीकता खो देते हैं, पर नामकरण नियम पूरी तरह वैसे ही लागू होता है।",
+          ja: "パダを求めるには月の正確な位置が必要で、それには出生時刻が要ります。時刻がわからない場合、このツールは進行を止める代わりに、ナクシャトラとパダを直接選べるようにします。計算されたチャートの精度は失われますが、命名規則そのものは同じように適用されます。",
+          ko: "파다를 구하려면 달의 정확한 위치가 필요하고, 이를 위해서는 출생 시각이 필요합니다. 시각을 모른다면 이 도구는 진행을 막는 대신 낙샤트라와 파다를 직접 선택하게 해줍니다. 계산된 차트의 정밀함은 잃지만, 작명 규칙 자체는 동일하게 적용됩니다.",
+        },
+      },
+      {
+        question: {
+          en: "Why Japanese names for a Sanskrit naming rule?",
+          hi: "संस्कृत नामकरण नियम के लिए जापानी नाम क्यों?",
+          ja: "サンスクリットの命名規則に、なぜ日本人名を使うのですか？",
+          ko: "산스크리트 작명 규칙에 왜 일본 이름을 쓰나요?",
+        },
+        answer: {
+          en: "This tool is built for families naming a child who will carry a Japanese name. Japanese has no letter-for-letter match for every Sanskrit consonant, so each pada's akshara is bridged to the nearest natural Japanese onset rather than transliterated literally — the naming rule is followed in spirit, with a name that's actually usable in Japan.",
+          hi: "यह उपकरण उन परिवारों के लिए बनाया गया है जो अपने बच्चे का जापानी नाम रखना चाहते हैं। जापानी में हर संस्कृत व्यंजन का अक्षर-दर-अक्षर मेल नहीं है, इसलिए हर पाद के अक्षर को शाब्दिक लिप्यंतरण के बजाय निकटतम स्वाभाविक जापानी ध्वनि से जोड़ा गया है — नामकरण नियम की भावना का पालन होता है, साथ ही एक ऐसा नाम मिलता है जो जापान में वास्तव में प्रयोग हो सके।",
+          ja: "このツールは、日本人名を持つことになる子どもに名前をつけるご家族のために作られています。日本語にはサンスクリット語のすべての子音に一致する音があるわけではないため、各パダのアクシャラは文字どおりの転写ではなく、最も自然に近い日本語の頭音に結び付けています。命名規則の趣旨を保ちながら、実際に日本で使える名前になります。",
+          ko: "이 도구는 일본 이름을 갖게 될 아이의 이름을 짓는 가정을 위해 만들어졌습니다. 일본어에는 산스크리트어의 모든 자음과 정확히 일치하는 소리가 없으므로, 각 파다의 악샤라는 문자 그대로 옮기는 대신 가장 자연스러운 일본어 첫소리에 연결했습니다. 작명 규칙의 취지를 지키면서 실제로 일본에서 쓸 수 있는 이름이 됩니다.",
+        },
+      },
+      {
+        question: {
+          en: "Can the nakshatra rule and the numerology score disagree?",
+          hi: "क्या नक्षत्र नियम और अंक ज्योतिष स्कोर असहमत हो सकते हैं?",
+          ja: "ナクシャトラの規則と数秘術のスコアが食い違うことはありますか？",
+          ko: "낙샤트라 규칙과 수비학 점수가 서로 다를 수 있나요?",
+        },
+        answer: {
+          en: "Yes, and that's expected — they're two separate traditions read together, not one system. Every name shown already starts with the correct traditional syllable; the numerology score is a second, complementary layer ranking those names against each other, not a filter that overrides the syllable rule.",
+          hi: "हां, और यह अपेक्षित है — ये एक साथ पढ़ी जाने वाली दो अलग परंपराएं हैं, एक प्रणाली नहीं। दिखाया गया हर नाम पहले से ही सही पारंपरिक अक्षर से शुरू होता है; अंक ज्योतिष स्कोर एक दूसरी, पूरक परत है जो इन नामों को एक-दूसरे के मुकाबले क्रमबद्ध करती है, अक्षर नियम को अधिलेखित करने वाला फ़िल्टर नहीं है।",
+          ja: "はい、それは想定内です。これらは一つの体系ではなく、併せて読む二つの別々の伝統だからです。表示される名前はすでにすべて正しい伝統的な音節で始まっており、数秘術のスコアはそれらの名前を互いに比較して並べる第二の補完的なレイヤーであって、音節の規則を上書きするフィルターではありません。",
+          ko: "네, 그것은 예상된 일입니다. 이는 하나의 체계가 아니라 함께 읽는 두 개의 별개 전통이기 때문입니다. 표시되는 모든 이름은 이미 올바른 전통 음절로 시작하며, 수비학 점수는 그 이름들을 서로 비교해 순위를 매기는 보조적인 층일 뿐, 음절 규칙을 무시하는 필터가 아닙니다.",
+        },
+      },
+      {
+        question: {
+          en: "Can I share the shortlist with family?",
+          hi: "क्या मैं शॉर्टलिस्ट परिवार के साथ साझा कर सकता/सकती हूं?",
+          ja: "候補リストを家族と共有できますか？",
+          ko: "후보 목록을 가족과 공유할 수 있나요?",
+        },
+        answer: {
+          en: "Yes — the shortlist has a WhatsApp share button that prefills the baby's nakshatra, pada, syllable, and every shortlisted name with its meaning and score, plus a copy-to-clipboard fallback for anywhere WhatsApp isn't the right channel.",
+          hi: "हां — शॉर्टलिस्ट में एक व्हाट्सएप शेयर बटन है जो बच्चे के नक्षत्र, पाद, अक्षर, और हर शॉर्टलिस्ट किए गए नाम को उसके अर्थ और स्कोर के साथ पहले से भर देता है, साथ ही जहां व्हाट्सएप सही माध्यम न हो वहां के लिए कॉपी-टू-क्लिपबोर्ड विकल्प भी है।",
+          ja: "はい。候補リストにはWhatsApp共有ボタンがあり、赤ちゃんのナクシャトラ、パダ、音節、そして候補に入れた各名前をその意味とスコアとともに自動入力します。WhatsAppが適さない場合のために、クリップボードへのコピー機能もあります。",
+          ko: "네 — 후보 목록에는 WhatsApp 공유 버튼이 있어 아기의 낙샤트라, 파다, 음절, 그리고 후보에 추가한 각 이름을 의미와 점수와 함께 미리 채워 넣습니다. WhatsApp이 적절하지 않은 경우를 위한 클립보드 복사 기능도 있습니다.",
         },
       },
     ],

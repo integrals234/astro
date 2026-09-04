@@ -4,6 +4,7 @@ export interface Planet {
   sign: string;
   d1_house: number;
   d9_sign: string;
+  d10_sign: string;
   chalit_house: number;
   sign_lord: string;
   nakshatra: string;
@@ -32,6 +33,7 @@ export interface ChartData {
   ascendant_longitude: number;
   ascendant_sign: string;
   d9_ascendant_sign: string;
+  d10_ascendant_sign: string;
   ascendant_nakshatra: string;
   planets: Planet[];
   transit_planets: TransitPlanet[];

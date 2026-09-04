@@ -12,6 +12,9 @@ import AnnualForecastPanel from "@/components/AnnualForecastPanel";
 import PanchangPanel from "@/components/PanchangPanel";
 import BabyNamesPanel from "@/components/BabyNamesPanel";
 import NakshatraFinderPanel from "@/components/NakshatraFinderPanel";
+import DoshaRemedyReference from "@/components/DoshaRemedyReference";
+import GemstonePanel from "@/components/GemstonePanel";
+import CareerReportPanel from "@/components/CareerReportPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
 import { uiText } from "@/lib/education";
 import {
@@ -171,6 +174,16 @@ export default async function ToolLandingPage({ params }: Params) {
             <NakshatraFinderPanel />
           </div>
         ) : null}
+        {tool.resultPanel === "gemstone" ? (
+          <div className="mt-10">
+            <GemstonePanel />
+          </div>
+        ) : null}
+        {tool.resultPanel === "careerReport" ? (
+          <div className="mt-10">
+            <CareerReportPanel />
+          </div>
+        ) : null}
         {tool.sections ? (
           <div className="mt-10" id="tool-form">
             <ChartSectionResult
@@ -180,6 +193,7 @@ export default async function ToolLandingPage({ params }: Params) {
             />
           </div>
         ) : null}
+        {tool.slug === "mangal-dosha" ? <DoshaRemedyReference /> : null}
 
         <hr className="washi-hairline my-14" />
 

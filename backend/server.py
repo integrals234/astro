@@ -77,6 +77,7 @@ class PlanetData(BaseModel):
     dignity: str  # Exalted, Debilitated, Own Sign, or Neutral
     d1_house: int
     d9_sign: str
+    d10_sign: str
     chalit_house: int
     aspects_houses: List[int] # Houses this planet is aspecting
 
@@ -97,6 +98,7 @@ class FullChartResponse(BaseModel):
     ascendant_longitude: float
     ascendant_sign: str
     d9_ascendant_sign: str
+    d10_ascendant_sign: str
     ascendant_nakshatra: str
     planets: List[PlanetData]
     transit_planets: List[TransitPlanetData]
@@ -161,6 +163,16 @@ def calculate_d9_sign(longitude: float) -> str:
     elif sign_idx in [1, 5, 9]: start = 9
     elif sign_idx in [2, 6, 10]: start = 6
     else: start = 3
+    return ZODIAC_SIGNS[(start + part) % 12]
+
+def calculate_d10_sign(longitude: float) -> str:
+    """Dashamsha (career/profession divisional chart): each sign split into
+    10 equal 3-degree parts. Standard Parashari rule — odd-numbered signs
+    (1-indexed: Aries, Gemini, Leo, Libra, Sagittarius, Aquarius) count from
+    themselves; even-numbered signs count from the 9th sign ahead."""
+    sign_idx = int(longitude // 30)
+    part = int((longitude % 30) // (30 / 10))
+    start = sign_idx if sign_idx % 2 == 0 else (sign_idx + 8) % 12
     return ZODIAC_SIGNS[(start + part) % 12]
 
 def calculate_chalit_house(planet_lon: float, cusps: tuple) -> int:
@@ -265,6 +277,7 @@ async def compute_charts(payload: BirthDataRequest):
         asc_lon = ascmc[0]
         asc_sign = get_sign(asc_lon)
         d9_asc_sign = calculate_d9_sign(asc_lon)
+        d10_asc_sign = calculate_d10_sign(asc_lon)
         asc_nak, _ = get_nakshatra_info(asc_lon)
         
         planets = []
@@ -286,7 +299,7 @@ async def compute_charts(payload: BirthDataRequest):
                 name=name, longitude=round(lon, 6), sign=sign,
                 sign_lord=SIGN_LORDS[sign], nakshatra=nak_name, nakshatra_pada=pada,
                 is_retrograde=is_retro, dignity=get_dignity(name, sign),
-                d1_house=house, d9_sign=calculate_d9_sign(lon),
+                d1_house=house, d9_sign=calculate_d9_sign(lon), d10_sign=calculate_d10_sign(lon),
                 chalit_house=calculate_chalit_house(lon, cusps),
                 aspects_houses=get_vedic_aspects(name, house)
             ))
@@ -297,12 +310,12 @@ async def compute_charts(payload: BirthDataRequest):
         k_sign = get_sign(ketu_lon)
         k_nak, k_pada = get_nakshatra_info(ketu_lon)
         k_house = calculate_d1_house(ketu_lon, asc_lon)
-        
+
         planets.append(PlanetData(
             name="Ketu", longitude=round(ketu_lon, 6), sign=k_sign,
             sign_lord=SIGN_LORDS[k_sign], nakshatra=k_nak, nakshatra_pada=k_pada,
             is_retrograde=True, dignity=get_dignity("Ketu", k_sign),
-            d1_house=k_house, d9_sign=calculate_d9_sign(ketu_lon),
+            d1_house=k_house, d9_sign=calculate_d9_sign(ketu_lon), d10_sign=calculate_d10_sign(ketu_lon),
             chalit_house=calculate_chalit_house(ketu_lon, cusps),
             aspects_houses=get_vedic_aspects("Ketu", k_house)
         ))
@@ -346,6 +359,7 @@ async def compute_charts(payload: BirthDataRequest):
             ascendant_longitude=round(asc_lon, 6),
             ascendant_sign=asc_sign,
             d9_ascendant_sign=d9_asc_sign,
+            d10_ascendant_sign=d10_asc_sign,
             ascendant_nakshatra=asc_nak,
             planets=planets,
             transit_planets=transit_planets,
@@ -519,7 +533,7 @@ async def annual_forecast(payload: AnnualForecastRequest):
                 name=name, longitude=round(lon, 6), sign=sign,
                 sign_lord=SIGN_LORDS[sign], nakshatra=nak_name, nakshatra_pada=pada,
                 is_retrograde=is_retro, dignity=get_dignity(name, sign),
-                d1_house=house, d9_sign=calculate_d9_sign(lon),
+                d1_house=house, d9_sign=calculate_d9_sign(lon), d10_sign=calculate_d10_sign(lon),
                 chalit_house=calculate_chalit_house(lon, cusps),
                 aspects_houses=get_vedic_aspects(name, house)
             ))
@@ -533,7 +547,7 @@ async def annual_forecast(payload: AnnualForecastRequest):
             name="Ketu", longitude=round(ketu_lon, 6), sign=k_sign,
             sign_lord=SIGN_LORDS[k_sign], nakshatra=k_nak, nakshatra_pada=k_pada,
             is_retrograde=True, dignity=get_dignity("Ketu", k_sign),
-            d1_house=k_house, d9_sign=calculate_d9_sign(ketu_lon),
+            d1_house=k_house, d9_sign=calculate_d9_sign(ketu_lon), d10_sign=calculate_d10_sign(ketu_lon),
             chalit_house=calculate_chalit_house(ketu_lon, cusps),
             aspects_houses=get_vedic_aspects("Ketu", k_house)
         ))

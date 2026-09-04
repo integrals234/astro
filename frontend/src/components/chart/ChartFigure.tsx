@@ -37,6 +37,7 @@ export interface ChartFigureProps {
 const VIEW_TO_TAB_TITLE_KEY: Record<ChartView, keyof ChartTranslations['tabTitles']> = {
   lagna: 'D1',
   d9: 'D9',
+  d10: 'D10',
   chalit: 'Chalit',
   moon: 'Chandra',
   gochar: 'Gochar',

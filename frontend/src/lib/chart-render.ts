@@ -27,7 +27,7 @@ import { getIntegerDegree, NUMBER_TO_SIGN, SIGN_TO_NUMBER } from "@/lib/chart-fo
  *    each consumer re-deriving `activeTab === 'D1' || activeTab === 'Gochar'`
  *    (or the view-based equivalent) independently.
  */
-export type ChartView = "lagna" | "d9" | "chalit" | "moon" | "gochar";
+export type ChartView = "lagna" | "d9" | "d10" | "chalit" | "moon" | "gochar";
 
 export interface ChartViewOptions {
   /** Which point Gochar anchors transits on. Default `"lagna"`. */
@@ -50,6 +50,17 @@ export interface ChartViewData {
   /** True for the two views where the Lagna marker belongs in house 1. */
   showAscendant: boolean;
   ascendantDegree: number;
+}
+
+/**
+ * House a sign falls in, counted from a given ascendant sign — the shared
+ * "which house is this divisional sign in" math the D9 and D10 branches
+ * below both need, and that `CareerReportPanel` also needs to place planets
+ * relative to the D10 Lagna outside of a `ChartFigure` diagram.
+ */
+export function houseFromSign(sign: string, ascendantSign: string): number {
+  const ascNum = SIGN_TO_NUMBER[ascendantSign];
+  return ((SIGN_TO_NUMBER[sign] - ascNum + 12) % 12) + 1;
 }
 
 function mapPlanet(
@@ -109,19 +120,36 @@ export function chartView(
   }
 
   if (view === "d9") {
-    const ascNum = SIGN_TO_NUMBER[data.d9_ascendant_sign];
     return {
       // p.d9_sign moves each planet to its Navamsha sign, not its D1 sign.
       planets: data.planets.map((p) =>
         mapPlanet(
           p,
-          ((SIGN_TO_NUMBER[p.d9_sign] - ascNum + 12) % 12) + 1,
+          houseFromSign(p.d9_sign, data.d9_ascendant_sign),
           name(p.name),
           p.d9_sign,
         ),
       ),
       transitPlanets: [],
       ascendantSign: data.d9_ascendant_sign,
+      showAscendant: false,
+      ascendantDegree,
+    };
+  }
+
+  if (view === "d10") {
+    return {
+      // p.d10_sign moves each planet to its Dashamsha sign, not its D1 sign.
+      planets: data.planets.map((p) =>
+        mapPlanet(
+          p,
+          houseFromSign(p.d10_sign, data.d10_ascendant_sign),
+          name(p.name),
+          p.d10_sign,
+        ),
+      ),
+      transitPlanets: [],
+      ascendantSign: data.d10_ascendant_sign,
       showAscendant: false,
       ascendantDegree,
     };

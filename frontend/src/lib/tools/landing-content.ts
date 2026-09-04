@@ -52,7 +52,9 @@ export interface ToolLanding {
     | "annualForecast"
     | "panchang"
     | "babyNames"
-    | "nakshatraFinder";
+    | "nakshatraFinder"
+    | "gemstone"
+    | "careerReport";
   /**
    * Chart section(s) this tool renders inline, stacked in this order, via
    * `ChartSectionBody` — the same component the workspace uses, so a tool
@@ -141,6 +143,68 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "लग्न और भाव जन्म समय पर निर्भर करते हैं, इसलिए अनुमानित समय से भाव भी अनुमानित होंगे। चंद्रमा को छोड़कर अन्य ग्रहों की राशि-स्थिति धीरे बदलती है और मोटे तौर पर विश्वसनीय रहती है।",
           ja: "アセンダントとハウスの位置は出生時刻に依存するため、時刻が概算であればハウスも概算になります。月以外の惑星の星座位置はゆっくり変化するため、おおむね信頼できます。",
           ko: "상승궁과 하우스 위치는 출생 시각에 좌우되므로, 시각이 대략적이면 하우스도 대략적입니다. 달을 제외한 행성의 별자리 위치는 천천히 변하므로 대체로 신뢰할 수 있습니다.",
+        },
+      },
+    ],
+  },
+  {
+    // The ascendant alone, as its own answer to its own search intent —
+    // distinct from `birth-chart`, which shows the Lagna diagram alongside
+    // every planet. Someone searching "lagna calculator" specifically wants
+    // just this.
+    slug: "lagna-calculator",
+    sections: ["lagna"],
+    title: {
+      en: "Lagna (ascendant) calculator",
+      hi: "लग्न कैलकुलेटर",
+      ja: "ラグナ（アセンダント）計算",
+      ko: "라그나(상승궁) 계산기",
+    },
+    description: {
+      en: "Find your Lagna — the sign rising on the eastern horizon at the moment of birth, and the foundation the rest of your Vedic chart is read from.",
+      hi: "अपना लग्न जानें — जन्म के क्षण पूर्वी क्षितिज पर उदय होने वाली राशि, जिस पर आपकी पूरी वैदिक कुंडली आधारित होती है।",
+      ja: "出生の瞬間に東の地平線から昇る星座、ラグナを調べます。ヴェーダ占星術のチャート全体はここから読まれます。",
+      ko: "태어난 순간 동쪽 지평선에서 떠오르는 별자리, 라그나를 확인하세요. 베다 차트 전체가 여기서부터 읽힙니다.",
+    },
+    useCase: {
+      en: "The starting point before reading anything else in a Vedic chart — houses, planetary strength, and yogas are all counted from here.",
+      hi: "वैदिक कुंडली में कुछ भी पढ़ने से पहले का प्रारंभिक बिंदु — भाव, ग्रह बल और योग सभी यहीं से गिने जाते हैं।",
+      ja: "ヴェーダ・チャートで他の何かを読む前の出発点です。ハウス、惑星の強さ、ヨーガはすべてここから数えられます。",
+      ko: "베다 차트에서 다른 무엇을 읽기 전의 출발점입니다. 하우스, 행성의 힘, 요가 모두 여기서부터 셉니다.",
+    },
+    lead: {
+      en: "Your Lagna (ascendant) is the zodiac sign that was rising on the eastern horizon at the exact moment and place of your birth. It sets house 1 — the self as presented to the world — and every other house in the chart is counted from it.",
+      hi: "आपका लग्न वह राशि है जो आपके जन्म के ठीक समय और स्थान पर पूर्वी क्षितिज पर उदय हो रही थी। यह भाव-1 — संसार के सामने प्रस्तुत स्वयं — तय करता है, और कुंडली के अन्य सभी भाव इसी से गिने जाते हैं।",
+      ja: "ラグナ（アセンダント）は、あなたが生まれた正確な時刻と場所において東の地平線から昇っていた星座です。これが第1室——世界に示す自己——を定め、チャートの他のすべてのハウスはここから数えられます。",
+      ko: "라그나(상승궁)는 당신이 태어난 정확한 시각과 장소에서 동쪽 지평선으로 떠오르고 있던 별자리입니다. 이것이 1궁 — 세상에 드러나는 자아 — 을 정하며, 차트의 다른 모든 하우스는 여기서부터 셉니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "Why does the Lagna need an exact birth time?",
+          hi: "लग्न के लिए सटीक जन्म समय क्यों आवश्यक है?",
+          ja: "ラグナに正確な出生時刻が必要なのはなぜですか？",
+          ko: "라그나에 정확한 출생 시각이 필요한 이유는 무엇인가요?",
+        },
+        answer: {
+          en: "The ascendant moves through the entire zodiac roughly once every 24 hours — about one degree every four minutes — so even a 15-20 minute error can shift it into a neighbouring sign. If your birth time is uncertain, the Birth Time Sensitivity checker shows exactly where that uncertainty matters.",
+          hi: "लग्न लगभग हर 24 घंटे में पूरे राशिचक्र से गुजरता है — लगभग हर चार मिनट में एक अंश — इसलिए 15-20 मिनट की त्रुटि भी इसे पड़ोसी राशि में बदल सकती है। यदि आपका जन्म समय अनिश्चित है, तो जन्म समय संवेदनशीलता जाँच बताती है कि यह अनिश्चितता कहाँ मायने रखती है।",
+          ja: "アセンダントはおよそ24時間で黄道を一周します——約4分で1度——そのため15〜20分の誤差でも隣の星座にずれることがあります。出生時刻が不確かな場合は、出生時刻感度チェックで、その不確かさがどこで問題になるかを確認できます。",
+          ko: "상승궁은 약 24시간마다 황도 전체를 한 바퀴 돕니다 — 약 4분마다 1도 — 그래서 15~20분의 오차만으로도 이웃 별자리로 바뀔 수 있습니다. 출생 시각이 불확실하다면, 출생 시각 민감도 확인에서 그 불확실성이 어디서 문제가 되는지 볼 수 있습니다.",
+        },
+      },
+      {
+        question: {
+          en: "Is the Lagna the same as my zodiac sign?",
+          hi: "क्या लग्न मेरी राशि के समान है?",
+          ja: "ラグナは自分の星座（サン・サイン）と同じですか？",
+          ko: "라그나는 제 별자리(태양궁)와 같은가요?",
+        },
+        answer: {
+          en: "No — what most people call their \"sign\" in casual conversation is usually their Sun sign, which changes once a month. The Lagna is a different, faster-moving point tied to the exact time of day you were born, not just the date.",
+          hi: "नहीं — सामान्य बातचीत में लोग जिसे अपनी 'राशि' कहते हैं वह प्रायः सूर्य राशि होती है, जो महीने में एक बार बदलती है। लग्न एक भिन्न, तेज़ी से बदलने वाला बिंदु है जो केवल तिथि नहीं बल्कि जन्म के सटीक समय से जुड़ा है।",
+          ja: "いいえ——日常会話で「自分の星座」と呼ばれるものは通常、太陽星座（サン・サイン）であり、月に一度変わります。ラグナは別の、より速く動く点で、日付だけでなく生まれた正確な時刻に結びついています。",
+          ko: "아니요 — 일상 대화에서 흔히 말하는 '별자리'는 보통 태양궁이며, 한 달에 한 번씩 바뀝니다. 라그나는 날짜뿐 아니라 태어난 정확한 시각에 연결된, 더 빠르게 움직이는 다른 지점입니다.",
         },
       },
     ],
@@ -978,6 +1042,128 @@ export const TOOL_LANDINGS: ToolLanding[] = [
           hi: "हां — शॉर्टलिस्ट में एक व्हाट्सएप शेयर बटन है जो बच्चे के नक्षत्र, पाद, अक्षर, और हर शॉर्टलिस्ट किए गए नाम को उसके अर्थ और स्कोर के साथ पहले से भर देता है, साथ ही जहां व्हाट्सएप सही माध्यम न हो वहां के लिए कॉपी-टू-क्लिपबोर्ड विकल्प भी है।",
           ja: "はい。候補リストにはWhatsApp共有ボタンがあり、赤ちゃんのナクシャトラ、パダ、音節、そして候補に入れた各名前をその意味とスコアとともに自動入力します。WhatsAppが適さない場合のために、クリップボードへのコピー機能もあります。",
           ko: "네 — 후보 목록에는 WhatsApp 공유 버튼이 있어 아기의 낙샤트라, 파다, 음절, 그리고 후보에 추가한 각 이름을 의미와 점수와 함께 미리 채워 넣습니다. WhatsApp이 적절하지 않은 경우를 위한 클립보드 복사 기능도 있습니다.",
+        },
+      },
+    ],
+  },
+  {
+    // Gemstone therapy is one of the more consequential traditional
+    // remedies — a wrong stone is classically believed to backfire, not
+    // just do nothing — so this page leans harder into caution and the
+    // escalation-to-a-human path than any other free tool on the site.
+    slug: "gemstone-recommendation",
+    resultPanel: "gemstone",
+    title: {
+      en: "Gemstone recommendation",
+      hi: "रत्न सुझाव",
+      ja: "宝石（ジェムストーン）の提案",
+      ko: "보석 추천",
+    },
+    description: {
+      en: "Find the classical gemstone recommendation for your Lagna lord and your chart's weakest placement, with a cheaper substitute stone for each — and a clear caution to consult before wearing anything.",
+      hi: "अपने लग्न स्वामी और कुंडली की सबसे कमजोर स्थिति के लिए शास्त्रीय रत्न सुझाव जानें, प्रत्येक के लिए सस्ता विकल्प सहित — साथ ही कुछ भी पहनने से पहले परामर्श की स्पष्ट सलाह।",
+      ja: "あなたのラグナの支配星と、チャート内で最も弱い配置に対する古典的な宝石の提案を、それぞれの安価な代替石とともに確認できます。身につける前のご相談についての明確な注意も添えています。",
+      ko: "당신의 라그나 지배 행성과 차트에서 가장 약한 배치에 대한 고전적 보석 추천을, 각각의 저렴한 대체 보석과 함께 확인하세요. 착용 전 상담에 대한 명확한 안내도 포함합니다.",
+    },
+    useCase: {
+      en: "A starting point before buying or wearing a gemstone on someone's advice — see the classical reasoning first, then confirm it with a professional.",
+      hi: "किसी की सलाह पर रत्न खरीदने या पहनने से पहले का प्रारंभिक बिंदु — पहले शास्त्रीय तर्क देखें, फिर किसी विशेषज्ञ से इसकी पुष्टि करें।",
+      ja: "誰かの助言で宝石を購入・着用する前の出発点として。まず古典的な根拠を確認し、その上で専門家に確認してください。",
+      ko: "누군가의 조언으로 보석을 사거나 착용하기 전의 출발점으로. 먼저 고전적 근거를 확인한 뒤 전문가에게 확인받으세요.",
+    },
+    lead: {
+      en: "Vedic gemstone therapy recommends a stone to strengthen a specific planet — most safely the ruler of your Lagna (ascendant), and more specifically the one planet your chart shows as classically weak. This tool shows both, with a cheaper substitute for each and a clear caution about the ones that carry real classical risk if wrong.",
+      hi: "वैदिक रत्न चिकित्सा किसी विशिष्ट ग्रह को मजबूत करने के लिए एक रत्न सुझाती है — सबसे सुरक्षित रूप से आपके लग्न के स्वामी को, और अधिक विशिष्ट रूप से उस एक ग्रह को जो आपकी कुंडली में शास्त्रीय रूप से कमजोर दिखता है। यह उपकरण दोनों दिखाता है, प्रत्येक के लिए सस्ता विकल्प सहित।",
+      ja: "ヴェーダの宝石療法は、特定の惑星を強化するための石を勧めます——最も安全なのはラグナ（アセンダント）の支配星、より具体的には、あなたのチャートで古典的に弱いと示される惑星です。このツールは両方を、それぞれの安価な代替石とともに示します。",
+      ko: "베다 보석 요법은 특정 행성을 강화하기 위한 보석을 추천합니다 — 가장 안전한 것은 라그나(상승궁)의 지배 행성이며, 더 구체적으로는 차트에서 고전적으로 약하다고 나타나는 행성입니다. 이 도구는 둘 다 보여주며, 각각 저렴한 대체 보석도 함께 제공합니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "Is it safe to wear any gemstone this page recommends?",
+          hi: "क्या इस पृष्ठ द्वारा सुझाया गया कोई भी रत्न पहनना सुरक्षित है?",
+          ja: "このページが提案する宝石を身につけても安全ですか？",
+          ko: "이 페이지가 추천하는 보석을 착용해도 안전한가요?",
+        },
+        answer: {
+          en: "Treat this as a starting point, not a prescription. Classical practice holds that the wrong stone — worn for the wrong planet, in the wrong metal, or without accounting for the rest of the chart — can do more harm than good, especially for Saturn, Mars, Rahu, and Ketu. Consult a professional before buying or wearing anything shown here.",
+          hi: "इसे नुस्खा नहीं बल्कि एक शुरुआती बिंदु मानें। शास्त्रीय मान्यता है कि गलत ग्रह के लिए, गलत धातु में, या कुंडली के बाकी हिस्से को ध्यान में रखे बिना पहना गया गलत रत्न लाभ के बजाय हानि कर सकता है — विशेषकर शनि, मंगल, राहु और केतु के लिए। यहाँ दिखाई गई किसी भी चीज़ को खरीदने या पहनने से पहले किसी विशेषज्ञ से परामर्श करें।",
+          ja: "これは処方ではなく出発点として捉えてください。誤った惑星のために、誤った金属で、あるいはチャート全体を考慮せずに身につけた誤った石は、益より害になり得ると古典では考えられています。特に土星・火星・ラーフ・ケートゥについては注意が必要です。ここに示すものを購入・着用する前に、必ず専門家にご相談ください。",
+          ko: "이것을 처방이 아닌 출발점으로 여기세요. 잘못된 행성을 위해, 잘못된 금속으로, 또는 차트 전체를 고려하지 않고 착용한 잘못된 보석은 이로움보다 해로움이 클 수 있다고 고전에서는 봅니다 — 특히 토성, 화성, 라후, 케투의 경우 더욱 그렇습니다. 여기 표시된 것을 구매하거나 착용하기 전에 반드시 전문가와 상담하세요.",
+        },
+      },
+      {
+        question: {
+          en: "Why are there cheaper substitute stones listed?",
+          hi: "सस्ते विकल्प रत्न क्यों सूचीबद्ध हैं?",
+          ja: "なぜ安価な代替石が掲載されているのですか？",
+          ko: "왜 저렴한 대체 보석이 나와 있나요?",
+        },
+        answer: {
+          en: "The classical primary stones (ruby, blue sapphire, and similar) can be genuinely expensive at the quality traditionally required. Substitute stones are the traditional lower-cost alternative believed to carry a lighter version of the same planetary association.",
+          hi: "पारंपरिक रूप से आवश्यक गुणवत्ता में शास्त्रीय मुख्य रत्न (माणिक, नीलम आदि) वास्तव में महंगे हो सकते हैं। विकल्प रत्न पारंपरिक रूप से कम लागत वाला विकल्प है जिसे उसी ग्रह संबंध का हल्का रूप माना जाता है।",
+          ja: "伝統的に求められる品質での古典的な主要石（ルビー、ブルーサファイアなど）は、実際に高価になり得ます。代替石は、同じ惑星との結びつきの軽い形を持つと考えられている、伝統的な低コストの選択肢です。",
+          ko: "전통적으로 요구되는 품질의 고전적 주 보석(루비, 블루 사파이어 등)은 실제로 매우 비쌀 수 있습니다. 대체 보석은 같은 행성과의 연관성을 더 약하게 지닌다고 여겨지는, 전통적인 저비용 대안입니다.",
+        },
+      },
+    ],
+  },
+  {
+    // D10 (Dashamsha) — the divisional chart classically read for career and
+    // profession specifically, distinct from D1's general life picture.
+    slug: "career-report",
+    resultPanel: "careerReport",
+    title: {
+      en: "Career report (D10 Dashamsha)",
+      hi: "करियर रिपोर्ट (D10 दशमांश)",
+      ja: "キャリアレポート（D10 ダシャムシャ）",
+      ko: "커리어 리포트(D10 다샴샤)",
+    },
+    description: {
+      en: "Your D10 (Dashamsha) divisional chart — the classical chart read specifically for career and profession, with your D10 Lagna and every planet's career signification.",
+      hi: "आपकी D10 (दशमांश) वर्ग कुंडली — विशेष रूप से करियर और पेशे के लिए पढ़ी जाने वाली शास्त्रीय कुंडली, आपके D10 लग्न और प्रत्येक ग्रह के करियर संकेत सहित।",
+      ja: "あなたのD10（ダシャムシャ）分割図——キャリアと職業のために特別に読まれる古典的なチャートです。D10ラグナと各惑星のキャリア暗示を示します。",
+      ko: "당신의 D10(다샴샤) 분할 차트 — 커리어와 직업을 위해 특별히 읽는 고전 차트로, D10 라그나와 각 행성의 커리어 암시를 보여줍니다.",
+    },
+    useCase: {
+      en: "Read this alongside your main birth chart when weighing a career direction — it's a different lens than the general D1 picture, not a replacement for it.",
+      hi: "करियर की दिशा तय करते समय इसे अपनी मुख्य जन्म-कुंडली के साथ पढ़ें — यह सामान्य D1 चित्र से एक अलग दृष्टिकोण है, इसका विकल्प नहीं।",
+      ja: "キャリアの方向性を検討する際は、メインの出生チャートと合わせて読んでください。一般的なD1の見方とは異なる視点であり、それに代わるものではありません。",
+      ko: "커리어 방향을 고민할 때 메인 출생 차트와 함께 읽으세요. 일반적인 D1 관점과는 다른 시각이며, 그것을 대체하는 것은 아닙니다.",
+    },
+    lead: {
+      en: "Vedic astrology reads career through its own divisional chart — the D10 (Dashamsha), built by dividing each sign into ten parts. This tool computes your D10 Lagna and shows every planet's career signification from it, alongside the diagram itself.",
+      hi: "वैदिक ज्योतिष करियर को अपनी स्वयं की वर्ग कुंडली — D10 (दशमांश) — के माध्यम से पढ़ता है, जो प्रत्येक राशि को दस भागों में बांटकर बनाई जाती है। यह उपकरण आपका D10 लग्न निकालता है और उससे प्रत्येक ग्रह का करियर संकेत दिखाता है, आरेख के साथ।",
+      ja: "ヴェーダ占星術は、キャリアを独自の分割図——各星座を10分割して作られるD10（ダシャムシャ）——を通じて読みます。このツールはあなたのD10ラグナを計算し、そこから各惑星のキャリア暗示を図とともに示します。",
+      ko: "베다 점성술은 커리어를 자체 분할 차트 — 각 별자리를 10등분하여 만드는 D10(다샴샤) — 를 통해 읽습니다. 이 도구는 당신의 D10 라그나를 계산하고, 거기서부터 각 행성의 커리어 암시를 도표와 함께 보여줍니다.",
+    },
+    faqs: [
+      {
+        question: {
+          en: "What is a D10 (Dashamsha) chart?",
+          hi: "D10 (दशमांश) कुंडली क्या है?",
+          ja: "D10（ダシャムシャ）チャートとは何ですか？",
+          ko: "D10(다샴샤) 차트란 무엇인가요?",
+        },
+        answer: {
+          en: "It's one of the classical divisional (varga) charts, built by dividing each zodiac sign into 10 equal 3° parts. Where your main birth chart (D1) reads the whole life, the D10 is read specifically for career, profession, and public standing.",
+          hi: "यह शास्त्रीय वर्ग कुंडलियों में से एक है, जो प्रत्येक राशि को दस बराबर 3° भागों में बांटकर बनाई जाती है। जहां आपकी मुख्य जन्म-कुंडली (D1) पूरे जीवन को पढ़ती है, वहीं D10 विशेष रूप से करियर, पेशे और सार्वजनिक प्रतिष्ठा के लिए पढ़ी जाती है।",
+          ja: "これは古典的な分割図（ヴァルガ）の一つで、各星座を10等分（各3度）して作られます。メインの出生チャート（D1）が人生全体を読むのに対し、D10はキャリア、職業、社会的地位を特に読むために用いられます。",
+          ko: "이는 고전 분할 차트(바르가) 중 하나로, 각 별자리를 10등분(각 3도)하여 만듭니다. 메인 출생 차트(D1)가 삶 전체를 읽는다면, D10은 커리어, 직업, 사회적 지위를 특별히 읽기 위한 것입니다.",
+        },
+      },
+      {
+        question: {
+          en: "Should the D10 agree with my main birth chart?",
+          hi: "क्या D10 को मेरी मुख्य जन्म-कुंडली से सहमत होना चाहिए?",
+          ja: "D10はメインの出生チャートと一致すべきですか？",
+          ko: "D10이 메인 출생 차트와 일치해야 하나요?",
+        },
+        answer: {
+          en: "Not necessarily — the two charts are different lenses on the same life, not two answers to the same question. Classical practice reads them together: the D1 for general life themes, the D10 for how those themes specifically play out in career.",
+          hi: "जरूरी नहीं — दोनों कुंडलियां एक ही जीवन पर अलग-अलग दृष्टिकोण हैं, एक ही प्रश्न के दो उत्तर नहीं। शास्त्रीय अभ्यास दोनों को साथ पढ़ता है: सामान्य जीवन विषयों के लिए D1, और करियर में वे विषय विशेष रूप से कैसे सामने आते हैं इसके लिए D10।",
+          ja: "必ずしもそうとは限りません。二つのチャートは同じ人生に対する異なる視点であり、同じ問いへの二つの答えではありません。古典的な実践では両方を併せて読みます——一般的な人生のテーマにはD1を、それがキャリアにおいて具体的にどう表れるかにはD10を用います。",
+          ko: "반드시 그럴 필요는 없습니다 — 두 차트는 같은 삶을 보는 서로 다른 렌즈이지, 같은 질문에 대한 두 개의 답이 아닙니다. 고전적 관행은 둘을 함께 읽습니다: 일반적인 삶의 주제는 D1로, 그 주제가 커리어에서 구체적으로 어떻게 나타나는지는 D10으로요.",
         },
       },
     ],

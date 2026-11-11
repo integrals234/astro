@@ -665,7 +665,8 @@ async def panchang(payload: PanchangRequest):
         swe.close()
         raise HTTPException(status_code=500, detail=str(err))
 
-# UptimeRobot endpoint
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+# Explicitly handle HEAD requests for the uptime monitor
+@app.head("/health")
+def head_health_check(response: Response):
+    response.status_code = 200
+    return

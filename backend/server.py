@@ -664,3 +664,8 @@ async def panchang(payload: PanchangRequest):
     except Exception as err:
         swe.close()
         raise HTTPException(status_code=500, detail=str(err))
+
+# UptimeRobot endpoint
+@app.get("/")
+def health_check():
+    return {"status": "healthy"}

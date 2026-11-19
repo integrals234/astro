@@ -86,6 +86,12 @@ export function buildSitemap({
       priority: 0.9,
       changeFrequency: "weekly",
     }),
+    // The tools hub (design upgrade): one crawlable page linking all 17.
+    entry("/tools", {
+      collection: "tools",
+      priority: 0.9,
+      changeFrequency: "monthly",
+    }),
     entry("/learn-jyotish", {
       collection: "articles",
       priority: 0.9,

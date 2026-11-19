@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "@/components/i18n/LocaleLink";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { saveVedicCourseProgress } from "@/app/actions/vedic-course";

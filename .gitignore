@@ -29,3 +29,7 @@ SEO_PLAN.md
 
 # Next.js build output, including strays from running the build outside frontend/
 .next/
+
+# Agent skills are restored from skills-lock.json (npx skills experimental_install);
+# their assets are ~43MB, so the files themselves stay out of git.
+.claude/skills/

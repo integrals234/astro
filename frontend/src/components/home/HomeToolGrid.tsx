@@ -20,7 +20,7 @@ import {
   Waves,
   type LucideIcon,
 } from "lucide-react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from "motion/react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useBirthProfile } from "@/components/profile/ProfileProvider";
 import { useChartData } from "@/components/chart/ChartDataProvider";

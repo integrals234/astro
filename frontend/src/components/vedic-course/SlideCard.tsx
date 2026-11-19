@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import { fadeUpPresence } from "@/lib/motion/tokens";
 import { createElement } from "react";
 import { FormattedText } from "@/lib/format-inline-text";

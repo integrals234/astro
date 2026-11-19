@@ -6,7 +6,7 @@ import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/i18n/LocaleLink";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from "motion/react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { getMainNavItems } from "@/lib/navigation";

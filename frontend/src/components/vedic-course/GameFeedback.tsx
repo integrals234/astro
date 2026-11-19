@@ -1,6 +1,6 @@
 "use client";
 
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "motion/react";
 import { PartyPopper, XCircle } from "lucide-react";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { uiString } from "@/lib/vedic-course/i18n/ui";

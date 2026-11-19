@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 

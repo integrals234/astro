@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, Suspense, useSyncExternalStore } from 'react';
 import Link from '@/components/i18n/LocaleLink';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { m, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'motion/react';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
 import { Search, MapPin, ChevronDown, LayoutDashboard } from 'lucide-react';

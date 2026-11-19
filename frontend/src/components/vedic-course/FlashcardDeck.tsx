@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import type { CourseLanguage, FlashcardGame } from "@/lib/vedic-course/types";
 import { getCourseIcon } from "@/lib/vedic-course/icons";

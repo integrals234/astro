@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from "motion/react";
 import { popPresence, scrimPresence } from "@/lib/motion/tokens";
 import { AlertTriangle, Check, X } from "lucide-react";
 

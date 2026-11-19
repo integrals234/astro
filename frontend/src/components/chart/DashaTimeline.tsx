@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { m, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'motion/react';
 import type { Dasha } from '@/lib/chart-types';
 import type { ChartTranslations } from '@/lib/chart-i18n';
 import { formatDashaDisplayDate, isDashaRunning, planetSymbols } from '@/lib/chart-format';

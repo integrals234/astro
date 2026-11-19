@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import type { CourseLanguage } from "@/lib/vedic-course/types";
 import { gameKindLabel } from "@/lib/vedic-course/step-utils";
 import type { CourseStep } from "@/lib/vedic-course/types";

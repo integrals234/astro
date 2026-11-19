@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LazyMotion, MotionConfig, domMax } from "framer-motion";
+import { LazyMotion, MotionConfig, domMax } from "motion/react";
 import { haptic } from "@/hooks/useHaptic";
 
 /**

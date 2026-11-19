@@ -1,6 +1,6 @@
 'use client';
 
-import { m } from 'framer-motion';
+import { m } from 'motion/react';
 import type { Planet } from '@/lib/chart-types';
 import type { ChartTranslations } from '@/lib/chart-i18n';
 import { planetSymbols } from '@/lib/chart-format';

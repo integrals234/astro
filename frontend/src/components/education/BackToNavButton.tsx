@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from "motion/react";
 import { ArrowUp } from "lucide-react";
 import { uiText } from "@/lib/education/i18n/ui";
 import type { BilingualText, EducationLang } from "@/lib/education/types";

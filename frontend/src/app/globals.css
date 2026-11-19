@@ -119,6 +119,16 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
+  /* Locale font families, loaded asynchronously per locale from the layout
+   * (no longer next/font variables, which put every locale's @font-face CSS
+   * in front of every page's first paint). */
+  --font-shippori: "Shippori Mincho";
+  --font-noto-sans-jp: "Noto Sans JP";
+  --font-noto-serif-kr: "Noto Serif KR";
+  --font-noto-sans-kr: "Noto Sans KR";
+  --font-martel: "Martel";
+  --font-hind: "Hind";
+
   /* Phone chrome: the bottom tab bar's height, so fixed UI can sit above it. */
   --tabbar-h: 0px;
 }
@@ -1406,4 +1416,19 @@ body:has(.tabbar):not(:has([data-education-scroll-root])) {
 .sheet-backdrop {
   background: color-mix(in srgb, var(--color-ink-deep) 40%, transparent);
 }
+}
+
+/* Sky ring bodies (SkyRing.tsx): rotated about the ring's centre in CSS so
+ * they are placed before any script runs, gliding when the date changes. */
+@layer components {
+  .sky-body {
+    transform-origin: 200px 200px;
+    transition: transform 700ms var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sky-body {
+      transition: none;
+    }
+  }
 }

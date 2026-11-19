@@ -504,8 +504,11 @@ function SectionFade({
   sectionKey: string;
   children: React.ReactNode;
 }) {
+  // initial={false}: the server-rendered section must be visible on first
+  // paint. Fading it in from opacity 0 hid the whole hub until hydration —
+  // the learn page's LCP waited on JavaScript. Section *changes* still fade.
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <m.div
         key={sectionKey}
         {...fadeUpPresence}

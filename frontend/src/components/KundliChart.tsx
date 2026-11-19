@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { m } from 'motion/react';
-import { gsap, useGSAP, MOTION_OK } from '@/lib/motion/gsap';
+import { useChartDraw } from '@/components/chart/useChartDraw';
 
 interface MappedPlanet {
   name: string;
@@ -63,19 +63,7 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
   const svgRef = useRef<SVGSVGElement>(null);
   const signature = `${ascendantSign}|${planets.map((p) => `${p.name}${p.house}`).join(',')}`;
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        gsap
-          .timeline()
-          .from('[data-k-line]', { drawSVG: '0%', duration: 0.55, ease: 'power2.inOut', stagger: 0.14 })
-          .from('[data-k-house]', { opacity: 0, y: 5, duration: 0.32, ease: 'power2.out', stagger: 0.045 }, '-=0.25');
-      });
-      return () => mm.revert();
-    },
-    { scope: svgRef, dependencies: [signature] },
-  );
+  useChartDraw(svgRef, signature);
 
   return (
     <m.div

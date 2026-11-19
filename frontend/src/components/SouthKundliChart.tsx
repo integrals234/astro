@@ -1,5 +1,8 @@
-import React from 'react';
+"use client";
+
+import React, { useRef } from 'react';
 import { m } from 'motion/react';
+import { useChartDraw } from '@/components/chart/useChartDraw';
 
 interface MappedPlanet { 
   name: string; 
@@ -40,6 +43,10 @@ const signNumbers: Record<string, number> = {
 export default function SouthKundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel, useSymbols, accessibility }: KundliChartProps) {
   const SIZE = 400;
   const isGocharChart = transitPlanets.length > 0;
+  const svgRef = useRef<SVGSVGElement>(null);
+  const signature = `${ascendantSign}|${planets.map((p) => `${p.name}${p.sign}`).join(',')}`;
+  // Same draw-in as the North Indian chart (signature moment #2).
+  useChartDraw(svgRef, signature);
 
   return (
     <m.div 
@@ -54,40 +61,42 @@ export default function SouthKundliChart({ planets, transitPlanets = [], ascenda
         </div>
       )}
 
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="kundli-chart-svg w-full h-auto fill-transparent" style={{ strokeWidth: 1 }}>
+      <svg ref={svgRef} viewBox={`0 0 ${SIZE} ${SIZE}`} className="kundli-chart-svg w-full h-auto fill-transparent" style={{ strokeWidth: 1 }}>
         {/* Outer Grid */}
-        <rect x="0" y="0" width={SIZE} height={SIZE} className="kundli-chart-grid" />
+        <rect data-k-line x="0" y="0" width={SIZE} height={SIZE} className="kundli-chart-grid" />
         
         {/* Inner Hollow Square */}
-        <rect x="100" y="100" width="200" height="200" className="kundli-chart-grid fill-transparent" />
+        <rect data-k-line x="100" y="100" width="200" height="200" className="kundli-chart-grid fill-transparent" />
 
         {/* Vertical Lines */}
-        <line x1="100" y1="0" x2="100" y2="100" className="kundli-chart-grid" />
-        <line x1="200" y1="0" x2="200" y2="100" className="kundli-chart-grid" />
-        <line x1="300" y1="0" x2="300" y2="100" className="kundli-chart-grid" />
+        <line data-k-line x1="100" y1="0" x2="100" y2="100" className="kundli-chart-grid" />
+        <line data-k-line x1="200" y1="0" x2="200" y2="100" className="kundli-chart-grid" />
+        <line data-k-line x1="300" y1="0" x2="300" y2="100" className="kundli-chart-grid" />
         
-        <line x1="100" y1="300" x2="100" y2="400" className="kundli-chart-grid" />
-        <line x1="200" y1="300" x2="200" y2="400" className="kundli-chart-grid" />
-        <line x1="300" y1="300" x2="300" y2="400" className="kundli-chart-grid" />
+        <line data-k-line x1="100" y1="300" x2="100" y2="400" className="kundli-chart-grid" />
+        <line data-k-line x1="200" y1="300" x2="200" y2="400" className="kundli-chart-grid" />
+        <line data-k-line x1="300" y1="300" x2="300" y2="400" className="kundli-chart-grid" />
 
         {/* Horizontal Lines */}
-        <line x1="0" y1="100" x2="100" y2="100" className="kundli-chart-grid" />
-        <line x1="0" y1="200" x2="100" y2="200" className="kundli-chart-grid" />
-        <line x1="0" y1="300" x2="100" y2="300" className="kundli-chart-grid" />
+        <line data-k-line x1="0" y1="100" x2="100" y2="100" className="kundli-chart-grid" />
+        <line data-k-line x1="0" y1="200" x2="100" y2="200" className="kundli-chart-grid" />
+        <line data-k-line x1="0" y1="300" x2="100" y2="300" className="kundli-chart-grid" />
 
-        <line x1="300" y1="100" x2="400" y2="100" className="kundli-chart-grid" />
-        <line x1="300" y1="200" x2="400" y2="200" className="kundli-chart-grid" />
-        <line x1="300" y1="300" x2="400" y2="300" className="kundli-chart-grid" />
+        <line data-k-line x1="300" y1="100" x2="400" y2="100" className="kundli-chart-grid" />
+        <line data-k-line x1="300" y1="200" x2="400" y2="200" className="kundli-chart-grid" />
+        <line data-k-line x1="300" y1="300" x2="400" y2="300" className="kundli-chart-grid" />
 
         {/* Render Planets in Zodiac Signs */}
-        {Object.entries(boxMap).map(([signName, { x, y }]) => {
+        {Object.entries(boxMap)
+          .sort(([a], [b]) => signNumbers[a] - signNumbers[b])
+          .map(([signName, { x, y }]) => {
           // Note: In Gochar mode, planets are mapped to relative signs. We rely on the un-mapped original sign for South format.
           const natalInSign = planets.filter(p => p.sign === signName);
           const transitInSign = transitPlanets.filter(p => p.sign === signName);
           const isAscendant = ascendantSign === signName;
 
           return (
-            <g key={`sign-${signName}`}>
+            <g key={`sign-${signName}`} data-k-house>
               {/* Faint Zodiac Number (Optional, helps beginners) */}
               <text x={x + 10} y={y + 20} textAnchor="start" className="kundli-chart-sign stroke-none text-xs font-bold font-chart">
                 {signNumbers[signName]}

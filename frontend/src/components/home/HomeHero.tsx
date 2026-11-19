@@ -17,7 +17,7 @@ import { chartFormCopy } from "@/lib/chart-i18n";
 import { homeStoryCopy } from "@/lib/home/home-story-copy";
 import { tr } from "@/lib/sky/entity-links";
 import { NAKSHATRAS } from "@/lib/jyotish/nakshatra-data";
-import { gsap, useGSAP, MOTION_OK } from "@/lib/motion/gsap";
+import { useGsapEffect, MOTION_OK } from "@/lib/motion/gsap";
 import { SIGNS, estimateUtcOffset, quickSkyFromFields } from "@/lib/sky/quick-sky";
 import { trackEvent } from "@/lib/analytics/events";
 
@@ -71,11 +71,20 @@ export default function HomeHero({
 
   // Signature moment #1: the headline's phrases rise in, staggered, while
   // the sky ring draws itself (SkyRing owns its own timeline).
-  useGSAP(
-    () => {
+  useGsapEffect(
+    root,
+    ({ gsap }) => {
+      const h1 = root.current?.querySelector("h1");
+      // GSAP arrives after hydration. If the CSS fallback entrance has
+      // already begun (1.4 s delay, measured from when the headline was
+      // inserted — page load or client navigation alike), let it finish
+      // instead of replaying the headline. Never add .is-split-live when
+      // skipping: it cancels the fallback that makes the phrases visible.
+      const fallback = h1?.querySelector<HTMLElement>(".hero-phrase")?.getAnimations?.()[0];
+      if (fallback && Number(fallback.currentTime ?? 0) >= 1350) return;
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        root.current?.querySelector("h1")?.classList.add("is-split-live");
+        h1?.classList.add("is-split-live");
         gsap.fromTo(
           "[data-hero-phrase]",
           { opacity: 0.01, y: "0.4em" },
@@ -94,7 +103,7 @@ export default function HomeHero({
       });
       return () => mm.revert();
     },
-    { scope: root },
+    [],
   );
 
   const canSubmit = isBirthDetailsComplete(entry) && !submitting;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, MOTION_OK } from "@/lib/motion/gsap";
+import { useGsapEffect, MOTION_OK } from "@/lib/motion/gsap";
 import type { QuickSky } from "@/lib/sky/quick-sky";
 
 /**
@@ -21,9 +21,9 @@ import type { QuickSky } from "@/lib/sky/quick-sky";
  *   - drift: the whole sky sways ±4° over 26 s — the "soft background
  *     drift", slow enough to read as stillness. Bodies drift with it, so
  *     positions never slip against the signs;
- *   - bodies: each new position tweens along the circle (rotation about the
- *     centre), 0.7 s ease-out, interruptible as the visitor keeps typing.
- * All three are skipped under prefers-reduced-motion.
+ *   - bodies: CSS rotation about the centre with a 0.7 s ease-out
+ *     transition, interruptible as the visitor keeps typing.
+ * All of it is skipped under prefers-reduced-motion.
  */
 const C = 200;
 const R_OUTER = 184;
@@ -69,9 +69,10 @@ export default function SkyRing({
   const sunRot = sky ? rotationFor(sky.sun.longitude) : 0;
   const nakStart = sky ? (sky.moon.nakshatraNumber - 1) * NAK : 0;
 
-  // Intro draw + perpetual drift. Runs once.
-  useGSAP(
-    () => {
+  // Intro draw + perpetual drift. Runs once, after GSAP loads.
+  useGsapEffect(
+    root,
+    ({ gsap }) => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         gsap.from("[data-ring-draw]", {
@@ -102,20 +103,7 @@ export default function SkyRing({
       });
       return () => mm.revert();
     },
-    { scope: root },
-  );
-
-  // Bodies glide to each new position.
-  useGSAP(
-    () => {
-      if (!sky) return;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const opts = { svgOrigin: `${C} ${C}`, duration: reduce ? 0 : 0.7, ease: "power3.out", overwrite: true } as const;
-      gsap.to("[data-body='moon']", { rotation: moonRot, ...opts });
-      gsap.to("[data-body='sun']", { rotation: sunRot, ...opts });
-      gsap.to("[data-body]", { opacity: 1, duration: reduce ? 0 : 0.3, overwrite: false });
-    },
-    { scope: root, dependencies: [moonRot, sunRot, Boolean(sky)] },
+    [],
   );
 
   // Arc for the Moon's nakshatra, highlighted on the tick band.
@@ -190,11 +178,14 @@ export default function SkyRing({
       )}
 
       {/* Bodies start at 0° Aries and rotate into place. */}
-      <g data-body="sun" style={{ opacity: sky ? 1 : 0 }}>
+      {/* Bodies: positioned by a CSS rotation about the centre, so they are
+          right before any script runs and glide (0.7 s ease-out) when the
+          date changes; instant under reduced motion (globals.css). */}
+      <g data-body="sun" className="sky-body" style={{ opacity: sky ? 1 : 0, transform: `rotate(${sunRot}deg)` }}>
         <circle cx={sunStart.x} cy={sunStart.y} r={size === "lg" ? 7 : 12} fill="var(--color-washi)" stroke="var(--color-ink)" strokeWidth={2} />
         <circle cx={sunStart.x} cy={sunStart.y} r={size === "lg" ? 2 : 4} fill="var(--color-ink)" />
       </g>
-      <g data-body="moon" style={{ opacity: sky ? 1 : 0 }}>
+      <g data-body="moon" className="sky-body" style={{ opacity: sky ? 1 : 0, transform: `rotate(${moonRot}deg)` }}>
         <circle cx={moonStart.x} cy={moonStart.y} r={size === "lg" ? 8 : 14} fill="var(--color-terracotta)" />
       </g>
       </g>

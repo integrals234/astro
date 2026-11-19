@@ -9,7 +9,7 @@ import { homeStoryCopy } from "@/lib/home/home-story-copy";
 import { welcomeContent, welcomeText } from "@/lib/home/welcome-content";
 import { NAKSHATRAS } from "@/lib/jyotish/nakshatra-data";
 import { nakshatraHref, tr } from "@/lib/sky/entity-links";
-import { gsap, useGSAP, ScrollTrigger, DESKTOP, MOTION_OK } from "@/lib/motion/gsap";
+import { useGsapEffect, DESKTOP, MOTION_OK } from "@/lib/motion/gsap";
 
 const STEPS = [
   { id: "rashi", href: "/rashis" },
@@ -41,8 +41,11 @@ export default function LearnStory() {
   const t = chartFormCopy[language];
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
+  useGsapEffect(
+    root,
+    ({ gsap, ScrollTrigger }) => {
+      // ScrollTrigger is only fetched on desktop; phones never load it.
+      if (!ScrollTrigger) return;
       const mm = gsap.matchMedia();
       mm.add(`${DESKTOP} and ${MOTION_OK}`, () => {
         const tl = gsap.timeline({
@@ -76,7 +79,8 @@ export default function LearnStory() {
       });
       return () => mm.revert();
     },
-    { scope: root },
+    [],
+    { withScrollTrigger: `${DESKTOP} and ${MOTION_OK}` },
   );
 
   return (

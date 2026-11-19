@@ -167,7 +167,10 @@ export default function InquiryForm({
               aria-label={copy.dialCodeLabel}
             >
               {COUNTRY_DIAL_CODES.map((country) => (
-                <option key={`${country.iso}-${country.dial}`} value={country.dial}>
+                // Region names come from ICU, and Node's and the browser's ICU
+                // disagree on a few (e.g. HK in Japanese) — a hydration error
+                // on every load of this page. Either spelling is correct.
+                <option key={`${country.iso}-${country.dial}`} value={country.dial} suppressHydrationWarning>
                   {country.dial} · {regionNames.of(country.iso) ?? country.label}
                 </option>
               ))}

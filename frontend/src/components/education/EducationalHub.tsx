@@ -224,7 +224,7 @@ function TopicIndexInner({
       <nav
         ref={navRef}
         aria-label={uiText("topicsInSection", lang)}
-        className={`-mx-1 mb-8 rounded-lg border border-border bg-washi-elevated px-3 py-3 lg:sticky lg:top-0 lg:z-20 lg:backdrop-blur-md ${pinned
+        className={`-mx-1 mb-8 rounded-lg border border-border bg-washi-elevated px-3 py-3 lg:sticky lg:top-[4.25rem] lg:z-20 lg:backdrop-blur-md ${pinned
             ? "lg:border-terracotta/40 lg:py-2.5"
             : ""
           }`}
@@ -244,16 +244,16 @@ function TopicIndexInner({
           </span>
           <ChevronDown
             size={16}
-            className={`shrink-0 text-text-muted transition-transform duration-200 ${expanded ? "rotate-180" : ""
+            className={`shrink-0 text-text-muted transition-transform duration-200 lg:hidden ${expanded ? "rotate-180" : ""
               }`}
             aria-hidden
           />
         </button>
 
-        {expanded ? (
+        {/* Always rendered: hidden on phones until opened, always shown on desktop. */}
           <div
             id="topic-index-list"
-            className="mt-3 flex max-h-[min(45vh,20rem)] flex-wrap gap-1.5 overflow-y-auto overscroll-contain pr-1 lg:mt-2.5 lg:max-h-[min(50vh,28rem)]"
+            className={`mt-3 max-h-[min(45vh,20rem)] flex-wrap gap-1.5 overflow-y-auto overscroll-contain pr-1 lg:mt-2.5 lg:flex lg:max-h-[min(50vh,28rem)] ${expanded ? "flex" : "hidden"}`}
           >
             {tabs.map((tab, index) => {
               const active = activeId === tab.id;
@@ -264,8 +264,8 @@ function TopicIndexInner({
                   onClick={() => handleJump(tab.id)}
                   aria-current={active ? "location" : undefined}
                   className={`rounded-md bg-washi-elevated px-3 py-1.5 text-left text-xs font-medium leading-snug transition-colors ${active
-                      ? "text-ink border border-border border-l-[3px] border-l-terracotta"
-                      : "text-text-muted border border-border hover:text-ink hover:border-terracotta"
+                      ? "text-ink border border-moss/50 bg-moss-tint"
+                      : "text-text-muted border border-border hover:text-ink hover:border-moss/40"
                     }`}
                 >
                   <span className="mr-1.5 text-[10px] tabular-nums text-terracotta">
@@ -276,7 +276,6 @@ function TopicIndexInner({
               );
             })}
           </div>
-        ) : null}
       </nav>
     </>
   );
@@ -305,7 +304,9 @@ function ArticleSectionPanel({
   tabOrder?: string[];
 }) {
   const navRef = useRef<HTMLElement>(null);
-  const [topicExpanded, setTopicExpanded] = useState(true);
+  // Collapsed by default: on a phone the open list was ~400px of chips
+  // before the first word of the article. Desktop shows it regardless (CSS).
+  const [topicExpanded, setTopicExpanded] = useState(false);
   const skipInitialScrollRef = useRef(true);
 
   const articles = getArticlesForSection(section);

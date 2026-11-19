@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import PublicPageShell from "@/components/layout/PublicPageShell";
-import ArticleBlocks from "@/components/education/ArticleBlocks";
+import ArticleBlocks, { articleHeadingId } from "@/components/education/ArticleBlocks";
 import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { uiText } from "@/lib/education";
@@ -80,6 +80,16 @@ export default async function ArticlePage({ params }: Params) {
   const summary = articleSummary(article, language);
   const label = sectionLabel(section, language);
 
+  // Level-2 headings become the contents list (sticky on desktop, folded on phone).
+  const contents = article.blocks
+    .map((block, index) => ({ block, index }))
+    .filter(({ block }) => block.type === "heading" && block.level === 2)
+    .map(({ block, index }) => ({
+      id: articleHeadingId(index),
+      text: block.type === "heading" ? block.text[language].replace(/\*\*/g, "") : "",
+    }));
+  const contentsLabel = { ja: "目次", en: "Contents", hi: "विषय-सूची", ko: "목차" }[language];
+
   const related = article.related
     .map((id) => getArticleById(id))
     .filter((entry) => entry !== undefined);
@@ -107,23 +117,58 @@ export default async function ArticlePage({ params }: Params) {
         ]}
       />
 
-      <div className="mx-auto w-full max-w-3xl px-6 py-12">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-8 md:py-12">
         <Breadcrumbs
           crumbs={crumbs}
           language={language}
           label={uiText("learnJyotish", language)}
         />
 
-        <header className="mb-9">
-          <p className="washi-eyebrow washi-eyebrow-lead mb-4">
-            {uiText("vedicWisdom", language)}
-          </p>
-          <h1 className="font-header text-[length:var(--step-3)] tracking-tight text-ink">
-            {title}
-          </h1>
+        <div className="lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
+        {/* Desktop: contents held in the margin while you read. */}
+        <aside className="hidden lg:block">
+          {contents.length > 1 && (
+            <nav aria-label={contentsLabel} className="sticky top-24 pt-24 text-sm">
+              <p className="mb-3 text-xs tracking-[0.08em] text-text-muted">{contentsLabel}</p>
+              <ol className="space-y-2 border-l border-border">
+                {contents.map((item) => (
+                  <li key={item.id}>
+                    <a href={`#${item.id}`} className="-ml-px block border-l border-transparent pl-4 leading-snug text-text-muted transition-colors hover:border-ink hover:text-ink">
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+        </aside>
+
+        <div className="min-w-0 max-w-[44rem]">
+        <header className="mb-8 mt-2">
+          <p className="mb-3 text-sm text-text-muted">{label}</p>
+          <h1 className="ma-title tracking-tight">{title}</h1>
         </header>
 
-        <div className="washi-measure washi-card p-6 md:p-9">
+        {/* Phone: the same contents, folded above the text. */}
+        {contents.length > 1 && (
+          <details className="disclose mb-8 border-y border-border lg:hidden">
+            <summary className="text-sm text-ink">
+              {contentsLabel}
+              <ChevronDown size={16} aria-hidden className="disclose-chevron text-text-muted" />
+            </summary>
+            <ol className="space-y-1 pb-4 text-sm">
+              {contents.map((item) => (
+                <li key={item.id}>
+                  <a href={`#${item.id}`} className="flex min-h-[40px] items-center text-text-muted">
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
+
+        <div className="washi-measure text-[length:var(--step-0)] leading-[1.9]">
           <ArticleBlocks blocks={article.blocks} lang={language} />
         </div>
 
@@ -154,7 +199,7 @@ export default async function ArticlePage({ params }: Params) {
           </aside>
         )}
 
-        <hr className="washi-hairline my-10" />
+        <div className="my-10" />
 
         <Link
           href={localizedHref(language, sectionPath(section))}
@@ -162,6 +207,8 @@ export default async function ArticlePage({ params }: Params) {
         >
           ← {label}
         </Link>
+        </div>
+        </div>
       </div>
     </PublicPageShell>
   );

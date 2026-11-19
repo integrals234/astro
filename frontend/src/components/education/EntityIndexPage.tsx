@@ -51,30 +51,25 @@ export default function EntityIndexPage({
         ]}
       />
 
-      <div className="mx-auto w-full max-w-5xl px-6 py-12">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-8 md:py-12">
         <Breadcrumbs crumbs={crumbs} language={language} label={title} />
 
-        <p className="washi-eyebrow washi-eyebrow-lead mb-4">
-          {uiText("learnJyotish", language)}
-        </p>
-        <h1 className="font-header text-[length:var(--step-3)] tracking-tight text-ink">
-          {title}
-        </h1>
-        <p className="washi-measure mt-4 text-text-muted">
+        <h1 className="ma-title mt-2 tracking-tight">{title}</h1>
+        <p className="washi-measure mt-4 leading-[1.9] text-text-muted">
           {set.description[language]}
         </p>
 
-        <hr className="washi-hairline my-10" />
-
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Phone: two compact columns (27 cards in ~5 screens, not 14).
+            Desktop: hover or focus a card to preview its meaning. */}
+        <ul className="mt-10 grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
           {set.entities.map((entity) => (
             <li key={entity.id}>
               <Link
                 href={localizedHref(language, entityPath(set, entity))}
-                className="washi-card flex h-full items-center gap-4 p-4"
+                className="washi-card washi-card-interactive group flex h-full flex-col gap-3 p-3 sm:flex-row sm:items-start sm:gap-4 sm:p-4"
               >
                 {entity.image ? (
-                  <span className="washi-mat block w-16 shrink-0 p-1.5">
+                  <span className="washi-mat block w-12 shrink-0 sm:w-16">
                     <Image
                       src={entity.image}
                       alt=""
@@ -95,6 +90,9 @@ export default function EntityIndexPage({
                   </span>
                   <span className="block text-xs text-text-muted">
                     {entity.sanskrit[language]}
+                  </span>
+                  <span className="mt-2 hidden text-xs leading-[1.7] text-moss opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 lg:line-clamp-2">
+                    {entity.description[language]}
                   </span>
                 </span>
               </Link>

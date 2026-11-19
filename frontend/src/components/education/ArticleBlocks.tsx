@@ -65,9 +65,11 @@ function ArticleTable({
 function ArticleBlock({
   block,
   lang,
+  index,
 }: {
   block: WisdomArticleBlock;
   lang: EducationLang;
+  index: number;
 }) {
   if (block.type === "table") {
     return <ArticleTable headers={block.headers} rows={block.rows} lang={lang} />;
@@ -90,7 +92,7 @@ function ArticleBlock({
   if (block.type === "heading") {
     if (block.level === 2) {
       return (
-        <h2 className="mt-10 mb-4 font-header text-[length:var(--step-2)] tracking-tight text-ink first:mt-0">
+        <h2 id={articleHeadingId(index)} className="mt-10 mb-4 scroll-mt-24 font-header text-[length:var(--step-2)] tracking-tight text-ink first:mt-0">
           <FormattedText text={t(block.text, lang)} />
         </h2>
       );
@@ -138,6 +140,9 @@ function ArticleBlock({
   );
 }
 
+/** Anchor for a level-2 heading block — shared with the article's contents list. */
+export const articleHeadingId = (index: number) => `s-${index}`;
+
 export default function ArticleBlocks({
   blocks,
   lang,
@@ -148,7 +153,7 @@ export default function ArticleBlocks({
   return (
     <>
       {blocks.map((block, index) => (
-        <ArticleBlock key={index} block={block} lang={lang} />
+        <ArticleBlock key={index} block={block} lang={lang} index={index} />
       ))}
     </>
   );

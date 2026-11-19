@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
 import { trackEvent } from '@/lib/analytics/events';
@@ -21,6 +21,9 @@ export interface ChartDataContextValue {
    * state — without it, the auto-compute effect below would silently refill
    * the same person the moment `data` clears. */
   overrideEntry: boolean;
+  /** Re-runs the last `compute()` — for the error state after a backend
+   * cold start, so the visitor never has to re-enter anything. */
+  retry: () => Promise<ChartData | null>;
 }
 
 const ChartDataContext = createContext<ChartDataContextValue | null>(null);
@@ -47,8 +50,10 @@ export function ChartDataProvider({
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [computedFor, setComputedFor] = useState<string | null>(null);
   const [overrideEntry, setOverrideEntry] = useState(false);
+  const lastInput = useRef<NatalInput | null>(null);
 
   const compute = useCallback(async (birth: NatalInput) => {
+    lastInput.current = birth;
     setStatus('loading');
     try {
       const response = await fetch('/api/charts/compute', {
@@ -79,6 +84,10 @@ export function ChartDataProvider({
     })();
   }, [isLoaded, primary, computedFor, overrideEntry, compute, toolSlug, language]);
 
+  const retry = useCallback(async () => {
+    return lastInput.current ? compute(lastInput.current) : null;
+  }, [compute]);
+
   const reset = useCallback(() => {
     setData(null);
     setComputedFor(null);
@@ -86,7 +95,7 @@ export function ChartDataProvider({
   }, []);
 
   return (
-    <ChartDataContext.Provider value={{ data, status, compute, reset, overrideEntry }}>
+    <ChartDataContext.Provider value={{ data, status, compute, reset, overrideEntry, retry }}>
       {children}
     </ChartDataContext.Provider>
   );

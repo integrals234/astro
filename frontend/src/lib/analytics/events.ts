@@ -28,6 +28,7 @@ export type AnalyticsEvent =
   | { name: "inquiry_failed"; props: { locale: string; reason: string } }
   // Engagement
   | { name: "instagram_clicked"; props: { locale: string; placement: string } }
+  | { name: "result_shared"; props: { locale: string; method: "native" | "clipboard" } }
   | { name: "course_chapter_completed"; props: { chapter: number; locale: string } };
 
 type EventName = AnalyticsEvent["name"];

@@ -9,6 +9,7 @@ import { findNakshatra, type NakshatraRow } from "@/lib/jyotish/nakshatra-data";
 import { toChartFormData } from "@/lib/profile/types";
 import type { ChartData } from "@/lib/chart-types";
 import { sukuyoCopy } from "@/lib/tools/sukuyo-copy";
+import { profilePersonName } from "@/lib/profile/types";
 
 /**
  * 宿曜 (Sukuyō) — the visitor's birth mansion.
@@ -77,7 +78,9 @@ export default function SukuyoResult() {
   return (
     <div className="space-y-6">
       <div className="washi-card p-6 md:p-7">
-        <p className="washi-eyebrow mb-2">{copy.forPerson(primary.label)}</p>
+        {profilePersonName(primary) && (
+          <p className="washi-eyebrow mb-2">{copy.forPerson(profilePersonName(primary))}</p>
+        )}
 
         {!result ? (
           <>

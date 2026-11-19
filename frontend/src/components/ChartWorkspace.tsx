@@ -29,6 +29,7 @@ import ChartSectionBody from '@/components/chart/ChartSectionBody';
 import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
 import ChartSectionRail from '@/components/chart/ChartSectionRail';
 import DeferredSection from '@/components/chart/DeferredSection';
+import { profilePersonName } from "@/lib/profile/types";
 
 interface ChartWorkspaceProps {
   enablePersistence?: boolean;
@@ -185,7 +186,7 @@ function ChartWorkspaceInner({
     setAppliedProfileId(primaryProfile.id);
     setFormData((current) => ({ ...current, ...primaryProfile.birth }));
     setSelectedLocationName(primaryProfile.locationName);
-    if (!personName.trim()) setPersonName(primaryProfile.label);
+    if (!personName.trim()) setPersonName(profilePersonName(primaryProfile));
   }
   const chartCopy = getChartUi(lang);
 
@@ -606,7 +607,7 @@ function ChartWorkspaceInner({
 
             {/* RIGHT COLUMN: Empty state */}
             <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
-              <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
+              <m.div initial={false} animate={{ opacity: 1 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
                 <div className="text-center text-text-muted p-8 max-w-sm">
                   <div className="washi-icon-chip w-16 h-16 mx-auto mb-6">
                     <MapPin size={24} />

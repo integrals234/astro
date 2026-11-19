@@ -21,6 +21,7 @@ import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { buildChartPrefillQuery } from '@/lib/chart-prefill';
 import { chartPreviewCopy } from '@/lib/tools/chart-preview-copy';
 import { sectionLabel, sectionHeading, type ChartSectionId } from '@/lib/chart-sections';
+import { profilePersonName } from "@/lib/profile/types";
 
 /**
  * Every section in reading order — "the answer" first, the diagrams after,
@@ -115,7 +116,7 @@ export default function VerticalChartReport() {
 
   const prefillQuery = primary
     ? buildChartPrefillQuery({
-        name: primary.label,
+        name: profilePersonName(primary),
         date: `${String(primary.birth.year).padStart(4, '0')}-${String(primary.birth.month).padStart(2, '0')}-${String(primary.birth.day).padStart(2, '0')}`,
         time: `${String(primary.birth.hour).padStart(2, '0')}:${String(primary.birth.minute).padStart(2, '0')}`,
         latitude: primary.birth.latitude,
@@ -128,7 +129,7 @@ export default function VerticalChartReport() {
     <div>
       <div className="mb-8 flex items-center justify-between gap-3">
         <p className="font-body text-sm text-text-muted">
-          {primary?.label} — {primary?.locationName}
+          {primary && profilePersonName(primary) ? `${profilePersonName(primary)} — ` : ""}{primary?.locationName}
         </p>
         <button
           type="button"

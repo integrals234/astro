@@ -7,6 +7,7 @@ import NeedsBirthDetails from '@/components/shared/NeedsBirthDetails';
 import { computeNumerology, isChaldeanComputable } from '@/lib/numerology';
 import { numerologyCopy } from '@/lib/numerology-copy';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
+import { profilePersonName } from "@/lib/profile/types";
 
 function NumberTile({ label, value, planet }: { label: string; value: number; planet: string }) {
   return (
@@ -40,8 +41,9 @@ export default function NumerologyPanel() {
     return <NeedsBirthDetails idPrefix="numerology" />;
   }
 
-  const profileNameUsable = isChaldeanComputable(primary.label);
-  const nameSource = profileNameUsable ? primary.label : latinName;
+  const profileName = profilePersonName(primary);
+  const profileNameUsable = isChaldeanComputable(profileName);
+  const nameSource = profileNameUsable ? profileName : latinName;
   const result = computeNumerology(primary.birth, nameSource || undefined);
 
   return (

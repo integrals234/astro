@@ -19,6 +19,7 @@ import type { ChartData } from "@/lib/chart-types";
 import type { ChartSectionId } from "@/lib/chart-sections";
 import { chartPreviewCopy } from "@/lib/tools/chart-preview-copy";
 import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
+import { profilePersonName } from "@/lib/profile/types";
 
 /**
  * One or more chart sections, computed and drawn without leaving the page.
@@ -136,7 +137,7 @@ export default function ChartSectionResult({
 
   const prefillQuery = primary
     ? buildChartPrefillQuery({
-        name: primary.label,
+        name: profilePersonName(primary),
         date: `${String(primary.birth.year).padStart(4, "0")}-${String(primary.birth.month).padStart(2, "0")}-${String(primary.birth.day).padStart(2, "0")}`,
         time: `${String(primary.birth.hour).padStart(2, "0")}:${String(primary.birth.minute).padStart(2, "0")}`,
         latitude: primary.birth.latitude,

@@ -66,3 +66,20 @@ export function isCompleteNatalInput(value: unknown): value is NatalInput {
     ["year", "month", "day", "hour", "minute", "latitude", "longitude"] as const
   ).every((k) => typeof v[k] === "number" && Number.isFinite(v[k]));
 }
+
+/**
+ * The person's actual name, or "" when there isn't one.
+ *
+ * Every birth-details form saves `label: name || birthplace`, because the
+ * label is what identifies a saved chart in lists. That made the birthplace
+ * leak into places that mean *the person* — the /chart name field was
+ * prefilled with "東京, 日本", tools greeted 「東京, 日本さん」, and numerology
+ * computed a name number from a city. Use this wherever the label stands in
+ * for a name.
+ */
+export function profilePersonName(
+  profile: Pick<BirthProfile, "label" | "locationName">,
+): string {
+  const label = profile.label.trim();
+  return label && label !== profile.locationName.trim() ? label : "";
+}

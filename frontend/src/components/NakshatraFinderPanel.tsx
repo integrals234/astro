@@ -24,6 +24,7 @@ import {
   DEITY_REMEDY_COPY,
 } from "@/lib/jyotish/nakshatra-remedies";
 import { nakshatraFinderCopy } from "@/lib/tools/nakshatra-finder-copy";
+import { profilePersonName } from "@/lib/profile/types";
 
 interface Result {
   nakshatraNumber: number;
@@ -100,7 +101,7 @@ export default function NakshatraFinderPanel() {
     void (async () => {
       setComputedFor(primary.id);
       trackEvent("tool_opened", { slug: "nakshatra-finder", locale: language });
-      await runCompute(toChartFormData(primary), true, primary.label);
+      await runCompute(toChartFormData(primary), true, profilePersonName(primary) || null);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, primary, editing, computedFor]);
@@ -146,7 +147,7 @@ export default function NakshatraFinderPanel() {
   const handleEdit = () => {
     if (primary) {
       setEntry({
-        name: primary.label,
+        name: profilePersonName(primary),
         date: `${String(primary.birth.year).padStart(4, "0")}-${String(primary.birth.month).padStart(2, "0")}-${String(primary.birth.day).padStart(2, "0")}`,
         time: `${String(primary.birth.hour).padStart(2, "0")}:${String(primary.birth.minute).padStart(2, "0")}`,
         location: {

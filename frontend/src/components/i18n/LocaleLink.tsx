@@ -26,10 +26,18 @@ import {
  * new-tab targets, external hrefs and reduced-motion visitors fall straight
  * through to normal `next/link` behaviour.
  */
+/*
+ * Routes whose client bundle is large (the learn hub ships every article in
+ * four locales, ~420KB gzipped; the course is similar). With the bottom tab
+ * bar and sticky header linking to them from every page, viewport prefetch
+ * downloaded that bundle on every visit to every page. They load on click.
+ */
+const NO_VIEWPORT_PREFETCH = ["/learn-jyotish", "/course"];
+
 const LocaleLink = forwardRef<
   HTMLAnchorElement,
   React.ComponentProps<typeof NextLink>
->(function LocaleLink({ href, onClick, target, ...props }, ref) {
+>(function LocaleLink({ href, onClick, target, prefetch, ...props }, ref) {
   const { language } = useLanguage();
   const navigate = useViewTransitionNavigate();
 
@@ -37,12 +45,16 @@ const LocaleLink = forwardRef<
     typeof href === "string" ? localizedHref(language, href) : href;
 
   const isInternal = typeof resolved === "string" && resolved.startsWith("/");
+  const heavy =
+    typeof href === "string" &&
+    NO_VIEWPORT_PREFETCH.some((route) => href === route || href.startsWith(`${route}?`));
 
   return (
     <NextLink
       ref={ref}
       href={resolved}
       target={target}
+      prefetch={prefetch ?? (heavy ? false : undefined)}
       onClick={(event) => {
         onClick?.(event);
         if (!isInternal) return;

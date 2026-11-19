@@ -406,7 +406,9 @@ function ArticleSectionPanel({
       ) : null}
       {singleArticleMode ? (
         activeTab ? (
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
+            {/* initial={false}: the first article renders visible (it is the
+                page's LCP); only switching topics animates. */}
             <m.section
               key={activeTab.id}
               id={educationTopicAnchor(section, activeTab.id)}

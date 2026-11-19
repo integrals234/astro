@@ -22,9 +22,9 @@ import { getSharedCopy } from "@/lib/i18n/shared";
 
 /*
  * Design upgrade: Shippori Mincho carries the display voice at two weights
- * only, and body moves to Noto Sans JP as a variable font — one file per
- * unicode-range slice instead of one per weight. The baseline downloaded 95
- * font files on the Japanese homepage.
+ * only (a weight costs nothing unless text on the page uses it), and body
+ * moves to Noto Sans JP. The baseline downloaded 95 font files on the
+ * Japanese homepage.
  */
 const shippori = Shippori_Mincho({
   weight: ["500", "600"],
@@ -33,7 +33,14 @@ const shippori = Shippori_Mincho({
   preload: false,
 });
 
+/*
+ * One weight. A variable Noto Sans JP slice is ~1.9x a single-weight slice,
+ * and Japanese body text needs 40–60 slices per page; 400 alone halves the
+ * body-font bytes. `font-medium` resolves to 400 (no synthesis); the calm
+ * direction uses weight sparingly and Mincho carries emphasis.
+ */
 const notoSansJp = Noto_Sans_JP({
+  weight: ["400"],
   subsets: ["latin"],
   variable: "--font-noto-sans-jp",
   display: "swap",
@@ -55,6 +62,7 @@ const notoSerifKr = Noto_Serif_KR({
 });
 
 const notoSansKr = Noto_Sans_KR({
+  weight: ["400"],
   variable: "--font-noto-sans-kr",
   display: "swap",
   preload: false,

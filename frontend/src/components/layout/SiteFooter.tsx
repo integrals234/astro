@@ -4,8 +4,8 @@ import Link from "next/link";
 import LocaleLink from "@/components/i18n/LocaleLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
-import { ENTITY_SETS } from "@/lib/education/entity-routes";
-import { LEGAL_DOCUMENTS } from "@/lib/legal/content";
+import { entityLabels } from "@/lib/education/entity-labels";
+import { LEGAL_LINKS } from "@/lib/legal/titles";
 import { aboutContent } from "@/lib/about/content";
 import { APP_LANGUAGE_OPTIONS } from "@/lib/i18n/language";
 import { localizedHref } from "@/lib/i18n/routing";
@@ -15,6 +15,17 @@ import { ChevronDown } from "lucide-react";
 import { homeStoryCopy } from "@/lib/home/home-story-copy";
 
 const INSTAGRAM_URL = "https://www.instagram.com/jyotishlife.jp/";
+
+/*
+ * Links only. The footer renders on every page, so importing ENTITY_SETS or
+ * LEGAL_DOCUMENTS here put the whole education corpus and all four legal
+ * texts (~430KB gzipped) into every page's JavaScript.
+ */
+const ENTITY_LINKS = [
+  { id: "nakshatras", path: "/nakshatras", title: entityLabels.nakshatrasTitle },
+  { id: "rashis", path: "/rashis", title: entityLabels.rashisTitleLong },
+  { id: "grahas", path: "/grahas", title: entityLabels.grahasTitle },
+];
 
 /**
  * The site had no footer at all (Phase 2.4).
@@ -80,7 +91,7 @@ export default function SiteFooter() {
               {/* Entity set hubs — the shortest path from any page into the
                   programmatic corpus, which is what keeps it inside three
                   clicks of the root (Phase 3.7). */}
-              {Object.values(ENTITY_SETS).map((set) => (
+              {ENTITY_LINKS.map((set) => (
                 <li key={set.id}>
                   <LocaleLink
                     href={set.path}
@@ -109,7 +120,7 @@ export default function SiteFooter() {
                   {aboutContent.eyebrow[language]}
                 </LocaleLink>
               </li>
-              {LEGAL_DOCUMENTS.map((document) => (
+              {LEGAL_LINKS.map((document) => (
                 <li key={document.slug}>
                   <LocaleLink
                     href={`/legal/${document.slug}`}

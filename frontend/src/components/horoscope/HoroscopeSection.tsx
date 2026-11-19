@@ -4,21 +4,14 @@ import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import BackToNavButton from "@/components/education/BackToNavButton";
 import { FormattedText } from "@/lib/format-inline-text";
-import {
-  educationUi,
-  generateHoroscopeReading,
-  getPeriodForType,
-  horoscopeIntro,
-  horoscopeSectionLabels,
-  horoscopeSigns,
-  periodTypeLabel,
-  uiText,
-  useHoroscopePeriods,
-  type BilingualText,
-  type EducationLang,
-  type HoroscopePeriodType,
-  type HoroscopeSignId,
-} from "@/lib/education";
+// Specific modules, not the "@/lib/education" barrel: the barrel re-exports
+// the whole article corpus, which this page never renders.
+import { educationUi, uiText } from "@/lib/education/i18n/ui";
+import { generateHoroscopeReading, horoscopeIntro, horoscopeSectionLabels, type HoroscopeSignId } from "@/lib/education/horoscope-engine";
+import { getPeriodForType, useHoroscopePeriods } from "@/lib/education/use-horoscope-periods";
+import { periodTypeLabel, type HoroscopePeriodType } from "@/lib/education/horoscope-periods";
+import { horoscopeSigns } from "@/lib/education/horoscope-signs";
+import type { BilingualText, EducationLang } from "@/lib/education/types";
 
 function t(text: BilingualText, lang: EducationLang) {
   return text[lang];

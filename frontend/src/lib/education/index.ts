@@ -22,17 +22,7 @@ export const nakshatras = nakshatrasRaw.map((n) => ({
   image: nakshatraImages[n.id],
 }));
 
-import { rashis } from "./rashi-content";
-import type { HoroscopeSignMeta } from "./horoscope-engine";
-
-export const horoscopeSigns: HoroscopeSignMeta[] = rashis.map((sign) => ({
-  id: sign.id as HoroscopeSignMeta["id"],
-  name: sign.name,
-  sanskrit: sign.sanskrit,
-  image: sign.image,
-  element: sign.element,
-  ruler: sign.ruler,
-}));
+export { horoscopeSigns } from "./horoscope-signs";
 
 export const educationSections: {
   id: EducationSectionId;

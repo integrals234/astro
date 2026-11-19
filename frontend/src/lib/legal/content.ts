@@ -1,4 +1,5 @@
 import type { BilingualText } from "@/lib/education/types";
+import { LEGAL_TITLES } from "./titles";
 
 /**
  * Legal documents.
@@ -111,12 +112,7 @@ const CONTACT_EMAIL: BilingualText = {
  * ------------------------------------------------------------------------- */
 const tokushoho: LegalDocument = {
   slug: "tokushoho",
-  title: {
-    en: "Notation based on the Act on Specified Commercial Transactions",
-    hi: "विशिष्ट वाणिज्यिक लेनदेन अधिनियम पर आधारित विवरण",
-    ja: "特定商取引法に基づく表記",
-    ko: "특정상거래법에 근거한 표기",
-  },
+  title: LEGAL_TITLES.tokushoho,
   summary: {
     en: "Seller details, pricing, payment method, delivery timing, and cancellation terms, as required of a mail-order trader under Article 11 of the Act.",
     hi: "अधिनियम की धारा 11 के अंतर्गत दूरस्थ-विक्रय व्यापारी के लिए अपेक्षित विक्रेता विवरण, मूल्य, भुगतान विधि, वितरण समय और रद्दीकरण शर्तें।",
@@ -345,12 +341,7 @@ const tokushoho: LegalDocument = {
  * ------------------------------------------------------------------------- */
 const refunds: LegalDocument = {
   slug: "refunds",
-  title: {
-    en: "Returns and Cancellation Policy",
-    hi: "वापसी और रद्दीकरण नीति",
-    ja: "返品・キャンセルポリシー",
-    ko: "반품 및 취소 정책",
-  },
+  title: LEGAL_TITLES.refunds,
   summary: {
     en: "When an appraisal or session may be cancelled, what is refunded at each stage, and how refunds are paid.",
     hi: "परामर्श या सत्र कब रद्द किया जा सकता है, प्रत्येक चरण पर क्या वापस किया जाता है, और धनवापसी कैसे की जाती है।",
@@ -567,12 +558,7 @@ const refunds: LegalDocument = {
  * ------------------------------------------------------------------------- */
 const terms: LegalDocument = {
   slug: "terms",
-  title: {
-    en: "Terms of Service",
-    hi: "सेवा की शर्तें",
-    ja: "利用規約",
-    ko: "이용약관",
-  },
+  title: LEGAL_TITLES.terms,
   summary: {
     en: "The terms on which this site and its readings may be used, including what a reading is, what it is not, and the limits of our responsibility.",
     hi: "इस साइट और इसके परामर्श के उपयोग की शर्तें — परामर्श क्या है, क्या नहीं है, और हमारी जिम्मेदारी की सीमाएँ।",
@@ -839,12 +825,7 @@ const terms: LegalDocument = {
  * ------------------------------------------------------------------------- */
 const privacy: LegalDocument = {
   slug: "privacy",
-  title: {
-    en: "Privacy Policy",
-    hi: "गोपनीयता नीति",
-    ja: "プライバシーポリシー",
-    ko: "개인정보 처리방침",
-  },
+  title: LEGAL_TITLES.privacy,
   summary: {
     en: "What personal information is collected — including the birth details entered into the chart tools — why, who else handles it, where it goes, how long it is kept, and how to have it removed.",
     hi: "कौन-सी व्यक्तिगत जानकारी एकत्र की जाती है — कुंडली उपकरणों में दर्ज जन्म-विवरण सहित — क्यों, उसे और कौन संभालता है, वह कहाँ जाती है, कितने समय रखी जाती है, तथा उसे कैसे हटवाया जाए।",

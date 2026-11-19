@@ -1449,16 +1449,23 @@ html {
   }
 }
 
-/* Phone: leave room for the bottom tab bar. */
+/* Leave room for the bottom tab bar while it is visible: phones always,
+ * tablets on public pages (.tabbar-lg). --tabbar-h is 0 everywhere else. */
 @media (max-width: 767px) {
   :root:has(.tabbar) {
     --tabbar-h: calc(60px + env(safe-area-inset-bottom, 0px));
   }
+}
 
-  /* AppShell scrolls inside its own <main> and pads that instead. */
-  body:has(.tabbar):not(:has([data-education-scroll-root])) {
-    padding-bottom: var(--tabbar-h);
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root:has(.tabbar-lg) {
+    --tabbar-h: calc(60px + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* AppShell scrolls inside its own <main> and pads that instead. */
+body:has(.tabbar):not(:has([data-education-scroll-root])) {
+  padding-bottom: var(--tabbar-h);
 }
 
 /* Hero headline: phrases rise in on load (GSAP). Before hydration they sit

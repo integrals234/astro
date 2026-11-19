@@ -81,8 +81,10 @@ export default function HomeHero({
           { opacity: 0.01, y: "0.4em" },
           { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.11 },
         );
+        // Transform only: the lead and form are painted by the server and
+        // must never be hidden again — fading them from 0 after hydration
+        // made the lead paragraph the page's LCP, ~3 s late.
         gsap.from("[data-hero-after]", {
-          opacity: 0,
           y: 12,
           duration: 0.7,
           ease: "power3.out",

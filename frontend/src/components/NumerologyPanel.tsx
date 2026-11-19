@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
+import NeedsBirthDetails from '@/components/shared/NeedsBirthDetails';
 import { computeNumerology, isChaldeanComputable } from '@/lib/numerology';
 import { numerologyCopy } from '@/lib/numerology-copy';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
@@ -36,11 +37,7 @@ export default function NumerologyPanel() {
   }
 
   if (!primary) {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="font-body text-text">{copy.needProfile}</p>
-      </div>
-    );
+    return <NeedsBirthDetails idPrefix="numerology" />;
   }
 
   const profileNameUsable = isChaldeanComputable(primary.label);

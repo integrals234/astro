@@ -6,6 +6,7 @@ import Link from '@/components/i18n/LocaleLink';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import { useChartData } from '@/components/chart/ChartDataProvider';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
+import { useToast } from '@/components/ui/Toaster';
 import ChartSectionRail from '@/components/chart/ChartSectionRail';
 import DeferredSection from '@/components/chart/DeferredSection';
 import ChartSectionBody from '@/components/chart/ChartSectionBody';
@@ -44,6 +45,7 @@ export default function VerticalChartReport() {
   const previewCopy = chartPreviewCopy[lang];
   const { primary, isLoaded, upsertProfile } = useBirthProfile();
   const { data, status, compute, reset, overrideEntry } = useChartData();
+  const { toast } = useToast();
   const [entry, setEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
   const [chalitOpen, setChalitOpen] = useState(false);
   const [chartStyle, setChartStyle] = useState<'North' | 'South'>('North');
@@ -63,13 +65,22 @@ export default function VerticalChartReport() {
     };
     const result = await compute(birth);
     if (!result) return;
-    void upsertProfile({
-      label: entry.name.trim() || entry.location.display_name,
-      locationName: entry.location.display_name,
-      birth,
-      isPrimary: false,
-      chartData: result,
-    });
+    // Previously fire-and-forget: a failed save (e.g. the FK-on-missing-user
+    // case `ensureUserRow` in lib/auth.ts now heals) surfaced no feedback at
+    // all — the chart still rendered from `compute()`, hiding the fact this
+    // person was never actually remembered for other tools or /chart's
+    // recent list.
+    try {
+      await upsertProfile({
+        label: entry.name.trim() || entry.location.display_name,
+        locationName: entry.location.display_name,
+        birth,
+        isPrimary: false,
+        chartData: result,
+      });
+    } catch {
+      toast(t.saveError);
+    }
   };
 
   if (!isLoaded) {

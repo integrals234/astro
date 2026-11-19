@@ -13,7 +13,9 @@ export type ToolHandoffId =
   | "compatibility"
   | "saturn"
   | "moonSign"
-  | "generic";
+  | "generic"
+  | "babyNames"
+  | "gemstone";
 
 interface HandoffCopy {
   eyebrow: string;
@@ -57,6 +59,18 @@ export const toolHandoffCopy: Record<
       body: "この計算は正確ですが、結果が示すのは配置であって、人生ではありません。ご自身の状況に即した読み解きは、鑑定士が一件ずつ手作業で準備いたします。",
       cta: "個人鑑定について見る",
     },
+    babyNames: {
+      eyebrow: "ここから先は鑑定の領域です",
+      heading: "音節と数秘術は、名づけの出発点です",
+      body: "パダの頭音と数秘術スコアはどちらも機械的に導けますが、実際に名前を選ぶ決め手にはなりません。家族の思い、姓との響き、実際に呼んだときの印象——そうしたことは計算の外にあります。",
+      cta: "個人鑑定について見る",
+    },
+    gemstone: {
+      eyebrow: "身につける前に",
+      heading: "この提案は出発点であり、処方ではありません",
+      body: "ラグナの支配星や弱い惑星は機械的に特定できますが、実際に石を選び、身につけてよいかどうかは、チャート全体・タイミング・体質を踏まえた鑑定士の判断が必要です。特に土星・火星・ラーフ・ケートゥに関わる石は、購入前に必ずご相談ください。",
+      cta: "個人鑑定について見る",
+    },
   },
   en: {
     sukuyo: {
@@ -87,6 +101,18 @@ export const toolHandoffCopy: Record<
       eyebrow: "Next step",
       heading: "Beyond the calculation",
       body: "This calculation is precise, but what it returns is a configuration, not a life. Interpreting it against your circumstances is what our astrologers prepare by hand, one reading at a time.",
+      cta: "See personal appraisals",
+    },
+    babyNames: {
+      eyebrow: "Where calculation stops",
+      heading: "The syllable and the score are a starting point",
+      body: "The pada's starting sound and the numerology score are both mechanical. Choosing an actual name isn't — how it sounds with your family name, what it means to you, how it feels to say out loud, sit outside what any calculator can settle.",
+      cta: "See personal appraisals",
+    },
+    gemstone: {
+      eyebrow: "Before you wear anything",
+      heading: "This is a starting point, not a prescription",
+      body: "The Lagna ruler and a weak planet can be identified mechanically, but whether a stone actually suits you depends on the full chart, timing, and constitution — judgement a calculator can't make. Stones tied to Saturn, Mars, Rahu, or Ketu especially carry real classical risk if wrong; please consult before buying or wearing one.",
       cta: "See personal appraisals",
     },
   },
@@ -121,6 +147,18 @@ export const toolHandoffCopy: Record<
       body: "यह गणना सटीक है, पर जो मिलता है वह एक स्थिति है, जीवन नहीं। आपकी परिस्थितियों के अनुसार उसकी व्याख्या हमारे ज्योतिषी एक-एक करके हाथ से तैयार करते हैं।",
       cta: "व्यक्तिगत परामर्श देखें",
     },
+    babyNames: {
+      eyebrow: "जहाँ गणना समाप्त होती है",
+      heading: "अक्षर और अंक-स्कोर केवल शुरुआत हैं",
+      body: "पाद का प्रारंभिक अक्षर और अंक ज्योतिष स्कोर, दोनों यंत्रवत निकाले जाते हैं। असली नाम चुनना ऐसा नहीं है — परिवार के उपनाम के साथ इसकी ध्वनि, इसका आपके लिए अर्थ, बोलने पर इसका एहसास — यह सब किसी भी गणना की सीमा से बाहर है।",
+      cta: "व्यक्तिगत परामर्श देखें",
+    },
+    gemstone: {
+      eyebrow: "कुछ भी पहनने से पहले",
+      heading: "यह एक शुरुआती बिंदु है, नुस्खा नहीं",
+      body: "लग्न स्वामी और कमजोर ग्रह की पहचान यंत्रवत की जा सकती है, पर कोई रत्न वास्तव में आपके लिए उपयुक्त है या नहीं यह पूरी कुंडली, समय और प्रकृति पर निर्भर करता है — यह निर्णय कोई कैलकुलेटर नहीं कर सकता। शनि, मंगल, राहु या केतु से जुड़े रत्नों में गलत चयन का वास्तविक शास्त्रीय जोखिम है; खरीदने या पहनने से पहले कृपया परामर्श लें।",
+      cta: "व्यक्तिगत परामर्श देखें",
+    },
   },
   ko: {
     sukuyo: {
@@ -151,6 +189,18 @@ export const toolHandoffCopy: Record<
       eyebrow: "다음 단계",
       heading: "계산 너머",
       body: "이 계산은 정확하지만, 결과가 보여주는 것은 배치이지 삶이 아닙니다. 상황에 맞는 해석은 점성술사가 한 건씩 직접 준비합니다.",
+      cta: "개인 상담 살펴보기",
+    },
+    babyNames: {
+      eyebrow: "계산이 멈추는 지점",
+      heading: "음절과 점수는 시작일 뿐입니다",
+      body: "파다의 시작 음절과 수비학 점수는 모두 기계적으로 도출됩니다. 실제로 이름을 정하는 일은 그렇지 않습니다 — 성과 어울리는 소리, 그 이름이 지니는 의미, 실제로 불러보았을 때의 느낌은 어떤 계산으로도 정해지지 않습니다.",
+      cta: "개인 상담 살펴보기",
+    },
+    gemstone: {
+      eyebrow: "무언가를 착용하기 전에",
+      heading: "이것은 시작점이지, 처방이 아닙니다",
+      body: "라그나의 지배 행성과 약한 행성은 기계적으로 파악할 수 있지만, 특정 보석이 실제로 당신에게 맞는지는 전체 차트, 시기, 체질에 달려 있습니다 — 계산기가 내릴 수 없는 판단입니다. 특히 토성, 화성, 라후, 케투와 관련된 보석은 잘못 선택했을 때 실제 고전적 위험이 따르니, 구매나 착용 전에 반드시 상담하세요.",
       cta: "개인 상담 살펴보기",
     },
   },

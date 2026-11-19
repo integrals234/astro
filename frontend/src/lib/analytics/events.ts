@@ -17,6 +17,10 @@ export type AnalyticsEvent =
   | { name: "chart_pdf_downloaded"; props: { locale: string } }
   | { name: "tool_opened"; props: { slug: string; locale: string } }
   | { name: "tool_completed"; props: { slug: string; locale: string } }
+  | {
+      name: "baby_names_shortlist_shared";
+      props: { locale: string; method: "whatsapp" | "clipboard" };
+    }
   // Booking funnel
   | { name: "pricing_viewed"; props: { locale: string } }
   | { name: "booking_started"; props: { offering: string; locale: string } }

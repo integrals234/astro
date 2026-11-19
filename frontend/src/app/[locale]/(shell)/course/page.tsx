@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import VedicCourseModule from "@/components/vedic-course/VedicCourseModule";
 import VedicCourseHeader from "@/components/vedic-course/VedicCourseHeader";
 import { getVedicCourseProgress } from "@/app/actions/vedic-course";
@@ -31,7 +32,10 @@ export default async function VedicCoursePage() {
       <VedicCourseHeader />
 
       <section className="washi-card relative p-5 pt-8 sm:p-8 sm:pt-8">
-        <VedicCourseModule initialProgress={initialProgress} />
+        {/* Suspends while the hi/ko course translations load (ja/en never do). */}
+        <Suspense fallback={<div className="h-96 animate-pulse rounded-[14px] bg-washi-deep" aria-hidden />}>
+          <VedicCourseModule initialProgress={initialProgress} />
+        </Suspense>
       </section>
     </div>
   );

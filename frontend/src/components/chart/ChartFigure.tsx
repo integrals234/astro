@@ -2,6 +2,7 @@
 
 import KundliChart from '@/components/KundliChart';
 import SouthKundliChart from '@/components/SouthKundliChart';
+import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
 import { chartView, type ChartView } from '@/lib/chart-render';
 import type { ChartData } from '@/lib/chart-types';
 import type { ChartTranslations } from '@/lib/chart-i18n';
@@ -137,36 +138,14 @@ export default function ChartFigure({
       </div>
 
       {controls === 'full' && (
-        <div className="mt-6 flex flex-col items-center gap-4">
-          <div className="washi-segmented">
-            <button
-              onClick={() => onUseSymbolsChange?.(false)}
-              className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${!useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-            >
-              {t.ui.textToggle}
-            </button>
-            <button
-              onClick={() => onUseSymbolsChange?.(true)}
-              className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-            >
-              {t.ui.symbolToggle}
-            </button>
-          </div>
-          <div className="washi-segmented">
-            <button
-              onClick={() => onChartStyleChange?.('North')}
-              className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'North' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-            >
-              {t.ui.northStyle}
-            </button>
-            <button
-              onClick={() => onChartStyleChange?.('South')}
-              className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'South' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-            >
-              {t.ui.southStyle}
-            </button>
-          </div>
-        </div>
+        <ChartDisplayControls
+          t={t}
+          useSymbols={useSymbols}
+          onUseSymbolsChange={(value) => onUseSymbolsChange?.(value)}
+          chartStyle={chartStyle}
+          onChartStyleChange={(style) => onChartStyleChange?.(style)}
+          className="mt-6"
+        />
       )}
     </div>
   );

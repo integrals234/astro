@@ -1,6 +1,8 @@
-import React from 'react';
+"use client";
+
+import React, { useRef } from 'react';
 import { m } from 'motion/react';
-import { staggerContainer, staggerItem, easeInOutSoft } from '@/lib/motion/tokens';
+import { gsap, useGSAP, MOTION_OK } from '@/lib/motion/gsap';
 
 interface MappedPlanet {
   name: string;
@@ -32,26 +34,17 @@ const signToNumber: Record<string, number> = {
 };
 
 /**
- * Grid draws in first (the diamond and its cross-lines), then the twelve
- * houses fade and settle into place one after another. Previously the whole
- * card just faded and scaled as one block — correct for a chart someone
- * already expects (re-opening a saved one), but wrong for the moment a chart
- * first appears from a compute, which reads better as something assembling
- * itself rather than popping in.
+ * Signature moment #2 — the chart draws itself.
  *
- * `MotionConfig reducedMotion="user"` is set app-wide in `MotionProvider`, so
- * this collapses to an instant reveal under `prefers-reduced-motion` with no
- * extra guard needed here.
+ * GSAP owns the SVG: the frame, both diagonals and the diamond are traced
+ * line by line (DrawSVG), then the twelve houses — sign numbers and planets
+ * — settle in one after another. Motion keeps only the outer card's fade,
+ * a different element, so the two libraries never touch the same node.
+ *
+ * Replays when the chart changes (a new person, a different ascendant), and
+ * is skipped entirely under prefers-reduced-motion. Content is in the DOM
+ * and visible without script; the timeline only animates *from* hidden.
  */
-const gridDraw = {
-  initial: { pathLength: 0, opacity: 0 },
-  animate: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { duration: 0.7, ease: easeInOutSoft },
-  },
-};
-
 export default function KundliChart({ planets, transitPlanets = [], ascendantSign, ascLabel, ascDegree, transitLabel, useSymbols, accessibility }: KundliChartProps) {
   const SIZE = 400;
   const houseCenters: Record<number, { x: number; y: number }> = {
@@ -67,6 +60,22 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
   };
 
   const isGocharChart = transitPlanets.length > 0;
+  const svgRef = useRef<SVGSVGElement>(null);
+  const signature = `${ascendantSign}|${planets.map((p) => `${p.name}${p.house}`).join(',')}`;
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        gsap
+          .timeline()
+          .from('[data-k-line]', { drawSVG: '0%', duration: 0.55, ease: 'power2.inOut', stagger: 0.14 })
+          .from('[data-k-house]', { opacity: 0, y: 5, duration: 0.32, ease: 'power2.out', stagger: 0.045 }, '-=0.25');
+      });
+      return () => mm.revert();
+    },
+    { scope: svgRef, dependencies: [signature] },
+  );
 
   return (
     <m.div
@@ -81,20 +90,20 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
         </div>
       )}
 
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="kundli-chart-svg w-full h-auto fill-transparent" style={{ strokeWidth: 1 }}>
-        <m.rect {...gridDraw} x="0" y="0" width={SIZE} height={SIZE} className="kundli-chart-grid" />
-        <m.line {...gridDraw} x1="0" y1="0" x2={SIZE} y2={SIZE} className="kundli-chart-grid" />
-        <m.line {...gridDraw} x1="0" y1={SIZE} x2={SIZE} y2="0" className="kundli-chart-grid" />
-        <m.polygon {...gridDraw} points={`${SIZE/2},0 ${SIZE},${SIZE/2} ${SIZE/2},${SIZE} 0,${SIZE/2}`} className="kundli-chart-grid" />
+      <svg ref={svgRef} viewBox={`0 0 ${SIZE} ${SIZE}`} className="kundli-chart-svg w-full h-auto fill-transparent" style={{ strokeWidth: 1 }}>
+        <rect data-k-line x="0" y="0" width={SIZE} height={SIZE} className="kundli-chart-grid" />
+        <line data-k-line x1="0" y1="0" x2={SIZE} y2={SIZE} className="kundli-chart-grid" />
+        <line data-k-line x1="0" y1={SIZE} x2={SIZE} y2="0" className="kundli-chart-grid" />
+        <polygon data-k-line points={`${SIZE/2},0 ${SIZE},${SIZE/2} ${SIZE/2},${SIZE} 0,${SIZE/2}`} className="kundli-chart-grid" />
 
-        <m.g variants={staggerContainer} initial="initial" animate="animate">
+        <g>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((houseNum) => {
           const { x, y } = houseCenters[houseNum];
           const natalInHouse = planets.filter(p => p.house === houseNum);
           const transitInHouse = transitPlanets.filter(p => p.house === houseNum);
 
           return (
-            <m.g key={`house-${houseNum}`} variants={staggerItem}>
+            <g key={`house-${houseNum}`} data-k-house>
               <text x={x} y={y - 22} textAnchor="middle" className="kundli-chart-sign stroke-none text-sm font-bold font-chart">
                 {getSignForHouse(houseNum)}
               </text>
@@ -144,10 +153,10 @@ export default function KundliChart({ planets, transitPlanets = [], ascendantSig
                   ))}
                 </text>
               )}
-            </m.g>
+            </g>
           );
           })}
-        </m.g>
+        </g>
       </svg>
     </m.div>
   );

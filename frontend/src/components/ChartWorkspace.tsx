@@ -26,6 +26,7 @@ import { sectionLabel, sectionHeading } from '@/lib/chart-sections';
 import ChartMetaStrip from '@/components/chart/ChartMetaStrip';
 import ChartResultHeader from '@/components/chart/ChartResultHeader';
 import ChartSectionBody from '@/components/chart/ChartSectionBody';
+import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
 import ChartSectionRail from '@/components/chart/ChartSectionRail';
 import DeferredSection from '@/components/chart/DeferredSection';
 
@@ -684,36 +685,14 @@ function ChartWorkspaceInner({
                     {/* Shared display controls — one flip updates every
                         chart-figure section below, since ChartFigure is
                         fully controlled and never owns this state itself. */}
-                    <div className="flex flex-wrap items-center justify-center gap-4 pb-6 border-b border-border">
-                      <div className="washi-segmented">
-                        <button
-                          onClick={() => setUseSymbols(false)}
-                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${!useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-                        >
-                          {t.ui.textToggle}
-                        </button>
-                        <button
-                          onClick={() => setUseSymbols(true)}
-                          className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${useSymbols ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-xs' : ''}`}
-                        >
-                          {t.ui.symbolToggle}
-                        </button>
-                      </div>
-                      <div className="washi-segmented">
-                        <button
-                          onClick={() => setChartStyle('North')}
-                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'North' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-                        >
-                          {t.ui.northStyle}
-                        </button>
-                        <button
-                          onClick={() => setChartStyle('South')}
-                          className={`px-6 py-2 font-body uppercase tracking-widest transition-colors ${chartStyle === 'South' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
-                        >
-                          {t.ui.southStyle}
-                        </button>
-                      </div>
-                    </div>
+                    <ChartDisplayControls
+                      t={t}
+                      useSymbols={useSymbols}
+                      onUseSymbolsChange={setUseSymbols}
+                      chartStyle={chartStyle}
+                      onChartStyleChange={setChartStyle}
+                      className="border-b border-border pb-6 lg:sticky lg:top-[4.25rem] lg:z-10 lg:bg-washi-elevated/95 lg:pt-3 lg:backdrop-blur"
+                    />
 
                     {WORKSPACE_SECTIONS.map((entry) => (
                       <DeferredSection key={entry.id} id={entry.id} title={sectionHeading(entry, t, lang)}>

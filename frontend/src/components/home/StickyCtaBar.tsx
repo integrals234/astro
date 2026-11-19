@@ -44,7 +44,7 @@ export default function StickyCtaBar({
   return (
     <div
       aria-hidden={!shown}
-      className={`fixed inset-x-0 z-40 bottom-[var(--tabbar-h)] transition-[opacity,transform] duration-200 ease-[var(--ease-out)] md:hidden ${
+      className={`fixed inset-x-0 z-40 bottom-[var(--tabbar-h)] transition-[opacity,transform] duration-200 ease-[var(--ease-out)] lg:hidden ${
         shown ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >

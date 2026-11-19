@@ -40,8 +40,8 @@ import { homeStoryCopy } from "@/lib/home/home-story-copy";
  * always; horoscope from 1024 px; the course from 1280 px (it is also in the
  * drawer, footer and the learn section). */
 const NAV_PRIORITY: Record<string, string> = {
-  "/horoscope": "hidden lg:inline-flex",
-  "/course": "hidden xl:inline-flex",
+  "/horoscope": "hidden xl:inline-flex",
+  "/course": "hidden 2xl:inline-flex",
 };
 
 export default function PublicHeader({
@@ -76,9 +76,9 @@ export default function PublicHeader({
 
   return (
     <>
-    <header className="relative z-40 border-b border-border bg-washi/85 backdrop-blur-md md:sticky md:top-0">
+    <header className="relative z-40 border-b border-border bg-washi/85 backdrop-blur-md lg:sticky lg:top-0">
       <div
-        className="shell-header-desktop mx-auto w-full max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:px-8"
+        className="mx-auto hidden w-full max-w-7xl items-center justify-between gap-6 px-8 py-3 lg:flex"
       >
         <SiteBrand size="lg" className="shrink-0" />
 
@@ -137,7 +137,7 @@ export default function PublicHeader({
       </div>
 
       <div
-        className={`shell-header-mobile mx-auto w-full ${maxWidth} items-center gap-2 px-4 py-3`}
+        className={`mx-auto flex w-full ${maxWidth} items-center gap-2 px-4 py-3 lg:hidden`}
       >
         {/*
          * Three controls, not five. The theme toggle is a 3-button segmented
@@ -168,7 +168,7 @@ export default function PublicHeader({
         </div>
       </div>
     </header>
-    <MobileTabBar />
+    <MobileTabBar breakpoint="lg" />
     </>
   );
 }

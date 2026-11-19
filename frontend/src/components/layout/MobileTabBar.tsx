@@ -21,10 +21,11 @@ const TABS: { key: "home" | "chart" | "tools" | "learn" | "reading"; href: strin
  * language, theme), but the five places people actually go are one tap away
  * at the bottom of the screen. 60 px tall plus the home-indicator inset;
  * the `.tabbar` class is what the layout CSS keys off to pad the page and
- * lift fixed UI (the sticky CTA) above it. Hidden from 768 px up, where the
- * header nav fits.
+ * lift fixed UI (the sticky CTA) above it. Public pages keep it through
+ * tablet widths (the full header needs 1024 px); AppShell, whose TopNav
+ * fits from 768 px, passes breakpoint="md".
  */
-export default function MobileTabBar() {
+export default function MobileTabBar({ breakpoint = "lg" }: { breakpoint?: "md" | "lg" }) {
   const { language } = useLanguage();
   const copy = homeStoryCopy[language];
   const pathname = useBarePathname();
@@ -35,7 +36,7 @@ export default function MobileTabBar() {
   return (
     <nav
       aria-label={copy.tabsAria}
-      className="tabbar fixed inset-x-0 bottom-0 z-50 border-t border-border bg-washi/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      className={`tabbar fixed inset-x-0 bottom-0 z-50 border-t border-border bg-washi/95 pb-[env(safe-area-inset-bottom)] backdrop-blur ${breakpoint === "lg" ? "tabbar-lg lg:hidden" : "md:hidden"}`}
     >
       <ul className="mx-auto grid h-[60px] max-w-md grid-cols-5">
         {TABS.map((tab) => {

@@ -41,7 +41,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       >
         <div className="w-full px-4 py-4 md:px-8 md:py-8">{children}</div>
       </main>
-      <MobileTabBar />
+      <MobileTabBar breakpoint="md" />
     </div>
   );
 }

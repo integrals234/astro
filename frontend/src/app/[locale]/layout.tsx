@@ -3,10 +3,10 @@ import {
   Hind,
   Lora,
   Martel,
+  Noto_Sans_JP,
   Noto_Sans_KR,
   Noto_Serif_KR,
   Shippori_Mincho,
-  Zen_Kaku_Gothic_New,
 } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -20,37 +20,41 @@ import {
 } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 
+/*
+ * Design upgrade: Shippori Mincho carries the display voice at two weights
+ * only, and body moves to Noto Sans JP as a variable font — one file per
+ * unicode-range slice instead of one per weight. The baseline downloaded 95
+ * font files on the Japanese homepage.
+ */
 const shippori = Shippori_Mincho({
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600"],
   variable: "--font-shippori",
   display: "swap",
   preload: false,
 });
 
-const zenKaku = Zen_Kaku_Gothic_New({
-  weight: ["400", "500", "700"],
-  variable: "--font-zen-kaku",
+const notoSansJp = Noto_Sans_JP({
+  subsets: ["latin"],
+  variable: "--font-noto-sans-jp",
   display: "swap",
   preload: false,
 });
 
 const lora = Lora({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-lora",
   display: "swap",
 });
 
 const notoSerifKr = Noto_Serif_KR({
-  weight: ["400", "500", "600"],
+  weight: ["500", "600"],
   variable: "--font-noto-serif-kr",
   display: "swap",
   preload: false,
 });
 
 const notoSansKr = Noto_Sans_KR({
-  weight: ["400", "500", "700"],
   variable: "--font-noto-sans-kr",
   display: "swap",
   preload: false,
@@ -66,7 +70,7 @@ const martel = Martel({
 
 const hind = Hind({
   subsets: ["latin", "devanagari"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   variable: "--font-hind",
   display: "swap",
   preload: false,
@@ -84,8 +88,8 @@ const hind = Hind({
  * regardless of language.
  */
 const FONTS_BY_LOCALE: Record<AppLanguage, string[]> = {
-  ja: [shippori.variable, zenKaku.variable, lora.variable],
-  en: [lora.variable, zenKaku.variable],
+  ja: [shippori.variable, notoSansJp.variable, lora.variable],
+  en: [lora.variable, notoSansJp.variable],
   ko: [notoSerifKr.variable, notoSansKr.variable, lora.variable],
   hi: [martel.variable, hind.variable, lora.variable],
 };
@@ -122,6 +126,15 @@ export default async function RootLayout({
       className={`${FONTS_BY_LOCALE[initialLanguage].join(" ")} antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Marks script-capable visitors before first paint, so the hero's
+            entrance state only applies when GSAP will actually run. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
       <body className="font-body antialiased" suppressHydrationWarning>
         <Providers initialLanguage={initialLanguage}>
           {children}

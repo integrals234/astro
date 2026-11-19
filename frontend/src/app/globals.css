@@ -1,62 +1,65 @@
 @import "tailwindcss";
 
-/* Washi Paper Minimal — light palette (default source of truth) */
+/*
+ * 静 (shizuka) — light palette.
+ *
+ * Paper, sumi ink, and exactly two accents:
+ *   藍 ai (indigo)   — the sky: charts, links, selection, "moss" call sites
+ *   朱 shu (vermilion) — the one thing to do: primary action, the Moon marker
+ *
+ * Token *names* are kept from the washi system so the ~400 existing call
+ * sites re-theme without edits: `moss` now resolves to indigo and
+ * `terracotta` to vermilion. `gold` is demoted to a quiet indigo-grey
+ * hairline so it no longer counts as a third accent.
+ */
 @theme {
-  --color-ink: #2f2f2f;
-  --color-moss: #7c8b6f;
-  --color-terracotta: #c77b4e;
-  --color-washi: #f5f0e6;
-  --color-washi-elevated: #fbf8f1;
-  --color-text: #333333;
-  --color-text-muted: #6b6b63;
-  --color-border: #e3dacb;
-  --color-neutral-tag: #ede7d8;
-  --color-positive: #7c8b6f;
-  --color-caution: #c77b4e;
+  --color-ink: #1d1c1a;
+  --color-moss: #3b4a6b;
+  --color-terracotta: #b4532a;
+  --color-washi: #f6f3ed;
+  --color-washi-elevated: #fbfaf7;
+  --color-text: #2b2a27;
+  --color-text-muted: #66635b;
+  --color-border: #e2ddd2;
+  --color-neutral-tag: #ece8df;
+  --color-positive: #3b4a6b;
+  --color-caution: #b4532a;
 
-  /* Tonal ramp (Phase 0.1). The eleven above keep their values and meaning;
-   * these only give them somewhere to go. Deep values are for borders, hard
-   * offset shadows, and text-on-tint — never for large fills. */
-  --color-gold: #a9832e; /* rules, glyphs, seals — never a CTA */
-  --color-moss-deep: #333f26;
-  --color-moss-tint: #dde4ce;
-  --color-terracotta-deep: #8f3f1e;
-  --color-terracotta-tint: #f0dcc9;
-  --color-washi-deep: #eae0c6; /* image mats, inset panels — DARKER than washi */
-  --color-ink-soft: #3a362c;
-  --color-ink-deep: #1d1b16; /* inverted-section ground */
+  --color-gold: #9aa1b2;
+  --color-moss-deep: #27324a;
+  --color-moss-tint: #e4e8f0;
+  --color-terracotta-deep: #8a3b1b;
+  --color-terracotta-tint: #f4e3d8;
+  --color-washi-deep: #eeeae2;
+  --color-ink-soft: #3a3833;
+  --color-ink-deep: #161a24; /* night-sky band */
 }
 
 /*
- * Dark theme — "sumi-ink paper at night".
- * Same editorial language on warm charcoal instead of pure black; accents
- * lifted slightly for contrast. Utilities compile to var(--color-*), so
- * overriding the variables here re-themes the whole site.
+ * Dark theme — the same page at night: indigo-black ground, warm ink,
+ * both accents lifted for contrast.
  */
 .dark {
-  --color-ink: #ece4d6;
-  --color-moss: #97a585;
-  --color-terracotta: #d68e5f;
-  --color-washi: #201e1a;
-  --color-washi-elevated: #2a2723;
-  --color-text: #ded7c9;
-  --color-text-muted: #978f80;
-  --color-border: #3a362f;
-  --color-neutral-tag: #332f29;
-  --color-positive: #97a585;
-  --color-caution: #d68e5f;
+  --color-ink: #ece8e0;
+  --color-moss: #a3b3d6;
+  --color-terracotta: #e38c62;
+  --color-washi: #111318;
+  --color-washi-elevated: #171a21;
+  --color-text: #dcd8cf;
+  --color-text-muted: #9d9a92;
+  --color-border: #2a2f3a;
+  --color-neutral-tag: #1f232c;
+  --color-positive: #a3b3d6;
+  --color-caution: #e38c62;
 
-  /* Ramp inversion. Gold lifts so the hairline stays visible on sumi; the
-   * tints become low-alpha mixes rather than literal pastels, which would
-   * glow on a dark ground. */
-  --color-gold: #c9a24f;
-  --color-moss-deep: #46543a;
-  --color-moss-tint: color-mix(in srgb, var(--color-moss) 16%, var(--color-washi));
-  --color-terracotta-deep: #a3552c;
-  --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 16%, var(--color-washi));
-  --color-washi-deep: #171512; /* still an inset: darker than the dark ground */
-  --color-ink-soft: #c9c1b2;
-  --color-ink-deep: #100f0c;
+  --color-gold: #6f7891;
+  --color-moss-deep: #7486ad;
+  --color-moss-tint: color-mix(in srgb, var(--color-moss) 14%, var(--color-washi));
+  --color-terracotta-deep: #c4683c;
+  --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 14%, var(--color-washi));
+  --color-washi-deep: #0c0e12;
+  --color-ink-soft: #c9c5bc;
+  --color-ink-deep: #0a0c10;
 }
 
 /* Non-color tokens + compatibility aliases */
@@ -72,19 +75,20 @@
   --step-2: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem); /* 22→28  h2 */
   --step-3: clamp(1.75rem, 1.55rem + 1vw, 2.5rem); /* 28→40  h1 */
   --step-4: clamp(2.25rem, 1.8rem + 2.25vw, 4rem); /* 36→64  display */
+  --step-5: clamp(2.5rem, 1.6rem + 4.2vw, 5.25rem); /* 40→84  the one line per screen */
 
   /* Legacy names kept as aliases so nothing breaks mid-migration. */
   --h1-size: var(--step-3);
   --h2-size: var(--step-2);
   --body-size: var(--step-0);
   --ui-small-size: var(--step--1);
-  --line-height-body: 1.9;
+  --line-height-body: 1.8;
 
   --measure: 34em; /* ~34 JP chars — researched optimum is 25–35 */
   --measure-latin: 68ch;
 
-  --radius-card: 8px;
-  --radius-button: 6px;
+  --radius-card: 14px;
+  --radius-button: 999px;
   --radius-chip: 4px;
   --shadow-elevated: 0 1px 3px rgba(47, 47, 47, 0.06);
   --shadow-soft: 0 2px 8px rgba(47, 47, 47, 0.05), 0 1px 2px rgba(47, 47, 47, 0.04);
@@ -103,21 +107,32 @@
   --background: var(--color-washi);
   --foreground: var(--color-text);
 
-  --font-header: var(--font-shippori), "Shippori Mincho", serif;
-  --font-body: var(--font-zen-kaku), "Zen Kaku Gothic New", sans-serif;
-  --font-chart: var(--font-lora), "Lora", serif;
+  /* Noto Sans JP last: Shippori lacks a few punctuation glyphs (｜, ／). */
+  --font-header: var(--font-shippori), "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", var(--font-noto-sans-jp), serif;
+  --font-body: var(--font-noto-sans-jp), "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  /* Lora for the chart's numerals and Latin; the body face for CJK planet
+   * abbreviations, which Lora does not have. */
+  --font-chart: var(--font-lora), "Lora", var(--font-noto-sans-jp), "Noto Sans JP", "Hiragino Sans", sans-serif;
+
+  /* Motion (emil-design-eng): strong ease-out for UI, drawer curve for sheets. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Phone chrome: the bottom tab bar's height, so fixed UI can sit above it. */
+  --tabbar-h: 0px;
 }
 
 html[lang="en"] {
-  --font-header: var(--font-lora), "Lora", "Cormorant Garamond", serif;
-  --font-body: var(--font-zen-kaku), "Zen Kaku Gothic New", sans-serif;
+  --font-header: var(--font-lora), "Lora", Georgia, serif;
+  --font-body: var(--font-noto-sans-jp), "Noto Sans JP", system-ui, sans-serif;
   --font-chart: var(--font-lora), "Lora", serif;
 }
 
 html[lang="ko"] {
   --font-header: var(--font-noto-serif-kr), "Noto Serif KR", serif;
   --font-body: var(--font-noto-sans-kr), "Pretendard", "Noto Sans KR", sans-serif;
-  --font-chart: var(--font-lora), "Lora", serif;
+  --font-chart: var(--font-lora), "Lora", var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
   /* Override the scale step, not --body-size — the latter is now an alias. */
   --step-0: 1.0625rem;
   --line-height-body: 2;
@@ -126,7 +141,7 @@ html[lang="ko"] {
 html[lang="hi"] {
   --font-header: var(--font-martel), "Martel", serif;
   --font-body: var(--font-hind), "Hind", sans-serif;
-  --font-chart: var(--font-lora), "Lora", serif;
+  --font-chart: var(--font-lora), "Lora", var(--font-hind), "Hind", sans-serif;
   --step-0: 1.0625rem;
   --line-height-body: 2;
 }
@@ -213,6 +228,7 @@ li {
 
 /* Paper grain (Phase 0.4) — fixed, non-interactive, no image asset. */
 body::before {
+  display: none;
   content: "";
   position: fixed;
   inset: 0;
@@ -284,7 +300,8 @@ svg {
       color-mix(in srgb, var(--color-moss) 5%, transparent),
       transparent 55%
     );
-  animation: washi-drift 42s var(--ease-soft) infinite alternate;
+  animation: none;
+  display: none;
 }
 
 @keyframes washi-drift {
@@ -311,106 +328,105 @@ svg {
   background: var(--color-washi-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  /* Depth comes from the paper edge, not the blur — the blur stays at the
-   * 0 1px 3px weight the market expects. */
-  box-shadow: var(--card-edge), var(--shadow-elevated);
+  /* Elevation is declared once: the border. No ghost shadow under it. */
+  box-shadow: none;
   transition:
-    box-shadow var(--duration-base) var(--ease-butter),
-    transform var(--duration-base) var(--ease-butter),
-    border-color var(--duration-fast) var(--ease-soft);
+    transform 220ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out);
 }
 
 .washi-card.washi-card-interactive:hover,
 .washi-card.group:hover {
-  box-shadow: var(--card-edge), var(--shadow-lift);
-  border-color: color-mix(in srgb, var(--color-terracotta) 35%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-moss) 40%, var(--color-border));
   transform: translateY(-2px);
 }
 
 .washi-card.washi-card-interactive:active,
 .washi-card.group:active,
 .washi-card.is-pressing {
-  box-shadow: var(--card-edge), var(--shadow-soft);
-  transform: translateY(0) scale(0.985);
+  transform: translateY(0) scale(0.99);
 }
 
 .washi-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
+  padding-inline: 1.25rem;
   border-radius: var(--radius-button);
   background: var(--color-terracotta);
-  color: var(--color-washi);
+  color: #fff;
   font-family: var(--font-body);
-  font-weight: 600;
-  /* Hard offset, not a blur — letterpress rather than web app. The press
-   * travels the full 3px so the button physically lands. */
-  box-shadow: 0 3px 0 var(--color-terracotta-deep);
+  font-weight: 500;
+  letter-spacing: 0.04em;
   transition:
-    background-color var(--duration-fast) var(--ease-soft),
-    transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-fast) var(--ease-soft);
-  will-change: transform;
+    background-color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
 
-.washi-btn-primary:hover {
-  background: var(--color-terracotta-deep);
-  box-shadow: 0 2px 0 var(--color-terracotta-deep);
-  transform: translateY(1px);
+@media (hover: hover) {
+  .washi-btn-primary:hover {
+    background: var(--color-terracotta-deep);
+  }
 }
 
 .washi-btn-primary:active,
 .washi-btn-primary.is-pressing {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 var(--color-terracotta-deep);
+  transform: scale(0.97);
+}
+
+.washi-btn-primary:disabled {
+  cursor: not-allowed;
+  transform: none;
 }
 
 .washi-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
+  padding-inline: 1.25rem;
   border-radius: var(--radius-button);
-  border: 1px solid var(--color-terracotta);
+  border: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
   background: transparent;
-  color: var(--color-terracotta);
+  color: var(--color-ink);
   font-family: var(--font-body);
-  font-weight: 600;
-  box-shadow: 0 3px 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
   transition:
-    background-color var(--duration-fast) var(--ease-soft),
-    transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-fast) var(--ease-soft),
-    border-color var(--duration-fast) var(--ease-soft),
-    color var(--duration-fast) var(--ease-soft);
-  will-change: transform;
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
 
-.washi-btn-secondary:hover {
-  background: color-mix(in srgb, var(--color-terracotta) 10%, transparent);
-  border-color: var(--color-terracotta-deep);
-  box-shadow: 0 2px 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
-  transform: translateY(1px);
+@media (hover: hover) {
+  .washi-btn-secondary:hover {
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+    border-color: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  }
 }
 
 .washi-btn-secondary:active,
 .washi-btn-secondary.is-pressing {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 color-mix(in srgb, var(--color-terracotta-deep) 40%, transparent);
+  transform: scale(0.97);
 }
 
 .washi-btn-tertiary {
-  color: var(--color-terracotta);
+  color: var(--color-moss);
   font-family: var(--font-body);
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  text-underline-offset: 4px;
   transition:
-    color var(--duration-fast) var(--ease-soft),
-    opacity var(--duration-fast) var(--ease-soft),
-    transform var(--duration-fast) var(--ease-butter);
+    color 160ms var(--ease-out),
+    text-decoration-color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
 
 .washi-btn-tertiary:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
 }
 
 .washi-btn-tertiary:active,
@@ -431,8 +447,10 @@ svg {
   touch-action: manipulation;
 }
 
-.tactile:hover {
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .tactile:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .tactile:active,
@@ -448,12 +466,12 @@ summary {
 }
 
 .washi-eyebrow {
+  /* Kept for existing call sites, but quiet: a label, not a kicker. */
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-terracotta-deep);
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
 }
 
 /*
@@ -473,11 +491,7 @@ summary {
 .washi-eyebrow-flanked::before,
 .washi-eyebrow-flanked::after,
 .washi-eyebrow-lead::before {
-  content: "";
-  width: 28px;
-  height: 1px;
-  flex: none;
-  background: var(--color-gold);
+  content: none;
 }
 
 .washi-eyebrow-muted {
@@ -493,8 +507,8 @@ summary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-button);
-  background: color-mix(in srgb, var(--color-moss) 12%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-moss) 9%, transparent);
   color: var(--color-moss);
 }
 
@@ -519,25 +533,25 @@ summary {
 .washi-field {
   background: var(--color-washi-elevated);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-button);
+  border-radius: 10px;
   color: var(--color-text);
   font-family: var(--font-body);
+  min-height: 44px;
   transition:
-    border-color var(--duration-fast) var(--ease-soft),
-    box-shadow var(--duration-base) var(--ease-butter),
-    background-color var(--duration-fast) var(--ease-soft);
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
 }
 
 .washi-field:hover {
-  border-color: color-mix(in srgb, var(--color-terracotta) 35%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-moss) 35%, var(--color-border));
 }
 
 .washi-field:focus,
 .washi-field:focus-within,
 .washi-field:focus-visible {
   outline: none;
-  border-color: var(--color-terracotta);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-terracotta) 18%, transparent);
+  border-color: var(--color-moss);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-moss) 16%, transparent);
 }
 
 .washi-segmented {
@@ -590,13 +604,16 @@ summary {
 }
 
 .washi-callout {
-  border-left: 3px solid var(--color-moss);
-  background: var(--color-washi-elevated);
+  /* A full tint, not a bar down one side. */
+  border: 1px solid color-mix(in srgb, var(--color-moss) 18%, transparent);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--color-moss) 5%, var(--color-washi-elevated));
 }
 
 .washi-blockquote {
-  border-left: 2px solid var(--color-moss);
-  padding-left: 16px;
+  padding-left: 0;
+  font-family: var(--font-header);
+  color: var(--color-ink);
 }
 
 /* ── Ornament primitives (Phase 0.5) ───────────────────────────────── */
@@ -642,37 +659,26 @@ summary {
   max-width: 640px;
   margin-inline: auto;
   border: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-gold) 15%,
-    var(--color-gold) 85%,
-    transparent
-  );
+  background: var(--color-border);
 }
 
 /* Major section breaks only. */
 .washi-glyph-divider {
-  padding: 26px 0;
-  text-align: center;
-  color: var(--color-gold);
-  letter-spacing: 14px;
-  /* letter-spacing trails the last glyph; pull it back so it reads centered */
-  text-indent: 14px;
-  font-size: var(--step--1);
-  user-select: none;
+  /* Ornament retired: a section break is space, not three stars. */
+  padding: 28px 0;
 }
 
 .washi-glyph-divider::before {
-  content: "✦ ✦ ✦";
+  content: none;
 }
 
 /* Image mat — inset in a deeper ground with a hairline border. */
 .washi-mat {
-  padding: 10px;
-  background: var(--color-washi-deep);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
 }
 
 .washi-mat :where(img, svg, video) {
@@ -701,14 +707,14 @@ summary {
 }
 
 .dark .washi-inverted {
-  background: #35312a;
+  background: #1a1f2b;
   color: var(--color-ink);
-  --deckle-ground: #35312a;
+  --deckle-ground: #1a1f2b;
 }
 
 .dark .washi-inverted .washi-card {
-  background: color-mix(in srgb, var(--color-ink) 7%, #35312a);
-  border-color: color-mix(in srgb, var(--color-ink) 16%, transparent);
+  background: color-mix(in srgb, var(--color-ink) 5%, #1a1f2b);
+  border-color: color-mix(in srgb, var(--color-ink) 14%, transparent);
   color: var(--color-ink);
 }
 
@@ -913,141 +919,85 @@ html[lang="en"] .washi-measure {
  * block theme-aware for free (the tokens already invert in dark mode), and
  * retires the `.ig-badge` dark special-case entirely.
  */
+/* Instagram surfaces, in the 静 palette: flat, one border, no gradient
+ * bars or letterpress shadows. */
 .ig-strip {
   position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  border-color: color-mix(in srgb, var(--color-terracotta) 22%, var(--color-border));
-  background: color-mix(in srgb, var(--color-terracotta) 6%, var(--color-washi-elevated));
-  box-shadow: var(--card-edge), var(--shadow-soft);
+  border-color: var(--color-border);
+  background: var(--color-washi-elevated);
+  box-shadow: none;
   transition:
-    box-shadow var(--duration-base) var(--ease-butter),
-    transform var(--duration-base) var(--ease-butter),
-    border-color var(--duration-fast) var(--ease-soft);
+    transform 200ms var(--ease-out),
+    border-color 160ms var(--ease-out);
 }
 
-.ig-strip::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: linear-gradient(
-    180deg,
-    var(--color-terracotta),
-    var(--color-gold) 60%,
-    var(--color-moss)
-  );
-  border-radius: var(--radius-card) 0 0 var(--radius-card);
-  z-index: 1;
-}
-
-.ig-strip:hover {
-  box-shadow: var(--card-edge), var(--shadow-lift);
-  border-color: color-mix(in srgb, var(--color-terracotta) 40%, var(--color-border));
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .ig-strip:hover {
+    border-color: color-mix(in srgb, var(--color-moss) 40%, var(--color-border));
+    transform: translateY(-2px);
+  }
 }
 
 .ig-strip:active,
 .ig-strip.is-pressing {
-  transform: translateY(0) scale(0.99);
-  box-shadow: var(--card-edge), var(--shadow-soft);
+  transform: scale(0.99);
 }
 
 .ig-icon-chip {
-  background: linear-gradient(
-    135deg,
-    var(--color-terracotta) 0%,
-    var(--color-gold) 60%,
-    var(--color-moss) 100%
-  );
-  color: var(--color-washi);
-  transition:
-    transform var(--duration-base) var(--ease-butter),
-    box-shadow var(--duration-base) var(--ease-butter);
-}
-
-.ig-strip:hover .ig-icon-chip {
-  transform: scale(1.06) rotate(-3deg);
+  background: color-mix(in srgb, var(--color-moss) 10%, transparent);
+  color: var(--color-moss);
 }
 
 .ig-handle {
-  color: var(--color-terracotta-deep);
-  font-weight: 600;
+  color: var(--color-ink);
+  font-weight: 500;
 }
 
 .ig-banner {
   position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  border-color: color-mix(in srgb, var(--color-terracotta) 24%, var(--color-border));
-  background:
-    radial-gradient(
-      ellipse 80% 70% at 100% 0%,
-      color-mix(in srgb, var(--color-terracotta) 12%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 70% 60% at 0% 100%,
-      color-mix(in srgb, var(--color-moss) 10%, transparent),
-      transparent 50%
-    ),
-    var(--color-washi-elevated);
-  box-shadow: var(--card-edge), var(--shadow-soft);
-}
-
-.ig-banner > * {
-  position: relative;
-  z-index: 1;
+  border-color: var(--color-border);
+  background: var(--color-washi-elevated);
+  box-shadow: none;
 }
 
 .ig-badge {
-  border-color: color-mix(in srgb, var(--color-terracotta) 30%, var(--color-border));
-  background: color-mix(in srgb, var(--color-terracotta) 8%, var(--color-washi));
-  color: var(--color-terracotta-deep);
+  border-color: var(--color-border);
+  background: var(--color-washi);
+  color: var(--color-text-muted);
 }
 
 .ig-perk {
-  border-color: color-mix(in srgb, var(--color-moss) 24%, var(--color-border));
-  background: color-mix(in srgb, var(--color-moss) 6%, var(--color-washi));
+  border-color: var(--color-border);
+  background: var(--color-washi);
   transition:
-    transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-base) var(--ease-butter),
-    border-color var(--duration-fast) var(--ease-soft);
+    transform 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
 }
 
-.ig-perk:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--color-terracotta) 38%, var(--color-border));
-  box-shadow: var(--shadow-soft);
+@media (hover: hover) {
+  .ig-perk:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--color-moss) 40%, var(--color-border));
+  }
 }
 
-/* Letterpress, like every other primary action — no more `!important` fork. */
 .ig-cta {
   border: none;
-  background: linear-gradient(
-    45deg,
-    var(--color-terracotta) 0%,
-    var(--color-gold) 60%,
-    var(--color-moss) 100%
-  );
+  background: var(--color-ink);
   color: var(--color-washi);
-  box-shadow: 0 3px 0 var(--color-terracotta-deep);
-  transition:
-    transform var(--duration-fast) var(--ease-butter),
-    box-shadow var(--duration-fast) var(--ease-soft),
-    filter var(--duration-fast) var(--ease-soft);
+  box-shadow: none;
+  transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out);
 }
 
-.ig-cta:hover {
-  filter: brightness(1.04);
-  box-shadow: 0 2px 0 var(--color-terracotta-deep);
-  transform: translateY(1px);
+@media (hover: hover) {
+  .ig-cta:hover {
+    opacity: 0.88;
+  }
 }
 
 .ig-cta:active,
 .ig-cta.is-pressing {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 var(--color-terracotta-deep);
+  transform: scale(0.97);
 }
 
 /* Nav link underline glide */
@@ -1342,4 +1292,206 @@ html[lang="en"] .washi-measure {
   .motion-ready [data-education-scroll-root] {
     scroll-behavior: auto;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * 静 (shizuka) — design-upgrade layer
+ * ══════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+/* Browser surfaces carry the palette too. */
+::selection {
+  background: color-mix(in srgb, var(--color-moss) 22%, transparent);
+  color: var(--color-ink);
+}
+
+html {
+  accent-color: var(--color-moss);
+  caret-color: var(--color-terracotta);
+  scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-moss);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Japanese: break between phrases (文節), not mid-word. Chrome 119+;
+ * other engines fall back to the strict line-break already set on body. */
+:lang(ja) :is(h1, h2, h3, h4, p, li, dt, dd, summary, figcaption, label, a, button) {
+  word-break: auto-phrase;
+}
+
+/* Synthetic oblique on Mincho, Hangul and Devanagari reads as a rendering
+ * fault, not emphasis. Italic stays a Latin-only device. */
+:lang(ja) :is(.italic, em, i, cite),
+:lang(ko) :is(.italic, em, i, cite),
+:lang(hi) :is(.italic, em, i, cite) {
+  font-style: normal;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+}
+
+@layer components {
+/* The one strong typographic idea: one large Mincho line per screen,
+ * everything around it quiet. */
+.ma-display,
+.ma-title {
+  /* auto-phrase keeps long katakana compounds whole; at display sizes on a
+   * phone one can exceed the line. Break it only when it would overflow. */
+  overflow-wrap: anywhere;
+}
+
+.ma-display {
+  font-family: var(--font-header);
+  font-weight: 500;
+  font-size: var(--step-5);
+  line-height: 1.22;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+:lang(en) .ma-display {
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+:lang(hi) .ma-display,
+:lang(ko) .ma-display {
+  font-size: var(--step-4);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.ma-title {
+  font-family: var(--font-header);
+  font-weight: 500;
+  font-size: var(--step-3);
+  line-height: 1.35;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+.ma-lead {
+  font-size: var(--step-1);
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  max-width: 34em;
+}
+
+/* Horizontal swipe rail (phone). Scroll-snap, native momentum, no JS. */
+.snap-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 16px;
+  padding-inline: 16px;
+  margin-inline: -16px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-rail > * {
+  scroll-snap-align: start;
+  flex: none;
+}
+
+/* Disclosure that is an accordion on phone and simply open on desktop.
+ * Content always ships in the HTML (crawlable, find-in-page expands it). */
+.disclose > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+}
+
+.disclose > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclose > summary .disclose-chevron {
+  flex: none;
+  transition: transform 200ms var(--ease-out);
+}
+
+.disclose[open] > summary .disclose-chevron {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 1024px) {
+  .disclose-desktop-open::details-content {
+    content-visibility: visible;
+    block-size: auto;
+  }
+
+  .disclose-desktop-open > summary {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .disclose-desktop-open > summary .disclose-chevron {
+    display: none;
+  }
+}
+
+/* Phone: leave room for the bottom tab bar. */
+@media (max-width: 767px) {
+  :root:has(.tabbar) {
+    --tabbar-h: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* AppShell scrolls inside its own <main> and pads that instead. */
+  body:has(.tabbar):not(:has([data-education-scroll-root])) {
+    padding-bottom: var(--tabbar-h);
+  }
+}
+
+/* Hero headline: phrases rise in on load (GSAP). Before hydration they sit
+ * at 1% opacity — painted, so LCP is not held back — and a CSS fallback
+ * finishes the reveal if script never runs. GSAP adds .is-split-live to
+ * take over, which cancels the fallback. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero-phrase {
+    display: inline-block;
+    opacity: 0.01;
+    transform: translateY(0.4em);
+    animation: hero-phrase-fallback 600ms var(--ease-out) 1.4s forwards;
+  }
+
+  .js .is-split-live .hero-phrase {
+    animation: none;
+  }
+}
+
+/* Japanese phrases are the line-break units of the headline. */
+:lang(ja) .hero-phrase {
+  white-space: nowrap;
+}
+
+@keyframes hero-phrase-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Sheet (bottom sheet on phone, side panel on desktop) backdrop. */
+.sheet-backdrop {
+  background: color-mix(in srgb, var(--color-ink-deep) 40%, transparent);
+}
 }

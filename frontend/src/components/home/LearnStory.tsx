@@ -60,11 +60,12 @@ export default function LearnStory() {
           .to("[data-layer='nakshatra']", { opacity: 0.3, duration: 1 }, 2.2)
           .fromTo("[data-layer='graha']", { opacity: 0, rotation: -40, svgOrigin: "200 200" }, { opacity: 1, rotation: 0, svgOrigin: "200 200", duration: 1 }, 2.2);
 
-        // The active step's text brightens; the others recede.
+        // The active step's text brightens; the others recede — but only to
+        // 0.7, which keeps every step above WCAG AA contrast while dimmed.
         gsap.utils.toArray<HTMLElement>("[data-learn-step]").forEach((step) => {
           gsap.fromTo(
             step,
-            { opacity: 0.35 },
+            { opacity: 0.7 },
             {
               opacity: 1,
               scrollTrigger: { trigger: step, start: "top 70%", end: "top 40%", scrub: true },

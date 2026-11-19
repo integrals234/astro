@@ -31,7 +31,17 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
+export default function MobileNav({
+  open,
+  onOpenChange,
+  breakpoint = "md",
+}: MobileNavProps & {
+  /** Width from which the drawer hides: "md" (768) for AppShell, "lg" (1024)
+   * for public pages, whose full header starts there. */
+  breakpoint?: "md" | "lg";
+}) {
+  const hideFrom = breakpoint === "lg" ? "lg:hidden" : "mobile-only";
+  const drawerHideFrom = breakpoint === "lg" ? "lg:hidden" : "mobile-drawer";
   const pathname = useBarePathname();
   const { language } = useLanguage();
   const copy = getSharedCopy(language);
@@ -75,7 +85,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: easeOutExpo }}
-              className="mobile-drawer fixed inset-0 z-[60] bg-ink/30"
+              className={`${drawerHideFrom} fixed inset-0 z-[60] bg-ink/30`}
               onClick={closeMenu}
             />
 
@@ -84,7 +94,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={springDrawer}
-              className="mobile-drawer mobile-drawer-panel fixed inset-y-0 left-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] flex-col border-r border-border bg-washi"
+              className={`${drawerHideFrom} mobile-drawer-panel fixed inset-y-0 left-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] flex-col border-r border-border bg-washi`}
               role="dialog"
               aria-modal="true"
             >
@@ -172,7 +182,7 @@ export default function MobileNav({ open, onOpenChange }: MobileNavProps) {
       <button
         type="button"
         onClick={openMenu}
-        className="mobile-only tactile h-10 w-10 items-center justify-center rounded-md border border-border bg-washi-elevated text-ink shadow-[var(--shadow-elevated)] transition-colors hover:border-terracotta/40 hover:text-terracotta hover:shadow-[var(--shadow-soft)]"
+        className={`${hideFrom} ${breakpoint === "lg" ? "inline-flex" : ""} tactile h-11 w-11 items-center justify-center rounded-md border border-border bg-washi-elevated text-ink shadow-[var(--shadow-elevated)] transition-colors hover:border-terracotta/40 hover:text-terracotta hover:shadow-[var(--shadow-soft)]`}
         aria-label={copy.chrome.openNavigation}
         aria-expanded={open}
       >

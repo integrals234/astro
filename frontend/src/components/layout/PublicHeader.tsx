@@ -145,7 +145,7 @@ export default function PublicHeader({
          * the right they overran a 390px viewport and collided with the
          * brand. Both now live in the drawer, which has room for them.
          */}
-        <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
+        <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} breakpoint="lg" />
 
         <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 overflow-hidden text-center">
           <SiteBrand size="sm" className="max-w-full shrink-0" />

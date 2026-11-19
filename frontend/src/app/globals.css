@@ -174,9 +174,6 @@ html[lang="hi"] {
   font-family: var(--font-chart);
 }
 
-.font-brand {
-  font-family: var(--font-header);
-}
 
 html {
   scroll-behavior: smooth;
@@ -618,42 +615,9 @@ summary {
 
 /* ── Ornament primitives (Phase 0.5) ───────────────────────────────── */
 
-/*
- * Torn / deckled paper edge. The scallop is punched out of the panel by
- * painting the *page ground* over it, so `--deckle-ground` must match
- * whatever sits behind the panel. Defaults to the page background.
- */
-.washi-deckle {
-  position: relative;
-  background: var(--color-washi-deep);
-  --deckle-ground: var(--color-washi);
-}
-
-.washi-deckle::before,
-.washi-deckle::after {
-  content: "";
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  height: 10px;
-  background: radial-gradient(circle at 8px 0, transparent 8px, var(--deckle-ground) 9px)
-    repeat-x;
-  background-size: 16px 10px;
-  pointer-events: none;
-}
-
-.washi-deckle::before {
-  top: -9px;
-}
-
-.washi-deckle::after {
-  bottom: -9px;
-  transform: rotate(180deg);
-}
 
 /* The everyday divider. */
-.washi-hairline,
-.washi-rule {
+.washi-hairline {
   height: 1px;
   width: 100%;
   max-width: 640px;
@@ -739,44 +703,6 @@ summary {
   color: var(--color-terracotta-deep);
 }
 
-/*
- * 縦書き seal — the JP-native counterpart to a horizontal eyebrow.
- * Latin and Devanagari do not set vertically, so `en`/`hi` fall back to the
- * horizontal eyebrow treatment.
- */
-.washi-seal {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  letter-spacing: 0.25em;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-terracotta-deep);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.washi-seal::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  flex: none;
-  background: var(--color-terracotta);
-}
-
-html[lang="en"] .washi-seal,
-html[lang="hi"] .washi-seal {
-  writing-mode: horizontal-tb;
-  text-orientation: mixed;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-/* 縦中横 — upright 2-digit numerals inside vertical text (第1章). */
-.washi-tatechuyoko {
-  text-combine-upright: all;
-}
 
 /* Prose column width. */
 .washi-measure {
@@ -813,10 +739,6 @@ html[lang="en"] .washi-measure {
   display: inline-flex;
 }
 
-.mobile-title {
-  display: block;
-  line-height: 1.2;
-}
 
 .shell-header-desktop {
   display: none;
@@ -840,8 +762,7 @@ html[lang="en"] .washi-measure {
     display: none !important;
   }
 
-  .mobile-only,
-  .mobile-title {
+  .mobile-only {
     display: none !important;
   }
 
@@ -1217,21 +1138,6 @@ html[lang="en"] .washi-measure {
 }
 
 /* Reading-progress hairline. */
-.washi-progress-bar {
-  position: fixed;
-  inset-block-start: 0;
-  inset-inline: 0;
-  z-index: 50;
-  height: 2px;
-  transform: scaleX(0);
-  transform-origin: left center;
-  background: linear-gradient(
-    90deg,
-    var(--color-gold),
-    color-mix(in srgb, var(--color-terracotta) 70%, var(--color-gold))
-  );
-  pointer-events: none;
-}
 
 /* Respect reduced motion everywhere */
 @media (prefers-reduced-motion: reduce) {
@@ -1276,12 +1182,6 @@ html[lang="en"] .washi-measure {
     stroke-dasharray: none !important;
   }
 
-  /* The [data-scroll] rule above resolves scaleX(0) to `transform: none`,
-     i.e. full width — a progress bar that reads as permanently complete
-     rather than reflecting real scroll position. Hide it instead. */
-  .washi-progress-bar {
-    opacity: 0 !important;
-  }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -1303,6 +1203,11 @@ html[lang="en"] .washi-measure {
 ::selection {
   background: color-mix(in srgb, var(--color-moss) 22%, transparent);
   color: var(--color-ink);
+}
+
+::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
 }
 
 html {

@@ -41,6 +41,7 @@ export default function Sheet({
 }) {
   const reduce = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const opener = useRef<Element | null>(null);
   const desktop = useSyncExternalStore(subscribeDesktop, isDesktop, () => false);
   // Portals need `document`; false during SSR and hydration, true after.
@@ -52,7 +53,27 @@ export default function Sheet({
     opener.current = document.activeElement;
     const prevOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // Keep Tab inside the dialog (aria-modal promises it).
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     const focusId = window.setTimeout(() => closeRef.current?.focus(), 30);
     return () => {
@@ -85,6 +106,7 @@ export default function Sheet({
             onClick={onClose}
           />
           <m.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={title}

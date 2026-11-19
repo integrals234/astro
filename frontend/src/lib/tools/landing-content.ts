@@ -1173,3 +1173,15 @@ export const TOOL_LANDINGS: ToolLanding[] = [
 export function findToolLanding(slug: string): ToolLanding | undefined {
   return TOOL_LANDINGS.find((tool) => tool.slug === slug);
 }
+
+/** Client-safe tile data for one language (see tool-summary.ts). Server-side only. */
+export function toolSummaries(language: import("@/lib/i18n/language").AppLanguage): import("@/lib/tools/tool-summary").ToolSummary[] {
+  return TOOL_LANDINGS.map((tool) => ({
+    slug: tool.slug,
+    title: tool.title[language],
+    description: tool.description[language],
+    useCase: tool.useCase[language],
+    ...(tool.resultPanel ? { resultPanel: tool.resultPanel } : {}),
+    ...(tool.sections ? { sections: tool.sections } : {}),
+  }));
+}

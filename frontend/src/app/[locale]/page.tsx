@@ -3,6 +3,7 @@ import WelcomeHomePage from "@/components/home/WelcomeHomePage";
 import JsonLd from "@/components/seo/JsonLd";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
+import { toolSummaries } from "@/lib/tools/landing-content";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import {
   organizationSchema,
@@ -44,7 +45,7 @@ export default async function HomePage({ params }: Params) {
           personSchema(language),
         ]}
       />
-      <WelcomeHomePage />
+      <WelcomeHomePage tools={toolSummaries(language)} />
     </>
   );
 }

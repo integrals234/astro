@@ -4,7 +4,7 @@ import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import ToolsHub from "@/components/tools/ToolsHub";
 import { uiText } from "@/lib/education";
-import { TOOL_LANDINGS } from "@/lib/tools/landing-content";
+import { TOOL_LANDINGS, toolSummaries } from "@/lib/tools/landing-content";
 import { APP_LANGUAGES, parseAppLanguage, type AppLanguage } from "@/lib/i18n/language";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, organizationSchema, websiteSchema } from "@/lib/seo/schema";
@@ -88,7 +88,7 @@ export default async function ToolsHubPage({ params }: Params) {
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 md:px-8">
         <Breadcrumbs crumbs={crumbs} language={language} label={HUB_COPY[language].title} />
       </div>
-      <ToolsHub title={HUB_COPY[language].title} />
+      <ToolsHub title={HUB_COPY[language].title} tools={toolSummaries(language)} />
     </PublicPageShell>
   );
 }

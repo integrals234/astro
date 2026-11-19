@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { Suspense, useCallback, useRef, useState } from "react";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PublicHeader from "@/components/layout/PublicHeader";
 import { ChartDataProvider, useChartData } from "@/components/chart/ChartDataProvider";
@@ -13,6 +13,8 @@ import ReadingClose from "@/components/home/ReadingClose";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
 import { useWelcomeLang } from "@/lib/home/use-welcome-lang";
 import { uiText } from "@/lib/education/i18n/ui";
+import type { ToolSummary } from "@/lib/tools/tool-summary";
+import { profilePersonName } from "@/lib/profile/types";
 
 /**
  * The homepage as a five-screen story, each screen with one job:
@@ -32,7 +34,7 @@ import { uiText } from "@/lib/education/i18n/ui";
  * Rendered once in both auth states — see git history for why wrapping it
  * in Clerk's <SignedIn>/<SignedOut> emptied the prerendered HTML.
  */
-function HomeInner() {
+function HomeInner({ tools }: { tools: ToolSummary[] }) {
   const heroRef = useRef<HTMLDivElement>(null);
   const { primary } = useBirthProfile();
   const { data } = useChartData();
@@ -47,33 +49,53 @@ function HomeInner() {
   }, []);
 
   const shownSubject: StorySubject | null =
-    subject ?? (primary ? { name: primary.label, place: primary.locationName.split(",")[0] ?? null } : null);
+    subject ?? (primary ? { name: profilePersonName(primary) || null, place: primary.locationName.split(",")[0] ?? null } : null);
 
   return (
     <>
+      {/*
+        Each screen is its own Suspense boundary. Nothing here suspends; the
+        boundaries let React hydrate the page in several short tasks instead
+        of one long one (selective hydration), which is what mobile
+        Lighthouse scores as Total Blocking Time. The HTML is unchanged.
+      */}
       <div ref={heroRef}>
-        <HomeHero onComputed={onComputed} />
+        <Suspense>
+          <HomeHero onComputed={onComputed} />
+        </Suspense>
       </div>
-      <ChartStory subject={shownSubject} />
-      <ToolsBrowser />
-      <LearnStory />
-      <ReadingClose />
+      <Suspense>
+        <ChartStory subject={shownSubject} />
+      </Suspense>
+      <Suspense>
+        <ToolsBrowser tools={tools} />
+      </Suspense>
+      <Suspense>
+        <LearnStory />
+      </Suspense>
+      <Suspense>
+        <ReadingClose />
+      </Suspense>
       <StickyCtaBar heroRef={heroRef} hidden={Boolean(data)} />
     </>
   );
 }
 
-export default function WelcomeHomePage() {
+export default function WelcomeHomePage({ tools }: { tools: ToolSummary[] }) {
   const { lang } = useWelcomeLang();
   return (
     <div className="min-h-screen bg-washi text-text">
-      <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
+      <Suspense>
+        <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
+      </Suspense>
       <main>
         <ChartDataProvider toolSlug="home">
-          <HomeInner />
+          <HomeInner tools={tools} />
         </ChartDataProvider>
       </main>
-      <SiteFooter />
+      <Suspense>
+        <SiteFooter />
+      </Suspense>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useChartData } from "@/components/chart/ChartDataProvider";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import type { ToolLanding } from "@/lib/tools/landing-content";
+import type { ToolSummary } from "@/lib/tools/tool-summary";
 
 /*
  * Every in-place tool result, loaded on demand.
@@ -32,14 +33,14 @@ const PANELS = {
 const ChartSectionBody = dynamic(() => import("@/components/chart/ChartSectionBody"), { ssr: false, loading });
 
 /** Can this tool answer in place, given what the page already knows? */
-export function canOpenInPlace(tool: ToolLanding, hasChart: boolean, hasProfile: boolean) {
+export function canOpenInPlace(tool: ToolSummary, hasChart: boolean, hasProfile: boolean) {
   if (tool.resultPanel) return hasProfile || hasChart;
   if (tool.sections) return hasChart;
   return false;
 }
 
 /** The tool's answer, rendered inside a sheet. Needs a `ChartDataProvider` above it. */
-export default function ToolPanel({ tool }: { tool: ToolLanding }) {
+export default function ToolPanel({ tool }: { tool: ToolSummary }) {
   const { language } = useLanguage();
   const t = chartFormCopy[language];
   const { data } = useChartData();

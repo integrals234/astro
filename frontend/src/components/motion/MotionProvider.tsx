@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { LazyMotion, MotionConfig, domMax } from "motion/react";
+import { LazyMotion, MotionConfig } from "motion/react";
+
+// Performance pass: the features load in their own chunk after hydration;
+// `m` components render their static state until then.
+const loadFeatures = () => import("@/lib/motion/features").then((mod) => mod.default);
 import { haptic } from "@/hooks/useHaptic";
 
 /**
@@ -86,7 +90,7 @@ export default function MotionProvider({
    *   grep -rn "</\?motion\." src --include=*.tsx   # must return nothing
    */
   return (
-    <LazyMotion features={domMax}>
+    <LazyMotion features={loadFeatures}>
       <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </LazyMotion>
   );

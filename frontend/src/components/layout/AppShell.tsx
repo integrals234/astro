@@ -4,6 +4,7 @@ import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import { useState } from "react";
 import MobileNav from "@/components/layout/MobileNav";
 import TopNav from "@/components/layout/TopNav";
+import MobileTabBar from "@/components/layout/MobileTabBar";
 import SiteBrand from "@/components/layout/SiteBrand";
 import { getNavLabel } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -36,10 +37,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       <main
         data-education-scroll-root
-        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-washi [scrollbar-gutter:stable]"
+        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-washi pb-[var(--tabbar-h)] [scrollbar-gutter:stable] md:pb-0"
       >
         <div className="w-full px-4 py-4 md:px-8 md:py-8">{children}</div>
       </main>
+      <MobileTabBar />
     </div>
   );
 }

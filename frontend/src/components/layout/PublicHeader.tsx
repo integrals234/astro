@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Sparkles } from "lucide-react";
+import { ChevronDown, Languages } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import MobileNav from "@/components/layout/MobileNav";
+import MobileTabBar from "@/components/layout/MobileTabBar";
 import SiteBrand from "@/components/layout/SiteBrand";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -13,6 +14,7 @@ import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import { getMainNavItems } from "@/lib/navigation";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { uiText } from "@/lib/education/i18n/ui";
+import { homeStoryCopy } from "@/lib/home/home-story-copy";
 
 /**
  * The one public header (Phase 2.4).
@@ -34,6 +36,14 @@ import { uiText } from "@/lib/education/i18n/ui";
  * inline rather than pulling a whole font (the reference loads Yatra One for
  * that single glyph).
  */
+/** Which nav items survive narrower desktop widths: the four core places
+ * always; horoscope from 1024 px; the course from 1280 px (it is also in the
+ * drawer, footer and the learn section). */
+const NAV_PRIORITY: Record<string, string> = {
+  "/horoscope": "hidden lg:inline-flex",
+  "/course": "hidden xl:inline-flex",
+};
+
 export default function PublicHeader({
   pageLabel,
   showChartCta = true,
@@ -49,32 +59,32 @@ export default function PublicHeader({
   const copy = getSharedCopy(language);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems = getMainNavItems(language).filter(
-    (item) => item.href !== "/settings",
+  // "Home" is the brand mark's job; "Tools" is the hub added in the
+  // design upgrade. Settings lives in the drawer and /settings.
+  const mainItems = getMainNavItems(language).filter(
+    (item) => item.href !== "/settings" && item.href !== "/",
   );
+  const chartIndex = mainItems.findIndex((item) => item.href === "/chart");
+  const navItems = [
+    ...mainItems.slice(0, chartIndex + 1),
+    { href: "/tools", label: homeStoryCopy[language].tabs.tools, description: undefined as string | undefined },
+    ...mainItems.slice(chartIndex + 1),
+  ];
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="border-b border-border bg-washi/80 backdrop-blur-md">
-      <div className="washi-inverted flex h-6 items-center justify-center gap-2">
-        <span aria-hidden className="text-gold" style={{ fontSize: 11 }}>
-          ॐ
-        </span>
-        <span className="text-[10px] uppercase tracking-[0.28em] opacity-70">
-          {copy.metadata.title}
-        </span>
-      </div>
-
+    <>
+    <header className="relative z-40 border-b border-border bg-washi/85 backdrop-blur-md md:sticky md:top-0">
       <div
-        className={`shell-header-desktop mx-auto w-full ${maxWidth} items-center justify-between gap-6 px-8 py-3.5`}
+        className="shell-header-desktop mx-auto w-full max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:px-8"
       >
         <SiteBrand size="lg" className="shrink-0" />
 
         <nav
           aria-label={copy.chrome.openNavigation}
-          className="flex min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto"
+          className="flex min-w-0 flex-1 items-center justify-center gap-0.5"
         >
           {navItems.map((item) => (
             <Link
@@ -82,10 +92,10 @@ export default function PublicHeader({
               href={item.href}
               title={item.description}
               data-active={isActive(item.href)}
-              className={`nav-link-underline tactile whitespace-nowrap px-2.5 py-2 text-sm font-medium ${
+              className={`nav-link-underline whitespace-nowrap px-2.5 py-2 text-[13px] transition-colors ${NAV_PRIORITY[item.href] ?? ""} ${
                 isActive(item.href)
                   ? "text-ink"
-                  : "text-text-muted hover:text-text"
+                  : "text-text-muted hover:text-ink"
               }`}
             >
               {item.label}
@@ -93,26 +103,36 @@ export default function PublicHeader({
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <PublicLanguageLink className="font-body inline-flex items-center gap-1.5 px-1.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text" />
+        <div className="flex shrink-0 items-center gap-1.5">
+          {/* Language: a small menu, but the four links stay real <a>s in
+              the HTML — sitewide crawlable cross-locale links (Phase 3.2). */}
+          <details className="group relative">
+            <summary className="flex min-h-[40px] cursor-pointer list-none items-center gap-1 rounded-full px-2.5 text-xs uppercase tracking-wider text-text-muted transition-colors hover:text-ink [&::-webkit-details-marker]:hidden">
+              <Languages size={15} aria-hidden />
+              {language}
+              <ChevronDown size={12} aria-hidden className="transition-transform duration-200 group-open:rotate-180" />
+            </summary>
+            <div className="absolute right-0 top-full z-50 mt-2 rounded-[12px] border border-border bg-washi-elevated p-2">
+              <PublicLanguageLink className="font-body flex items-center gap-1.5 px-1.5 py-1 text-xs text-text-muted" />
+            </div>
+          </details>
           <ThemeToggle />
-          {showChartCta && (
-            <Link
-              href="/chart"
-              className="washi-btn-secondary gap-1.5 px-3 py-2 text-xs"
-            >
-              <Sparkles size={14} aria-hidden />
-              {uiText("generateChart", language)}
-            </Link>
-          )}
           <SignedOut>
-            <Link href="/sign-in" className="washi-btn-tertiary text-xs">
+            <Link href="/sign-in" className="px-2 text-xs text-text-muted transition-colors hover:text-ink">
               {copy.chrome.signIn}
             </Link>
           </SignedOut>
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
+          {showChartCta && (
+            <Link
+              href="/chart"
+              className="washi-btn-primary min-h-[38px] px-4 text-xs"
+            >
+              {uiText("generateChart", language)}
+            </Link>
+          )}
         </div>
       </div>
 
@@ -138,7 +158,7 @@ export default function PublicHeader({
 
         <div className="flex shrink-0 items-center">
           <SignedOut>
-            <Link href="/sign-in" className="washi-btn-tertiary text-[11px]">
+            <Link href="/sign-in" className="inline-flex min-h-[44px] items-center px-1 text-[12px] text-text-muted">
               {copy.chrome.signIn}
             </Link>
           </SignedOut>
@@ -148,5 +168,7 @@ export default function PublicHeader({
         </div>
       </div>
     </header>
+    <MobileTabBar />
+    </>
   );
 }

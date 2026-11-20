@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuthState } from "@/components/auth/AuthProvider";
 import { Check, Languages } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { APP_LANGUAGE_OPTIONS } from "@/lib/i18n/language";
@@ -8,7 +8,7 @@ import { settingsCopy } from "@/lib/i18n/settings";
 
 export default function LanguageSetting() {
   const { language, setLanguage } = useLanguage();
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useAuthState();
   const copy = settingsCopy[language].language;
 
   return (

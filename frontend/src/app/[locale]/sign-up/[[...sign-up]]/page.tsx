@@ -1,7 +1,6 @@
 "use client";
 
-import { SignUp } from "@clerk/nextjs";
-import { clerkAppearance } from "@/lib/clerk-appearance";
+import { ClerkSlot } from "@/components/auth/AuthProvider";
 import SiteBrand from "@/components/layout/SiteBrand";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -27,13 +26,17 @@ export default function SignUpPage() {
        * `path` must match the URL this component is actually mounted at.
        * Locale routing moved it from `/sign-up` to `/en/sign-up` (and the
        * bare path for Japanese), and a mismatch makes Clerk render nothing —
-       * the page shipped its heading and no form at all.
+       * the page shipped its heading and no form at all. Clerk itself
+       * loads with this slot (AuthProvider); the slot keeps its space.
        */}
-      <SignUp
-        appearance={clerkAppearance}
-        routing="path"
-        path={localizedHref(language, "/sign-up")}
-        signInUrl={localizedHref(language, "/sign-in")}
+      <ClerkSlot
+        kind="signUp"
+        className="flex min-h-[440px] w-full justify-center"
+        props={{
+          routing: "path",
+          path: localizedHref(language, "/sign-up"),
+          signInUrl: localizedHref(language, "/sign-in"),
+        }}
       />
     </main>
   );

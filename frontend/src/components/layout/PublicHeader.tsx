@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserMenu } from "@/components/auth/AuthProvider";
 import { ChevronDown, Languages } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
@@ -123,7 +123,7 @@ export default function PublicHeader({
             </Link>
           </SignedOut>
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
+            <UserMenu avatarClassName="h-7 w-7" />
           </SignedIn>
           {showChartCta && (
             <Link
@@ -163,7 +163,7 @@ export default function PublicHeader({
             </Link>
           </SignedOut>
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
+            <UserMenu avatarClassName="h-7 w-7" />
           </SignedIn>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/i18n/LocaleLink";
 import { AnimatePresence, m } from "motion/react";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserMenu } from "@/components/auth/AuthProvider";
 import { Menu, X } from "lucide-react";
 import { getMainNavItems } from "@/lib/navigation";
 import SiteBrand from "@/components/layout/SiteBrand";
@@ -144,14 +144,7 @@ export default function MobileNav({
                 </div>
                 <SignedIn>
                   <div className="flex items-center gap-3 rounded-lg border border-border bg-washi-elevated px-3 py-3">
-                    <UserButton
-                      afterSignOutUrl="/"
-                      appearance={{
-                        elements: {
-                          avatarBox: "h-8 w-8 bg-terracotta text-washi",
-                        },
-                      }}
-                    />
+                    <UserMenu />
                     <div>
                       <p className="text-[10px] font-body uppercase tracking-widest text-text-muted">
                         {copy.chrome.account}

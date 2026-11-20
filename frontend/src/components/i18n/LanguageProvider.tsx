@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -18,6 +17,7 @@ import {
   type AppLanguage,
 } from "@/lib/i18n/language";
 import { switchLocale } from "@/lib/i18n/routing";
+import { useAuthState } from "@/components/auth/AuthProvider";
 
 interface LanguageContextValue {
   language: AppLanguage;
@@ -79,14 +79,14 @@ export function LanguageProvider({
 }
 
 export function LanguageAccountSync() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn, user } = useAuthState();
+  const userId = user?.id ?? null;
   const { language } = useLanguage();
   const [accountLoadedFor, setAccountLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn || !user) return;
+    if (!isLoaded || !isSignedIn || !userId) return;
 
-    const userId = user.id;
     const controller = new AbortController();
 
     async function loadAccountPreference() {
@@ -114,10 +114,10 @@ export function LanguageAccountSync() {
 
     void loadAccountPreference();
     return () => controller.abort();
-  }, [isLoaded, isSignedIn, user]);
+  }, [isLoaded, isSignedIn, userId]);
 
   useEffect(() => {
-    if (!isSignedIn || !user || accountLoadedFor !== user.id) return;
+    if (!isSignedIn || !userId || accountLoadedFor !== userId) return;
 
     void fetch("/api/preferences/language", {
       method: "PATCH",
@@ -126,7 +126,7 @@ export function LanguageAccountSync() {
     }).catch((error) => {
       console.error("Failed to save language preference", error);
     });
-  }, [accountLoadedFor, isSignedIn, language, user]);
+  }, [accountLoadedFor, isSignedIn, language, userId]);
 
   return null;
 }

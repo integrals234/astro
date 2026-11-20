@@ -1,6 +1,6 @@
 "use client";
 
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@/components/auth/AuthProvider";
 import AppShell from "@/components/layout/AppShell";
 import PublicHeader from "@/components/layout/PublicHeader";
 import ChartSectionNav from "@/components/chart/ChartSectionNav";

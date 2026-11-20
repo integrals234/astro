@@ -7,7 +7,7 @@ import { m, AnimatePresence } from 'motion/react';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
 import { Search, MapPin, ChevronDown, LayoutDashboard } from 'lucide-react';
-import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserMenu, useAuthState } from '@/components/auth/AuthProvider';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
 import type {
@@ -99,7 +99,7 @@ function ChartWorkspaceInner({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
+  const { isSignedIn, isLoaded: isAuthLoaded } = useAuthState();
   const isClient = useSyncExternalStore(subscribeToClient, () => true, () => false);
 
   const { language: lang } = useLanguage();
@@ -205,7 +205,8 @@ function ChartWorkspaceInner({
   }, [enablePersistence]);
 
   useEffect(() => {
-    if (!enablePersistence) return;
+    // Saved charts belong to an account; asking while signed out only earns 401s.
+    if (!enablePersistence || !isAuthLoaded || !isSignedIn) return;
     const controller = new AbortController();
 
     void Promise.all([
@@ -223,7 +224,7 @@ function ChartWorkspaceInner({
       });
 
     return () => controller.abort();
-  }, [enablePersistence]);
+  }, [enablePersistence, isAuthLoaded, isSignedIn]);
 
   const persistChart = async (data: ChartData, saved = false) => {
     if (!enablePersistence || !personName.trim()) return null;
@@ -576,7 +577,7 @@ function ChartWorkspaceInner({
               <LayoutDashboard size={16} />
               {t.chart}
             </Link>
-            <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-8 w-8 bg-terracotta text-washi" } }} />
+            <UserMenu />
           </SignedIn>
         </div>
       )}

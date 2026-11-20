@@ -3,7 +3,7 @@
 import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import Link from "@/components/i18n/LocaleLink";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserMenu } from "@/components/auth/AuthProvider";
 import { getMainNavItems } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { getSharedCopy } from "@/lib/i18n/shared";
@@ -57,14 +57,9 @@ export default function TopNav() {
       <div className="ml-2 flex items-center gap-2 border-l border-border pl-2">
         <ThemeToggle />
         <SignedIn>
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: "h-8 w-8 bg-terracotta text-washi transition-shadow duration-300 hover:shadow-[var(--shadow-glow-terracotta)]",
-                userButtonPopoverCard: "border border-border shadow-[var(--shadow-lift)]",
-              },
-            }}
+          <UserMenu
+            avatarClassName="h-8 w-8 bg-terracotta text-washi transition-shadow duration-300 hover:shadow-[var(--shadow-glow-terracotta)]"
+            popoverClassName="border border-border shadow-[var(--shadow-lift)]"
           />
         </SignedIn>
         <SignedOut>

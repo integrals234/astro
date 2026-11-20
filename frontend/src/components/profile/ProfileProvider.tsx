@@ -10,7 +10,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuthState } from "@/components/auth/AuthProvider";
 import {
   clearLocalProfiles,
   getPrimaryId,
@@ -108,7 +108,7 @@ async function createServerProfile(
 }
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
-  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
+  const { isSignedIn, isLoaded: isAuthLoaded } = useAuthState();
 
   // Local (guest) branch — unchanged external-store subscription.
   const localProfiles = useSyncExternalStore(

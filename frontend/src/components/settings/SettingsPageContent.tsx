@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuthState } from "@/components/auth/AuthProvider";
 import Link from "@/components/i18n/LocaleLink";
 import ShellPageHeader from "@/components/layout/ShellPageHeader";
 import AppearanceSetting from "@/components/settings/AppearanceSetting";
@@ -10,7 +10,7 @@ import { settingsCopy } from "@/lib/i18n/settings";
 import { Settings, CreditCard } from "lucide-react";
 
 export default function SettingsPageContent() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded } = useAuthState();
   const { language } = useLanguage();
   const copy = settingsCopy[language];
 
@@ -50,7 +50,7 @@ export default function SettingsPageContent() {
             <div className="washi-field p-4">
               <p className="text-[11px] font-body uppercase tracking-widest text-text-muted mb-1">{copy.account.email}</p>
               <p className="text-ink font-medium truncate">
-                {user?.primaryEmailAddress?.emailAddress ?? "—"}
+                {user?.email ?? "—"}
               </p>
             </div>
             <div className="washi-field p-4 sm:col-span-2">

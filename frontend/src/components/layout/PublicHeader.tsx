@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SignedIn, SignedOut, UserMenu } from "@/components/auth/AuthProvider";
 import { ChevronDown, Languages } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
@@ -15,6 +15,8 @@ import { getMainNavItems } from "@/lib/navigation";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { uiText } from "@/lib/education/i18n/ui";
 import { homeStoryCopy } from "@/lib/home/home-story-copy";
+import { usePendingNav } from "@/lib/nav/pending-nav";
+import { useNavIndicator } from "@/lib/nav/use-nav-indicator";
 
 /**
  * The one public header (Phase 2.4).
@@ -71,8 +73,12 @@ export default function PublicHeader({
     ...mainItems.slice(chartIndex + 1),
   ];
 
+  // The clicked item is active immediately; its underline glides over.
+  const shownPath = usePendingNav() ?? pathname;
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === "/" ? shownPath === "/" : shownPath.startsWith(href);
+  const navRef = useRef<HTMLElement>(null);
+  useNavIndicator("public-nav", navRef, navItems.find((item) => isActive(item.href))?.href ?? null, "after");
 
   return (
     <>
@@ -83,6 +89,7 @@ export default function PublicHeader({
         <SiteBrand size="lg" className="shrink-0" />
 
         <nav
+          ref={navRef}
           aria-label={copy.chrome.openNavigation}
           className="flex min-w-0 flex-1 items-center justify-center gap-0.5"
         >

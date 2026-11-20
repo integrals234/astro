@@ -39,7 +39,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         data-education-scroll-root
         className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-washi pb-[var(--tabbar-h)] [scrollbar-gutter:stable] md:pb-0"
       >
-        <div className="w-full px-4 py-4 md:px-8 md:py-8">{children}</div>
+        {/* Keyed by path: the shell persists across its pages, so this
+            wrapper is what re-mounts — and animates in (.page-enter). */}
+        <div key={pathname} className="page-enter w-full px-4 py-4 md:px-8 md:py-8">{children}</div>
       </main>
       <MobileTabBar breakpoint="md" />
     </div>

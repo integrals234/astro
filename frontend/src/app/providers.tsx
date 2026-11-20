@@ -3,6 +3,7 @@
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import ContentProtection from "@/components/layout/ContentProtection";
+import NavProgress from "@/components/layout/NavProgress";
 import MotionProvider from "@/components/motion/MotionProvider";
 import { ProfileProvider } from "@/components/profile/ProfileProvider";
 import { ToastProvider } from "@/components/ui/Toaster";
@@ -26,6 +27,7 @@ export function Providers({
         <AuthProvider>
           <LanguageAccountSync />
           <ContentProtection />
+          <NavProgress />
           <MotionProvider>
             {/* Inside AuthProvider: adoption of guest profiles on sign-in needs the auth state. */}
             <ProfileProvider>

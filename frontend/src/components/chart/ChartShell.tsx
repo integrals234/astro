@@ -25,7 +25,7 @@ export default function ChartShell({ children, showPublicAuthBar }: ChartShellPr
       <SignedOut>
         <div className="min-h-screen bg-washi text-ink">
           {showPublicAuthBar && <PublicHeader showChartCta={false} />}
-          <div className="mx-auto max-w-7xl px-4 py-4 md:px-8 md:py-8">
+          <div className="page-enter mx-auto max-w-7xl px-4 py-4 md:px-8 md:py-8">
             <ChartSectionNav />
             {children}
           </div>

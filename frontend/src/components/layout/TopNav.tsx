@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useBarePathname } from "@/lib/i18n/use-bare-pathname";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import Link from "@/components/i18n/LocaleLink";
@@ -8,6 +9,8 @@ import { getMainNavItems } from "@/lib/navigation";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { useHaptic } from "@/hooks/useHaptic";
+import { usePendingNav } from "@/lib/nav/pending-nav";
+import { useNavIndicator } from "@/lib/nav/use-nav-indicator";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -23,11 +26,15 @@ export default function TopNav() {
   const copy = getSharedCopy(language);
   const mainNavItems = getMainNavItems(language);
   const { selection } = useHaptic();
+  // The clicked item is active immediately; its underline glides over.
+  const shownPath = usePendingNav() ?? pathname;
+  const navRef = useRef<HTMLElement>(null);
+  useNavIndicator("shell-nav", navRef, mainNavItems.find((item) => isActive(shownPath, item.href))?.href ?? null, "after");
 
   return (
-    <nav className="desktop-topnav min-w-0 flex-1 items-center justify-end gap-1 overflow-x-auto border-b border-transparent">
+    <nav ref={navRef} className="desktop-topnav min-w-0 flex-1 items-center justify-end gap-1 overflow-x-auto border-b border-transparent">
       {mainNavItems.map((item) => {
-        const active = isActive(pathname, item.href);
+        const active = isActive(shownPath, item.href);
         const Icon = item.icon;
 
         return (

@@ -1031,6 +1031,71 @@ html[lang="en"] .washi-measure {
   view-transition-name: none;
 }
 
+/*
+ * Page enter (design upgrade). In-app navigations no longer run through a
+ * view transition (it froze the page until the next one was ready); instead
+ * the new page's content eases in as it mounts. `@starting-style` applies only
+ * to elements newly inserted into the page, and `.nav-ready` is added after
+ * hydration, so the first load never animates — only pages reached by a
+ * click. Phones slide from the side of the tapped tab (`data-nav-dir`, set by
+ * LocaleLink from the tab bar); desktop rises softly. Opacity and translate
+ * only, and `translate` returns to `none`, so nothing is left composited.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* The side slide must never show a horizontal scrollbar. `clip`, unlike
+     `hidden`, makes no scroll container, so sticky headers keep working. */
+  .nav-ready body {
+    overflow-x: clip;
+  }
+
+  .nav-ready .page-enter {
+    transition:
+      opacity 240ms var(--ease-soft),
+      translate 380ms var(--ease-butter);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 12px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .nav-ready[data-nav-dir="forward"] .page-enter {
+      @starting-style {
+        translate: 32px 0;
+      }
+    }
+
+    .nav-ready[data-nav-dir="back"] .page-enter {
+      @starting-style {
+        translate: -32px 0;
+      }
+    }
+  }
+}
+
+/* A thin line while a page takes more than a moment to arrive (NavProgress). */
+.nav-progress {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  height: 2px;
+  background: var(--color-terracotta);
+  transform-origin: left center;
+  animation: nav-progress 6s cubic-bezier(0.08, 0.7, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes nav-progress {
+  from {
+    transform: scaleX(0.04);
+  }
+  to {
+    transform: scaleX(0.9);
+  }
+}
+
 /* Theme switch — circular wipe from the clicked control (Phase 1.3). */
 [data-theme-transition]::view-transition-old(root) {
   animation: none;

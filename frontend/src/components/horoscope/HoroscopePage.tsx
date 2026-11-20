@@ -13,7 +13,7 @@ function HoroscopePageInner({ embedded }: { embedded?: boolean }) {
     <div className={`${embedded ? "" : "min-h-screen"} bg-washi text-ink`}>
       {!embedded && <PublicHeader pageLabel={uiText("horoscope", lang)} />}
 
-      <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
+      <div className={`page-enter mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
         <HoroscopeSection lang={lang} />
       </div>
     </div>

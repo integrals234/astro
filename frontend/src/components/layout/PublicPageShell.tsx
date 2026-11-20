@@ -18,7 +18,7 @@ export default function PublicPageShell({
   return (
     <div className="washi-ambient flex min-h-screen flex-col bg-washi text-text">
       <PublicHeader maxWidth="max-w-6xl" />
-      <main className="flex-1">
+      <main className="page-enter flex-1">
         {children}
       </main>
       <SiteFooter />

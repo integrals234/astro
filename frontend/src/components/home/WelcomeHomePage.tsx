@@ -70,7 +70,7 @@ export default function WelcomeHomePage({ tools }: { tools: ToolSummary[] }) {
   return (
     <div className="min-h-screen bg-washi text-text">
       <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
-      <main>
+      <main className="page-enter">
         <ChartDataProvider toolSlug="home">
           <HomeInner tools={tools} />
         </ChartDataProvider>

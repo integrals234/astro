@@ -1,12 +1,14 @@
 "use client";
 
 import { Check } from "lucide-react";
-import type { CourseChapter, CourseLanguage } from "@/lib/vedic-course/types";
+import type { CourseLanguage } from "@/lib/vedic-course/types";
+import type { LocalizedChapter } from "@/lib/vedic-course/localized-chapters";
+import { chapterIcon } from "@/lib/vedic-course/chapter-icons";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
 import { t } from "@/lib/vedic-course/utils";
 
 interface ChapterStepperProps {
-  chapters: CourseChapter[];
+  chapters: LocalizedChapter[];
   currentChapter: number;
   completedSlides: string[];
   lang: CourseLanguage;
@@ -23,7 +25,7 @@ export default function ChapterStepper({
   return (
     <div className="grid gap-2 sm:gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {chapters.map((chapter, index) => {
-        const Icon = chapter.icon;
+        const Icon = chapterIcon(chapter.icon);
         const isActive = index === currentChapter;
         const isComplete = chapter.steps.every((step) =>
           completedSlides.includes(step.id),

@@ -44,9 +44,9 @@ export default function SlideCard({ slide, lang, slideIndex, totalSlides }: Slid
 
       {slide.bullets && slide.bullets.length > 0 && (
         <ul className="mt-5 space-y-2.5 max-w-2xl">
-          {slide.bullets.map((bullet) => (
+          {slide.bullets.map((bullet, index) => (
             <li
-              key={bullet.en}
+              key={`${index}`}
               className="flex gap-3 text-sm text-text leading-relaxed"
             >
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />

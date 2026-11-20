@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import VedicCourseModule from "@/components/vedic-course/VedicCourseModule";
 import VedicCourseHeader from "@/components/vedic-course/VedicCourseHeader";
 import { getVedicCourseProgress } from "@/app/actions/vedic-course";
+import { buildCourseChapters } from "@/lib/vedic-course/localized-chapters";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -24,7 +24,9 @@ export async function generateMetadata({
   });
 }
 
-export default async function VedicCoursePage() {
+export default async function VedicCoursePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const language = parseAppLanguage(locale);
   const initialProgress = await getVedicCourseProgress();
 
   return (
@@ -32,10 +34,8 @@ export default async function VedicCoursePage() {
       <VedicCourseHeader />
 
       <section className="washi-card relative p-5 pt-8 sm:p-8 sm:pt-8">
-        {/* Suspends while the hi/ko course translations load (ja/en never do). */}
-        <Suspense fallback={<div className="h-96 animate-pulse rounded-[14px] bg-washi-deep" aria-hidden />}>
-          <VedicCourseModule initialProgress={initialProgress} />
-        </Suspense>
+        {/* The chapters arrive as data, already in this language. */}
+        <VedicCourseModule initialProgress={initialProgress} chapters={buildCourseChapters(language)} />
       </section>
     </div>
   );

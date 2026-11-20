@@ -1,16 +1,15 @@
 "use client";
 
-import { use, useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "@/components/i18n/LocaleLink";
 import { AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { saveVedicCourseProgress } from "@/app/actions/vedic-course";
-import { ALL_STEP_IDS, VEDIC_COURSE_CHAPTERS } from "@/lib/vedic-course/content";
+import type { CourseChapters } from "@/lib/vedic-course/localized-chapters";
 import type { CourseProgress } from "@/lib/vedic-course/types";
 import { isInteractiveStep } from "@/lib/vedic-course/step-utils";
 import { uiString } from "@/lib/vedic-course/i18n/ui";
-import { loadCourseTranslations } from "@/lib/vedic-course/i18n/translate-content";
 import { computeProgressPercent, t } from "@/lib/vedic-course/utils";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import CourseProgressBar from "./CourseProgressBar";
@@ -19,9 +18,11 @@ import StepRenderer from "./StepRenderer";
 
 interface VedicCourseModuleProps {
   initialProgress: CourseProgress;
+  /** Every chapter, already in the page's language (localized-chapters.ts). */
+  chapters: CourseChapters;
 }
 
-function resolveInitialLocation(progress: CourseProgress) {
+function resolveInitialLocation(progress: CourseProgress, VEDIC_COURSE_CHAPTERS: CourseChapters) {
   const chapterIndex = Math.min(
     Math.max(0, progress.currentChapter),
     VEDIC_COURSE_CHAPTERS.length - 1,
@@ -36,15 +37,15 @@ function resolveInitialLocation(progress: CourseProgress) {
   };
 }
 
-export default function VedicCourseModule({ initialProgress }: VedicCourseModuleProps) {
+export default function VedicCourseModule({ initialProgress, chapters: VEDIC_COURSE_CHAPTERS }: VedicCourseModuleProps) {
   const { language: lang } = useLanguage();
-  // Hindi/Korean course text is its own chunk; suspend until it has loaded
-  // (the static render waits too, so /hi/course and /ko/course ship
-  // translated HTML). Japanese and English never download it.
-  use(loadCourseTranslations(lang));
+  const ALL_STEP_IDS = useMemo(
+    () => VEDIC_COURSE_CHAPTERS.flatMap((ch) => ch.steps.map((s) => s.id)),
+    [VEDIC_COURSE_CHAPTERS],
+  );
   const initialLocation = useMemo(
-    () => resolveInitialLocation(initialProgress),
-    [initialProgress],
+    () => resolveInitialLocation(initialProgress, VEDIC_COURSE_CHAPTERS),
+    [initialProgress, VEDIC_COURSE_CHAPTERS],
   );
   const [currentChapter, setCurrentChapter] = useState(initialLocation.chapterIndex);
   const [currentStepIndex, setCurrentStepIndex] = useState(initialLocation.stepIndex);

@@ -3,9 +3,9 @@
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import EducationalHub from "@/components/education/EducationalHub";
+import type { LearnCorpus } from "@/lib/education/learn-corpus";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
-import { isEducationSectionId } from "@/lib/education/section-links";
-import { sectionPath } from "@/lib/education/article-routes";
+import { isEducationSectionId, learnJyotishSectionHref } from "@/lib/education/section-links";
 import { localizedHref } from "@/lib/i18n/routing";
 
 /**
@@ -29,19 +29,19 @@ function LegacySectionRedirect() {
 
   useEffect(() => {
     if (!section || !isEducationSectionId(section)) return;
-    router.replace(localizedHref(language, sectionPath(section)));
+    router.replace(localizedHref(language, learnJyotishSectionHref(section)));
   }, [section, language, router]);
 
   return null;
 }
 
-export default function LearnJyotishPageClient() {
+export default function LearnJyotishPageClient({ corpus }: { corpus: LearnCorpus }) {
   return (
     <>
       <Suspense fallback={null}>
         <LegacySectionRedirect />
       </Suspense>
-      <EducationalHub />
+      <EducationalHub corpus={corpus} />
     </>
   );
 }

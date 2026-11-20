@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import LearnJyotishPageClient from "@/components/education/LearnJyotishPageClient";
 import JsonLd from "@/components/seo/JsonLd";
 import { educationSections, uiText } from "@/lib/education";
+import { buildLearnCorpus } from "@/lib/education/learn-corpus";
 import { sectionPath } from "@/lib/education/article-routes";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
@@ -60,7 +61,7 @@ export default async function LearnJyotishPage({ params }: Params) {
           }),
         ]}
       />
-      <LearnJyotishPageClient />
+      <LearnJyotishPageClient corpus={buildLearnCorpus(language)} />
     </>
   );
 }

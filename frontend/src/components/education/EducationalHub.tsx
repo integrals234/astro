@@ -21,27 +21,24 @@ import WisdomArticleView from "@/components/education/WisdomArticleView";
 import { rashiSectionLabels } from "@/lib/education/entity-labels";
 import PublicHeader from "@/components/layout/PublicHeader";
 import { FormattedText } from "@/lib/format-inline-text";
+// Specific modules, never the "@/lib/education" barrel: the barrel re-exports
+// the four-language corpus, and this component gets its content as props.
+import { educationSections } from "@/lib/education/sections";
+import { uiText } from "@/lib/education/i18n/ui";
+import { useEducationLang } from "@/lib/education/use-education-lang";
+import type {
+  EducationLang,
+  EducationSectionId,
+  EducationNavigateTarget,
+  BilingualText,
+} from "@/lib/education/types";
+import type { LearnCorpus, LearnSection } from "@/lib/education/learn-corpus";
 import {
-  educationSections,
-  rashisIntro,
-  rashisOverviewBlocks,
-  rashis,
-  planetsIntro,
-  planets,
-  nakshatrasIntro,
-  nakshatras,
-  aspectsIntro,
-  universalAspect,
-  specialAspects,
-  conjunctionBlock,
-  getArticlesForSection,
-  type EducationLang,
-  type EducationSectionId,
-  type EducationNavigateTarget,
-  type BilingualText,
-  uiText,
-  useEducationLang,
-} from "@/lib/education";
+  LearnCorpusProvider,
+  firstArticleId,
+  useLearnCorpus,
+  useLoadedSection,
+} from "@/components/education/LearnCorpusContext";
 
 const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   introduction: BookOpen,
@@ -55,10 +52,8 @@ const sectionIcons: Record<EducationSectionId, typeof BookOpen> = {
   remedies: HeartHandshake,
 };
 
-function defaultArticleForSection(section: EducationSectionId): string | null {
-  const articles = getArticlesForSection(section);
-  return articles[0]?.id ?? null;
-}
+/** Guide data for a visual section; present once that section has loaded. */
+type GuideData = Required<LearnSection>;
 
 function educationTopicAnchor(section: EducationSectionId, id: string) {
   return `education-${section}-${id}`;
@@ -309,7 +304,7 @@ function ArticleSectionPanel({
   const [topicExpanded, setTopicExpanded] = useState(false);
   const skipInitialScrollRef = useRef(true);
 
-  const articles = getArticlesForSection(section);
+  const articles = useLoadedSection(section).articles;
   const tabs: { id: string; label: BilingualText; content: React.ReactNode }[] = [];
 
   const articleTabs = articles.map((article) => ({
@@ -523,6 +518,7 @@ function SectionFade({
 
 
 function RashisSection({ lang }: { lang: EducationLang }) {
+  const { rashisIntro, rashisOverviewBlocks, rashis } = useLoadedSection("rashis") as GuideData;
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -648,6 +644,7 @@ function RashisSection({ lang }: { lang: EducationLang }) {
 }
 
 function PlanetsVisualGuide({ lang }: { lang: EducationLang }) {
+  const { planetsIntro, planets } = useLoadedSection("planets") as GuideData;
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -746,6 +743,7 @@ function PlanetsSection({
 }
 
 function NakshatrasVisualGuide({ lang }: { lang: EducationLang }) {
+  const { nakshatrasIntro, nakshatras } = useLoadedSection("nakshatras") as GuideData;
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -854,6 +852,7 @@ function NakshatrasSection({
 }
 
 function AspectsVisualGuide({ lang }: { lang: EducationLang }) {
+  const { aspectsIntro, universalAspect, specialAspects, conjunctionBlock } = useLoadedSection("aspects") as GuideData;
   return (
     <div className="space-y-8">
       <div className="max-w-3xl">
@@ -997,6 +996,25 @@ function EducationContent({
   lang: EducationLang;
   onNavigate: (target: EducationNavigateTarget) => void;
 }) {
+  const { sections, ensureSection } = useLearnCorpus();
+  const loaded = Boolean(sections[section]);
+  useEffect(() => {
+    ensureSection(section);
+  }, [section, ensureSection]);
+
+  if (!loaded) {
+    // Sections other than the opening one arrive as JSON; usually already
+    // fetched in idle time, otherwise this shows for the length of one request.
+    return (
+      <div className="space-y-4" aria-busy="true">
+        <div className="h-8 w-2/3 animate-pulse rounded-md bg-washi-deep" />
+        <div className="h-4 w-full animate-pulse rounded bg-washi-deep" />
+        <div className="h-4 w-11/12 animate-pulse rounded bg-washi-deep" />
+        <div className="h-64 animate-pulse rounded-[14px] bg-washi-deep" />
+      </div>
+    );
+  }
+
   return (
     <SectionFade sectionKey={`${section}-${lang}`}>
       {section === "introduction" && (
@@ -1061,31 +1079,34 @@ function EducationHubInner({
   embedded?: boolean;
   initialSection?: EducationSectionId;
 }) {
+  const { articleIndex, ensureSection } = useLearnCorpus();
   const [section, setSection] = useState<EducationSectionId>(
     initialSection ?? "introduction"
   );
-  const [articleId, setArticleId] = useState<string | null>(
-    defaultArticleForSection(initialSection ?? "introduction")
+  const [articleId, setArticleId] = useState<string | null>(() =>
+    firstArticleId(articleIndex, initialSection ?? "introduction")
   );
   const { lang } = useEducationLang();
 
   const navigateTo = (target: EducationNavigateTarget) => {
+    ensureSection(target.section);
     setSection(target.section);
     setArticleId(
-      target.articleId ?? defaultArticleForSection(target.section)
+      target.articleId ?? firstArticleId(articleIndex, target.section)
     );
   };
 
   const selectSection = (next: EducationSectionId) => {
+    ensureSection(next);
     setSection(next);
-    setArticleId(defaultArticleForSection(next));
+    setArticleId(firstArticleId(articleIndex, next));
   };
 
   const content = (
     <div className={`${embedded ? "" : "min-h-screen"} bg-washi text-ink`}>
       {!embedded && <PublicHeader pageLabel={uiText("learnJyotish", lang)} />}
 
-      <div className={`mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
+      <div className={`page-enter mx-auto max-w-7xl ${embedded ? "" : "px-4 py-6 md:px-8 md:py-10"}`}>
         {/* Hero strip */}
         <div className="mb-6 sm:mb-8">
           <h1 className="font-header text-2xl tracking-tight text-ink md:text-3xl">
@@ -1136,15 +1157,20 @@ function EducationHubInner({
 }
 
 export default function EducationalHub({
+  corpus,
   initialSection,
 }: {
+  /** This language's content, from the server page (learn-corpus.ts). */
+  corpus: LearnCorpus;
   initialSection?: EducationSectionId;
 }) {
   // Rendered once — see the note in WelcomeHomePage on the prerender bailout.
   return (
-    <EducationHubInner
-      key={initialSection ?? "introduction"}
-      initialSection={initialSection}
-    />
+    <LearnCorpusProvider corpus={corpus}>
+      <EducationHubInner
+        key={initialSection ?? "introduction"}
+        initialSection={initialSection}
+      />
+    </LearnCorpusProvider>
   );
 }

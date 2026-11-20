@@ -3,16 +3,17 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { FormattedText } from "@/lib/format-inline-text";
-import {
-  getArticleById,
-  uiText,
-  type EducationLang,
-  type EducationNavigateTarget,
-  type EducationSectionId,
-  type WisdomArticle,
-  type WisdomArticleBlock,
-  type BilingualText,
-} from "@/lib/education";
+import { uiText } from "@/lib/education/i18n/ui";
+import type {
+  EducationLang,
+  EducationNavigateTarget,
+  EducationSectionId,
+  WisdomArticle,
+  WisdomArticleBlock,
+  BilingualText,
+} from "@/lib/education/types";
+import { findArticleRef, useLearnCorpus } from "@/components/education/LearnCorpusContext";
+import type { LearnArticleRef } from "@/lib/education/learn-corpus";
 
 function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
@@ -110,7 +111,7 @@ function ArticleBlock({
   }
 
   const text = t(block.text, lang);
-  const sourceText = block.text.en;
+  const sourceText = block.marker ?? block.text.en ?? "";
   if (sourceText.startsWith("Q. ")) {
     return (
       <p className="font-body text-base leading-[1.9] text-text font-medium mt-5 mb-1">
@@ -150,9 +151,10 @@ export function RelatedWisdom({
   lang: EducationLang;
   onNavigate: (target: EducationNavigateTarget) => void;
 }) {
+  const { articleIndex } = useLearnCorpus();
   const related = article.related
-    .map((id) => getArticleById(id))
-    .filter((a): a is WisdomArticle => Boolean(a));
+    .map((id) => findArticleRef(articleIndex, id))
+    .filter((a): a is LearnArticleRef => Boolean(a));
 
   if (related.length === 0) return null;
 

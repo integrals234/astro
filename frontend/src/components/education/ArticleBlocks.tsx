@@ -107,7 +107,7 @@ function ArticleBlock({
   const text = t(block.text, lang);
   // The source corpus encodes Q/A and bullets as prose prefixes on the English
   // string; the translations preserve the marker positionally.
-  const sourceText = block.text.en;
+  const sourceText = block.marker ?? block.text.en ?? "";
 
   if (sourceText.startsWith("Q. ")) {
     return (

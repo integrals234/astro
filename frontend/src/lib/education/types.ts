@@ -24,6 +24,11 @@ export interface WisdomArticleBlockHeading {
 export interface WisdomArticleBlockParagraph {
   type: "paragraph";
   text: BilingualText;
+  /**
+   * The English source's leading marker, set when the learn hub's corpus is
+   * cut down to one language (the English text is not shipped then).
+   */
+  marker?: "Q. " | "A. " | "• ";
 }
 
 export interface WisdomArticleBlockTable {

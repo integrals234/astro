@@ -18,6 +18,29 @@ export interface ToolSection {
   body: BilingualText[];
   /** Optional bullet list rendered after the paragraphs. */
   bullets?: BilingualText[];
+  /**
+   * Optional internal links rendered after the bullets ("related pages").
+   * Root-relative, unprefixed hrefs to routes that exist; the page adds the
+   * locale prefix.
+   */
+  links?: { href: string; label: BilingualText }[];
+}
+
+/** A question and answer, rendered in a page's FAQ list and its FAQPage JSON-LD. */
+export interface GuideFaq {
+  question: BilingualText;
+  answer: BilingualText;
+}
+
+/**
+ * Explanatory content for a non-tool page (the home page, /chart), rendered
+ * below the page's own UI by <LongFormGuide>.
+ */
+export interface PageGuide {
+  /** Optional metadata override for the page (title ≤32 chars in Japanese). */
+  meta?: { title: BilingualText; description: BilingualText };
+  sections: ToolSection[];
+  faqs: GuideFaq[];
 }
 
 export interface ToolLongForm {

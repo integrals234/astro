@@ -4,8 +4,11 @@ import JsonLd from "@/components/seo/JsonLd";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { toolSummaries } from "@/lib/tools/landing-content";
+import LongFormGuide from "@/components/content/LongFormGuide";
+import { homeGuide } from "@/lib/tools/content/home-guide";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import {
+  faqSchema,
   organizationSchema,
   personSchema,
   websiteSchema,
@@ -43,9 +46,15 @@ export default async function HomePage({ params }: Params) {
           organizationSchema(language),
           websiteSchema(language),
           personSchema(language),
+          ...(homeGuide.faqs.length > 0
+            ? [faqSchema(homeGuide.faqs.map((faq) => ({ question: faq.question[language], answer: faq.answer[language] })))]
+            : []),
         ]}
       />
-      <WelcomeHomePage tools={toolSummaries(language)} />
+      <WelcomeHomePage
+        tools={toolSummaries(language)}
+        guide={homeGuide.sections.length > 0 ? <LongFormGuide guide={homeGuide} language={language} /> : null}
+      />
     </>
   );
 }

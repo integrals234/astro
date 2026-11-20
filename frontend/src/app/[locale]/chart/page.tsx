@@ -5,7 +5,9 @@ import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { getChartUi } from "@/lib/chart-i18n";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
+import { faqSchema, organizationSchema, websiteSchema } from "@/lib/seo/schema";
+import LongFormGuide from "@/components/content/LongFormGuide";
+import { chartPageGuide } from "@/lib/tools/content/chart-page";
 import { localeUrl, SITE_NAME } from "@/lib/seo/site";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -18,8 +20,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return buildPageMetadata({
     language,
     path: "/chart",
-    title: copy.navigation.chart,
-    description: copy.navigation.chartDescription,
+    title: chartPageGuide.meta?.title[language] ?? copy.navigation.chart,
+    description: chartPageGuide.meta?.description[language] ?? copy.navigation.chartDescription,
   });
 }
 
@@ -57,6 +59,9 @@ export default async function ChartPage({ params }: Params) {
             publisher: { "@type": "Organization", name: SITE_NAME },
             offers: { "@type": "Offer", price: "0", priceCurrency: "JPY" },
           },
+          ...(chartPageGuide.faqs.length > 0
+            ? [faqSchema(chartPageGuide.faqs.map((faq) => ({ question: faq.question[language], answer: faq.answer[language] })))]
+            : []),
         ]}
       />
 
@@ -66,6 +71,7 @@ export default async function ChartPage({ params }: Params) {
       </div>
 
       <ChartPageClient />
+      {chartPageGuide.sections.length > 0 ? <LongFormGuide guide={chartPageGuide} language={language} /> : null}
     </>
   );
 }

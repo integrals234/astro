@@ -1,0 +1,2 @@
+# ads.txt for jyotishlife.jp — add the Google AdSense line once the publisher ID is issued, e.g.
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

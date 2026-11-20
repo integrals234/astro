@@ -259,6 +259,21 @@ export default async function ToolLandingPage({ params }: Params) {
                     ))}
                   </ul>
                 ) : null}
+                {section.links ? (
+                  <ul className="mt-5 space-y-2">
+                    {section.links.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          href={localizedHref(language, link.href)}
+                          className="inline-flex items-center gap-1.5 font-body text-sm text-terracotta underline-offset-4 hover:underline"
+                        >
+                          {link.label[language]}
+                          <ArrowRight size={14} aria-hidden />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
                 </div>
               </details>
             ))}

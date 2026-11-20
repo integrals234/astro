@@ -48,7 +48,7 @@ export const TBD = "【TO BE COMPLETED】";
 /** Flip to `true` only after legal review. Drives the draft banner and noindex. */
 export const LEGAL_IN_FORCE = false;
 
-export type LegalSlug = "tokushoho" | "privacy" | "terms" | "refunds";
+export type LegalSlug = "tokushoho" | "privacy" | "terms" | "refunds" | "disclaimer" | "contact";
 
 export interface LegalRow {
   label: BilingualText;
@@ -1047,7 +1047,7 @@ const privacy: LegalDocument = {
         },
         {
           label: { en: "Google Analytics", hi: "Google Analytics", ja: "Google アナリティクス", ko: "Google 애널리틱스" },
-          value: { en: `United States. Receives usage events with the IP address truncated. Google’s own opt-out browser add-on can be used to prevent this.`, hi: `संयुक्त राज्य अमेरिका। IP पता संक्षिप्त कर उपयोग-घटनाएँ प्राप्त करता है। इसे रोकने हेतु Google का अपना ऑप्ट-आउट ब्राउज़र ऐड-ऑन प्रयोग किया जा सकता है।`, ja: `米国。IPアドレスを短縮したうえで利用状況を取得します。Googleが提供するオプトアウト アドオンにより送信を停止できます。`, ko: `미국. IP 주소를 단축한 후 이용 상황을 수집합니다. Google이 제공하는 옵트아웃 부가 기능으로 전송을 중지할 수 있습니다.` },
+          value: { en: `United States. Receives usage events with the IP address truncated. Google’s own opt-out browser add-on (https://tools.google.com/dlpage/gaoptout) can be used to prevent this.`, hi: `संयुक्त राज्य अमेरिका। IP पता संक्षिप्त कर उपयोग-घटनाएँ प्राप्त करता है। इसे रोकने हेतु Google का अपना ऑप्ट-आउट ब्राउज़र ऐड-ऑन (https://tools.google.com/dlpage/gaoptout) प्रयोग किया जा सकता है।`, ja: `米国。IPアドレスを短縮したうえで利用状況を取得します。Googleが提供するオプトアウト アドオン（https://tools.google.com/dlpage/gaoptout）により送信を停止できます。`, ko: `미국. IP 주소를 단축한 후 이용 상황을 수집합니다. Google이 제공하는 옵트아웃 부가 기능(https://tools.google.com/dlpage/gaoptout)으로 전송을 중지할 수 있습니다.` },
         },
       ],
     },
@@ -1095,15 +1095,54 @@ const privacy: LegalDocument = {
           label: { en: "Preference cookies", hi: "वरीयता कुकीज़", ja: "設定保存用Cookie", ko: "설정 저장용 쿠키" },
           value: { en: "Remember your chosen language so the site opens in it next time.", hi: "आपकी चयनित भाषा स्मरण रखती हैं ताकि अगली बार साइट उसी में खुले।", ja: "次回も同じ言語で表示されるよう、選択された言語を保存します。", ko: "다음에도 같은 언어로 표시되도록 선택하신 언어를 저장합니다." },
         },
+        {
+          label: { en: "Advertising cookies", hi: "विज्ञापन कुकीज़", ja: "広告用Cookie", ko: "광고용 쿠키" },
+          value: { en: "Set by Google and its partners when advertising is shown on this site (see section 8). They can be refused as described there.", hi: "जब इस साइट पर विज्ञापन दिखाए जाते हैं, तब Google एवं उसके साझेदारों द्वारा सेट (अनुभाग 8 देखें)। वहाँ बताए अनुसार इन्हें अस्वीकार किया जा सकता है।", ja: "本サイトに広告が表示される際に、Googleおよびその提携事業者が設定します（第8項参照）。同項に記載の方法で無効にできます。", ko: "본 사이트에 광고가 표시될 때 Google 및 그 제휴 사업자가 설정합니다(제8항 참조). 해당 항목에 기재된 방법으로 무효화할 수 있습니다." },
+        },
+      ],
+    },
+    {
+      id: "advertising",
+      heading: {
+        en: "8. Advertising (Google AdSense)",
+        hi: "8. विज्ञापन (Google AdSense)",
+        ja: "8. 広告の配信について（Google AdSense）",
+        ko: "8. 광고 게재에 대하여(Google AdSense)",
+      },
+      body: [
+        {
+          en: "This site may use Google AdSense, an advertising service provided by Google LLC, to display advertisements.",
+          hi: "यह साइट विज्ञापन दिखाने हेतु Google LLC द्वारा प्रदत्त विज्ञापन सेवा Google AdSense का उपयोग कर सकती है।",
+          ja: "本サイトでは、Google LLC が提供する第三者配信の広告サービス「Google AdSense（グーグルアドセンス）」を利用して広告を掲載することがあります。",
+          ko: "본 사이트는 광고 게재를 위해 Google LLC가 제공하는 제3자 광고 서비스인 Google AdSense를 이용할 수 있습니다.",
+        },
+        {
+          en: "Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this site and other websites. Google’s use of advertising cookies enables it and its partners to serve ads to you based on those visits.",
+          hi: "Google सहित तृतीय-पक्ष विक्रेता, इस साइट तथा अन्य वेबसाइटों पर आपकी पिछली यात्राओं के आधार पर विज्ञापन दिखाने हेतु कुकीज़ का उपयोग करते हैं। विज्ञापन कुकीज़ के उपयोग से Google तथा उसके साझेदार उन यात्राओं के आधार पर आपको विज्ञापन दिखा पाते हैं।",
+          ja: "Googleを含む第三者配信事業者は、Cookieを使用して、お客様が過去に本サイトや他のウェブサイトにアクセスした際の情報に基づいて広告を配信します。Googleが広告Cookieを使用することにより、Googleおよびその提携事業者は、お客様のそうしたアクセス情報に基づいて適切な広告を表示できます。",
+          ko: "Google을 포함한 제3자 광고 사업자는 쿠키를 사용하여 고객이 과거에 본 사이트 및 다른 웹사이트를 방문한 정보에 기반해 광고를 게재합니다. Google은 광고 쿠키를 사용함으로써 Google 및 제휴 사업자가 그러한 방문 정보에 기반한 광고를 표시할 수 있습니다.",
+        },
+        {
+          en: "You can opt out of personalised advertising in Google’s Ads Settings. How Google uses cookies in advertising, and how to control it, is explained at https://policies.google.com/technologies/ads. You can also opt out of some third-party vendors’ use of cookies for personalised advertising at https://www.aboutads.info.",
+          hi: "आप Google की विज्ञापन सेटिंग में वैयक्तिकृत विज्ञापन से ऑप्ट-आउट कर सकते हैं। Google विज्ञापन में कुकीज़ का उपयोग कैसे करता है और इसे कैसे नियंत्रित करें, इसका विवरण https://policies.google.com/technologies/ads पर है। कुछ तृतीय-पक्ष विक्रेताओं की कुकीज़ से https://www.aboutads.info पर भी ऑप्ट-आउट किया जा सकता है।",
+          ja: "パーソナライズ広告は、Googleの広告設定から無効にできます。Googleによる広告でのCookieの使用方法と、その管理方法については、https://policies.google.com/technologies/ads をご覧ください。また、https://www.aboutads.info にアクセスすると、一部の第三者配信事業者によるパーソナライズ広告用Cookieを無効にできます。",
+          ko: "개인 맞춤 광고는 Google 광고 설정에서 해제할 수 있습니다. Google이 광고에서 쿠키를 사용하는 방식과 관리 방법은 https://policies.google.com/technologies/ads 에서 확인하실 수 있습니다. 또한 https://www.aboutads.info 에서 일부 제3자 사업자의 맞춤 광고용 쿠키를 해제할 수 있습니다.",
+        },
+        {
+          en: "Refusing these cookies does not stop you from using the site. The content of advertisements is the responsibility of the advertisers, and their appearance here is not an endorsement.",
+          hi: "इन कुकीज़ को अस्वीकार करने से साइट का उपयोग बंद नहीं होता। विज्ञापनों की विषयवस्तु का उत्तरदायित्व विज्ञापनदाताओं का है, और यहाँ उनका दिखना किसी प्रकार का समर्थन नहीं है।",
+          ja: "これらのCookieを無効にした場合でも、本サイトは引き続きご利用いただけます。なお、広告の内容は各広告主の責任において提供されるものであり、本サイトが広告の商品・サービスを推奨するものではありません。",
+          ko: "이러한 쿠키를 해제하셔도 본 사이트는 계속 이용하실 수 있습니다. 광고 내용은 각 광고주의 책임하에 제공되며, 본 사이트가 광고 상품·서비스를 추천하는 것은 아닙니다.",
+        },
       ],
     },
     {
       id: "retention",
       heading: {
-        en: "8. How long it is kept",
-        hi: "8. कितने समय रखा जाता है",
-        ja: "8. 保有期間",
-        ko: "8. 보유 기간",
+        en: "9. How long it is kept",
+        hi: "9. कितने समय रखा जाता है",
+        ja: "9. 保有期間",
+        ko: "9. 보유 기간",
       },
       bullets: [
         {
@@ -1135,10 +1174,10 @@ const privacy: LegalDocument = {
     {
       id: "rights",
       heading: {
-        en: "9. Your rights",
-        hi: "9. आपके अधिकार",
-        ja: "9. 開示等のご請求",
-        ko: "9. 공개 등의 청구",
+        en: "10. Your rights",
+        hi: "10. आपके अधिकार",
+        ja: "10. 開示等のご請求",
+        ko: "10. 공개 등의 청구",
       },
       body: [
         {
@@ -1164,10 +1203,10 @@ const privacy: LegalDocument = {
     {
       id: "regions",
       heading: {
-        en: "10. Visitors outside Japan",
-        hi: "10. जापान के बाहर के आगंतुक",
-        ja: "10. 日本国外からご利用の方へ",
-        ko: "10. 일본 국외에서 이용하시는 분께",
+        en: "11. Visitors outside Japan",
+        hi: "11. जापान के बाहर के आगंतुक",
+        ja: "11. 日本国外からご利用の方へ",
+        ko: "11. 일본 국외에서 이용하시는 분께",
       },
       body: [
         {
@@ -1193,10 +1232,10 @@ const privacy: LegalDocument = {
     {
       id: "security",
       heading: {
-        en: "11. Security and changes",
-        hi: "11. सुरक्षा एवं परिवर्तन",
-        ja: "11. 安全管理措置および本ポリシーの変更",
-        ko: "11. 안전 관리 조치 및 본 방침의 변경",
+        en: "12. Security and changes",
+        hi: "12. सुरक्षा एवं परिवर्तन",
+        ja: "12. 安全管理措置および本ポリシーの変更",
+        ko: "12. 안전 관리 조치 및 본 방침의 변경",
       },
       body: [
         {
@@ -1216,7 +1255,267 @@ const privacy: LegalDocument = {
   ],
 };
 
-export const LEGAL_DOCUMENTS: LegalDocument[] = [tokushoho, privacy, terms, refunds];
+/* ------------------------------------------------------------------------- *
+ * 免責事項 (disclaimer)
+ * ------------------------------------------------------------------------- */
+const disclaimer: LegalDocument = {
+  slug: "disclaimer",
+  title: LEGAL_TITLES.disclaimer,
+  summary: {
+    en: "What the astrology content and free tools on this site are — and are not — and the limits of our responsibility for their use.",
+    hi: "इस साइट की ज्योतिष सामग्री और निःशुल्क उपकरण क्या हैं और क्या नहीं हैं, तथा उनके उपयोग के लिए हमारे उत्तरदायित्व की सीमाएँ।",
+    ja: "本サイトの占星術コンテンツおよび無料ツールの性質と、そのご利用に関する当方の責任の範囲について定めます。",
+    ko: "본 사이트의 점성술 콘텐츠와 무료 도구의 성격, 그리고 그 이용에 관한 당사 책임의 범위를 정합니다.",
+  },
+  lastUpdated: "2026-11-20",
+  sections: [
+    {
+      id: "nature",
+      heading: {
+        en: "1. The nature of astrology on this site",
+        hi: "1. इस साइट पर ज्योतिष का स्वरूप",
+        ja: "1. 占星術コンテンツの性質について",
+        ko: "1. 점성술 콘텐츠의 성격에 대하여",
+      },
+      body: [
+        {
+          en: "The charts, readings, articles and tool results on this site are based on the traditional system of Indian astrology (Jyotish). They are offered for self-reflection and enjoyment, as one way of looking at your life and choices.",
+          hi: "इस साइट की कुंडलियाँ, परामर्श, लेख और उपकरण-परिणाम भारतीय ज्योतिष की पारंपरिक पद्धति पर आधारित हैं। ये आत्म-चिंतन और आनंद के लिए, अपने जीवन और निर्णयों को देखने के एक दृष्टिकोण के रूप में प्रस्तुत हैं।",
+          ja: "本サイトのチャート、鑑定、記事およびツールの結果は、インド占星術（ジョーティッシュ）の伝統的な体系にもとづくものです。ご自身の人生や選択を見つめ直すための一つの視点として、自己理解と娯楽を目的にご提供しています。",
+          ko: "본 사이트의 차트, 감정, 기사 및 도구 결과는 인도 점성술(조티시)의 전통적 체계에 기반합니다. 자신의 삶과 선택을 돌아보는 하나의 관점으로서, 자기 이해와 오락을 목적으로 제공합니다.",
+        },
+        {
+          en: "Astrology is not a science that can predict events with certainty, and no result on this site is guaranteed. Please make important decisions with your own judgement.",
+          hi: "ज्योतिष ऐसा विज्ञान नहीं है जो घटनाओं की निश्चित भविष्यवाणी कर सके, और इस साइट का कोई भी परिणाम प्रत्याभूत नहीं है। कृपया महत्वपूर्ण निर्णय अपने विवेक से लें।",
+          ja: "占星術は出来事を確実に予言できる科学ではなく、本サイトのいかなる結果もその内容や的中を保証するものではありません。大切なご判断は、ご自身の意思でなさってください。",
+          ko: "점성술은 사건을 확실하게 예측할 수 있는 과학이 아니며, 본 사이트의 어떠한 결과도 그 내용이나 적중을 보장하지 않습니다. 중요한 판단은 스스로의 의사로 내려 주십시오.",
+        },
+      ],
+    },
+    {
+      id: "not-advice",
+      heading: {
+        en: "2. Not professional advice",
+        hi: "2. पेशेवर परामर्श नहीं",
+        ja: "2. 専門的な助言ではありません",
+        ko: "2. 전문적인 조언이 아닙니다",
+      },
+      body: [
+        {
+          en: "Nothing on this site is medical, psychological, legal, financial or investment advice. For health, mental wellbeing, legal matters, money or employment, please consult a qualified professional such as a doctor, counsellor, lawyer or financial adviser.",
+          hi: "इस साइट की कोई भी सामग्री चिकित्सीय, मनोवैज्ञानिक, विधिक, वित्तीय या निवेश संबंधी परामर्श नहीं है। स्वास्थ्य, मानसिक कल्याण, विधिक मामलों, धन या रोज़गार के लिए कृपया डॉक्टर, परामर्शदाता, अधिवक्ता या वित्तीय सलाहकार जैसे योग्य पेशेवर से संपर्क करें।",
+          ja: "本サイトの内容は、医療・心理・法律・財務・投資に関する助言ではありません。健康や心の不調、法的な問題、お金や仕事に関することは、医師、カウンセラー、弁護士、ファイナンシャルプランナーなどの専門家にご相談ください。",
+          ko: "본 사이트의 내용은 의료·심리·법률·재무·투자에 관한 조언이 아닙니다. 건강이나 마음의 불편, 법적 문제, 돈이나 일에 관한 것은 의사, 상담사, 변호사, 재무 설계사 등 전문가와 상담하십시오.",
+        },
+        {
+          en: "If you are in distress or in danger, please contact the emergency services or a public counselling service rather than relying on astrology.",
+          hi: "यदि आप संकट या ख़तरे में हैं, तो ज्योतिष पर निर्भर रहने के बजाय कृपया आपातकालीन सेवाओं या सार्वजनिक परामर्श सेवा से संपर्क करें।",
+          ja: "つらい状況にある方や身の危険を感じている方は、占星術に頼るのではなく、緊急通報先や公的な相談窓口にご連絡ください。",
+          ko: "힘든 상황에 계시거나 신변의 위험을 느끼시는 분은 점성술에 의지하지 마시고 긴급 신고처나 공적 상담 창구에 연락해 주십시오.",
+        },
+      ],
+    },
+    {
+      id: "accuracy",
+      heading: {
+        en: "3. Accuracy of information and calculations",
+        hi: "3. जानकारी और गणनाओं की सटीकता",
+        ja: "3. 情報および計算結果の正確性について",
+        ko: "3. 정보 및 계산 결과의 정확성에 대하여",
+      },
+      body: [
+        {
+          en: "We take care to keep the content accurate and calculate charts with an astronomical ephemeris, but results depend on the birth date, time and place you enter. An inaccurate birth time in particular can change the ascendant, houses and dasha dates.",
+          hi: "हम सामग्री को सटीक रखने का ध्यान रखते हैं और खगोलीय पंचांग से कुंडली की गणना करते हैं, परंतु परिणाम आपके द्वारा दर्ज जन्म तिथि, समय और स्थान पर निर्भर करते हैं। विशेषकर ग़लत जन्म-समय से लग्न, भाव और दशा की तिथियाँ बदल सकती हैं।",
+          ja: "掲載内容の正確性には注意を払い、チャートは天体暦にもとづいて計算していますが、結果はご入力いただいた生年月日・出生時刻・出生地に左右されます。特に出生時刻が不正確な場合、ラグナ（上昇宮）やハウス、ダシャーの時期が変わることがあります。",
+          ko: "게재 내용의 정확성에 주의를 기울이고 차트는 천체력에 기반해 계산하지만, 결과는 입력하신 생년월일·출생 시각·출생지에 좌우됩니다. 특히 출생 시각이 부정확하면 라그나(상승궁)나 하우스, 다샤 시기가 달라질 수 있습니다.",
+        },
+        {
+          en: "We do not guarantee that the content is complete, current or free of errors, and it may be changed or removed without notice.",
+          hi: "हम यह प्रत्याभूति नहीं देते कि सामग्री पूर्ण, अद्यतन या त्रुटिरहित है, और इसे बिना सूचना के बदला या हटाया जा सकता है।",
+          ja: "掲載内容の完全性・最新性・無謬性を保証するものではなく、予告なく変更または削除することがあります。",
+          ko: "게재 내용의 완전성·최신성·무오류성을 보장하지 않으며, 예고 없이 변경 또는 삭제할 수 있습니다.",
+        },
+      ],
+    },
+    {
+      id: "liability",
+      heading: {
+        en: "4. Limitation of liability",
+        hi: "4. उत्तरदायित्व की सीमा",
+        ja: "4. 損害等について",
+        ko: "4. 손해 등에 대하여",
+      },
+      body: [
+        {
+          en: "Except in cases of our intentional misconduct or gross negligence, we are not liable for any loss or damage arising from the use of this site or of decisions made on the basis of its content. Where Japanese consumer law provides otherwise, that law takes precedence.",
+          hi: "हमारे जानबूझकर किए गए कदाचार या घोर लापरवाही के मामलों को छोड़कर, इस साइट के उपयोग से या इसकी सामग्री के आधार पर लिए गए निर्णयों से उत्पन्न किसी हानि या क्षति के लिए हम उत्तरदायी नहीं हैं। जहाँ जापानी उपभोक्ता क़ानून अन्यथा प्रावधान करता है, वहाँ वही क़ानून प्रभावी होगा।",
+          ja: "当方の故意または重大な過失による場合を除き、本サイトのご利用、または本サイトの内容にもとづいて行われたご判断により生じた損害について、当方は責任を負いかねます。ただし、消費者契約法その他の法令に別段の定めがある場合は、その定めに従います。",
+          ko: "당사의 고의 또는 중대한 과실에 의한 경우를 제외하고, 본 사이트의 이용 또는 본 사이트의 내용에 근거한 판단으로 인해 발생한 손해에 대해 당사는 책임을 지지 않습니다. 다만 일본 소비자계약법 기타 법령에 별도의 규정이 있는 경우에는 그에 따릅니다.",
+        },
+      ],
+    },
+    {
+      id: "links-ads",
+      heading: {
+        en: "5. External links and advertising",
+        hi: "5. बाहरी लिंक और विज्ञापन",
+        ja: "5. 外部リンクおよび広告について",
+        ko: "5. 외부 링크 및 광고에 대하여",
+      },
+      body: [
+        {
+          en: "We are not responsible for the content of external sites linked from this site, or for any transaction with them. Advertisements shown on this site are provided by third parties; their content is the responsibility of each advertiser and does not represent our recommendation.",
+          hi: "इस साइट से जुड़ी बाहरी साइटों की सामग्री या उनके साथ किसी लेन-देन के लिए हम उत्तरदायी नहीं हैं। इस साइट पर दिखाए गए विज्ञापन तृतीय पक्षों द्वारा प्रदत्त हैं; उनकी सामग्री का उत्तरदायित्व संबंधित विज्ञापनदाता का है और यह हमारी अनुशंसा नहीं है।",
+          ja: "本サイトからリンクしている外部サイトの内容や、そのサイトとのお取引について、当方は責任を負いません。また、本サイトに表示される広告は第三者により配信されるもので、その内容は各広告主の責任において提供されており、当方が推奨するものではありません。",
+          ko: "본 사이트에서 링크한 외부 사이트의 내용이나 그 사이트와의 거래에 대해 당사는 책임을 지지 않습니다. 또한 본 사이트에 표시되는 광고는 제3자가 게재하는 것으로, 그 내용은 각 광고주의 책임하에 제공되며 당사가 추천하는 것이 아닙니다.",
+        },
+      ],
+    },
+    {
+      id: "copyright",
+      heading: {
+        en: "6. Copyright",
+        hi: "6. प्रतिलिप्यधिकार",
+        ja: "6. 著作権について",
+        ko: "6. 저작권에 대하여",
+      },
+      body: [
+        {
+          en: "The text, illustrations and other content on this site belong to the operator or their rightful owners. Quotation within the scope permitted by the Copyright Act is welcome with a clear source; please do not reproduce content beyond that without permission.",
+          hi: "इस साइट का पाठ, चित्र और अन्य सामग्री संचालक या उनके वैध स्वामियों की है। प्रतिलिप्यधिकार अधिनियम द्वारा अनुमत सीमा में स्पष्ट स्रोत सहित उद्धरण का स्वागत है; उससे आगे बिना अनुमति सामग्री का पुनरुत्पादन न करें।",
+          ja: "本サイトの文章・イラストその他のコンテンツの著作権は、運営者または正当な権利者に帰属します。著作権法で認められた範囲での引用は、出典を明記のうえ歓迎いたしますが、それを超える無断転載はご遠慮ください。",
+          ko: "본 사이트의 문장·일러스트 기타 콘텐츠의 저작권은 운영자 또는 정당한 권리자에게 귀속됩니다. 저작권법에서 인정하는 범위 내의 인용은 출처를 명기하시면 환영하지만, 그 범위를 넘는 무단 전재는 삼가 주십시오.",
+        },
+      ],
+    },
+    {
+      id: "changes",
+      heading: {
+        en: "7. Changes",
+        hi: "7. परिवर्तन",
+        ja: "7. 本免責事項の変更",
+        ko: "7. 본 면책사항의 변경",
+      },
+      body: [
+        {
+          en: "This disclaimer may be revised when necessary. The revised version takes effect when it is published on this page.",
+          hi: "आवश्यकता होने पर यह अस्वीकरण संशोधित किया जा सकता है। संशोधित संस्करण इस पृष्ठ पर प्रकाशित होते ही प्रभावी होगा।",
+          ja: "本免責事項は、必要に応じて改定することがあります。改定後の内容は、本ページに掲載した時点から効力を生じます。",
+          ko: "본 면책사항은 필요에 따라 개정될 수 있습니다. 개정 후의 내용은 본 페이지에 게재한 시점부터 효력이 발생합니다.",
+        },
+      ],
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------------- *
+ * お問い合わせ (contact)
+ * ------------------------------------------------------------------------- */
+const contact: LegalDocument = {
+  slug: "contact",
+  title: LEGAL_TITLES.contact,
+  summary: {
+    en: "How to reach the operator of Jyotish Life, and what to include so we can help.",
+    hi: "ज्योतिष लाइफ़ के संचालक से कैसे संपर्क करें, और सहायता हेतु क्या शामिल करें।",
+    ja: "Jyotish Life 運営者へのご連絡方法と、お問い合わせの際にお書き添えいただきたい内容をご案内します。",
+    ko: "Jyotish Life 운영자에게 연락하는 방법과 문의 시 함께 적어 주셨으면 하는 내용을 안내합니다.",
+  },
+  lastUpdated: "2026-11-20",
+  sections: [
+    {
+      id: "contact-details",
+      heading: {
+        en: "1. Contact details",
+        hi: "1. संपर्क विवरण",
+        ja: "1. 連絡先",
+        ko: "1. 연락처",
+      },
+      rows: [
+        {
+          label: { en: "Operator", hi: "संचालक", ja: "運営者", ko: "운영자" },
+          value: { en: TBD, hi: TBD, ja: TBD, ko: TBD },
+        },
+        {
+          label: { en: "Email", hi: "ईमेल", ja: "メールアドレス", ko: "이메일" },
+          value: CONTACT_EMAIL,
+        },
+        {
+          label: { en: "Personal readings", hi: "व्यक्तिगत परामर्श", ja: "個人鑑定のご相談", ko: "개인 감정 문의" },
+          value: {
+            en: "Please use the inquiry form on the Personal Appraisals page.",
+            hi: "कृपया व्यक्तिगत परामर्श पृष्ठ पर दिए गए पूछताछ प्रपत्र का उपयोग करें।",
+            ja: "「個人鑑定」ページのお問い合わせフォームからご連絡ください。",
+            ko: "'개인 감정' 페이지의 문의 양식으로 연락해 주십시오.",
+          },
+        },
+        {
+          label: { en: "Replies", hi: "उत्तर", ja: "ご返信について", ko: "회신에 대하여" },
+          value: {
+            en: `We reply in order of receipt, usually within ${TBD} business days.`,
+            hi: `हम प्राप्ति के क्रम में उत्तर देते हैं, सामान्यतः ${TBD} कार्यदिवसों के भीतर।`,
+            ja: `受付順に、通常${TBD}営業日以内にご返信いたします。`,
+            ko: `접수 순서대로 보통 ${TBD}영업일 이내에 회신드립니다.`,
+          },
+        },
+      ],
+    },
+    {
+      id: "before-contacting",
+      heading: {
+        en: "2. Before you write",
+        hi: "2. लिखने से पहले",
+        ja: "2. お問い合わせの前に",
+        ko: "2. 문의하시기 전에",
+      },
+      bullets: [
+        {
+          en: "Questions about how a free tool works are often answered in the FAQ at the bottom of each tool page.",
+          hi: "किसी निःशुल्क उपकरण के काम करने के तरीके से जुड़े प्रश्नों के उत्तर प्रायः प्रत्येक उपकरण-पृष्ठ के नीचे दिए FAQ में मिल जाते हैं।",
+          ja: "無料ツールの使い方に関するご質問は、各ツールページ下部の「よくある質問」で解決できることがあります。",
+          ko: "무료 도구 사용법에 관한 질문은 각 도구 페이지 하단의 '자주 묻는 질문'에서 해결되는 경우가 있습니다.",
+        },
+        {
+          en: "If a chart looks wrong, please tell us the page, the birth date, time and place you entered, and what you expected to see.",
+          hi: "यदि कोई कुंडली ग़लत लगे, तो कृपया पृष्ठ, आपके द्वारा दर्ज जन्म तिथि, समय और स्थान, तथा आप क्या देखने की अपेक्षा कर रहे थे, बताएँ।",
+          ja: "計算結果がおかしいと感じた場合は、ご利用のページ、ご入力の生年月日・出生時刻・出生地、想定していた結果をお書き添えください。確認がスムーズになります。",
+          ko: "계산 결과가 이상하다고 느끼시면 이용하신 페이지, 입력하신 생년월일·출생 시각·출생지, 예상하신 결과를 함께 적어 주십시오.",
+        },
+        {
+          en: "We cannot give individual astrological readings by email free of charge. Readings are provided through the Personal Appraisals service.",
+          hi: "हम ईमेल द्वारा निःशुल्क व्यक्तिगत ज्योतिषीय परामर्श नहीं दे सकते। परामर्श व्यक्तिगत परामर्श सेवा के माध्यम से दिए जाते हैं।",
+          ja: "メールでの無料の個別鑑定はお受けしておりません。鑑定をご希望の方は「個人鑑定」をご利用ください。",
+          ko: "이메일을 통한 무료 개별 감정은 받지 않습니다. 감정을 원하시는 분은 '개인 감정' 서비스를 이용해 주십시오.",
+        },
+        {
+          en: "Inquiries in Japanese or English are easiest for us to answer.",
+          hi: "जापानी या अंग्रेज़ी में की गई पूछताछ का उत्तर देना हमारे लिए सबसे सरल है।",
+          ja: "日本語または英語でのお問い合わせに対応しております。",
+          ko: "일본어 또는 영어로 문의해 주시면 원활하게 대응할 수 있습니다.",
+        },
+      ],
+    },
+    {
+      id: "privacy-note",
+      heading: {
+        en: "3. Your personal information",
+        hi: "3. आपकी व्यक्तिगत जानकारी",
+        ja: "3. 個人情報の取り扱い",
+        ko: "3. 개인정보의 취급",
+      },
+      body: [
+        {
+          en: "Information you send us, such as your name, email address and birth details, is used only to reply to your inquiry and is handled as described in our Privacy Policy.",
+          hi: "आप जो जानकारी हमें भेजते हैं, जैसे नाम, ईमेल पता और जन्म विवरण, उसका उपयोग केवल आपकी पूछताछ का उत्तर देने हेतु होता है और उसे हमारी गोपनीयता नीति के अनुसार संभाला जाता है।",
+          ja: "お問い合わせの際にいただいたお名前、メールアドレス、出生情報などは、ご返信のためにのみ利用し、プライバシーポリシーに従って適切に管理いたします。",
+          ko: "문의 시 보내 주신 성함, 이메일 주소, 출생 정보 등은 회신을 위해서만 이용하며, 개인정보 처리방침에 따라 적절히 관리합니다.",
+        },
+      ],
+    },
+  ],
+};
+
+export const LEGAL_DOCUMENTS: LegalDocument[] = [tokushoho, privacy, terms, refunds, disclaimer, contact];
 
 export function findLegalDocument(slug: string): LegalDocument | undefined {
   return LEGAL_DOCUMENTS.find((document) => document.slug === slug);

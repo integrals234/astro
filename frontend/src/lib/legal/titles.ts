@@ -31,10 +31,22 @@ export const LEGAL_TITLES = {
     ja: "プライバシーポリシー",
     ko: "개인정보 처리방침",
   },
+  disclaimer: {
+    en: "Disclaimer",
+    hi: "अस्वीकरण",
+    ja: "免責事項",
+    ko: "면책사항",
+  },
+  contact: {
+    en: "Contact",
+    hi: "संपर्क",
+    ja: "お問い合わせ",
+    ko: "문의하기",
+  },
 } satisfies Record<string, BilingualText>;
 
 /** Footer order — matches LEGAL_DOCUMENTS. */
-export const LEGAL_LINKS = (["tokushoho", "privacy", "terms", "refunds"] as const).map((slug) => ({
+export const LEGAL_LINKS = (["tokushoho", "privacy", "terms", "refunds", "disclaimer", "contact"] as const).map((slug) => ({
   slug,
   title: LEGAL_TITLES[slug],
 }));

@@ -4,6 +4,8 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { aboutContent, ABOUT_KNOWS_ABOUT } from "@/lib/about/content";
+import { operatorHeading, operatorRows } from "@/lib/about/operator";
+import { LEGAL_TITLES } from "@/lib/legal/titles";
 import { uiText } from "@/lib/education";
 import { APP_LANGUAGES, parseAppLanguage } from "@/lib/i18n/language";
 import { localizedHref } from "@/lib/i18n/routing";
@@ -99,6 +101,25 @@ export default async function AboutPage({ params }: Params) {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section id="operator" className="mt-10 scroll-mt-24">
+          <h2 className="washi-eyebrow-muted mb-4">{operatorHeading[language]}</h2>
+          <dl className="washi-measure divide-y divide-border border-y border-border">
+            {operatorRows.map((row) => (
+              <div key={row.label.en} className="grid gap-1 py-3 sm:grid-cols-[9rem_1fr] sm:gap-4">
+                <dt className="text-sm text-text-muted">{row.label[language]}</dt>
+                <dd className="font-body text-sm text-text">{row.value[language]}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {(["contact", "privacy", "disclaimer"] as const).map((slug) => (
+              <Link key={slug} href={localizedHref(language, `/legal/${slug}`)} className="text-terracotta underline-offset-4 hover:underline">
+                {LEGAL_TITLES[slug][language]}
+              </Link>
+            ))}
+          </p>
         </section>
 
         <div className="washi-glyph-divider" aria-hidden />

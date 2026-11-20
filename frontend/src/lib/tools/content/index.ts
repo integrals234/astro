@@ -1,8 +1,20 @@
-import { compatibilityLongForm } from "./compatibility";
-import { sukuyoLongForm } from "./sukuyo";
-import { birthChartLongForm } from "./birth-chart";
-import { mangalDoshaLongForm } from "./mangal-dosha";
+import { annualForecastLongForm } from "./annual-forecast";
 import { babyNamesLongForm } from "./baby-names";
+import { birthChartLongForm } from "./birth-chart";
+import { birthTimeCheckLongForm } from "./birth-time-check";
+import { careerReportLongForm } from "./career-report";
+import { compatibilityLongForm } from "./compatibility";
+import { dashaCalculatorLongForm } from "./dasha-calculator";
+import { gemstoneRecommendationLongForm } from "./gemstone-recommendation";
+import { lagnaCalculatorLongForm } from "./lagna-calculator";
+import { mangalDoshaLongForm } from "./mangal-dosha";
+import { moonSignLongForm } from "./moon-sign";
+import { nakshatraFinderLongForm } from "./nakshatra-finder";
+import { numerologyLongForm } from "./numerology";
+import { panchangLongForm } from "./panchang";
+import { saturnReturnLongForm } from "./saturn-return";
+import { sukuyoLongForm } from "./sukuyo";
+import { transitNowLongForm } from "./transit-now";
 import type { ToolLongForm } from "./types";
 
 /**
@@ -13,15 +25,25 @@ import type { ToolLongForm } from "./types";
  * shorter page rather than an empty heading, which is the right failure mode
  * while the corpus is being filled in.
  *
- * Still missing (backlog, Phase 11): dasha-calculator, nakshatra-finder,
- * moon-sign, transit-now, numerology, saturn-return, birth-time-check.
  */
 const ALL: ToolLongForm[] = [
-  sukuyoLongForm,
-  compatibilityLongForm,
-  birthChartLongForm,
-  mangalDoshaLongForm,
+  annualForecastLongForm,
   babyNamesLongForm,
+  birthChartLongForm,
+  birthTimeCheckLongForm,
+  careerReportLongForm,
+  compatibilityLongForm,
+  dashaCalculatorLongForm,
+  gemstoneRecommendationLongForm,
+  lagnaCalculatorLongForm,
+  mangalDoshaLongForm,
+  moonSignLongForm,
+  nakshatraFinderLongForm,
+  numerologyLongForm,
+  panchangLongForm,
+  saturnReturnLongForm,
+  sukuyoLongForm,
+  transitNowLongForm,
 ];
 
 export function findToolLongForm(slug: string): ToolLongForm | undefined {

@@ -65,7 +65,14 @@ function HomeInner({ tools }: { tools: ToolSummary[] }) {
   );
 }
 
-export default function WelcomeHomePage({ tools }: { tools: ToolSummary[] }) {
+export default function WelcomeHomePage({
+  tools,
+  guide,
+}: {
+  tools: ToolSummary[];
+  /** Server-rendered explanatory guide + FAQ, placed after the story sections. */
+  guide?: React.ReactNode;
+}) {
   const { lang } = useWelcomeLang();
   return (
     <div className="min-h-screen bg-washi text-text">
@@ -74,6 +81,7 @@ export default function WelcomeHomePage({ tools }: { tools: ToolSummary[] }) {
         <ChartDataProvider toolSlug="home">
           <HomeInner tools={tools} />
         </ChartDataProvider>
+        {guide}
       </main>
       <SiteFooter />
     </div>

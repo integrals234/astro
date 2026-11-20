@@ -107,7 +107,9 @@ export default function ChartSectionResult({
   };
 
   if (!isLoaded) {
-    return <div className="washi-card h-72 animate-pulse" aria-hidden />;
+    // Sized like the birth-details form that replaces it, so the page
+    // below does not jump when profiles finish loading.
+    return <div className="washi-card h-[536px] animate-pulse md:h-[424px] lg:h-[412px]" aria-hidden />;
   }
 
   if (!chartData && !primary && status !== "loading") {
@@ -132,7 +134,9 @@ export default function ChartSectionResult({
   }
 
   if (status === "loading" || !chartData) {
-    return <div className="washi-card h-72 animate-pulse" aria-hidden />;
+    // Sized like the birth-details form that replaces it, so the page
+    // below does not jump when profiles finish loading.
+    return <div className="washi-card h-[536px] animate-pulse md:h-[424px] lg:h-[412px]" aria-hidden />;
   }
 
   const prefillQuery = primary

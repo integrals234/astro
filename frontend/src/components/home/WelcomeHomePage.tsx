@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PublicHeader from "@/components/layout/PublicHeader";
 import { ChartDataProvider, useChartData } from "@/components/chart/ChartDataProvider";
@@ -53,29 +53,13 @@ function HomeInner({ tools }: { tools: ToolSummary[] }) {
 
   return (
     <>
-      {/*
-        Each screen is its own Suspense boundary. Nothing here suspends; the
-        boundaries let React hydrate the page in several short tasks instead
-        of one long one (selective hydration), which is what mobile
-        Lighthouse scores as Total Blocking Time. The HTML is unchanged.
-      */}
       <div ref={heroRef}>
-        <Suspense>
-          <HomeHero onComputed={onComputed} />
-        </Suspense>
+        <HomeHero onComputed={onComputed} />
       </div>
-      <Suspense>
-        <ChartStory subject={shownSubject} />
-      </Suspense>
-      <Suspense>
-        <ToolsBrowser tools={tools} />
-      </Suspense>
-      <Suspense>
-        <LearnStory />
-      </Suspense>
-      <Suspense>
-        <ReadingClose />
-      </Suspense>
+      <ChartStory subject={shownSubject} />
+      <ToolsBrowser tools={tools} />
+      <LearnStory />
+      <ReadingClose />
       <StickyCtaBar heroRef={heroRef} hidden={Boolean(data)} />
     </>
   );
@@ -85,17 +69,13 @@ export default function WelcomeHomePage({ tools }: { tools: ToolSummary[] }) {
   const { lang } = useWelcomeLang();
   return (
     <div className="min-h-screen bg-washi text-text">
-      <Suspense>
-        <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
-      </Suspense>
+      <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
       <main>
         <ChartDataProvider toolSlug="home">
           <HomeInner tools={tools} />
         </ChartDataProvider>
       </main>
-      <Suspense>
-        <SiteFooter />
-      </Suspense>
+      <SiteFooter />
     </div>
   );
 }

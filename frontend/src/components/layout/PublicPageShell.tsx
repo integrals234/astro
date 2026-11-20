@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import PublicHeader from "@/components/layout/PublicHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 
@@ -18,18 +17,11 @@ export default function PublicPageShell({
 }) {
   return (
     <div className="washi-ambient flex min-h-screen flex-col bg-washi text-text">
-      {/* Separate Suspense boundaries: React hydrates header, page and footer
-          as separate short tasks (selective hydration) instead of one long
-          one. Nothing suspends; the HTML is unchanged. */}
-      <Suspense>
-        <PublicHeader maxWidth="max-w-6xl" />
-      </Suspense>
+      <PublicHeader maxWidth="max-w-6xl" />
       <main className="flex-1">
-        <Suspense>{children}</Suspense>
+        {children}
       </main>
-      <Suspense>
-        <SiteFooter />
-      </Suspense>
+      <SiteFooter />
     </div>
   );
 }

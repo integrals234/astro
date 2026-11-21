@@ -11,7 +11,7 @@ export interface ChartDataContextValue {
   data: ChartData | null;
   status: 'idle' | 'loading' | 'error';
   /** Computes and stores a chart for arbitrary birth details. */
-  compute: (birth: NatalInput) => Promise<ChartData | null>;
+  compute: (birth: NatalInput, options?: { silent?: boolean }) => Promise<ChartData | null>;
   /** Clears the displayed chart without touching the underlying profile —
    * see `reset`'s doc comment below for why `overrideEntry` matters. */
   reset: () => void;
@@ -52,7 +52,7 @@ export function ChartDataProvider({
   const [overrideEntry, setOverrideEntry] = useState(false);
   const lastInput = useRef<NatalInput | null>(null);
 
-  const compute = useCallback(async (birth: NatalInput) => {
+  const compute = useCallback(async (birth: NatalInput, options?: { silent?: boolean }) => {
     lastInput.current = birth;
     setStatus('loading');
     try {
@@ -65,7 +65,8 @@ export function ChartDataProvider({
       const result: ChartData = await response.json();
       setData(result);
       setStatus('idle');
-      trackEvent('tool_completed', { slug: toolSlug, locale: language });
+      // Automatic computes on page load are not a visitor using a tool.
+      if (!options?.silent) trackEvent('tool_completed', { slug: toolSlug, locale: language });
       return result;
     } catch {
       setStatus('error');
@@ -79,8 +80,7 @@ export function ChartDataProvider({
     if (!isLoaded || !primary || computedFor === primary.id || overrideEntry) return;
     void (async () => {
       setComputedFor(primary.id);
-      trackEvent('tool_opened', { slug: toolSlug, locale: language });
-      await compute(primary.birth);
+      await compute(primary.birth, { silent: true });
     })();
   }, [isLoaded, primary, computedFor, overrideEntry, compute, toolSlug, language]);
 

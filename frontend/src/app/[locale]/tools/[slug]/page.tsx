@@ -13,7 +13,6 @@ import AnnualForecastPanel from "@/components/AnnualForecastPanel";
 import PanchangPanel from "@/components/PanchangPanel";
 import BabyNamesPanel from "@/components/BabyNamesPanel";
 import NakshatraFinderPanel from "@/components/NakshatraFinderPanel";
-import DoshaRemedyReference from "@/components/DoshaRemedyReference";
 import GemstonePanel from "@/components/GemstonePanel";
 import CareerReportPanel from "@/components/CareerReportPanel";
 import ChartSectionResult from "@/components/tools/ChartSectionResult";
@@ -210,10 +209,11 @@ export default async function ToolLandingPage({ params }: Params) {
               sections={tool.sections}
               toolSlug={tool.slug}
               handoffTool={tool.chartHandoff}
+              formless={Boolean(tool.resultPanel)}
+              showRemedies={tool.slug === "mangal-dosha"}
             />
           </div>
         ) : null}
-        {tool.slug === "mangal-dosha" ? <DoshaRemedyReference /> : null}
 
         <hr className="my-12 h-px border-0 bg-border" />
 

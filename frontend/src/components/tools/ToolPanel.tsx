@@ -1,9 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import Link from "@/components/i18n/LocaleLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useChartData } from "@/components/chart/ChartDataProvider";
+import { useBirthProfile } from "@/components/profile/ProfileProvider";
+import { Calculating, InlineError } from "@/components/tools/ToolResultFrame";
+import { profilePersonName } from "@/lib/profile/types";
+import { toolUiCopy } from "@/lib/tools/tool-ui-copy";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import type { ToolLanding } from "@/lib/tools/landing-content";
 import type { ToolSummary } from "@/lib/tools/tool-summary";
@@ -32,10 +37,13 @@ const PANELS = {
 
 const ChartSectionBody = dynamic(() => import("@/components/chart/ChartSectionBody"), { ssr: false, loading });
 
-/** Can this tool answer in place, given what the page already knows? */
+/**
+ * Can this tool answer in place, given what the page already knows? A
+ * remembered person is enough: if their chart is still calculating (or
+ * failed) the sheet opens with that state instead of navigating away.
+ */
 export function canOpenInPlace(tool: ToolSummary, hasChart: boolean, hasProfile: boolean) {
-  if (tool.resultPanel) return hasProfile || hasChart;
-  if (tool.sections) return hasChart;
+  if (tool.resultPanel || tool.sections) return hasProfile || hasChart;
   return false;
 }
 
@@ -43,14 +51,41 @@ export function canOpenInPlace(tool: ToolSummary, hasChart: boolean, hasProfile:
 export default function ToolPanel({ tool }: { tool: ToolSummary }) {
   const { language } = useLanguage();
   const t = chartFormCopy[language];
-  const { data } = useChartData();
+  const ui = toolUiCopy[language];
+  const { data, status, retry } = useChartData();
+  const { primary } = useBirthProfile();
+  const [gocharBase, setGocharBase] = useState<"Lagna" | "Chandra">("Lagna");
   const Panel = tool.resultPanel ? PANELS[tool.resultPanel] : null;
+  const showSections = Boolean(tool.sections) && !tool.resultPanel;
 
   return (
     <div className="space-y-6">
+      {showSections && primary ? (
+        <p className="text-sm text-text-muted">{ui.resultFor(profilePersonName(primary))}</p>
+      ) : null}
       {Panel ? <Panel /> : null}
-      {tool.sections && data
-        ? tool.sections.map((id) => <ChartSectionBody key={id} id={id} data={data} t={t} lang={language} />)
+      {showSections && !data && status === "error" ? (
+        <InlineError message={ui.computeError}>
+          <button type="button" onClick={() => void retry()} className="washi-btn-primary px-4 text-sm">
+            {ui.retry}
+          </button>
+        </InlineError>
+      ) : null}
+      {showSections && !data && status !== "error" ? <Calculating /> : null}
+      {showSections && data
+        ? tool.sections!.map((id) => (
+            <ChartSectionBody
+              key={id}
+              id={id}
+              data={data}
+              t={t}
+              lang={language}
+              gocharBase={gocharBase}
+              onGocharBaseChange={setGocharBase}
+              openCurrentDasha={id === "dasha"}
+              birthYear={primary?.birth.year}
+            />
+          ))
         : null}
       <Link href={`/tools/${tool.slug}`} className="washi-btn-secondary px-5 text-sm">
         {t.ui.readFullExplanation}

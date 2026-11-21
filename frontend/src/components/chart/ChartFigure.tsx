@@ -1,5 +1,6 @@
 'use client';
 
+import { toolUiCopy } from '@/lib/tools/tool-ui-copy';
 import KundliChart from '@/components/KundliChart';
 import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
@@ -78,20 +79,28 @@ export default function ChartFigure({
 
       {view === 'gochar' && (
         <div className="flex flex-col items-center gap-3 mb-8">
-          <div className="washi-segmented">
+          {/* Only offered when something handles it — a toggle with no
+              handler used to sit on the tool page doing nothing. */}
+          {onGocharBaseChange ? (
+          <div className="washi-segmented" role="group" aria-label={`${t.lagnaBase} / ${t.chandraBase}`}>
             <button
-              onClick={() => onGocharBaseChange?.('Lagna')}
+              type="button"
+              aria-pressed={gocharBase === 'Lagna'}
+              onClick={() => onGocharBaseChange('Lagna')}
               className={`px-5 py-2 font-body uppercase tracking-wider transition-colors ${gocharBase === 'Lagna' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
             >
               {t.lagnaBase}
             </button>
             <button
-              onClick={() => onGocharBaseChange?.('Chandra')}
+              type="button"
+              aria-pressed={gocharBase === 'Chandra'}
+              onClick={() => onGocharBaseChange('Chandra')}
               className={`px-5 py-2 font-body uppercase tracking-wider transition-colors ${gocharBase === 'Chandra' ? 'washi-segment-selected' : 'washi-segment-unselected'} ${lang === 'hi' ? 'text-sm' : 'text-xs'}`}
             >
               {t.chandraBase}
             </button>
           </div>
+          ) : null}
           <div className="inline-flex items-center gap-4 text-[11px] font-body text-text-muted">
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-terracotta" />
@@ -136,6 +145,13 @@ export default function ChartFigure({
         />
       )}
       </div>
+
+      {/* What the marks in the drawing mean — previously only in SVG titles. */}
+      <p className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-text-muted">
+        {rendered.showAscendant ? <span>{toolUiCopy[lang].legendAsc}</span> : null}
+        <span>{toolUiCopy[lang].legendRetro}</span>
+        {chartStyle === 'North' ? <span>{toolUiCopy[lang].legendHouses}</span> : null}
+      </p>
 
       {controls === 'full' && (
         <ChartDisplayControls

@@ -12,6 +12,8 @@ export interface SadeSatiPanelProps {
   t: ChartTranslations;
   lang: AppLanguage;
   showHeading?: boolean;
+  /** Birth year of the person this chart is for (falls back to the remembered person). */
+  birthYear?: number;
 }
 
 /**
@@ -25,14 +27,16 @@ export interface SadeSatiPanelProps {
  * `useBirthProfile()` directly rather than threading it through
  * `ChartSectionBody`'s props for one field only this section needs.
  */
-export default function SadeSatiPanel({ data, t, lang, showHeading = true }: SadeSatiPanelProps) {
+export default function SadeSatiPanel({ data, t, lang, showHeading = true, birthYear }: SadeSatiPanelProps) {
   const { primary } = useBirthProfile();
   const copy = sadeSatiCopy[lang];
 
   const moon = data.planets.find((p) => p.name === 'Moon');
   const transitSaturn = data.transit_planets.find((p) => p.name === 'Saturn');
   const sadeSati = moon && transitSaturn ? computeSadeSati(moon.sign, transitSaturn.sign) : null;
-  const returnInfo = primary ? nextSaturnReturn(primary.birth.year) : null;
+  // The year of the chart being shown — not always the remembered person's.
+  const year = birthYear ?? primary?.birth.year;
+  const returnInfo = year ? nextSaturnReturn(year) : null;
 
   return (
     <div>
@@ -52,6 +56,7 @@ export default function SadeSatiPanel({ data, t, lang, showHeading = true }: Sad
           </div>
         )}
 
+        {year ? (
         <div className="washi-card p-5">
           <div className="mb-2 text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">
             {copy.saturnReturnHeading}
@@ -60,6 +65,7 @@ export default function SadeSatiPanel({ data, t, lang, showHeading = true }: Sad
             {returnInfo ? copy.saturnReturnUpcoming(returnInfo.age, returnInfo.approximateYear) : copy.saturnReturnPast}
           </p>
         </div>
+        ) : null}
       </div>
     </div>
   );

@@ -7,8 +7,8 @@ import type { ToolLongForm } from "./types";
  * renders the Gochar view of ChartFigure: natal planets (terracotta) and the
  * nine transiting grahas (moss) placed in whole-sign houses counted from the
  * natal Lagna sign. Transits are computed for noon of today's date in the
- * birth place's time zone. On this page the base is fixed to Lagna; the /chart
- * workspace lets the user switch to the Moon (チャンドラ基準) and change the
+ * birth place's time zone. The Lagna / Chandra base buttons and the transit
+ * date picker work on this page too (as on /chart); the
  * transit date. Saturn alone is covered in depth by /tools/saturn-return, so
  * this page covers all nine grahas, Lagna- vs Moon-based counting, and how
  * transits combine with the running Vimshottari dasha.
@@ -81,16 +81,16 @@ export const transitNowLongForm: ToolLongForm = {
       ],
       bullets: [
         {
-          ja: "ラグナ基準：出生時のラグナの星座を1室とし、そこから星座単位で数えたハウスにトランジット惑星を配置した表示です。このページはこの基準で表示します。",
-          en: "Lagna base: the sign of your natal Lagna is the 1st house, and transiting planets are placed in houses counted sign by sign from there. This page displays the chart on this base.",
-          hi: "लग्न आधार: जन्म लग्न की राशि को पहला भाव मानकर, वहाँ से राशि-दर-राशि गिने गए भावों में गोचर ग्रह रखे जाते हैं। यह पृष्ठ इसी आधार पर दिखाता है।",
-          ko: "라그나 기준: 출생 라그나의 별자리를 1하우스로 하고, 거기서 별자리 단위로 센 하우스에 트랜짓 행성을 배치한 표시입니다. 이 페이지는 이 기준으로 표시합니다.",
+          ja: "ラグナ基準：出生時のラグナの星座を1室とし、そこから星座単位で数えたハウスにトランジット惑星を配置した表示です。このページは初めにこの基準で表示します。",
+          en: "Lagna base: the sign of your natal Lagna is the 1st house, and transiting planets are placed in houses counted sign by sign from there. This page opens on this base.",
+          hi: "लग्न आधार: जन्म लग्न की राशि को पहला भाव मानकर, वहाँ से राशि-दर-राशि गिने गए भावों में गोचर ग्रह रखे जाते हैं। यह पृष्ठ आरंभ में इसी आधार पर दिखाता है।",
+          ko: "라그나 기준: 출생 라그나의 별자리를 1하우스로 하고, 거기서 별자리 단위로 센 하우스에 트랜짓 행성을 배치한 표시입니다. 이 페이지는 처음에 이 기준으로 표시합니다.",
         },
         {
-          ja: "チャンドラ基準：出生時の月の星座を1室として数える方法です。インドの伝統的なゴーチャラ（運行）の判断はこちらが中心で、ホロスコープ作成ページのトランジット表示で切り替えられます。",
-          en: "Chandra (Moon) base: counting from your natal Moon sign as the 1st house. Traditional Indian gochara judgement is centred on this method, and you can switch to it in the transit view on the birth chart page.",
-          hi: "चंद्र आधार: जन्म चंद्र राशि को पहला भाव मानकर गिनना। भारतीय पारंपरिक गोचर-फल मुख्यतः इसी पद्धति पर आधारित है, और कुंडली पृष्ठ के गोचर दृश्य में इसे चुना जा सकता है।",
-          ko: "찬드라(달) 기준: 출생 달의 별자리를 1하우스로 세는 방법입니다. 인도의 전통적인 고차라 판단은 이 방식이 중심이며, 차트 작성 페이지의 트랜짓 보기에서 전환할 수 있습니다.",
+          ja: "チャンドラ基準：出生時の月の星座を1室として数える方法です。インドの伝統的なゴーチャラ（運行）の判断はこちらが中心で、チャート上の「チャンドラ基準」ボタンで切り替えられます。",
+          en: "Chandra (Moon) base: counting from your natal Moon sign as the 1st house. Traditional Indian gochara judgement is centred on this method, and you can switch to it with the Chandra base button above the chart.",
+          hi: "चंद्र आधार: जन्म चंद्र राशि को पहला भाव मानकर गिनना। भारतीय पारंपरिक गोचर-फल मुख्यतः इसी पद्धति पर आधारित है, और चार्ट के ऊपर “चंद्र आधार” बटन से इसे चुना जा सकता है।",
+          ko: "찬드라(달) 기준: 출생 달의 별자리를 1하우스로 세는 방법입니다. 인도의 전통적인 고차라 판단은 이 방식이 중심이며, 차트 위의 ‘찬드라 기준’ 버튼으로 전환할 수 있습니다.",
         },
         {
           ja: "度数：各惑星の横の数字は、その星座の中で何度にあるか（0〜29度）を示します。同じ区画内の惑星同士は、度数が近いほど重なりが強いと読みます。",

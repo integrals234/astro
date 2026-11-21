@@ -1,169 +1,138 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "@/components/i18n/LocaleLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
-import { useBirthProfile } from "@/components/profile/ProfileProvider";
 import ChartSectionBody from "@/components/chart/ChartSectionBody";
 import BookingHandoff from "@/components/tools/BookingHandoff";
-import BirthDetailsFields, {
-  EMPTY_BIRTH_DETAILS,
-  isBirthDetailsComplete,
-  type BirthDetailsValue,
-} from "@/components/shared/BirthDetailsFields";
-import { trackEvent } from "@/lib/analytics/events";
+import DoshaRemedyReference from "@/components/DoshaRemedyReference";
+import ToolResultFrame from "@/components/tools/ToolResultFrame";
+import { computeChart, useProfileResult } from "@/components/tools/useProfileResult";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { buildChartPrefillQuery } from "@/lib/chart-prefill";
-import { natalToChartFormData, toChartFormData } from "@/lib/profile/types";
-import type { ChartData } from "@/lib/chart-types";
 import type { ChartSectionId } from "@/lib/chart-sections";
+import type { NatalInput } from "@/lib/profile/types";
 import { chartPreviewCopy } from "@/lib/tools/chart-preview-copy";
 import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
-import { profilePersonName } from "@/lib/profile/types";
+import { toolUiCopy } from "@/lib/tools/tool-ui-copy";
 
 /**
  * One or more chart sections, computed and drawn without leaving the page.
  *
- * The tools that used to embed the full chart workspace for this — a
- * component built for someone who wants every tab, every save/load control,
- * and a PDF export — get only the section(s) that answer what they searched
- * for, stacked vertically. Same entry-and-compute flow used elsewhere for
- * this (birth details once, remembered for every other tool), rendered
- * through `ChartSectionBody` so it shares markup with every other section
- * consumer instead of calling `KundliChart` directly.
+ * The tools that used to embed the full chart workspace for this get only
+ * the section(s) that answer what they searched for, stacked vertically,
+ * through `ChartSectionBody` so the markup is shared with /chart.
+ *
+ * The person/compute/error flow is the shared `useProfileResult` +
+ * `ToolResultFrame`. Transit sections also get a working Lagna/Moon base
+ * toggle (client-side re-anchoring, no new request) and a date picker
+ * (recomputes the transits for that day).
  */
+function isoDate(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default function ChartSectionResult({
   sections,
   toolSlug,
   handoffTool = "generic",
+  formless = false,
+  showRemedies = false,
 }: {
   sections: readonly ChartSectionId[];
   toolSlug: string;
   handoffTool?: ToolHandoffId;
+  /** Another panel on the page owns the entry form (sukuyo): render nothing until a person exists. */
+  formless?: boolean;
+  /** Mangal Dosha: the general remedy reference, after the result. */
+  showRemedies?: boolean;
 }) {
   const { language } = useLanguage();
   const t = chartFormCopy[language];
   const copy = chartPreviewCopy[language];
-  const { primary, isLoaded, upsertProfile } = useBirthProfile();
+  const ui = toolUiCopy[language];
+  const hasTransits = sections.includes("gochar") || sections.includes("sadeSati");
 
-  const [chartData, setChartData] = useState<ChartData | null>(null);
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [entry, setEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
-  const [computedFor, setComputedFor] = useState<string | null>(null);
+  const [gocharBase, setGocharBase] = useState<"Lagna" | "Chandra">("Lagna");
+  const [transitDay, setTransitDay] = useState(() => isoDate(new Date()));
 
-  const runCompute = async (
-    formData: ReturnType<typeof natalToChartFormData>,
-  ) => {
-    setStatus("loading");
-    try {
-      const response = await fetch("/api/charts/compute", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error("compute failed");
-      const data: ChartData = await response.json();
-      setChartData(data);
-      setStatus("idle");
-      trackEvent("tool_completed", { slug: toolSlug, locale: language });
-      return data;
-    } catch {
-      setStatus("error");
-      return null;
-    }
-  };
+  const compute = useCallback(
+    (natal: NatalInput) => {
+      const [y, m, d] = transitDay.split("-").map(Number);
+      return computeChart(natal, new Date(y, m - 1, d));
+    },
+    [transitDay],
+  );
 
-  // Auto-compute from the remembered person, once, the first time one exists.
-  useEffect(() => {
-    if (!isLoaded || !primary || computedFor === primary.id) return;
-    void (async () => {
-      setComputedFor(primary.id);
-      trackEvent("tool_opened", { slug: toolSlug, locale: language });
-      await runCompute(toChartFormData(primary));
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, primary, computedFor]);
+  const state = useProfileResult({
+    toolSlug,
+    compute,
+    key: hasTransits ? transitDay : "",
+    toChartData: (data) => data,
+  });
 
-  const handleEntrySubmit = async () => {
-    if (!isBirthDetailsComplete(entry) || !entry.location) return;
-    const birth = {
-      year: Number(entry.date.slice(0, 4)),
-      month: Number(entry.date.slice(5, 7)),
-      day: Number(entry.date.slice(8, 10)),
-      hour: Number(entry.time.slice(0, 2)),
-      minute: Number(entry.time.slice(3, 5)),
-      latitude: Number(entry.location.lat),
-      longitude: Number(entry.location.lon),
-    };
-    const data = await runCompute(natalToChartFormData(birth));
-    if (!data) return;
-    void upsertProfile({
-      label: entry.name.trim() || entry.location.display_name,
-      locationName: entry.location.display_name,
-      birth,
-      isPrimary: false,
-      chartData: data,
-    });
-  };
-
-  if (!isLoaded) {
-    // Sized like the birth-details form that replaces it, so the page
-    // below does not jump when profiles finish loading.
-    return <div className="washi-card h-[536px] animate-pulse md:h-[424px] lg:h-[412px]" aria-hidden />;
-  }
-
-  if (!chartData && !primary && status !== "loading") {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="mb-4 font-body text-text">{copy.needDetails}</p>
-        <BirthDetailsFields
-          value={entry}
-          onChange={(patch) => setEntry((v) => ({ ...v, ...patch }))}
-          idPrefix={`preview-${toolSlug}`}
-        />
-        <button
-          type="button"
-          onClick={handleEntrySubmit}
-          disabled={!isBirthDetailsComplete(entry)}
-          className="washi-btn-primary mt-4 disabled:opacity-50"
-        >
-          {copy.generate}
-        </button>
-      </div>
-    );
-  }
-
-  if (status === "loading" || !chartData) {
-    // Sized like the birth-details form that replaces it, so the page
-    // below does not jump when profiles finish loading.
-    return <div className="washi-card h-[536px] animate-pulse md:h-[424px] lg:h-[412px]" aria-hidden />;
-  }
-
-  const prefillQuery = primary
-    ? buildChartPrefillQuery({
-        name: profilePersonName(primary),
-        date: `${String(primary.birth.year).padStart(4, "0")}-${String(primary.birth.month).padStart(2, "0")}-${String(primary.birth.day).padStart(2, "0")}`,
-        time: `${String(primary.birth.hour).padStart(2, "0")}:${String(primary.birth.minute).padStart(2, "0")}`,
-        latitude: primary.birth.latitude,
-        longitude: primary.birth.longitude,
-        place: primary.locationName,
-      })
-    : "";
+  if (formless && state.isLoaded && !state.subject) return null;
 
   return (
-    <div className="space-y-10">
-      {sections.map((id) => (
-        <ChartSectionBody key={id} id={id} data={chartData} t={t} lang={language} />
-      ))}
+    <ToolResultFrame state={state} idPrefix={`preview-${toolSlug}`} loadingClassName="h-[536px] md:h-[424px] lg:h-[412px]">
+      {(chartData, subject) => {
+        const n = subject.natal;
+        const prefillQuery = buildChartPrefillQuery({
+          name: subject.name,
+          date: `${String(n.year).padStart(4, "0")}-${String(n.month).padStart(2, "0")}-${String(n.day).padStart(2, "0")}`,
+          time: `${String(n.hour).padStart(2, "0")}:${String(n.minute).padStart(2, "0")}`,
+          latitude: n.latitude,
+          longitude: n.longitude,
+          place: subject.place,
+        });
+        return (
+          <div className="space-y-10">
+            {hasTransits ? (
+              <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+                <label htmlFor={`${toolSlug}-transit-date`} className="text-text-muted">
+                  {ui.transitDate}
+                </label>
+                <input
+                  id={`${toolSlug}-transit-date`}
+                  type="date"
+                  value={transitDay}
+                  min="1900-01-01"
+                  max="2099-12-31"
+                  onChange={(e) => e.target.value && setTransitDay(e.target.value)}
+                  className="washi-field cursor-pointer p-2 text-sm"
+                />
+                {transitDay !== isoDate(new Date()) ? (
+                  <button type="button" onClick={() => setTransitDay(isoDate(new Date()))} className="washi-btn-secondary px-3 py-2 text-xs">
+                    {ui.today}
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
 
-      <Link
-        href={prefillQuery ? `/chart?${prefillQuery}` : "/chart"}
-        className="washi-btn-secondary inline-block text-sm"
-      >
-        {copy.openFullChart}
-      </Link>
+            {sections.map((id) => (
+              <ChartSectionBody
+                key={id}
+                id={id}
+                data={chartData}
+                t={t}
+                lang={language}
+                gocharBase={gocharBase}
+                onGocharBaseChange={setGocharBase}
+                openCurrentDasha={id === "dasha"}
+                birthYear={n.year}
+              />
+            ))}
 
-      <BookingHandoff tool={handoffTool} offering="consultation" />
-    </div>
+            {showRemedies ? <DoshaRemedyReference /> : null}
+
+            <Link href={`/chart?${prefillQuery}`} className="washi-btn-secondary inline-block text-sm">
+              {copy.openFullChart}
+            </Link>
+
+            <BookingHandoff tool={handoffTool} offering="consultation" />
+          </div>
+        );
+      }}
+    </ToolResultFrame>
   );
 }

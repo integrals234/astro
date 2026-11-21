@@ -31,6 +31,8 @@ export interface ChartSectionBodyProps {
   onGocharBaseChange?: (base: 'Lagna' | 'Chandra') => void;
   /** Opens the running mahadasha by default, for `id === 'dasha'`. */
   openCurrentDasha?: boolean;
+  /** Birth year of the chart's person, for the Saturn-return estimate. */
+  birthYear?: number;
   /** `false` when the caller (e.g. `DeferredSection`) renders its own
    * heading for this section already. */
   showHeading?: boolean;
@@ -52,6 +54,7 @@ export default function ChartSectionBody({
   gocharBase,
   onGocharBaseChange,
   openCurrentDasha = false,
+  birthYear,
   showHeading = true,
 }: ChartSectionBodyProps) {
   const view = SECTION_TO_VIEW[id];
@@ -84,7 +87,7 @@ export default function ChartSectionBody({
     case 'ashtakavarga':
       return <AshtakavargaPanel data={data} t={t} lang={lang} showHeading={showHeading} />;
     case 'sadeSati':
-      return <SadeSatiPanel data={data} t={t} lang={lang} showHeading={showHeading} />;
+      return <SadeSatiPanel data={data} t={t} lang={lang} showHeading={showHeading} birthYear={birthYear} />;
     case 'dasha':
       return (
         <DashaTimeline

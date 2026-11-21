@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
 /*
- * 静 (shizuka) — light palette.
+ * 渾天儀 (kontengi, the armillary sphere) — design-magic palette.
  *
- * Paper, sumi ink, and exactly two accents:
- *   藍 ai (indigo)   — the sky: charts, links, selection, "moss" call sites
- *   朱 shu (vermilion) — the one thing to do: primary action, the Moon marker
+ * Two grounds, one material language:
+ *   - Paper (light, reading pages): warm paper and sumi ink, accented with
+ *     engraved brass and night indigo.
+ *   - Night lacquer (dark mode, and the always-night stages — the home page
+ *     and the chart workspace, via `.night`): deep indigo lacquer, ivory
+ *     type, brass linework.
+ *   真鍮 brass   — the one thing to do: primary action, the Moon marker
+ *   夜 indigo    — the sky: charts, links, selection ("moss" call sites)
  *
  * Token *names* are kept from the washi system so the ~400 existing call
  * sites re-theme without edits: `moss` now resolves to indigo and
@@ -13,53 +18,53 @@
  * hairline so it no longer counts as a third accent.
  */
 @theme {
-  --color-ink: #1d1c1a;
-  --color-moss: #3b4a6b;
-  --color-terracotta: #b4532a;
-  --color-washi: #f6f3ed;
-  --color-washi-elevated: #fbfaf7;
+  --color-ink: #1b1a17;
+  --color-moss: #2f3a6b;
+  --color-terracotta: #7d5d1b;
+  --color-washi: #f5f1e8;
+  --color-washi-elevated: #fbf8f1;
   --color-text: #2b2a27;
   --color-text-muted: #66635b;
   --color-border: #e2ddd2;
   --color-neutral-tag: #ece8df;
-  --color-positive: #3b4a6b;
-  --color-caution: #b4532a;
+  --color-positive: #2f3a6b;
+  --color-caution: #7d5d1b;
 
-  --color-gold: #9aa1b2;
-  --color-moss-deep: #27324a;
-  --color-moss-tint: #e4e8f0;
-  --color-terracotta-deep: #8a3b1b;
-  --color-terracotta-tint: #f4e3d8;
+  --color-gold: #b39a68;
+  --color-moss-deep: #1f2750;
+  --color-moss-tint: #e4e6f1;
+  --color-terracotta-deep: #5f4613;
+  --color-terracotta-tint: #f0e5cc;
   --color-washi-deep: #eeeae2;
   --color-ink-soft: #3a3833;
-  --color-ink-deep: #161a24; /* night-sky band */
+  --color-ink-deep: #0b0f1e; /* night lacquer band */
 }
 
 /*
  * Dark theme — the same page at night: indigo-black ground, warm ink,
  * both accents lifted for contrast.
  */
-.dark {
-  --color-ink: #ece8e0;
-  --color-moss: #a3b3d6;
-  --color-terracotta: #e38c62;
-  --color-washi: #111318;
-  --color-washi-elevated: #171a21;
-  --color-text: #dcd8cf;
-  --color-text-muted: #9d9a92;
-  --color-border: #2a2f3a;
-  --color-neutral-tag: #1f232c;
-  --color-positive: #a3b3d6;
-  --color-caution: #e38c62;
-
-  --color-gold: #6f7891;
-  --color-moss-deep: #7486ad;
+.dark,
+.night {
+  --color-ink: #f2ead7;
+  --color-moss: #aebcea;
+  --color-terracotta: #dcb86c;
+  --color-washi: #0b0f1e;
+  --color-washi-elevated: #121831;
+  --color-text: #ded6c2;
+  --color-text-muted: #aaa28d;
+  --color-border: #2a3152;
+  --color-neutral-tag: #1a2142;
+  --color-positive: #aebcea;
+  --color-caution: #e4a96f;
+  --color-gold: #b8955a;
+  --color-moss-deep: #8494cc;
   --color-moss-tint: color-mix(in srgb, var(--color-moss) 14%, var(--color-washi));
-  --color-terracotta-deep: #c4683c;
-  --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 14%, var(--color-washi));
-  --color-washi-deep: #0c0e12;
-  --color-ink-soft: #c9c5bc;
-  --color-ink-deep: #0a0c10;
+  --color-terracotta-deep: #c39c50;
+  --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 16%, var(--color-washi));
+  --color-washi-deep: #070a16;
+  --color-ink-soft: #d1c8b1;
+  --color-ink-deep: #05070f;
 }
 
 /* Non-color tokens + compatibility aliases */
@@ -94,7 +99,7 @@
   --shadow-soft: 0 2px 8px rgba(47, 47, 47, 0.05), 0 1px 2px rgba(47, 47, 47, 0.04);
   --shadow-lift: 0 8px 24px rgba(47, 47, 47, 0.08), 0 2px 6px rgba(47, 47, 47, 0.04);
   --shadow-press: 0 1px 2px rgba(47, 47, 47, 0.08) inset;
-  --shadow-glow-terracotta: 0 4px 18px rgba(199, 123, 78, 0.22);
+  --shadow-glow-terracotta: 0 4px 18px rgba(125, 93, 27, 0.2);
   /* Paper top edge — the depth device. Composed into every card shadow so it
    * survives hover/press state changes. */
   --card-edge: inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
@@ -156,14 +161,15 @@ html[lang="hi"] {
   --line-height-body: 2;
 }
 
-/* Dark-only overrides for tokens set in the shared block above */
-.dark {
+/* Dark/night overrides for tokens set in the shared block above */
+.dark,
+.night {
   --shadow-elevated: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-lift: 0 10px 28px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-press: 0 1px 3px rgba(0, 0, 0, 0.5) inset;
-  --shadow-glow-terracotta: 0 4px 20px rgba(214, 142, 95, 0.28);
-  --card-edge: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+  --shadow-glow-terracotta: 0 6px 24px rgba(220, 184, 108, 0.22);
+  --card-edge: inset 0 1px 0 color-mix(in srgb, #dcb86c 12%, transparent);
 }
 
 @theme inline {
@@ -680,13 +686,13 @@ summary {
   color: var(--color-washi);
 }
 
-.dark .washi-inverted {
+:is(.dark, .night) .washi-inverted {
   background: #1a1f2b;
   color: var(--color-ink);
   --deckle-ground: #1a1f2b;
 }
 
-.dark .washi-inverted .washi-card {
+:is(.dark, .night) .washi-inverted .washi-card {
   background: color-mix(in srgb, var(--color-ink) 5%, #1a1f2b);
   border-color: color-mix(in srgb, var(--color-ink) 14%, transparent);
   color: var(--color-ink);
@@ -968,7 +974,7 @@ html[lang="en"] .washi-measure {
     2px 0 8px rgba(47, 47, 47, 0.05);
 }
 
-.dark .mobile-drawer-panel {
+:is(.dark, .night) .mobile-drawer-panel {
   background: var(--color-washi);
   box-shadow:
     8px 0 36px rgba(0, 0, 0, 0.55),
@@ -1496,4 +1502,193 @@ body:has(.tabbar):not(:has([data-education-scroll-root])) {
       transition: none;
     }
   }
+}
+
+/* ───────────────────────── design-magic: the night stage ─────────────────────────
+ * `.night` paints a subtree in the night-lacquer palette regardless of the
+ * site theme (home page and chart workspace). The tokens come from the
+ * shared `.dark, .night` block; this sets the ground and type colour the
+ * subtree would otherwise inherit from <body>.
+ */
+.night {
+  background-color: var(--color-washi);
+  color: var(--color-text);
+  color-scheme: dark;
+}
+
+.night ::selection {
+  background: color-mix(in srgb, var(--color-terracotta) 32%, transparent);
+  color: var(--color-ink);
+}
+
+/* The sky behind the stars: lacquer deepening to the zenith, a faint
+   milky band, and the warm horizon glow of a city at night. Painted in CSS
+   so the first frame is already night before the starfield starts. */
+.night-sky {
+  background:
+    radial-gradient(120% 70% at 50% 110%, color-mix(in srgb, #dcb86c 10%, transparent) 0%, transparent 60%),
+    radial-gradient(60% 40% at 78% 18%, color-mix(in srgb, #6c7fd1 12%, transparent) 0%, transparent 70%),
+    radial-gradient(70% 50% at 12% 30%, color-mix(in srgb, #3a2f6e 22%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, #05070f 0%, #0b0f1e 55%, #10162c 100%);
+}
+
+/* Engraved brass hairline, used for rules between night sections. */
+.brass-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-terracotta) 55%, transparent), transparent);
+}
+
+/* ── Armillary sphere (Armillary.tsx) ── */
+.armillary {
+  --size: min(520px, 86vw);
+  position: relative;
+  width: var(--size);
+  aspect-ratio: 1;
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+.armillary-tilt,
+.armillary-spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.armillary-tilt {
+  transform: rotateX(calc(var(--tilt-y, 0) * -10deg)) rotateY(calc(var(--tilt-x, 0) * 14deg));
+  transition: transform 900ms var(--ease-butter);
+}
+
+.armillary-ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.armillary-ring svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.armillary-plate {
+  position: absolute;
+  inset: 17%;
+  transform: translateZ(1px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .armillary-spin {
+    animation: armillary-spin 120s linear infinite;
+  }
+
+  .armillary-ring {
+    animation: armillary-open 1800ms var(--ease-butter) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  .armillary-plate {
+    animation: armillary-plate 1400ms var(--ease-butter) 300ms both;
+  }
+
+  .astrolabe-ring {
+    animation: astrolabe-turn 360s linear infinite;
+  }
+}
+
+@keyframes armillary-spin {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Each ring opens out of a flat disc into its own plane — the one authored
+   entrance on the page. */
+@keyframes armillary-open {
+  from {
+    opacity: 0;
+    transform: var(--ring-from, rotateX(0deg)) scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: var(--ring-to);
+  }
+}
+
+@keyframes armillary-plate {
+  from {
+    opacity: 0;
+    transform: translateZ(1px) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(1px) scale(1);
+  }
+}
+
+/* ── Astrolabe ring behind every chart drawing (ChartFigure) ── */
+.astrolabe {
+  position: relative;
+  isolation: isolate;
+}
+
+.astrolabe::before {
+  content: "";
+  position: absolute;
+  inset: -6%;
+  z-index: -2;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-terracotta) 14%, transparent), transparent 75%);
+  pointer-events: none;
+}
+
+.astrolabe-ring {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--color-gold);
+}
+
+/* Moon phase glyph (TonightSky) */
+.moon-disc {
+  filter: drop-shadow(0 6px 18px color-mix(in srgb, #f2ead7 22%, transparent));
+}
+
+/* Pointer light on night cards (PointerLight.tsx). Layered over the card's
+   own background so nothing else about the card changes. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .night .washi-card,
+  .night [data-glow] {
+    background-image: radial-gradient(
+      360px circle at var(--mx, -400px) var(--my, -400px),
+      color-mix(in srgb, var(--color-terracotta) 9%, transparent),
+      transparent 70%
+    );
+    transition: border-color var(--duration-base) var(--ease-soft);
+  }
+
+  .night .washi-card:hover,
+  .night [data-glow]:hover {
+    border-color: color-mix(in srgb, var(--color-terracotta) 38%, var(--color-border));
+  }
+}
+
+/* The drawing sits on the astrolabe: a translucent plate lets the turning
+   degree ring show through, and on the night stage the grid is engraved
+   brass rather than a dim border line. */
+.astrolabe .kundli-chart-surface {
+  background-color: color-mix(in srgb, var(--color-washi-elevated) 45%, transparent);
+}
+
+.night .kundli-chart-svg,
+.night .kundli-chart-grid {
+  stroke: color-mix(in srgb, var(--color-gold) 62%, transparent);
+}
+
+.night .kundli-chart-surface {
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }

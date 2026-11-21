@@ -12,22 +12,22 @@ const palette: Record<ThemeMode, {
   danger: string;
 }> = {
   light: {
-    primary: "#C77B4E",
+    primary: "#7D5D1B",
     text: "#333333",
     textSecondary: "#6B6B63",
     background: "#FBF8F1",
     inputBackground: "#FBF8F1",
     inputText: "#333333",
-    danger: "#C77B4E",
+    danger: "#7D5D1B",
   },
   dark: {
-    primary: "#D68E5F",
+    primary: "#DCB86C",
     text: "#ECE4D6",
     textSecondary: "#978F80",
-    background: "#2A2723",
-    inputBackground: "#201E1A",
+    background: "#121831",
+    inputBackground: "#0B0F1E",
     inputText: "#DED7C9",
-    danger: "#D68E5F",
+    danger: "#E4A96F",
   },
 };
 

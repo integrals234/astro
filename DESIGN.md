@@ -2,6 +2,19 @@
 
 The visual system shipped on the `design-upgrade` branch. Tokens live in `frontend/src/app/globals.css` (Tailwind v4, CSS-first; there is no `tailwind.config`).
 
+## Visual world — 渾天儀 (the armillary sphere) · design-magic
+
+Replaces the earlier calm-paper-only look for the two persuade surfaces (home, /chart) and re-accents the rest of the site.
+
+- **Grounds.** Paper (light mode, reading pages): warm paper `#f5f1e8`, sumi ink. Night lacquer (dark mode, and always on the home page and chart workspace via `.night`): `#0b0f1e` ground, ivory type `#f2ead7`, muted `#aaa28d`.
+- **Accents.** Brass is the one action colour (`--color-terracotta`: `#7d5d1b` on paper, `#dcb86c` at night). Night indigo / starlight is the sky colour (`--color-moss`). Gold (`#b8955a`) is engraved hairline only. No third hue.
+- **Signature object.** `components/celestial/Armillary.tsx`: CSS-3D brass rings (meridian, colure, equator, horizon, zodiac band at 23.44°) around a plate; rings open from flat discs on load (the one authored entrance), turn slowly, lean toward a desktop pointer. Home hero (live sky ring as plate), /chart empty state and phone form emblem, chart result banner.
+- **Sky.** `.night-sky` CSS gradient (first frame is already night) + `components/celestial/Starfield.tsx` (static layer drawn once, ≤48 twinkling stars at ~24 fps, rare meteor, compositor parallax; starts on idle, pauses off-screen, still under reduced motion).
+- **Charts.** Every `ChartFigure` sits on an astrolabe: an engraved degree ring inscribed in the chart square, turning once per six minutes; on the night stage the grid is brass.
+- **Interaction light.** `PointerLight.tsx`: night cards catch a brass light at the pointer (desktop only).
+- **Type.** Unchanged families per locale (Shippori Mincho / Lora / Noto Serif KR / Martel display); numerals tabular in data.
+- **Daily hook.** `TonightSky.tsx` — the Moon's nakshatra, phase, tithi and the Sun's rashi right now, computed client-side.
+
 ## Direction
 
 Extremely minimal, calm, airy, contemplative. Low visual density, generous space, one idea per screen. The world is **the sky drawn as geometry on paper**: a sidereal ring of 12 signs and 27 nakshatras, a kundli drawn in hairlines, and nothing ornamental around them.

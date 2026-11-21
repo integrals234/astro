@@ -11,9 +11,8 @@ import type { ToolLongForm } from "./types";
  * the Moon's nakshatra or the dasha, and it is not rectification — the copy
  * below is careful to say so and points to the tools that do cover those.
  *
- * Note for the copy: samples wrap around midnight without changing the date
- * (generateTimeSamples normalises minutes mod 1440), hence the tip to run a
- * separate check with the adjacent date when the window crosses midnight.
+ * Samples carry their own calendar date (generateTimeSamples), so a window
+ * crossing midnight computes the far side for the adjacent day.
  */
 export const birthTimeCheckLongForm: ToolLongForm = {
   slug: "birth-time-check",
@@ -87,10 +86,10 @@ export const birthTimeCheckLongForm: ToolLongForm = {
           ko: "일본은 1948년부터 1951년 여름까지 서머타임을 실시했기 때문에, 그 시기에 기록된 출생 시각은 표준시보다 1시간 앞서 있을 수 있습니다. 확신이 없다면 ±60분 이상의 범위로 확인해 보세요.",
         },
         {
-          ja: "幅が午前0時をまたぐ場合（例：23:30の±60分）、日付をまたいだ側の時刻も同じ日付のまま計算されます。深夜の出生の方は、前日または翌日の日付でもう一度チェックしてください。",
-          en: "If the window crosses midnight (for example 23:30 ±60 minutes), times on the far side of midnight are still computed with the same date. If you were born late at night, run the check again with the previous or next date.",
-          hi: "यदि सीमा आधी रात को पार करती है (जैसे 23:30 ±60 मिनट), तो आधी रात के बाद वाले समय भी उसी तिथि से गणना किए जाते हैं। देर रात जन्म हुआ हो तो पिछली या अगली तिथि के साथ फिर से जाँचें।",
-          ko: "범위가 자정을 넘는 경우(예: 23:30 ±60분), 자정 너머의 시각도 같은 날짜로 계산됩니다. 한밤중에 태어났다면 전날 또는 다음 날 날짜로 한 번 더 확인하세요.",
+          ja: "幅が午前0時をまたぐ場合（例：23:30の±60分）は、日付をまたいだ側の時刻を自動的に翌日または前日の日付で計算し、表に「翌日」「前日」と表示します。",
+          en: "If the window crosses midnight (for example 23:30 ±60 minutes), times on the far side of midnight are automatically calculated for the next or previous day and marked as such in the table.",
+          hi: "यदि सीमा आधी रात को पार करती है (जैसे 23:30 ±60 मिनट), तो आधी रात के पार वाले समय स्वतः अगली या पिछली तिथि से गणना होते हैं और तालिका में चिह्नित होते हैं।",
+          ko: "범위가 자정을 넘는 경우(예: 23:30 ±60분), 자정 너머의 시각은 자동으로 다음 날 또는 전날 날짜로 계산되며 표에 표시됩니다.",
         },
         {
           ja: "このサイトはインド占星術の恒星黄道（ラヒリ・アヤナムシャ）で計算します。西洋占星術の「アセンダント」とは基準が約24度ずれているため、西洋式の結果よりひとつ前の星座になることがよくあります。",

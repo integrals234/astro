@@ -13,6 +13,11 @@ interface BirthTimeSensitivityCopy {
   boundaryFlag: string;
   stableResult: string;
   changesFound: (count: number) => string;
+  /** Marks the row at the entered time. */
+  centerFlag: string;
+  dayBefore: string;
+  dayAfter: string;
+  degreeColumn: string;
 }
 
 export const birthTimeSensitivityCopy: Record<AppLanguage, BirthTimeSensitivityCopy> = {
@@ -28,7 +33,11 @@ export const birthTimeSensitivityCopy: Record<AppLanguage, BirthTimeSensitivityC
     ascendantColumn: "Ascendant",
     boundaryFlag: "← changes here",
     stableResult: "The ascendant sign stays the same across this entire window — your uncertainty doesn't change this specific placement.",
-    changesFound: (count) => `The ascendant sign changes ${count} time(s) within this window — the exact time matters more than usual here.`,
+    changesFound: (count) => `The ascendant sign changes ${count === 1 ? "once" : `${count} times`} within this window — the exact time matters more than usual here.`,
+    centerFlag: "your entered time",
+    dayBefore: "previous day",
+    dayAfter: "next day",
+    degreeColumn: "Degree",
   },
   hi: {
     heading: "जन्म समय संवेदनशीलता जाँच",
@@ -43,6 +52,10 @@ export const birthTimeSensitivityCopy: Record<AppLanguage, BirthTimeSensitivityC
     boundaryFlag: "← यहाँ बदलता है",
     stableResult: "इस पूरी सीमा में लग्न राशि समान रहती है — आपकी अनिश्चितता इस विशेष स्थिति को नहीं बदलती।",
     changesFound: (count) => `इस सीमा में लग्न राशि ${count} बार बदलती है — यहाँ सटीक समय सामान्य से अधिक मायने रखता है।`,
+    centerFlag: "आपका दर्ज समय",
+    dayBefore: "पिछला दिन",
+    dayAfter: "अगला दिन",
+    degreeColumn: "अंश",
   },
   ja: {
     heading: "出生時刻の感度チェック",
@@ -57,6 +70,10 @@ export const birthTimeSensitivityCopy: Record<AppLanguage, BirthTimeSensitivityC
     boundaryFlag: "← ここで変化",
     stableResult: "この範囲全体でアセンダントの星座は変わりません。この配置に関しては、時刻の不確かさは影響しません。",
     changesFound: (count) => `この範囲内でアセンダントの星座が${count}回変化します。ここでは正確な時刻が通常より重要です。`,
+    centerFlag: "入力した時刻",
+    dayBefore: "前日",
+    dayAfter: "翌日",
+    degreeColumn: "度数",
   },
   ko: {
     heading: "출생 시각 민감도 확인",
@@ -71,5 +88,9 @@ export const birthTimeSensitivityCopy: Record<AppLanguage, BirthTimeSensitivityC
     boundaryFlag: "← 여기서 변화",
     stableResult: "이 범위 전체에서 상승궁 별자리는 동일하게 유지됩니다. 이 배치에 관해서는 시각의 불확실성이 영향을 주지 않습니다.",
     changesFound: (count) => `이 범위 내에서 상승궁 별자리가 ${count}번 바뀝니다. 여기서는 정확한 시각이 평소보다 더 중요합니다.`,
+    centerFlag: "입력한 시각",
+    dayBefore: "전날",
+    dayAfter: "다음 날",
+    degreeColumn: "도수",
   },
 };

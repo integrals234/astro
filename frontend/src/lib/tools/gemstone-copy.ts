@@ -20,7 +20,7 @@ interface GemstoneCopy {
 
 export const gemstoneCopy: Record<AppLanguage, GemstoneCopy> = {
   en: {
-    submit: "Find My Gemstones",
+    submit: "Find my gemstones",
     computing: "Computing…",
     error: "Could not complete the calculation. Please try again.",
     calculateAgain: "Calculate Again",

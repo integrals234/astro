@@ -33,7 +33,7 @@ export const nakshatraFinderCopy: Record<AppLanguage, NakshatraFinderCopy> = {
     dontKnowTime: "Don't know your birth time?",
     birthTimeSensitivityLink: "Check which nakshatras are possible for a birth-time window",
     requiredField: "Required",
-    submit: "Find My Nakshatra",
+    submit: "Find my nakshatra",
     computing: "Computing…",
     error: "Could not complete the calculation. Please try again.",
     forPerson: (name) => `For ${name}`,

@@ -13,6 +13,7 @@ interface SukuyoCopy {
   padaValue: (n: number) => string;
   lordLabel: string;
   ganaLabel: string;
+  ganaNames: Record<string, string>;
   derivation: (sukuyo: string, nakshatra: string) => string;
 }
 
@@ -32,6 +33,7 @@ export const sukuyoCopy: Record<AppLanguage, SukuyoCopy> = {
     padaValue: (n) => `第${n}パダ`,
     lordLabel: "支配星",
     ganaLabel: "ガナ（性質）",
+    ganaNames: { Deva: "デーヴァ（神）", Manushya: "マヌシャ（人）", Rakshasa: "ラークシャサ（羅刹）" },
     derivation: (s, n) =>
       `${s}は、インド占星術のナクシャトラ「${n}」に対応します。宿曜は唐代に中国を経て日本へ伝わった二十七宿の体系で、本来はこの月宿と同じものです。当サイトでは旧暦の日付ではなく、スイス天体暦による月の実際の黄経から算出しているため、境界日の判定がより正確です。`,
   },
@@ -50,6 +52,7 @@ export const sukuyoCopy: Record<AppLanguage, SukuyoCopy> = {
     padaValue: (n) => `Pada ${n}`,
     lordLabel: "Ruling planet",
     ganaLabel: "Gana (temperament)",
+    ganaNames: { Deva: "Deva (divine)", Manushya: "Manushya (human)", Rakshasa: "Rakshasa (fierce)" },
     derivation: (s, n) =>
       `${s} corresponds to the nakshatra ${n}. Sukuyō is the Japanese system of 27 lunar mansions, transmitted from India through Tang-dynasty China — the same mansions Jyotish uses. This page derives it from the Moon's actual sidereal longitude via the Swiss Ephemeris rather than from a lunar-calendar date, which makes boundary days more reliable.`,
   },
@@ -60,7 +63,7 @@ export const sukuyoCopy: Record<AppLanguage, SukuyoCopy> = {
     forPerson: (l) => `${l} का जन्म नक्षत्र`,
     readyPrompt:
       "आपके सहेजे गए जन्म-विवरण में चंद्रमा की वास्तविक स्थिति से गणना की जाती है।",
-    compute: "मेरा नक्षत्र देखें",
+    compute: "मेरा सुकुयो नक्षत्र खोजें",
     computing: "गणना हो रही है…",
     error: "गणना विफल रही। कृपया कुछ देर बाद प्रयास करें।",
     nakshatraLabel: "संबंधित नक्षत्र",
@@ -68,8 +71,9 @@ export const sukuyoCopy: Record<AppLanguage, SukuyoCopy> = {
     padaValue: (n) => `पाद ${n}`,
     lordLabel: "स्वामी ग्रह",
     ganaLabel: "गण",
+    ganaNames: { Deva: "देव", Manushya: "मनुष्य", Rakshasa: "राक्षस" },
     derivation: (s, n) =>
-      `${s} नक्षत्र ${n} से मेल खाता है। सुक्युō जापान की सत्ताईस नक्षत्रों की पद्धति है, जो भारत से चीन होते हुए जापान पहुँची — वही नक्षत्र जिन्हें ज्योतिष प्रयोग करता है। यह पृष्ठ पंचांग तिथि के बजाय स्विस एफ़ेमेरिस से चंद्रमा के वास्तविक निरयण देशांतर से गणना करता है।`,
+      `${s} नक्षत्र ${n} से मेल खाता है। सुकुयो जापान की सत्ताईस नक्षत्रों की पद्धति है, जो भारत से चीन होते हुए जापान पहुँची — वही नक्षत्र जिन्हें ज्योतिष प्रयोग करता है। यह पृष्ठ पंचांग तिथि के बजाय स्विस एफ़ेमेरिस से चंद्रमा के वास्तविक निरयण देशांतर से गणना करता है।`,
   },
   ko: {
     needProfile:
@@ -85,6 +89,7 @@ export const sukuyoCopy: Record<AppLanguage, SukuyoCopy> = {
     padaValue: (n) => `제${n}파다`,
     lordLabel: "지배성",
     ganaLabel: "가나(성질)",
+    ganaNames: { Deva: "데바(신)", Manushya: "마누샤(인간)", Rakshasa: "락샤사(나찰)" },
     derivation: (s, n) =>
       `${s}는 낙샤트라 '${n}'에 대응합니다. 수쿠요(宿曜)는 인도에서 당나라를 거쳐 일본에 전해진 27수 체계로, 조티시가 사용하는 것과 같은 별자리입니다. 이 페이지는 음력 날짜가 아니라 스위스 천체력의 실제 항성 황경에서 산출하므로 경계일 판정이 더 정확합니다.`,
   },

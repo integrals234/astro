@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
-import { useBirthProfile } from '@/components/profile/ProfileProvider';
-import NeedsBirthDetails from '@/components/shared/NeedsBirthDetails';
 import PlanetDetailsGrid from '@/components/chart/PlanetDetailsGrid';
+import BookingHandoff from '@/components/tools/BookingHandoff';
+import ToolResultFrame from '@/components/tools/ToolResultFrame';
+import { useProfileResult } from '@/components/tools/useProfileResult';
+import SegmentedControl from '@/components/ui/SegmentedControl';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { annualForecastCopy } from '@/lib/annual-forecast-copy';
 import type { Planet } from '@/lib/chart-types';
+import type { NatalInput } from '@/lib/profile/types';
 
 interface AnnualForecastResult {
   return_date: string;
@@ -17,116 +20,69 @@ interface AnnualForecastResult {
 }
 
 const CURRENT_YEAR = new Date().getFullYear();
-const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR + 1, CURRENT_YEAR + 2];
+/** Last year too: someone whose birthday has passed may want the running year's chart. */
+const YEAR_OPTIONS = [CURRENT_YEAR - 1, CURRENT_YEAR, CURRENT_YEAR + 1, CURRENT_YEAR + 2];
 
 /**
  * Varshaphala (solar return) — the chart cast for the moment transiting
- * Sun returns to its natal degree each year. Reuses PlanetDetailsGrid
- * directly rather than building a new table: the backend's
- * AnnualForecastResponse.planets deliberately reuses the exact same
- * PlanetData shape as the natal chart, so the same display component
- * applies unchanged.
+ * Sun returns to its natal degree each year. Reuses PlanetDetailsGrid: the
+ * backend's AnnualForecastResponse.planets uses the natal PlanetData shape.
  *
- * Talks to /api/annual-forecast, which proxies to the backend's
- * /api/v1/annual-forecast endpoint (see backend/server.py) — shows
- * `unavailable` rather than a silent failure if that service is
- * unreachable (a free-tier Render cold start, most commonly).
+ * Calculates straight away for the remembered person and the current year;
+ * changing the year recalculates. Talks to /api/annual-forecast (proxy to
+ * the backend's /api/v1/annual-forecast).
  */
 export default function AnnualForecastPanel() {
   const { language } = useLanguage();
   const t: ChartTranslations = chartFormCopy[language];
   const copy = annualForecastCopy[language];
-  const { primary, isLoaded } = useBirthProfile();
-
   const [year, setYear] = useState(CURRENT_YEAR);
-  const [result, setResult] = useState<AnnualForecastResult | null>(null);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'unavailable'>('idle');
 
-  const handleCompute = async () => {
-    if (!primary) return;
-    setStatus('loading');
-    setResult(null);
-    try {
+  const compute = useCallback(
+    async (natal: NatalInput): Promise<AnnualForecastResult> => {
       const response = await fetch('/api/annual-forecast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          year: primary.birth.year,
-          month: primary.birth.month,
-          day: primary.birth.day,
-          hour: primary.birth.hour,
-          minute: primary.birth.minute,
-          latitude: primary.birth.latitude,
-          longitude: primary.birth.longitude,
-          target_year: year,
-        }),
+        body: JSON.stringify({ ...natal, target_year: year }),
       });
-      if (response.status === 502 || response.status === 503) {
-        setStatus('unavailable');
-        return;
-      }
-      if (!response.ok) throw new Error('compute failed');
-      setResult(await response.json());
-      setStatus('idle');
-    } catch {
-      setStatus('error');
-    }
-  };
+      if (!response.ok) throw new Error(`annual forecast failed: ${response.status}`);
+      return (await response.json()) as AnnualForecastResult;
+    },
+    [year],
+  );
 
-  if (!isLoaded) {
-    return <div className="washi-card h-40 animate-pulse" aria-hidden />;
-  }
-
-  if (!primary) {
-    return <NeedsBirthDetails idPrefix="annual-forecast" />;
-  }
+  const state = useProfileResult({ toolSlug: 'annual-forecast', compute, key: String(year) });
 
   return (
     <div>
-      <h2 className="font-header text-2xl text-ink mb-2 text-center">{copy.heading}</h2>
       <p className="washi-measure mb-6 font-body text-sm text-text-muted">{copy.intro}</p>
-
-      <div className="washi-card p-6 md:p-7">
-        <p className="mb-1.5 text-[11px] text-text-muted">{copy.yearLabel}</p>
-        <div className="washi-segmented inline-flex mb-4">
-          {YEAR_OPTIONS.map((y) => (
-            <button
-              key={y}
-              type="button"
-              onClick={() => setYear(y)}
-              className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${year === y ? 'washi-segment-selected' : 'washi-segment-unselected'}`}
-            >
-              {y}
-            </button>
-          ))}
-        </div>
-
-        <div>
-          <button
-            type="button"
-            onClick={handleCompute}
-            disabled={status === 'loading'}
-            className="washi-btn-primary disabled:opacity-50"
-          >
-            {status === 'loading' ? copy.computing : copy.compute}
-          </button>
-        </div>
-
-        {status === 'error' && <p className="mt-3 text-sm text-terracotta">{copy.error}</p>}
-        {status === 'unavailable' && <p className="mt-3 text-sm text-terracotta">{copy.unavailable}</p>}
-      </div>
-
-      {result && (
-        <div className="mt-6 space-y-6">
-          <p className="text-center font-body text-sm text-text-muted">
-            {copy.returnMoment(result.return_date, result.return_time)}
-          </p>
-          <p className="text-center font-body text-sm text-ink">
-            {copy.ascendantLabel}: {t.signs[result.ascendant_sign] ?? result.ascendant_sign}
-          </p>
-          <PlanetDetailsGrid planets={result.planets} t={t} lang={language} />
-        </div>
-      )}
+      <ToolResultFrame state={state} idPrefix="annual-forecast" submitLabel={copy.compute} loadingClassName="h-64">
+        {(result) => (
+          <div className="space-y-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-[11px] text-text-muted">{copy.yearLabel}</span>
+              <SegmentedControl
+                label={copy.yearLabel}
+                options={YEAR_OPTIONS.map((y) => ({ value: y, label: String(y) }))}
+                value={year}
+                onChange={setYear}
+              />
+            </div>
+            <div className="washi-card grid gap-4 p-5 sm:grid-cols-2">
+              <div>
+                <p className="washi-eyebrow-muted mb-1">{year}</p>
+                <p className="font-body text-sm text-ink">{copy.returnMoment(result.return_date, result.return_time)}</p>
+              </div>
+              <div>
+                <p className="washi-eyebrow-muted mb-1">{copy.ascendantLabel}</p>
+                <p className="font-header text-xl text-ink">{t.signs[result.ascendant_sign] ?? result.ascendant_sign}</p>
+              </div>
+            </div>
+            <PlanetDetailsGrid planets={result.planets} t={t} lang={language} />
+            <BookingHandoff tool="generic" />
+          </div>
+        )}
+      </ToolResultFrame>
     </div>
   );
 }

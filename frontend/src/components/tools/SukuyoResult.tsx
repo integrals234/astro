@@ -1,15 +1,12 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
-import { useBirthProfile } from "@/components/profile/ProfileProvider";
 import BookingHandoff from "@/components/tools/BookingHandoff";
-import { trackEvent } from "@/lib/analytics/events";
-import { findNakshatra, type NakshatraRow } from "@/lib/jyotish/nakshatra-data";
-import { toChartFormData } from "@/lib/profile/types";
-import type { ChartData } from "@/lib/chart-types";
+import ToolResultFrame from "@/components/tools/ToolResultFrame";
+import { computeChart, useProfileResult } from "@/components/tools/useProfileResult";
+import { chartFormCopy, type ChartTranslations } from "@/lib/chart-i18n";
+import { findNakshatra } from "@/lib/jyotish/nakshatra-data";
 import { sukuyoCopy } from "@/lib/tools/sukuyo-copy";
-import { profilePersonName } from "@/lib/profile/types";
 
 /**
  * 宿曜 (Sukuyō) — the visitor's birth mansion.
@@ -22,109 +19,51 @@ import { profilePersonName } from "@/lib/profile/types";
  * longitude from the ephemeris.
  *
  * Reads the shared birth profile, so someone arriving from any other tool sees
- * their answer immediately instead of another form.
+ * their answer immediately instead of another form (shared useProfileResult).
  */
 export default function SukuyoResult() {
   const { language } = useLanguage();
-  const { primary, isLoaded } = useBirthProfile();
   const copy = sukuyoCopy[language];
+  const t: ChartTranslations = chartFormCopy[language];
 
-  const [result, setResult] = useState<{
-    row: NakshatraRow;
-    pada: number;
-  } | null>(null);
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-
-  const compute = useCallback(async () => {
-    if (!primary) return;
-    setStatus("loading");
-    trackEvent("tool_opened", { slug: "sukuyo", locale: language });
-    try {
-      const response = await fetch("/api/charts/compute", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(toChartFormData(primary)),
-      });
-      if (!response.ok) throw new Error("compute failed");
-      const data: ChartData = await response.json();
-
-      const moon = data.planets.find((p) => p.name === "Moon");
-      const row = moon ? findNakshatra(moon.nakshatra) : null;
-      if (!moon || !row) throw new Error("no moon");
-
-      setResult({ row, pada: moon.nakshatra_pada });
-      setStatus("idle");
-      trackEvent("tool_completed", { slug: "sukuyo", locale: language });
-    } catch {
-      setStatus("error");
-    }
-  }, [primary, language]);
-
-  if (!isLoaded) {
-    return <div className="washi-card h-40 animate-pulse" aria-hidden />;
-  }
-
-  if (!primary) {
-    return (
-      <div className="washi-card p-6 md:p-7">
-        <p className="font-body text-text">{copy.needProfile}</p>
-        <a href="#tool-form" className="washi-btn-primary mt-4 inline-block">
-          {copy.enterDetails}
-        </a>
-      </div>
-    );
-  }
+  // Computes for the remembered person straight away; a first-time visitor
+  // gets the form here (one submit also fills the chart section below).
+  const state = useProfileResult({
+    toolSlug: "sukuyo",
+    compute: (natal) => computeChart(natal),
+    toChartData: (data) => data,
+  });
 
   return (
-    <div className="space-y-6">
-      <div className="washi-card p-6 md:p-7">
-        {profilePersonName(primary) && (
-          <p className="washi-eyebrow mb-2">{copy.forPerson(profilePersonName(primary))}</p>
-        )}
+    <ToolResultFrame state={state} idPrefix="sukuyo" intro={copy.needProfile} submitLabel={copy.compute} loadingClassName="h-64">
+      {(data, subject) => {
+        const moon = data.planets.find((p) => p.name === "Moon");
+        const row = moon ? findNakshatra(moon.nakshatra) : undefined;
+        if (!moon || !row) return <p className="text-sm text-terracotta">{copy.error}</p>;
+        return (
+          <div className="space-y-6">
+            <div className="washi-card p-6 md:p-7">
+              <p className="font-header text-[length:var(--step-3)] text-ink">{row.sukuyo}</p>
+              <p className="mt-1 font-body text-sm text-text-muted">{row.sukuyoReading}</p>
 
-        {!result ? (
-          <>
-            <p className="font-body text-text">{copy.readyPrompt}</p>
-            <button
-              type="button"
-              onClick={compute}
-              disabled={status === "loading"}
-              className="washi-btn-primary mt-4 disabled:opacity-50"
-            >
-              {status === "loading" ? copy.computing : copy.compute}
-            </button>
-            {status === "error" && (
-              <p className="mt-3 text-sm text-terracotta">{copy.error}</p>
-            )}
-          </>
-        ) : (
-          <>
-            <p className="font-header text-[length:var(--step-3)] text-ink">
-              {result.row.sukuyo}
-            </p>
-            <p className="mt-1 font-body text-sm text-text-muted">
-              {result.row.sukuyoReading}
-            </p>
+              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+                <Field label={copy.nakshatraLabel} value={t.nakshatras[row.name] ?? row.name} />
+                {/* The pada needs a real birth time to be trusted. */}
+                {!subject.timeUnknown ? <Field label={copy.padaLabel} value={copy.padaValue(moon.nakshatra_pada)} /> : null}
+                <Field label={copy.lordLabel} value={t.planets[row.lord] ?? row.lord} />
+                <Field label={copy.ganaLabel} value={copy.ganaNames[row.gana] ?? row.gana} />
+              </dl>
 
-            <dl className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label={copy.nakshatraLabel} value={result.row.name} />
-              <Field
-                label={copy.padaLabel}
-                value={copy.padaValue(result.pada)}
-              />
-              <Field label={copy.lordLabel} value={result.row.lord} />
-              <Field label={copy.ganaLabel} value={result.row.gana} />
-            </dl>
+              <p className="washi-measure mt-6 text-sm leading-relaxed text-text-muted">
+                {copy.derivation(row.sukuyo, t.nakshatras[row.name] ?? row.name)}
+              </p>
+            </div>
 
-            <p className="washi-measure mt-6 text-sm leading-relaxed text-text-muted">
-              {copy.derivation(result.row.sukuyo, result.row.name)}
-            </p>
-          </>
-        )}
-      </div>
-
-      {result ? <BookingHandoff tool="sukuyo" /> : null}
-    </div>
+            <BookingHandoff tool="sukuyo" />
+          </div>
+        );
+      }}
+    </ToolResultFrame>
   );
 }
 

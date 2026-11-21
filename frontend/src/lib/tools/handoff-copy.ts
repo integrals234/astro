@@ -15,7 +15,8 @@ export type ToolHandoffId =
   | "moonSign"
   | "generic"
   | "babyNames"
-  | "gemstone";
+  | "gemstone"
+  | "career";
 
 interface HandoffCopy {
   eyebrow: string;
@@ -51,6 +52,12 @@ export const toolHandoffCopy: Record<
       eyebrow: "次の一歩",
       heading: "月星座は入り口にすぎません",
       body: "月星座とアセンダントは、出生図の骨格にあたる部分です。実際の傾向や時期の判断には、九つの惑星の配置と現在のダシャーを併せて読む必要があります。",
+      cta: "個人鑑定について見る",
+    },
+    career: {
+      eyebrow: "ここから先は鑑定の領域です",
+      heading: "D10は仕事の一面を映す図です",
+      body: "D10（ダシャムシャ）は職業面の傾向を示しますが、いつ、どの方向で力を発揮しやすいかは、出生図の第十室とその支配星、そして現在のダシャーを併せて読んで初めて見えてきます。実際の進路の判断は、ご自身の経験やキャリアの専門家のご意見とあわせてお考えください。",
       cta: "個人鑑定について見る",
     },
     generic: {
@@ -97,6 +104,12 @@ export const toolHandoffCopy: Record<
       body: "Your Moon sign and ascendant are the frame of the chart. Reading tendencies or timing from them requires the placement of all nine grahas alongside the dasha period you are in.",
       cta: "See personal appraisals",
     },
+    career: {
+      eyebrow: "Where calculation stops",
+      heading: "The D10 shows one side of your working life",
+      body: "The D10 (Dashamsha) shows tendencies in your working life, but when and in which direction they are most likely to come through only shows when it is read with the birth chart's 10th house, its lord and your current dasha. For real career decisions, weigh it alongside your own experience and a career professional's advice.",
+      cta: "About personal readings",
+    },
     generic: {
       eyebrow: "Next step",
       heading: "Beyond the calculation",
@@ -141,6 +154,12 @@ export const toolHandoffCopy: Record<
       body: "चंद्र राशि और लग्न कुंडली का ढाँचा हैं। प्रवृत्तियों या समय का आकलन करने के लिए नौ ग्रहों की स्थिति और वर्तमान दशा को साथ पढ़ना आवश्यक है।",
       cta: "व्यक्तिगत परामर्श देखें",
     },
+    career: {
+      eyebrow: "गणना के आगे",
+      heading: "D10 कार्य-जीवन का एक पक्ष दिखाता है",
+      body: "D10 (दशमांश) कार्य-जीवन की प्रवृत्तियाँ दिखाता है, परंतु वे कब और किस दिशा में अधिक प्रकट होंगी, यह जन्म कुंडली के दशम भाव, उसके स्वामी और वर्तमान दशा के साथ पढ़ने पर ही स्पष्ट होता है। वास्तविक करियर निर्णयों में इसे अपने अनुभव और करियर विशेषज्ञ की सलाह के साथ देखें।",
+      cta: "व्यक्तिगत परामर्श के बारे में",
+    },
     generic: {
       eyebrow: "अगला कदम",
       heading: "गणना से आगे",
@@ -184,6 +203,12 @@ export const toolHandoffCopy: Record<
       heading: "달 별자리는 입구입니다",
       body: "달 별자리와 상승궁은 차트의 골격입니다. 성향이나 시기를 읽으려면 아홉 행성의 배치와 현재 다샤를 함께 보아야 합니다.",
       cta: "개인 상담 살펴보기",
+    },
+    career: {
+      eyebrow: "여기부터는 감정의 영역입니다",
+      heading: "D10은 직업 생활의 한 면을 보여 줍니다",
+      body: "D10(다샴샤)은 직업 면의 경향을 보여 주지만, 언제 어떤 방향으로 힘을 발휘하기 쉬운지는 출생 차트의 10하우스와 그 지배성, 현재의 다샤를 함께 읽어야 보입니다. 실제 진로 판단은 자신의 경험과 커리어 전문가의 조언과 함께 생각해 주세요.",
+      cta: "개인 감정 알아보기",
     },
     generic: {
       eyebrow: "다음 단계",

@@ -1,21 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import Link from "@/components/i18n/LocaleLink";
-import { useBirthProfile } from "@/components/profile/ProfileProvider";
-import { useToast } from "@/components/ui/Toaster";
 import BookingHandoff from "@/components/tools/BookingHandoff";
-import BirthDetailsFields, {
-  EMPTY_BIRTH_DETAILS,
-  isBirthDetailsComplete,
-  type BirthDetailsValue,
-} from "@/components/shared/BirthDetailsFields";
+import ToolResultFrame from "@/components/tools/ToolResultFrame";
+import { computeChart, useProfileResult } from "@/components/tools/useProfileResult";
 import { chartFormCopy, type ChartTranslations } from "@/lib/chart-i18n";
-import { natalToChartFormData, toChartFormData } from "@/lib/profile/types";
-import type { ChartData } from "@/lib/chart-types";
-import { trackEvent } from "@/lib/analytics/events";
 import { NAKSHATRAS, findNakshatra } from "@/lib/jyotish/nakshatra-data";
 import { nakshatras } from "@/lib/education/nakshatras-content";
 import {
@@ -24,7 +15,6 @@ import {
   DEITY_REMEDY_COPY,
 } from "@/lib/jyotish/nakshatra-remedies";
 import { nakshatraFinderCopy } from "@/lib/tools/nakshatra-finder-copy";
-import { profilePersonName } from "@/lib/profile/types";
 
 interface Result {
   nakshatraNumber: number;
@@ -49,126 +39,12 @@ export default function NakshatraFinderPanel() {
   const { language } = useLanguage();
   const t: ChartTranslations = chartFormCopy[language];
   const copy = nakshatraFinderCopy[language];
-  const { primary, isLoaded, upsertProfile } = useBirthProfile();
-  const { toast } = useToast();
 
-  const [entry, setEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
-  const [timeUnknown, setTimeUnknown] = useState(false);
-  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [result, setResult] = useState<Result | null>(null);
-  const [computedFor, setComputedFor] = useState<string | null>(null);
-  const [editing, setEditing] = useState(false);
-
-  const runCompute = async (
-    formData: ReturnType<typeof natalToChartFormData>,
-    padaKnown: boolean,
-    personLabel: string | null,
-  ) => {
-    setStatus("loading");
-    try {
-      const response = await fetch("/api/charts/compute", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error("compute failed");
-      const data: ChartData = await response.json();
-      const moon = data.planets.find((p) => p.name === "Moon");
-      if (!moon) throw new Error("no moon");
-      const row = findNakshatra(moon.nakshatra);
-      if (!row) throw new Error("unknown nakshatra");
-      setResult({
-        nakshatraNumber: row.number,
-        nakshatraName: row.name,
-        pada: padaKnown ? moon.nakshatra_pada : null,
-        moonSign: moon.sign,
-        personLabel,
-      });
-      setStatus("idle");
-      trackEvent("tool_completed", { slug: "nakshatra-finder", locale: language });
-      return data;
-    } catch {
-      setStatus("error");
-      return null;
-    }
-  };
-
-  // Auto-compute from the remembered person, once, the first time one
-  // exists — same pattern as `ChartSectionResult`.
-  useEffect(() => {
-    if (!isLoaded || !primary || editing || computedFor === primary.id) return;
-    void (async () => {
-      setComputedFor(primary.id);
-      trackEvent("tool_opened", { slug: "nakshatra-finder", locale: language });
-      await runCompute(toChartFormData(primary), true, profilePersonName(primary) || null);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, primary, editing, computedFor]);
-
-  const handleSubmit = async () => {
-    setAttemptedSubmit(true);
-    if (!isBirthDetailsComplete(entry) || !entry.location) return;
-    const birth = {
-      year: Number(entry.date.slice(0, 4)),
-      month: Number(entry.date.slice(5, 7)),
-      day: Number(entry.date.slice(8, 10)),
-      hour: Number(entry.time.slice(0, 2)),
-      minute: Number(entry.time.slice(3, 5)),
-      latitude: Number(entry.location.lat),
-      longitude: Number(entry.location.lon),
-    };
-    const data = await runCompute(
-      natalToChartFormData(birth),
-      !timeUnknown,
-      entry.name.trim() || null,
-    );
-    if (!data) return;
-    setEditing(false);
-
-    // An approximate (default-noon) time isn't confidently this person's
-    // actual birth time — saving it as their shared profile would quietly
-    // hand every other tool (ascendant-sensitive ones especially) a wrong
-    // time as if it were exact. Only remembered site-wide when known.
-    if (timeUnknown) return;
-    try {
-      await upsertProfile({
-        label: entry.name.trim() || entry.location.display_name,
-        locationName: entry.location.display_name,
-        birth,
-        isPrimary: false,
-        chartData: data,
-      });
-    } catch {
-      toast(t.saveError);
-    }
-  };
-
-  const handleEdit = () => {
-    if (primary) {
-      setEntry({
-        name: profilePersonName(primary),
-        date: `${String(primary.birth.year).padStart(4, "0")}-${String(primary.birth.month).padStart(2, "0")}-${String(primary.birth.day).padStart(2, "0")}`,
-        time: `${String(primary.birth.hour).padStart(2, "0")}:${String(primary.birth.minute).padStart(2, "0")}`,
-        location: {
-          display_name: primary.locationName,
-          lat: String(primary.birth.latitude),
-          lon: String(primary.birth.longitude),
-        },
-      });
-    }
-    setEditing(true);
-  };
-
-  if (!isLoaded) {
-    return <div className="washi-card h-40 animate-pulse" aria-hidden />;
-  }
-
-  // A visitor with a saved profile skips the form entirely — the auto-compute
-  // effect above is already running — and sees the result card's skeleton
-  // rather than a form they don't need to fill in.
-  const showForm = editing || (!primary && !result);
-  const showResultSkeleton = !showForm && !result;
+  const state = useProfileResult({
+    toolSlug: "nakshatra-finder",
+    compute: (natal) => computeChart(natal),
+    toChartData: (data) => data,
+  });
 
   return (
     <div>
@@ -180,64 +56,28 @@ export default function NakshatraFinderPanel() {
         ))}
       </div>
 
-      {showForm && (
-        <div className="washi-card p-6 md:p-7">
-          <BirthDetailsFields
-            value={entry}
-            onChange={(patch) => setEntry((v) => ({ ...v, ...patch }))}
-            idPrefix="nakshatra-finder"
-          />
+      <ToolResultFrame state={state} idPrefix="nakshatra-finder" submitLabel={copy.submit} loadingClassName="h-64">
+        {(data, subject) => {
+          const moon = data.planets.find((p) => p.name === "Moon");
+          const row = moon ? findNakshatra(moon.nakshatra) : undefined;
+          if (!moon || !row) return <p className="text-sm text-terracotta">{copy.error}</p>;
+          const result: Result = {
+            nakshatraNumber: row.number,
+            nakshatraName: row.name,
+            // Without a real birth time the pada (a 3°20′ quarter) is not reliable.
+            pada: subject.timeUnknown ? null : moon.nakshatra_pada,
+            moonSign: moon.sign,
+            personLabel: null,
+          };
+          return <NakshatraResult result={result} copy={copy} t={t} language={language} />;
+        }}
+      </ToolResultFrame>
 
-          {attemptedSubmit && !entry.date && (
-            <p className="mt-1.5 text-xs text-terracotta">{copy.requiredField}</p>
-          )}
-          {attemptedSubmit && !entry.location && (
-            <p className="mt-1.5 text-xs text-terracotta">{copy.requiredField}</p>
-          )}
-
-          <div className="mt-3">
-            <label className="flex items-center gap-2 text-xs text-text-muted">
-              <input
-                type="checkbox"
-                checked={timeUnknown}
-                onChange={(e) => setTimeUnknown(e.target.checked)}
-              />
-              {copy.dontKnowTime}
-            </label>
-            <p className="mt-1.5 text-xs text-text-muted">{copy.timeHelper}</p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={status === "loading"}
-            className="washi-btn-primary mt-5 disabled:opacity-50"
-          >
-            {status === "loading" ? copy.computing : copy.submit}
-          </button>
-          {status === "error" && <p className="mt-3 text-sm text-terracotta">{copy.error}</p>}
-
-          <p className="washi-measure mt-4 text-xs text-text-muted">
-            <Link href="/tools/birth-time-check" className="underline">
-              {copy.birthTimeSensitivityLink}
-            </Link>
-          </p>
-        </div>
-      )}
-
-      {showResultSkeleton && (
-        <div className="washi-card h-64 animate-pulse" aria-hidden />
-      )}
-
-      {!showForm && result && (
-        <NakshatraResult
-          result={result}
-          copy={copy}
-          t={t}
-          language={language}
-          onEdit={handleEdit}
-        />
-      )}
+      <p className="washi-measure mt-4 text-xs text-text-muted">
+        <Link href="/tools/birth-time-check" className="underline">
+          {copy.birthTimeSensitivityLink}
+        </Link>
+      </p>
     </div>
   );
 }
@@ -253,7 +93,7 @@ function NakshatraResult({
   copy: (typeof nakshatraFinderCopy)[keyof typeof nakshatraFinderCopy];
   t: ChartTranslations;
   language: keyof typeof nakshatraFinderCopy;
-  onEdit: () => void;
+  onEdit?: () => void;
 }) {
   const nakshatraRow = NAKSHATRAS[result.nakshatraNumber - 1];
   const education = nakshatras.find((n) => n.number === result.nakshatraNumber);
@@ -297,9 +137,11 @@ function NakshatraResult({
           </div>
         </div>
 
+        {onEdit ? (
         <button type="button" onClick={onEdit} className="washi-btn-secondary mt-6 px-4 py-2 text-sm">
           {copy.calculateAgain}
         </button>
+        ) : null}
       </div>
 
       <div className="washi-card p-6 md:p-7">

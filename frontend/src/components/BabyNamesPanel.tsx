@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Star } from "lucide-react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import Link from "@/components/i18n/LocaleLink";
 import BookingHandoff from "@/components/tools/BookingHandoff";
 import BirthDetailsFields, {
+  birthFromDetails,
   EMPTY_BIRTH_DETAILS,
-  isBirthDetailsComplete,
+  validateBirthDetails,
+  type BirthDetailsErrors,
   type BirthDetailsValue,
 } from "@/components/shared/BirthDetailsFields";
 import { chartFormCopy, type ChartTranslations } from "@/lib/chart-i18n";
@@ -29,6 +31,7 @@ import {
 } from "@/lib/jyotish/naam-akshar";
 import { nakshatras } from "@/lib/education/nakshatras-content";
 import {
+  BABY_NAMES,
   namesForOnset,
   type BabyName,
   type BabyGender,
@@ -43,6 +46,8 @@ interface Result {
   nakshatraName: string;
   pada: 1 | 2 | 3 | 4;
   moonSign: string;
+  /** Birth date the result was calculated for (scores use this, not the live form). */
+  date: string;
 }
 
 interface ScoredName extends BabyName {
@@ -86,7 +91,6 @@ export default function BabyNamesPanel() {
   const [entry, setEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
   const [gender, setGender] = useState<GenderFilter>("all");
   const [sort, setSort] = useState<SortMode>("score");
-  const [manualMode, setManualMode] = useState(false);
   const [manualNakshatra, setManualNakshatra] = useState<number | "">("");
   const [manualPada, setManualPada] = useState<1 | 2 | 3 | 4>(1);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -94,6 +98,11 @@ export default function BabyNamesPanel() {
   const [shortlist, setShortlist] = useState<string[]>(loadShortlist);
   const [shortlistOpen, setShortlistOpen] = useState(false);
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+  const [errors, setErrors] = useState<BirthDetailsErrors>({});
+  const resultRef = useRef<HTMLDivElement>(null);
+  // "I don't know the birth time" (the shared checkbox) switches to picking
+  // the nakshatra and pada by hand — place and time are then not needed.
+  const manualMode = Boolean(entry.timeUnknown);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -105,37 +114,38 @@ export default function BabyNamesPanel() {
     }
   }, [shortlist]);
 
-  const canSubmitChart = isBirthDetailsComplete(entry);
-  const canSubmitManual = Boolean(entry.date) && manualNakshatra !== "";
+  const reveal = () =>
+    requestAnimationFrame(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      resultRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event?: React.FormEvent) => {
+    event?.preventDefault();
+    const found = validateBirthDetails(entry, language, manualMode ? { time: false, place: false } : {});
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
     trackEvent("tool_opened", { slug: "baby-names", locale: language });
 
     if (manualMode) {
-      if (!canSubmitManual) return;
+      if (manualNakshatra === "") return;
       const row = NAKSHATRAS[manualNakshatra - 1];
       setResult({
         nakshatraNumber: row.number,
         nakshatraName: row.name,
         pada: manualPada,
         moonSign: signForNakshatraPada(row.number, manualPada),
+        date: entry.date,
       });
       trackEvent("tool_completed", { slug: "baby-names", locale: language });
+      reveal();
       return;
     }
 
-    if (!canSubmitChart || !entry.location) return;
+    if (!entry.location) return;
     setStatus("loading");
     try {
-      const formData = natalToChartFormData({
-        year: Number(entry.date.slice(0, 4)),
-        month: Number(entry.date.slice(5, 7)),
-        day: Number(entry.date.slice(8, 10)),
-        hour: Number(entry.time.slice(0, 2)),
-        minute: Number(entry.time.slice(3, 5)),
-        latitude: Number(entry.location.lat),
-        longitude: Number(entry.location.lon),
-      });
+      const formData = natalToChartFormData(birthFromDetails(entry));
       const response = await fetch("/api/charts/compute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -152,8 +162,10 @@ export default function BabyNamesPanel() {
         nakshatraName: row.name,
         pada: (moon.nakshatra_pada as 1 | 2 | 3 | 4) ?? 1,
         moonSign: moon.sign,
+        date: entry.date,
       });
       setStatus("idle");
+      reveal();
       trackEvent("tool_completed", { slug: "baby-names", locale: language });
     } catch {
       setStatus("error");
@@ -169,16 +181,13 @@ export default function BabyNamesPanel() {
     : null;
   const onset = syllable ? japaneseOnsetFor(syllable) : null;
 
-  const mulank = entry.date ? computeMulank({
-    year: Number(entry.date.slice(0, 4)),
-    month: Number(entry.date.slice(5, 7)),
-    day: Number(entry.date.slice(8, 10)),
-  }) : null;
-  const bhagyank = entry.date ? computeBhagyank({
-    year: Number(entry.date.slice(0, 4)),
-    month: Number(entry.date.slice(5, 7)),
-    day: Number(entry.date.slice(8, 10)),
-  }) : null;
+  // Scored against the date the result was calculated for — editing the
+  // form afterwards used to re-score names against the old nakshatra.
+  const resultDate = result?.date
+    ? { year: Number(result.date.slice(0, 4)), month: Number(result.date.slice(5, 7)), day: Number(result.date.slice(8, 10)) }
+    : null;
+  const mulank = resultDate ? computeMulank(resultDate) : null;
+  const bhagyank = resultDate ? computeBhagyank(resultDate) : null;
 
   const { names: candidateNames, usedFallback } = onset
     ? namesForOnset(onset, gender)
@@ -198,21 +207,20 @@ export default function BabyNamesPanel() {
               : a.romaji.localeCompare(b.romaji),
           );
 
-  const shortlistedNames = scoredNames.filter((n) =>
-    shortlist.includes(shortlistId(n)),
-  );
-  // Shortlisted names picked before a filter/sort change hid them stay
-  // findable by id even if `scoredNames` no longer contains them.
-  const allScoredById = new Map<string, ScoredName>();
-  for (const n of scoredNames) allScoredById.set(shortlistId(n), n);
+  // Resolved from the whole name list, so a gender filter or sort change
+  // never hides (or un-shares) a name already on the shortlist.
+  const shortlistedNames: ScoredName[] = BABY_NAMES.filter((n) => shortlist.includes(shortlistId(n))).map((n) => ({
+    ...n,
+    score: mulank !== null && bhagyank !== null ? (scoreCandidateName(n.romaji, mulank, bhagyank) ?? 5) : 5,
+  }));
 
   const toggleShortlist = (name: BabyName) => {
     const id = shortlistId(name);
-    setShortlist((current) =>
-      current.includes(id)
-        ? current.filter((i) => i !== id)
-        : [...current, id],
-    );
+    setShortlist((current) => {
+      if (current.includes(id)) return current.filter((i) => i !== id);
+      if (current.length === 0) setShortlistOpen(true); // show it on the first add
+      return [...current, id];
+    });
   };
 
   const shareText = result && syllable
@@ -220,10 +228,7 @@ export default function BabyNamesPanel() {
         nakshatra: education?.name[language] ?? result.nakshatraName,
         pada: result.pada,
         syllable: syllable.roman,
-        names: (shortlistedNames.length > 0
-          ? shortlistedNames
-          : Array.from(allScoredById.values())
-        ).map((n) => ({
+        names: shortlistedNames.map((n) => ({
           name: `${n.kanji} (${n.reading})`,
           meaning: language === "ja" ? n.meaning.ja : n.meaning.en,
           score: n.score,
@@ -269,47 +274,30 @@ export default function BabyNamesPanel() {
         ))}
       </div>
 
-      <div className="washi-card p-6 md:p-7">
+      <form onSubmit={handleSubmit} noValidate className="washi-card p-6 md:p-7">
         <BirthDetailsFields
           value={entry}
-          onChange={(patch) => setEntry((v) => ({ ...v, ...patch }))}
+          onChange={(patch) => {
+            setEntry((v) => ({ ...v, ...patch }));
+            setErrors({});
+          }}
           idPrefix="baby-names"
           showName={false}
+          showPlace={!manualMode}
+          errors={errors}
         />
 
-        <div className="mt-4">
-          <p className="mb-1.5 text-[11px] text-text-muted">{copy.genderLabel}</p>
-          <div className="washi-segmented inline-flex">
-            {(["all", "boy", "girl"] as const).map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setGender(option)}
-                className={`px-4 py-1.5 text-[10px] font-body uppercase tracking-widest transition-colors ${gender === option ? "washi-segment-selected" : "washi-segment-unselected"}`}
-              >
-                {option === "all" ? copy.genderAll : option === "boy" ? copy.genderBoy : copy.genderGirl}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setManualMode((v) => !v)}
-          className="washi-btn-tertiary mt-4 block text-sm"
-        >
-          {copy.dontKnowTime}
-        </button>
 
         {manualMode && (
           <div className="washi-card mt-3 p-4">
             <p className="mb-3 text-xs text-text-muted">{copy.dontKnowTimeHelp}</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-[11px] text-text-muted">
+                <label htmlFor="baby-names-nakshatra" className="mb-1.5 block text-[11px] text-text-muted">
                   {copy.manualNakshatraLabel}
                 </label>
                 <select
+                  id="baby-names-nakshatra"
                   value={manualNakshatra}
                   onChange={(e) =>
                     setManualNakshatra(e.target.value ? Number(e.target.value) : "")
@@ -325,10 +313,11 @@ export default function BabyNamesPanel() {
                 </select>
               </div>
               <div>
-                <label className="mb-1.5 block text-[11px] text-text-muted">
+                <label htmlFor="baby-names-pada" className="mb-1.5 block text-[11px] text-text-muted">
                   {copy.manualPadaLabel}
                 </label>
                 <select
+                  id="baby-names-pada"
                   value={manualPada}
                   onChange={(e) => setManualPada(Number(e.target.value) as 1 | 2 | 3 | 4)}
                   className="washi-field w-full p-2.5 text-sm"
@@ -345,17 +334,13 @@ export default function BabyNamesPanel() {
         )}
 
         <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={
-            status === "loading" ||
-            (manualMode ? !canSubmitManual : !canSubmitChart)
-          }
+          type="submit"
+          disabled={status === "loading" || (manualMode && manualNakshatra === "")}
           className="washi-btn-primary mt-5 disabled:opacity-50"
         >
           {status === "loading" ? copy.computing : copy.submit}
         </button>
-        {status === "error" && <p className="mt-3 text-sm text-terracotta">{copy.error}</p>}
+        {status === "error" && <p className="mt-3 text-sm text-terracotta" role="alert">{copy.error}</p>}
 
         {!manualMode && (
           <p className="washi-measure mt-4 text-xs text-text-muted">
@@ -364,8 +349,9 @@ export default function BabyNamesPanel() {
             </Link>
           </p>
         )}
-      </div>
+      </form>
 
+      <div ref={resultRef} className="scroll-mt-24" />
       {result && education && nakshatraRow && syllable && onset && (
         <div className="mt-8 space-y-8">
           <div className="washi-card p-6 md:p-7">
@@ -482,6 +468,7 @@ export default function BabyNamesPanel() {
             <button
               type="button"
               onClick={() => setShortlistOpen((v) => !v)}
+              aria-expanded={shortlistOpen}
               className="font-body text-sm font-semibold text-ink"
             >
               {copy.shortlistHeading(shortlistedNames.length)}

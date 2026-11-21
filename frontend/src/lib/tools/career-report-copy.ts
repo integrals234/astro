@@ -14,7 +14,7 @@ interface CareerReportCopy {
 
 export const careerReportCopy: Record<AppLanguage, CareerReportCopy> = {
   en: {
-    submit: "Find My Career Report",
+    submit: "Show my career report",
     computing: "Computing…",
     error: "Could not complete the calculation. Please try again.",
     calculateAgain: "Calculate Again",

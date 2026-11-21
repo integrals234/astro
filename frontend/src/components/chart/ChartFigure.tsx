@@ -2,6 +2,37 @@
 
 import { toolUiCopy } from '@/lib/tools/tool-ui-copy';
 import KundliChart from '@/components/KundliChart';
+
+/**
+ * design-magic: an engraved degree ring behind the drawing, inscribed in
+ * the chart's square so it meets the diamond's points, turning once every
+ * six minutes. Decorative; still under reduced motion.
+ */
+const RING_TICKS = Array.from({ length: 72 }, (_, i) => i * 5);
+function AstrolabeRing() {
+  return (
+    <svg viewBox="0 0 200 200" className="astrolabe-ring" aria-hidden>
+      <circle cx="100" cy="100" r="99" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.7" />
+      <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.45" />
+      {RING_TICKS.map((deg) => {
+        const a = (deg * Math.PI) / 180;
+        const inner = deg % 30 === 0 ? 92 : 95.5;
+        return (
+          <line
+            key={deg}
+            x1={(100 + Math.cos(a) * inner).toFixed(2)}
+            y1={(100 + Math.sin(a) * inner).toFixed(2)}
+            x2={(100 + Math.cos(a) * 99).toFixed(2)}
+            y2={(100 + Math.sin(a) * 99).toFixed(2)}
+            stroke="currentColor"
+            strokeWidth={deg % 30 === 0 ? 0.6 : 0.3}
+            opacity={deg % 30 === 0 ? 0.8 : 0.5}
+          />
+        );
+      })}
+    </svg>
+  );
+}
 import SouthKundliChart from '@/components/SouthKundliChart';
 import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
 import { chartView, type ChartView } from '@/lib/chart-render';
@@ -120,7 +151,8 @@ export default function ChartFigure({
           say) has less room than that, and AppShell's <main> clips overflow
           rather than scrolling it. `min(28rem,100%)` never exceeds the
           parent's actual width. */}
-      <div className="w-full max-w-[min(28rem,100%)]">
+      <div className="astrolabe w-full max-w-[min(28rem,100%)]">
+      <AstrolabeRing />
       {chartStyle === 'North' ? (
         <KundliChart
           planets={rendered.planets}

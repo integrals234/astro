@@ -1,5 +1,7 @@
 'use client';
 
+import Armillary from '@/components/celestial/Armillary';
+import { SIGNS } from '@/lib/sky/quick-sky';
 import { Bookmark, BookmarkCheck, Download, RotateCcw } from 'lucide-react';
 import type { ChartTranslations } from '@/lib/chart-i18n';
 
@@ -24,7 +26,8 @@ export interface ChartResultHeaderProps {
 
 /**
  * The result panel's title bar. Extracted from `ChartWorkspace`'s header
- * strip, unchanged apart from the optional reset slot.
+ * strip, unchanged apart from the optional reset slot. design-magic: a
+ * celestial banner — the person's name set large over a night sky.
  */
 export default function ChartResultHeader({
   subject,
@@ -34,19 +37,22 @@ export default function ChartResultHeader({
   onReset,
 }: ChartResultHeaderProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 px-6 md:px-8 py-4 border-b border-border bg-washi">
-      <div>
-        <div className="text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">
-          {t.subject}
-        </div>
-        <div className="font-header text-lg text-ink">{subject.trim() || '—'}</div>
+    <div className="night-sky relative isolate flex min-h-[9.5rem] flex-wrap items-end justify-between gap-4 overflow-hidden border-b border-border px-6 py-6 md:min-h-[12rem] md:px-10 md:py-8">
+      {/* design-magic: the result opens under its own sky, the armillary
+          turning behind the person's name. */}
+      <div aria-hidden className="pointer-events-none absolute -right-16 -top-20 -z-10 opacity-60 md:-right-12 md:-top-24">
+        <Armillary signLabels={SIGNS.map((sign) => t.signs[sign] ?? sign)} style={{ '--size': 'clamp(180px, 26vw, 280px)' } as React.CSSProperties} />
       </div>
-      <div className="flex flex-wrap items-center justify-end gap-2">
+      <h2 className="min-w-0 font-header text-[length:var(--step-4)] leading-none tracking-tight text-ink">
+        <span className="sr-only">{t.subject}: </span>
+        {subject.trim() || '—'}
+      </h2>
+      <div className="relative flex flex-wrap items-center justify-end gap-2">
         {onReset && (
           <button
             type="button"
             onClick={onReset}
-            className="washi-btn-tertiary flex items-center gap-1.5 px-2 py-2 text-[10px] uppercase tracking-wider"
+            className="washi-btn-secondary flex items-center gap-1.5 bg-washi/70 px-4 py-2 text-xs backdrop-blur-sm"
           >
             <RotateCcw size={13} />
             {t.ui?.resetChart}
@@ -56,7 +62,7 @@ export default function ChartResultHeader({
           <button
             type="button"
             onClick={onDownloadPdf}
-            className="washi-btn-secondary flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-wider transition-colors hover:bg-terracotta/10"
+            className="washi-btn-secondary flex items-center gap-2 bg-washi/60 px-4 py-2 text-xs backdrop-blur-sm transition-colors hover:bg-terracotta/10"
           >
             <Download size={14} />
             {t.downloadPdf}

@@ -71,7 +71,13 @@ export default async function ChartPage({ params }: Params) {
       </div>
 
       <ChartPageClient />
-      {chartPageGuide.sections.length > 0 ? <LongFormGuide guide={chartPageGuide} language={language} /> : null}
+      {/* Same night stage as the workspace above it (design-magic). */}
+      {chartPageGuide.sections.length > 0 ? (
+        <div className="night">
+          <hr className="brass-rule mx-auto max-w-3xl" />
+          <LongFormGuide guide={chartPageGuide} language={language} />
+        </div>
+      ) : null}
     </>
   );
 }

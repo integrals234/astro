@@ -1,5 +1,8 @@
 'use client';
 
+import Armillary from '@/components/celestial/Armillary';
+import ChartSummaryCard from '@/components/chart/ChartSummaryCard';
+import { SIGNS } from '@/lib/sky/quick-sky';
 import React, { useState, useEffect, useCallback, Suspense, useSyncExternalStore } from 'react';
 import Link from '@/components/i18n/LocaleLink';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -587,8 +590,16 @@ function ChartWorkspaceInner({
           <div className={`grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8`}>
             {/* LEFT COLUMN: Form */}
             <m.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
-              <div className="washi-card p-8">
-                <div className="mb-8">
+              <div className="washi-card p-6 sm:p-8">
+                <div className="mb-8 flex items-center gap-4">
+                  {/* Phone / tablet: the armillary as a small turning emblem;
+                      wide screens show it full size in the empty column. */}
+                  <div aria-hidden className={`shrink-0 ${enablePersistence ? 'xl:hidden' : 'lg:hidden'}`}>
+                    <Armillary
+                      signLabels={SIGNS.map((sign) => t.signs[sign] ?? sign)}
+                      style={{ '--size': '88px' } as React.CSSProperties}
+                    />
+                  </div>
                   <h1 className="text-3xl font-header font-medium text-ink tracking-tight">{chartCopy.appTitle}</h1>
                 </div>
                 {formFields}
@@ -607,13 +618,21 @@ function ChartWorkspaceInner({
             </m.div>
 
             {/* RIGHT COLUMN: Empty state */}
-            <div className={`${enablePersistence ? 'xl:col-span-8' : 'lg:col-span-8'} min-w-0`}>
-              <m.div initial={false} animate={{ opacity: 1 }} className="h-full flex items-center justify-center border border-dashed border-border rounded-lg bg-washi-elevated min-h-[600px]">
-                <div className="text-center text-text-muted p-8 max-w-sm">
-                  <div className="washi-icon-chip w-16 h-16 mx-auto mb-6">
-                    <MapPin size={24} />
+            <div className={`${enablePersistence ? 'hidden xl:block xl:col-span-8' : 'hidden lg:block lg:col-span-8'} min-w-0`}>
+              {/* design-magic: the armillary turns, waiting for a birth moment. */}
+              <m.div initial={false} animate={{ opacity: 1 }} className="flex h-full min-h-[600px] flex-col items-center justify-center gap-8 py-8 text-center">
+                <Armillary
+                  signLabels={SIGNS.map((sign) => t.signs[sign] ?? sign)}
+                  style={{ '--size': 'min(460px, 84vw)' } as React.CSSProperties}
+                >
+                  <div className="flex h-full items-center justify-center">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border text-terracotta">
+                      <MapPin size={22} aria-hidden />
+                    </span>
                   </div>
-                  <h3 className="text-lg font-header text-ink mb-2">{t.awaitingTitle}</h3>
+                </Armillary>
+                <div className="max-w-sm text-text-muted">
+                  <h2 className="mb-2 font-header text-[length:var(--step-2)] text-ink">{t.awaitingTitle}</h2>
                   <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
               </m.div>
@@ -642,16 +661,6 @@ function ChartWorkspaceInner({
               {isFormOpen && <div className="border-t border-border p-8 pt-6">{formFields}</div>}
             </div>
 
-            {enablePersistence && (
-              <ChartLibraryPanel
-                recentCharts={recentCharts}
-                savedCharts={savedCharts}
-                activeChartId={currentChartId}
-                onLoadChart={loadChart}
-                onToggleSave={handleToggleSave}
-                onDeleteChart={handleDeleteChart}
-              />
-            )}
 
             {/* No `overflow-hidden` on this card: the sticky rail below is a
                 descendant, and an ancestor with any `overflow` other than
@@ -676,6 +685,11 @@ function ChartWorkspaceInner({
 
               <div className="p-8 md:p-12">
                 <ChartMetaStrip data={chartData} t={t} />
+
+                {/* The four facts first; the sections below are the detail. */}
+                <div className="mb-12 mt-8">
+                  <ChartSummaryCard data={chartData} t={t} lang={lang} />
+                </div>
 
                 <div className="flex flex-col lg:flex-row lg:gap-12">
                   <ChartSectionRail
@@ -716,6 +730,18 @@ function ChartWorkspaceInner({
                 </div>
               </div>
             </div>
+
+            {/* The library comes after the result, not before it. */}
+            {enablePersistence && (
+              <ChartLibraryPanel
+                recentCharts={recentCharts}
+                savedCharts={savedCharts}
+                activeChartId={currentChartId}
+                onLoadChart={loadChart}
+                onToggleSave={handleToggleSave}
+                onDeleteChart={handleDeleteChart}
+              />
+            )}
           </m.div>
         )}
       </div>

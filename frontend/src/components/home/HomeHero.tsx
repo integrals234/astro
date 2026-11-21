@@ -15,6 +15,8 @@ import BirthDetailsFields, {
   type BirthDetailsValue,
 } from "@/components/shared/BirthDetailsFields";
 import SkyRing from "@/components/home/SkyRing";
+import Armillary from "@/components/celestial/Armillary";
+import Starfield from "@/components/celestial/Starfield";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { homeStoryCopy } from "@/lib/home/home-story-copy";
 import { tr } from "@/lib/sky/entity-links";
@@ -31,8 +33,11 @@ import { trackEvent } from "@/lib/analytics/events";
  *   - phone: headline, form, and a slim preview strip that slides in between
  *     the fields and the button once a date exists (the button stays above
  *     the fold at 390×844);
- *   - desktop: a split screen — copy and form on the left, the full sky
- *     ring on the right, alive from the first keystroke.
+ *   - desktop: a split screen — copy and form on the left, the armillary
+ *     sphere on the right with the live sky ring as its plate.
+ *
+ * design-magic: the whole screen is the night sky (CSS sky + Starfield),
+ * and the armillary sphere is the page's signature object.
  */
 export default function HomeHero({
   onComputed,
@@ -148,8 +153,16 @@ export default function HomeHero({
       ref={root}
       id="start"
       aria-labelledby="hero-title"
-      className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-14 pt-8 md:px-8 md:pt-14 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16 lg:pb-20"
+      className="night-sky relative isolate overflow-hidden"
     >
+      <Starfield />
+      {/* Phone and tablet: the armillary turns behind the headline, so the
+          form keeps its place above the fold. */}
+      <div aria-hidden className="pointer-events-none absolute -right-[22vw] -top-6 opacity-55 sm:-right-24 lg:hidden">
+        <Armillary signLabels={signLabels} style={{ "--size": "min(440px, 96vw)" } as React.CSSProperties} />
+      </div>
+
+      <div className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-14 pt-6 md:px-8 md:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12 lg:pb-20">
       <div className="min-w-0">
         <h1 id="hero-title" className="ma-display max-w-[13em] lg:text-[clamp(2.75rem,3.5vw,3.6rem)]">
           {phrases.map((phrase, i) => (
@@ -162,14 +175,14 @@ export default function HomeHero({
           ))}
         </h1>
 
-        <p data-hero-after className="ma-lead mt-5 md:mt-7">
+        <p data-hero-after className="ma-lead mt-4 md:mt-7">
           {copy.heroLead}
         </p>
 
         <form
           data-hero-after
           onSubmit={handleSubmit}
-          className="mt-7 max-w-md md:mt-9"
+          className="mt-5 max-w-md rounded-[16px] border border-border bg-washi-elevated/85 p-4 shadow-[0_18px_48px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-5 md:mt-9 md:p-6"
           aria-label={copy.submit}
         >
           <BirthDetailsFields
@@ -232,9 +245,10 @@ export default function HomeHero({
         </form>
       </div>
 
-      {/* Desktop: the full sky ring, alive from the first keystroke. */}
+      {/* Desktop: the armillary sphere with the visitor's live sky as its plate. */}
       <div className="hidden min-w-0 lg:block" aria-live="polite">
-        <div className="mx-auto max-w-[520px]">
+        <div className="mx-auto flex max-w-[560px] flex-col items-center">
+          <Armillary signLabels={signLabels} style={{ "--size": "min(560px, 44vw)" } as React.CSSProperties}>
           <SkyRing
             sky={sky}
             signLabels={signLabels}
@@ -243,6 +257,7 @@ export default function HomeHero({
             centerMain={sky ? moonNak : undefined}
             centerSub={sky ? `${moonSign} · ${t.ui.pada} ${sky.moon.pada}` : undefined}
           />
+          </Armillary>
           <div className="mt-6 min-h-[4.5rem] text-center text-sm leading-relaxed text-text-muted">
             {sky ? (
               <>
@@ -260,6 +275,7 @@ export default function HomeHero({
             )}
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

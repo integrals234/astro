@@ -11,6 +11,8 @@ import ToolsBrowser from "@/components/tools/ToolsBrowser";
 import LearnStory from "@/components/home/LearnStory";
 import ReadingClose from "@/components/home/ReadingClose";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
+import TonightSky from "@/components/celestial/TonightSky";
+import PointerLight from "@/components/celestial/PointerLight";
 import { useWelcomeLang } from "@/lib/home/use-welcome-lang";
 import { uiText } from "@/lib/education/i18n/ui";
 import type { ToolSummary } from "@/lib/tools/tool-summary";
@@ -56,6 +58,7 @@ function HomeInner({ tools }: { tools: ToolSummary[] }) {
       <div ref={heroRef}>
         <HomeHero onComputed={onComputed} />
       </div>
+      <TonightSky />
       <ChartStory subject={shownSubject} />
       <ToolsBrowser tools={tools} />
       <LearnStory />
@@ -75,7 +78,10 @@ export default function WelcomeHomePage({
 }) {
   const { lang } = useWelcomeLang();
   return (
-    <div className="min-h-screen bg-washi text-text">
+    // design-magic: the home page is an always-night stage (`.night` remaps
+    // the colour tokens), whatever the site theme.
+    <div className="night min-h-screen bg-washi text-text">
+      <PointerLight />
       <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
       <main className="page-enter">
         <ChartDataProvider toolSlug="home">

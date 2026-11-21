@@ -6,9 +6,8 @@ export const runtime = "nodejs";
 /**
  * Server-side proxy for the Varshaphala (solar return) endpoint.
  *
- * `/api/v1/annual-forecast` is new backend code that has not been deployed
- * yet (see backend/server.py) — this route will 502 against the live
- * Render service until that ships. No caching here yet, unlike
+ * Forwards to the backend's `/api/v1/annual-forecast` (backend/server.py).
+ * No caching here yet, unlike
  * /api/charts/compute: this isn't a hot path the way chart computation is,
  * and adding one is easy to do later against real traffic rather than
  * guessing now.

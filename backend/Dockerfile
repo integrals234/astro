@@ -20,4 +20,6 @@ RUN mkdir -p /usr/share/ephe && \
 COPY . .
 
 EXPOSE 8000
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Production: no --reload (a dev-only file watcher); honour $PORT when the
+# host provides one (Render does), defaulting to 8000.
+CMD ["sh", "-c", "uvicorn server:app --host 0.0.0.0 --port ${PORT:-8000}"]

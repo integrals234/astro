@@ -6,10 +6,9 @@ export const runtime = "nodejs";
 /**
  * Server-side proxy for the Panchang (tithi/nakshatra/yoga/karana) endpoint.
  *
- * `/api/v1/panchang` is new backend code that has not been deployed yet
- * (see backend/server.py) — this route will 502 against the live Render
- * service until that ships. Deliberately does not return Rokuyo — see the
- * backend comment for why that's separate follow-up work.
+ * Forwards to the backend's `/api/v1/panchang` (backend/server.py).
+ * Deliberately does not return Rokuyo — see the backend comment for why
+ * that's separate follow-up work.
  */
 interface PanchangForm {
   year: number;

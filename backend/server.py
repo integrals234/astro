@@ -379,8 +379,7 @@ async def compute_charts(payload: BirthDataRequest):
 
 # --- VARSHAPHALA (ANNUAL FORECAST / SOLAR RETURN) ---
 #
-# NOT YET DEPLOYED — written for review, not live. See the request/response
-# models and endpoint below for the full explanation of scope and the
+# See the request/response models and endpoint below for the scope and the
 # solar-return root-finding approach.
 
 NAKSHATRA_ARC = 360.0 / 27.0
@@ -570,8 +569,6 @@ async def annual_forecast(payload: AnnualForecastRequest):
 
 
 # --- PANCHANG (DAY-LEVEL ELEMENTS: TITHI / NAKSHATRA / YOGA / KARANA) ---
-#
-# NOT YET DEPLOYED — written for review, not live.
 #
 # Deliberately does not compute Rokuyo (Japanese six-day cycle). Rokuyo is
 # derived from the traditional Japanese lunisolar calendar's month and day

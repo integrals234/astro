@@ -8,6 +8,8 @@ import { useChartData } from "@/components/chart/ChartDataProvider";
 import { useBirthProfile } from "@/components/profile/ProfileProvider";
 import { useToast } from "@/components/ui/Toaster";
 import BirthDetailsFields, {
+  birthFromDetails,
+  effectiveTime,
   EMPTY_BIRTH_DETAILS,
   isBirthDetailsComplete,
   type BirthDetailsValue,
@@ -46,7 +48,9 @@ export default function HomeHero({
   const { toast } = useToast();
   const root = useRef<HTMLElement>(null);
 
-  const [entry, setEntry] = useState<BirthDetailsValue>({ ...EMPTY_BIRTH_DETAILS });
+  // Noon pre-filled here so the live sky preview has something to show;
+  // the visitor changes it (or ticks "unknown").
+  const [entry, setEntry] = useState<BirthDetailsValue>({ ...EMPTY_BIRTH_DETAILS, time: "12:00" });
   const [nameOpen, setNameOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,8 +60,8 @@ export default function HomeHero({
       : // No place yet: assume the visitor's own zone — right for most of
         // them, and corrected the moment a place is chosen.
         -new Date().getTimezoneOffset() / 60;
-    return quickSkyFromFields(entry.date, entry.time, offset);
-  }, [entry.date, entry.time, entry.location]);
+    return quickSkyFromFields(entry.date, effectiveTime(entry), offset);
+  }, [entry]);
 
   const signLabels = SIGNS.map((s) => tr(t.signs, s));
   const moonSign = sky ? (tr(t.signs, sky.moon.sign)) : "";
@@ -112,15 +116,7 @@ export default function HomeHero({
     event.preventDefault();
     if (!canSubmit || !entry.location) return;
     setSubmitting(true);
-    const birth = {
-      year: Number(entry.date.slice(0, 4)),
-      month: Number(entry.date.slice(5, 7)),
-      day: Number(entry.date.slice(8, 10)),
-      hour: Number(entry.time.slice(0, 2)),
-      minute: Number(entry.time.slice(3, 5)),
-      latitude: Number(entry.location.lat),
-      longitude: Number(entry.location.lon),
-    };
+    const birth = birthFromDetails(entry);
     // Hand the visitor to the result immediately — it shows its own
     // progress — rather than holding them on a disabled button.
     const pending = compute(birth);

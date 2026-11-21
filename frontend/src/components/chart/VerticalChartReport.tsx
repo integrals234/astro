@@ -13,6 +13,7 @@ import DeferredSection from '@/components/chart/DeferredSection';
 import ChartSectionBody from '@/components/chart/ChartSectionBody';
 import BookingHandoff from '@/components/tools/BookingHandoff';
 import BirthDetailsFields, {
+  birthFromDetails,
   EMPTY_BIRTH_DETAILS,
   isBirthDetailsComplete,
   type BirthDetailsValue,
@@ -56,15 +57,7 @@ export default function VerticalChartReport() {
 
   const handleEntrySubmit = async () => {
     if (!isBirthDetailsComplete(entry) || !entry.location) return;
-    const birth = {
-      year: Number(entry.date.slice(0, 4)),
-      month: Number(entry.date.slice(5, 7)),
-      day: Number(entry.date.slice(8, 10)),
-      hour: Number(entry.time.slice(0, 2)),
-      minute: Number(entry.time.slice(3, 5)),
-      latitude: Number(entry.location.lat),
-      longitude: Number(entry.location.lon),
-    };
+    const birth = birthFromDetails(entry);
     const result = await compute(birth);
     if (!result) return;
     // Previously fire-and-forget: a failed save (e.g. the FK-on-missing-user

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { SignedIn, SignedOut, UserMenu } from "@/components/auth/AuthProvider";
-import { ChevronDown, Languages } from "lucide-react";
+import { ChevronDown, Languages, Settings } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
 import PublicLanguageLink from "@/components/i18n/PublicLanguageLink";
 import MobileNav from "@/components/layout/MobileNav";
@@ -62,7 +62,7 @@ export default function PublicHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // "Home" is the brand mark's job; "Tools" is the hub added in the
-  // design upgrade. Settings lives in the drawer and /settings.
+  // design upgrade. Settings: the gear beside the avatar (signed in), the drawer, and /settings.
   const mainItems = getMainNavItems(language).filter(
     (item) => item.href !== "/settings" && item.href !== "/",
   );
@@ -130,6 +130,17 @@ export default function PublicHeader({
             </Link>
           </SignedOut>
           <SignedIn>
+            {/* Site settings (language, appearance, account) — Clerk's own
+                menu only manages the Clerk profile. */}
+            <Link
+              href="/settings"
+              aria-label={copy.navigation.settings}
+              title={copy.navigation.settings}
+              aria-current={isActive("/settings") ? "page" : undefined}
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-neutral-tag hover:text-ink ${isActive("/settings") ? "text-ink" : "text-text-muted"}`}
+            >
+              <Settings size={17} aria-hidden />
+            </Link>
             <UserMenu avatarClassName="h-7 w-7" />
           </SignedIn>
           {showChartCta && (
@@ -170,6 +181,13 @@ export default function PublicHeader({
             </Link>
           </SignedOut>
           <SignedIn>
+            <Link
+              href="/settings"
+              aria-label={copy.navigation.settings}
+              className="flex h-11 w-11 items-center justify-center rounded-full text-text-muted"
+            >
+              <Settings size={18} aria-hidden />
+            </Link>
             <UserMenu avatarClassName="h-7 w-7" />
           </SignedIn>
         </div>

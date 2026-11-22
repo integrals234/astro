@@ -1,14 +1,12 @@
 @import "tailwindcss";
 
 /*
- * 渾天儀 (kontengi, the armillary sphere) — design-magic palette.
+ * 星図 (seizu, the star atlas) — design-magic palette.
  *
- * Two grounds, one material language:
- *   - Paper (light, reading pages): warm paper and sumi ink, accented with
+ * Two grounds, one material language, both sitewide (the theme toggle):
+ *   - Light — a printed orrery: warm paper and sumi ink, accented with
  *     engraved brass and night indigo.
- *   - Night lacquer (dark mode, and the always-night stages — the home page
- *     and the chart workspace, via `.night`): deep indigo lacquer, ivory
- *     type, brass linework.
+ *   - Dark — deep space: near-black ground, ivory type, brass linework.
  *   真鍮 brass   — the one thing to do: primary action, the Moon marker
  *   夜 indigo    — the sky: charts, links, selection ("moss" call sites)
  *
@@ -37,24 +35,23 @@
   --color-terracotta-tint: #f0e5cc;
   --color-washi-deep: #eeeae2;
   --color-ink-soft: #3a3833;
-  --color-ink-deep: #0b0f1e; /* night lacquer band */
+  --color-ink-deep: #0b0f1e; /* night band */
 }
 
 /*
- * Dark theme — the same page at night: indigo-black ground, warm ink,
+ * Dark theme — deep space: near-black ground, warm ivory ink,
  * both accents lifted for contrast.
  */
-.dark,
-.night {
+.dark {
   --color-ink: #f2ead7;
   --color-moss: #aebcea;
   --color-terracotta: #dcb86c;
-  --color-washi: #0b0f1e;
-  --color-washi-elevated: #121831;
+  --color-washi: #06070b;
+  --color-washi-elevated: #0f1118;
   --color-text: #ded6c2;
-  --color-text-muted: #aaa28d;
-  --color-border: #2a3152;
-  --color-neutral-tag: #1a2142;
+  --color-text-muted: #a8a190;
+  --color-border: #242836;
+  --color-neutral-tag: #171a25;
   --color-positive: #aebcea;
   --color-caution: #e4a96f;
   --color-gold: #b8955a;
@@ -62,9 +59,9 @@
   --color-moss-tint: color-mix(in srgb, var(--color-moss) 14%, var(--color-washi));
   --color-terracotta-deep: #c39c50;
   --color-terracotta-tint: color-mix(in srgb, var(--color-terracotta) 16%, var(--color-washi));
-  --color-washi-deep: #070a16;
+  --color-washi-deep: #030406;
   --color-ink-soft: #d1c8b1;
-  --color-ink-deep: #05070f;
+  --color-ink-deep: #020305;
 }
 
 /* Non-color tokens + compatibility aliases */
@@ -161,9 +158,8 @@ html[lang="hi"] {
   --line-height-body: 2;
 }
 
-/* Dark/night overrides for tokens set in the shared block above */
-.dark,
-.night {
+/* Dark overrides for tokens set in the shared block above */
+.dark {
   --shadow-elevated: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-lift: 0 10px 28px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -686,13 +682,13 @@ summary {
   color: var(--color-washi);
 }
 
-:is(.dark, .night) .washi-inverted {
+.dark .washi-inverted {
   background: #1a1f2b;
   color: var(--color-ink);
   --deckle-ground: #1a1f2b;
 }
 
-:is(.dark, .night) .washi-inverted .washi-card {
+.dark .washi-inverted .washi-card {
   background: color-mix(in srgb, var(--color-ink) 5%, #1a1f2b);
   border-color: color-mix(in srgb, var(--color-ink) 14%, transparent);
   color: var(--color-ink);
@@ -974,7 +970,7 @@ html[lang="en"] .washi-measure {
     2px 0 8px rgba(47, 47, 47, 0.05);
 }
 
-:is(.dark, .night) .mobile-drawer-panel {
+.dark .mobile-drawer-panel {
   background: var(--color-washi);
   box-shadow:
     8px 0 36px rgba(0, 0, 0, 0.55),
@@ -1504,191 +1500,420 @@ body:has(.tabbar):not(:has([data-education-scroll-root])) {
   }
 }
 
-/* ───────────────────────── design-magic: the night stage ─────────────────────────
- * `.night` paints a subtree in the night-lacquer palette regardless of the
- * site theme (home page and chart workspace). The tokens come from the
- * shared `.dark, .night` block; this sets the ground and type colour the
- * subtree would otherwise inherit from <body>.
- */
-.night {
-  background-color: var(--color-washi);
-  color: var(--color-text);
-  color-scheme: dark;
-}
+/* ───────────────────────── design-magic: star atlas ───────────────────────── */
 
-.night ::selection {
-  background: color-mix(in srgb, var(--color-terracotta) 32%, transparent);
-  color: var(--color-ink);
-}
-
-/* The sky behind the stars: lacquer deepening to the zenith, a faint
-   milky band, and the warm horizon glow of a city at night. Painted in CSS
-   so the first frame is already night before the starfield starts. */
-.night-sky {
-  background:
-    radial-gradient(120% 70% at 50% 110%, color-mix(in srgb, #dcb86c 10%, transparent) 0%, transparent 60%),
-    radial-gradient(60% 40% at 78% 18%, color-mix(in srgb, #6c7fd1 12%, transparent) 0%, transparent 70%),
-    radial-gradient(70% 50% at 12% 30%, color-mix(in srgb, #3a2f6e 22%, transparent) 0%, transparent 70%),
-    linear-gradient(180deg, #05070f 0%, #0b0f1e 55%, #10162c 100%);
-}
-
-/* Engraved brass hairline, used for rules between night sections. */
+/* Engraved brass hairline between sections. */
 .brass-rule {
   height: 1px;
   border: 0;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-terracotta) 55%, transparent), transparent);
 }
 
-/* ── Armillary sphere (Armillary.tsx) ── */
-.armillary {
-  --size: min(520px, 86vw);
-  position: relative;
-  width: var(--size);
-  aspect-ratio: 1;
-  perspective: 1400px;
-  perspective-origin: 50% 40%;
-}
-
-.armillary-tilt,
-.armillary-spin {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-
-.armillary-tilt {
-  transform: rotateX(calc(var(--tilt-y, 0) * -10deg)) rotateY(calc(var(--tilt-x, 0) * 14deg));
-  transition: transform 900ms var(--ease-butter);
-}
-
-.armillary-ring {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-
-.armillary-ring svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.armillary-plate {
-  position: absolute;
-  inset: 17%;
-  transform: translateZ(1px);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .armillary-spin {
-    animation: armillary-spin 120s linear infinite;
-  }
-
-  .armillary-ring {
-    animation: armillary-open 1800ms var(--ease-butter) both;
-    animation-delay: var(--delay, 0ms);
-  }
-
-  .armillary-plate {
-    animation: armillary-plate 1400ms var(--ease-butter) 300ms both;
-  }
-
-  .astrolabe-ring {
-    animation: astrolabe-turn 360s linear infinite;
-  }
-}
-
-@keyframes armillary-spin {
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-/* Each ring opens out of a flat disc into its own plane — the one authored
-   entrance on the page. */
-@keyframes armillary-open {
-  from {
-    opacity: 0;
-    transform: var(--ring-from, rotateX(0deg)) scale(0.72);
-  }
-  to {
-    opacity: 1;
-    transform: var(--ring-to);
-  }
-}
-
-@keyframes armillary-plate {
-  from {
-    opacity: 0;
-    transform: translateZ(1px) scale(0.86);
-  }
-  to {
-    opacity: 1;
-    transform: translateZ(1px) scale(1);
-  }
-}
-
-/* ── Astrolabe ring behind every chart drawing (ChartFigure) ── */
-.astrolabe {
-  position: relative;
-  isolation: isolate;
-}
-
-.astrolabe::before {
-  content: "";
-  position: absolute;
-  inset: -6%;
-  z-index: -2;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-terracotta) 14%, transparent), transparent 75%);
-  pointer-events: none;
-}
-
-.astrolabe-ring {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  color: var(--color-gold);
-}
-
-/* Moon phase glyph (TonightSky) */
+/* Moon phase glyph (TonightSky / the journey's last chapter) */
 .moon-disc {
-  filter: drop-shadow(0 6px 18px color-mix(in srgb, #f2ead7 22%, transparent));
+  filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--color-ink) 18%, transparent));
 }
 
-/* Pointer light on night cards (PointerLight.tsx). Layered over the card's
-   own background so nothing else about the card changes. */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .night .washi-card,
-  .night [data-glow] {
-    background-image: radial-gradient(
-      360px circle at var(--mx, -400px) var(--my, -400px),
-      color-mix(in srgb, var(--color-terracotta) 9%, transparent),
-      transparent 70%
-    );
-    transition: border-color var(--duration-base) var(--ease-soft);
-  }
-
-  .night .washi-card:hover,
-  .night [data-glow]:hover {
-    border-color: color-mix(in srgb, var(--color-terracotta) 38%, var(--color-border));
-  }
-}
-
-/* The drawing sits on the astrolabe: a translucent plate lets the turning
-   degree ring show through, and on the night stage the grid is engraved
-   brass rather than a dim border line. */
-.astrolabe .kundli-chart-surface {
-  background-color: color-mix(in srgb, var(--color-washi-elevated) 45%, transparent);
-}
-
-.night .kundli-chart-svg,
-.night .kundli-chart-grid {
+/* In deep space the chart grid is engraved brass rather than a dim line. */
+.dark .kundli-chart-svg,
+.dark .kundli-chart-grid {
   stroke: color-mix(in srgb, var(--color-gold) 62%, transparent);
 }
 
-.night .kundli-chart-surface {
-  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+.dark .kundli-chart-surface {
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+}
+
+/* ── Chart workspace: cards (ChartCover, SectionCard, ChartSectionBar) ── */
+.chart-card {
+  border-radius: 20px;
+  border: 1px solid var(--color-border);
+  background: var(--color-washi-elevated);
+  box-shadow: var(--card-edge), var(--shadow-soft);
+}
+
+.dark .chart-card {
+  border-color: color-mix(in srgb, var(--color-gold) 16%, var(--color-border));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-terracotta) 5%, transparent), transparent 140px),
+    var(--color-washi-elevated);
+}
+
+.chart-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 1.1rem 1.25rem 0.25rem;
+}
+
+.chart-card-index {
+  flex-shrink: 0;
+  font-family: var(--font-chart);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-terracotta);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-card-body {
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+/* Cards in a row share a height; a shorter drawing sits centred in its card. */
+section.chart-card {
+  display: flex;
+  flex-direction: column;
+}
+
+section.chart-card > .chart-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+section.chart-card[data-figure] > .chart-card-body {
+  justify-content: center;
+}
+
+section.chart-card > .chart-card-body > * {
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .chart-card-head {
+    padding: 1.5rem 1.75rem 0.25rem;
+  }
+  .chart-card-body {
+    padding: 1.25rem 1.75rem 2rem;
+  }
+}
+
+.chart-cover {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--color-border);
+  background:
+    radial-gradient(90% 140% at 100% 0%, color-mix(in srgb, var(--color-terracotta) 13%, transparent), transparent 62%),
+    radial-gradient(70% 120% at 0% 100%, color-mix(in srgb, var(--color-moss) 9%, transparent), transparent 60%),
+    var(--color-washi-elevated);
+  box-shadow: var(--card-edge), var(--shadow-soft);
+}
+
+.dark .chart-cover {
+  border-color: color-mix(in srgb, var(--color-gold) 22%, var(--color-border));
+}
+
+.chart-cover-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-border);
+}
+
+.chart-cover-facts > * {
+  background: color-mix(in srgb, var(--color-washi-elevated) 92%, transparent);
+}
+
+@media (min-width: 768px) {
+  .chart-cover-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.chart-bar {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 20;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-washi-elevated) 90%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.35rem 0.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Signed out, the page header is sticky from lg up: sit just below it. */
+@media (min-width: 1024px) {
+  .chart-stage .chart-bar {
+    top: calc(4.25rem + 0.5rem);
+  }
+}
+
+.chart-bar-rail {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chart-bar-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.chart-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 38px;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--duration-fast, 150ms) var(--ease-out, ease-out),
+    color var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+
+@media (hover: hover) {
+  .chart-chip:hover {
+    color: var(--color-ink);
+    background: var(--color-neutral-tag);
+  }
+}
+
+.chart-chip[aria-current="true"] {
+  background: var(--color-ink);
+  color: var(--color-washi);
+}
+
+/* Empty-state preview (ChartPreviewArt) */
+.preview-card {
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  background: var(--color-washi-elevated);
+  box-shadow: var(--card-edge), var(--shadow-lift);
+}
+
+.preview-card-b {
+  rotate: 4deg;
+}
+
+.preview-card-c {
+  rotate: -3deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .preview-art .preview-card {
+    animation: preview-rise 900ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  }
+  .preview-art .preview-card-b {
+    animation-delay: 500ms;
+  }
+  .preview-art .preview-card-c {
+    animation-delay: 700ms;
+  }
+  .preview-draw > * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: preview-draw 1400ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+  .preview-draw > :nth-child(2) { animation-delay: 300ms; }
+  .preview-draw > :nth-child(3) { animation-delay: 450ms; }
+  .preview-draw > :nth-child(4) { animation-delay: 650ms; }
+  .preview-glyphs {
+    animation: preview-fade 800ms ease-out 1300ms both;
+  }
+}
+
+@keyframes preview-rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@keyframes preview-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes preview-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── Home: the cosmos stage (HomeCosmos, CosmosCanvas, Journey) ── */
+
+/* The first frame, before (or instead of) WebGL: the Sun's glow where the
+   scene will put it, and a sprinkle of stars. */
+.cosmos-poster {
+  background:
+    radial-gradient(circle at 70% 46%, rgba(255, 214, 150, 0.9) 0, rgba(255, 160, 60, 0.35) 1.6%, rgba(255, 140, 40, 0.08) 7%, transparent 16%),
+    radial-gradient(1px 1px at 12% 18%, rgba(230, 234, 255, 0.9), transparent 60%),
+    radial-gradient(1px 1px at 28% 72%, rgba(230, 234, 255, 0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 44% 30%, rgba(243, 220, 168, 0.85), transparent 60%),
+    radial-gradient(1px 1px at 58% 84%, rgba(230, 234, 255, 0.6), transparent 60%),
+    radial-gradient(1px 1px at 84% 16%, rgba(230, 234, 255, 0.8), transparent 60%),
+    radial-gradient(1.5px 1.5px at 92% 64%, rgba(230, 234, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 6% 52%, rgba(243, 220, 168, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 36% 8%, rgba(230, 234, 255, 0.7), transparent 60%);
+}
+
+@media (max-width: 767px) {
+  .cosmos-poster {
+    background-position: 0 0;
+    background-image:
+      radial-gradient(circle at 50% 30%, rgba(255, 214, 150, 0.9) 0, rgba(255, 160, 60, 0.35) 3%, rgba(255, 140, 40, 0.08) 12%, transparent 26%),
+      radial-gradient(1px 1px at 12% 18%, rgba(230, 234, 255, 0.9), transparent 60%),
+      radial-gradient(1px 1px at 28% 72%, rgba(230, 234, 255, 0.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 74% 40%, rgba(243, 220, 168, 0.85), transparent 60%),
+      radial-gradient(1px 1px at 84% 16%, rgba(230, 234, 255, 0.8), transparent 60%);
+  }
+}
+
+:root:not(.dark) .cosmos-poster {
+  filter: saturate(0.8);
+}
+
+/* Legibility: the page ground rises behind the text side of each screen. */
+.cosmos-veil {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--color-washi) 72%, transparent) 0%, color-mix(in srgb, var(--color-washi) 30%, transparent) 38%, transparent 58%),
+    linear-gradient(0deg, var(--color-washi) 0%, transparent 14%);
+}
+
+@media (max-width: 767px) {
+  .cosmos-veil {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--color-washi) 55%, transparent) 0%, transparent 30%),
+      linear-gradient(0deg, color-mix(in srgb, var(--color-washi) 85%, transparent) 0%, transparent 55%);
+  }
+}
+
+.cosmos-hud {
+  text-shadow: 0 1px 12px var(--color-washi);
+}
+
+.journey-card {
+  max-width: 31rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-washi-elevated) 90%, transparent);
+  padding: 1.5rem;
+  box-shadow: var(--card-edge), var(--shadow-lift);
+}
+
+.journey-card-wide {
+  max-width: 36rem;
+}
+
+@media (min-width: 768px) {
+  .journey-card {
+    padding: 2rem 2.25rem;
+    background: color-mix(in srgb, var(--color-washi-elevated) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  }
+}
+
+.dark .journey-card {
+  border-color: color-mix(in srgb, var(--color-gold) 20%, transparent);
+}
+
+/* Chapter rail (desktop) */
+.journey-rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .journey-rail {
+    display: block;
+    position: absolute;
+    inset: 0 1.25rem 0 auto;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .journey-rail ol {
+    position: sticky;
+    top: calc(50vh - 7rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    pointer-events: auto;
+  }
+  .journey-rail button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    min-height: 28px;
+    padding: 0 0.25rem;
+    color: var(--color-text-muted);
+  }
+  .journey-rail-label {
+    font-size: 11px;
+    opacity: 0;
+    translate: 6px 0;
+    transition: opacity 200ms var(--ease-out), translate 200ms var(--ease-out);
+  }
+  .journey-rail button:hover .journey-rail-label,
+  .journey-rail button:focus-visible .journey-rail-label,
+  .journey-rail button[aria-current="step"] .journey-rail-label {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .journey-rail button[aria-current="step"] {
+    color: var(--color-ink);
+  }
+  .journey-rail-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.5;
+    transition: transform 200ms var(--ease-out), opacity 200ms var(--ease-out), background-color 200ms;
+  }
+  .journey-rail button[aria-current="step"] .journey-rail-dot {
+    opacity: 1;
+    transform: scale(1.6);
+    background: var(--color-terracotta);
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hero form over the sky */
+.hero-form {
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--color-washi-elevated) 92%, transparent);
+  box-shadow: var(--card-edge), 0 18px 48px rgba(0, 0, 0, 0.18);
+}
+
+.dark .hero-form {
+  border-color: color-mix(in srgb, var(--color-gold) 22%, transparent);
+  box-shadow: var(--card-edge), 0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 768px) {
+  .hero-form {
+    background: color-mix(in srgb, var(--color-washi-elevated) 80%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }

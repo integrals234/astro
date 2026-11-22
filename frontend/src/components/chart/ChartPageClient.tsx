@@ -3,9 +3,10 @@
 import ChartShell from "@/components/chart/ChartShell";
 import ChartWorkspace from "@/components/ChartWorkspace";
 
-export default function ChartPageClient() {
+/** `after` (the server-rendered guide): see ChartShell for where it goes. */
+export default function ChartPageClient({ after }: { after?: React.ReactNode }) {
   return (
-    <ChartShell showPublicAuthBar>
+    <ChartShell showPublicAuthBar after={after}>
       <ChartWorkspace embedded enablePersistence />
     </ChartShell>
   );

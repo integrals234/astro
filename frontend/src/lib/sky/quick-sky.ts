@@ -67,7 +67,7 @@ export function julianDay(
 }
 
 /** Tropical apparent-ish solar longitude, degrees. */
-function sunTropical(t: number): number {
+export function sunTropical(t: number): number {
   const l0 = 280.46646 + 36000.76983 * t + 0.0003032 * t * t;
   const m = (357.52911 + 35999.05029 * t - 0.0001537 * t * t) * DEG;
   const c =
@@ -78,7 +78,7 @@ function sunTropical(t: number): number {
 }
 
 /** Tropical lunar longitude, degrees — the largest periodic terms. */
-function moonTropical(t: number): number {
+export function moonTropical(t: number): number {
   const lp = 218.3164477 + 481267.88123421 * t;
   const d = (297.8501921 + 445267.1114034 * t) * DEG;
   const m = (357.5291092 + 35999.0502909 * t) * DEG;
@@ -109,7 +109,7 @@ function moonTropical(t: number): number {
 }
 
 /** Lahiri (Chitrapaksha) ayanamsa, linear approximation. */
-function lahiri(t: number): number {
+export function lahiri(t: number): number {
   return 23.85307 + 1.39697 * t;
 }
 

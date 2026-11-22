@@ -142,7 +142,7 @@ export default function Sheet({
               </button>
             </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 lg:px-8">{children}</div>
+            <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 lg:px-8">{children}</div>
           </m.div>
         </div>
       )}

@@ -5,7 +5,6 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "@/components/i18n/LocaleLink";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import { useBirthProfile } from "@/components/profile/ProfileProvider";
-import { useChartData } from "@/components/chart/ChartDataProvider";
 import Sheet from "@/components/ui/Sheet";
 import ToolPanel, { canOpenInPlace } from "@/components/tools/ToolPanel";
 import type { ToolSummary } from "@/lib/tools/tool-summary";
@@ -29,8 +28,9 @@ const groupTools = (tools: ToolSummary[], id: ToolGroupId) => {
  *   desktop — a bento grid with two featured tiles; hovering a tile reveals
  *             its use case, and every tile is a real link (crawlable,
  *             middle-click opens a tab).
- * When the page already has a chart or saved profile, a plain click opens
- * the answer in a sheet instead of leaving the page.
+ * A plain click opens the tool in a sheet without leaving the page — the
+ * answer when a person is remembered, the tool's own short form when not
+ * (quick use). Modified clicks still follow the real link.
  */
 export default function ToolsBrowser({
   tools,
@@ -46,14 +46,13 @@ export default function ToolsBrowser({
   const copy = homeStoryCopy[language];
   const toolsCopy = homeToolsCopy[language];
   const { primary, isLoaded } = useBirthProfile();
-  const { data } = useChartData();
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const openTool = openSlug ? tools.find((tool) => tool.slug === openSlug) ?? null : null;
 
   const onTileClick = (event: React.MouseEvent, tool: ToolSummary) => {
     trackEvent("tool_opened", { slug: tool.slug, locale: language });
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
-    if (!canOpenInPlace(tool, Boolean(data), Boolean(primary))) return;
+    if (!canOpenInPlace(tool)) return;
     event.preventDefault();
     setOpenSlug(tool.slug);
   };
@@ -117,7 +116,7 @@ export default function ToolsBrowser({
             <ul className="grid grid-flow-row-dense grid-cols-2 gap-3 xl:grid-cols-3">
               {groupTools(tools, group).map((tool) => {
                 const featured = FEATURED.has(tool.slug);
-                const inPlace = canOpenInPlace(tool, Boolean(data), Boolean(primary));
+                const inPlace = canOpenInPlace(tool);
                 return (
                   <li key={tool.slug} className={featured ? "col-span-2" : ""}>
                     <Link

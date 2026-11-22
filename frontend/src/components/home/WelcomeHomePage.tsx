@@ -11,21 +11,24 @@ import ToolsBrowser from "@/components/tools/ToolsBrowser";
 import LearnStory from "@/components/home/LearnStory";
 import ReadingClose from "@/components/home/ReadingClose";
 import StickyCtaBar from "@/components/home/StickyCtaBar";
-import TonightSky from "@/components/celestial/TonightSky";
-import PointerLight from "@/components/celestial/PointerLight";
+import HomeCosmos from "@/components/home/HomeCosmos";
+import { smoothScrollTo } from "@/lib/cosmos/smooth";
 import { useWelcomeLang } from "@/lib/home/use-welcome-lang";
 import { uiText } from "@/lib/education/i18n/ui";
 import type { ToolSummary } from "@/lib/tools/tool-summary";
 import { profilePersonName } from "@/lib/profile/types";
 
 /**
- * The homepage as a five-screen story, each screen with one job:
+ * The homepage as a scroll story (design-magic), each part with one job:
  *
- *   1. Hero      — the form is the primary action; the sky answers as you type.
- *   2. Your chart — appears once there is one: six beats, swipe or side-by-side.
- *   3. Tools     — seventeen ways to read the same chart, opening in place.
- *   4. Learn     — three words to read a sky (the scroll story).
- *   5. Reading   — a person, then the one closing action: back to the form.
+ *   1. Hero      — the form is the primary action; the 3D solar system
+ *                  time-lapses to the birth moment as it is typed.
+ *   2. Journey   — six screens over the same sky: the solar system, the
+ *                  view from Earth, rashis, nakshatras, grahas, the sky now.
+ *   3. Your chart — appears once there is one: six beats, swipe or side-by-side.
+ *   4. Tools     — seventeen ways to read the same chart, opening in place.
+ *   5. Learn     — where to go next: course, articles, the 27 mansions.
+ *   6. Reading   — a person, then the one closing action: back to the form.
  *
  * It replaced a ~9,500 px phone scroll (banner, hero, full ten-section
  * report, 17-card grid, prose, four starting-point cards, CTA rows). Nothing
@@ -46,7 +49,10 @@ function HomeInner({ tools }: { tools: ToolSummary[] }) {
     setSubject(s);
     // The story section mounts on the next render; bring it into view then.
     window.requestAnimationFrame(() =>
-      window.setTimeout(() => document.getElementById("your-chart")?.scrollIntoView({ behavior: "smooth", block: "start" }), 60),
+      window.setTimeout(() => {
+        const el = document.getElementById("your-chart");
+        if (el) smoothScrollTo(el, -16);
+      }, 60),
     );
   }, []);
 
@@ -55,10 +61,11 @@ function HomeInner({ tools }: { tools: ToolSummary[] }) {
 
   return (
     <>
-      <div ref={heroRef}>
-        <HomeHero onComputed={onComputed} />
-      </div>
-      <TonightSky />
+      <HomeCosmos>
+        <div ref={heroRef}>
+          <HomeHero onComputed={onComputed} />
+        </div>
+      </HomeCosmos>
       <ChartStory subject={shownSubject} />
       <ToolsBrowser tools={tools} />
       <LearnStory />
@@ -78,10 +85,7 @@ export default function WelcomeHomePage({
 }) {
   const { lang } = useWelcomeLang();
   return (
-    // design-magic: the home page is an always-night stage (`.night` remaps
-    // the colour tokens), whatever the site theme.
-    <div className="night min-h-screen bg-washi text-text">
-      <PointerLight />
+    <div className="min-h-screen bg-washi text-text">
       <PublicHeader pageLabel={uiText("home", lang)} maxWidth="max-w-6xl" />
       <main className="page-enter">
         <ChartDataProvider toolSlug="home">

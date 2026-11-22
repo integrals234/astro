@@ -109,7 +109,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     privacy: "ログインしない限り、データは保存されません。",
 
     previewLabel: "生まれた瞬間の空",
-    previewEmpty: "生年月日を入れると、その日の月がここに現れます。",
+    previewEmpty: "生年月日を入れると、太陽系がその瞬間まで巻き戻ります。",
     previewNote: "これは概算です。正確な位置はチャート作成時に計算します。",
     moon: "月",
     sun: "太陽",
@@ -197,7 +197,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     privacy: "Nothing is saved unless you sign in.",
 
     previewLabel: "The sky at your birth",
-    previewEmpty: "Enter a birth date and that day's Moon appears here.",
+    previewEmpty: "Enter a birth date and the solar system turns back to that moment.",
     previewNote: "This is an estimate. Exact positions are calculated when you create the chart.",
     moon: "Moon",
     sun: "Sun",
@@ -285,7 +285,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     privacy: "साइन इन किए बिना कुछ भी सहेजा नहीं जाता।",
 
     previewLabel: "आपके जन्म का आकाश",
-    previewEmpty: "जन्म तिथि दर्ज करें, उस दिन का चंद्रमा यहाँ दिखाई देगा।",
+    previewEmpty: "जन्म तिथि दर्ज करें, और सौरमंडल उसी क्षण तक लौट जाएगा।",
     previewNote: "यह अनुमान है। सटीक स्थितियाँ कुंडली बनाते समय गणना की जाती हैं।",
     moon: "चंद्र",
     sun: "सूर्य",
@@ -373,7 +373,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     privacy: "로그인하지 않으면 아무것도 저장되지 않습니다.",
 
     previewLabel: "태어난 순간의 하늘",
-    previewEmpty: "생년월일을 입력하면 그날의 달이 이곳에 나타납니다.",
+    previewEmpty: "생년월일을 입력하면 태양계가 그 순간으로 되돌아갑니다.",
     previewNote: "이것은 추정치입니다. 정확한 위치는 차트를 만들 때 계산합니다.",
     moon: "달",
     sun: "태양",

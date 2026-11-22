@@ -110,7 +110,7 @@ export default function MobileNav({
                 </button>
               </div>
 
-              <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain bg-washi px-3 py-4">
+              <nav data-lenis-prevent className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain bg-washi px-3 py-4">
                 {mainNavItems.map((item) => {
                   const active = isActive(pathname, item.href);
                   const Icon = item.icon;

@@ -2,18 +2,17 @@
 
 The visual system shipped on the `design-upgrade` branch. Tokens live in `frontend/src/app/globals.css` (Tailwind v4, CSS-first; there is no `tailwind.config`).
 
-## Visual world — 渾天儀 (the armillary sphere) · design-magic
+## Visual world — 星図 (the star atlas) · design-magic
 
-Replaces the earlier calm-paper-only look for the two persuade surfaces (home, /chart) and re-accents the rest of the site.
+Replaces the earlier calm-paper-only look for the two persuade surfaces (home, /chart) and re-accents the rest of the site. Light and dark are both first-class and sitewide (the theme toggle); no surface forces a theme.
 
-- **Grounds.** Paper (light mode, reading pages): warm paper `#f5f1e8`, sumi ink. Night lacquer (dark mode, and always on the home page and chart workspace via `.night`): `#0b0f1e` ground, ivory type `#f2ead7`, muted `#aaa28d`.
-- **Accents.** Brass is the one action colour (`--color-terracotta`: `#7d5d1b` on paper, `#dcb86c` at night). Night indigo / starlight is the sky colour (`--color-moss`). Gold (`#b8955a`) is engraved hairline only. No third hue.
-- **Signature object.** `components/celestial/Armillary.tsx`: CSS-3D brass rings (meridian, colure, equator, horizon, zodiac band at 23.44°) around a plate; rings open from flat discs on load (the one authored entrance), turn slowly, lean toward a desktop pointer. Home hero (live sky ring as plate), /chart empty state and phone form emblem, chart result banner.
-- **Sky.** `.night-sky` CSS gradient (first frame is already night) + `components/celestial/Starfield.tsx` (static layer drawn once, ≤48 twinkling stars at ~24 fps, rare meteor, compositor parallax; starts on idle, pauses off-screen, still under reduced motion).
-- **Charts.** Every `ChartFigure` sits on an astrolabe: an engraved degree ring inscribed in the chart square, turning once per six minutes; on the night stage the grid is brass.
-- **Interaction light.** `PointerLight.tsx`: night cards catch a brass light at the pointer (desktop only).
+- **Grounds.** Light — a printed orrery: warm paper `#f5f1e8`, sumi ink. Dark — deep space: near-black `#06070b`, ivory type `#f2ead7`, muted `#a8a190`.
+- **Accents.** Brass is the one action colour (`--color-terracotta`: `#7d5d1b` light, `#dcb86c` dark). Night indigo / starlight is the sky colour (`--color-moss`). Gold (`#b8955a`) is engraved hairline only. No third hue.
+- **Home = a scroll journey over a real 3D sky.** `components/cosmos/scene.ts` (Three.js) draws the solar system with every planet at its calculated position (JPL Keplerian elements, `lib/sky/orbits.ts`), distances compressed. Scroll is the camera's timeline (GSAP ScrollTrigger, `components/home/Journey.tsx`): hero → solar system → the view from Earth (zodiac band appears around it) → 12 rashis → 27 nakshatras → the nine grahas on the band (Rahu/Ketu as shadow discs) → the sky right now. Typing a birth date in the hero time-lapses the system to that moment (`lib/cosmos/bus.ts`). Desktop scrolls with Lenis and settles on the nearest chapter; phones scroll natively. Planet surfaces, rings and labels are painted on canvas in the browser — no image assets.
+- **Budget.** The first frame is a CSS poster (`.cosmos-poster`); Three.js loads when the page is idle on desktop and at the first touch/scroll on phones; it renders only while visible; textures are painted in short slices; reduced motion holds everything still except what scrolling moves. Every chapter is server-rendered HTML; the 3D is illustration (`aria-hidden`).
+- **Chart workspace = cards.** A cover card (person, birth moment, ascendant degree, timezone, sunrise/sunset, every action; Edit opens the form inside it), four summary seals, a sticky chip bar of sections, and a bento grid of `SectionCard`s (D1 beside D9, three drawings in a row, tables full width, dasha beside yogas). No ornament behind the charts.
 - **Type.** Unchanged families per locale (Shippori Mincho / Lora / Noto Serif KR / Martel display); numerals tabular in data.
-- **Daily hook.** `TonightSky.tsx` — the Moon's nakshatra, phase, tithi and the Sun's rashi right now, computed client-side.
+- **Daily hook.** The journey's last chapter (`TonightFacts.tsx`) — the Moon's nakshatra, phase, tithi and the Sun's rashi right now, computed client-side.
 
 ## Direction
 

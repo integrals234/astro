@@ -53,7 +53,7 @@ const Emblems: Record<'lagna' | 'moon' | 'sun' | 'dasha', ReactNode> = {
 
 function Seal({ emblem, label, value, sub }: { emblem: keyof typeof Emblems; label: string; value: string; sub?: string }) {
   return (
-    <div data-glow className="relative rounded-[14px] border border-border bg-washi-elevated p-4 sm:p-5">
+    <div className="chart-card relative p-4 sm:p-5">
       <svg viewBox="0 0 32 32" className="h-8 w-8 text-terracotta" aria-hidden>
         {Emblems[emblem]}
       </svg>
@@ -77,7 +77,7 @@ export default function ChartSummaryCard({ data, t, lang }: ChartSummaryCardProp
   const runningDasha = findRunningDasha(data.vimshottari_dashas);
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
       <Seal emblem="lagna" label={t.ui.summaryLagna} value={t.signs[data.ascendant_sign] ?? data.ascendant_sign} />
       <Seal
         emblem="moon"

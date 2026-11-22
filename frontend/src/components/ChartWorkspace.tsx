@@ -1,15 +1,18 @@
 'use client';
 
-import Armillary from '@/components/celestial/Armillary';
 import ChartSummaryCard from '@/components/chart/ChartSummaryCard';
-import { SIGNS } from '@/lib/sky/quick-sky';
+import { toolUiCopy } from '@/lib/tools/tool-ui-copy';
+import ChartCover from '@/components/chart/ChartCover';
+import ChartSectionBar from '@/components/chart/ChartSectionBar';
+import SectionCard from '@/components/chart/SectionCard';
+import ChartPreviewArt from '@/components/chart/ChartPreviewArt';
 import React, { useState, useEffect, useCallback, Suspense, useSyncExternalStore } from 'react';
 import Link from '@/components/i18n/LocaleLink';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { m, AnimatePresence } from 'motion/react';
 import { useDebounce } from 'use-debounce';
 import { Command } from 'cmdk';
-import { Search, MapPin, ChevronDown, LayoutDashboard } from 'lucide-react';
+import { Search, MapPin, LayoutDashboard } from 'lucide-react';
 import { SignedIn, SignedOut, UserMenu, useAuthState } from '@/components/auth/AuthProvider';
 import ChartLibraryPanel from '@/components/ChartLibraryPanel';
 import { useLanguage } from '@/components/i18n/LanguageProvider';
@@ -26,12 +29,8 @@ import { parseChartPrefill } from '@/lib/chart-prefill';
 import { useBirthProfile } from '@/components/profile/ProfileProvider';
 import type { ChartSectionId } from '@/lib/chart-sections';
 import { sectionLabel, sectionHeading } from '@/lib/chart-sections';
-import ChartMetaStrip from '@/components/chart/ChartMetaStrip';
-import ChartResultHeader from '@/components/chart/ChartResultHeader';
 import ChartSectionBody from '@/components/chart/ChartSectionBody';
 import ChartDisplayControls from '@/components/chart/ChartDisplayControls';
-import ChartSectionRail from '@/components/chart/ChartSectionRail';
-import DeferredSection from '@/components/chart/DeferredSection';
 import { profilePersonName } from "@/lib/profile/types";
 
 interface ChartWorkspaceProps {
@@ -92,6 +91,24 @@ const WORKSPACE_SECTIONS: readonly { id: ChartSectionId; tabKey?: string }[] = [
   { id: 'yogas' },
   { id: 'ashtakavarga' },
 ];
+
+/**
+ * The bento: the birth chart and navamsha side by side (the pair readers
+ * compare), the three other drawings in a row, then the tables full width,
+ * the dasha tree beside the yogas it times.
+ */
+const CARD_SPAN: Partial<Record<ChartSectionId, { span: string; minHeight?: number }>> = {
+  lagna: { span: 'md:col-span-6', minHeight: 460 },
+  navamsha: { span: 'md:col-span-6', minHeight: 460 },
+  chalit: { span: 'md:col-span-6 xl:col-span-4', minHeight: 420 },
+  moon: { span: 'md:col-span-6 xl:col-span-4', minHeight: 420 },
+  gochar: { span: 'md:col-span-12 xl:col-span-4', minHeight: 460 },
+  planets: { span: 'md:col-span-12', minHeight: 420 },
+  aspects: { span: 'md:col-span-12', minHeight: 320 },
+  dasha: { span: 'md:col-span-12 lg:col-span-7', minHeight: 520 },
+  yogas: { span: 'md:col-span-12 lg:col-span-5', minHeight: 360 },
+  ashtakavarga: { span: 'md:col-span-12', minHeight: 360 },
+};
 
 // --- MAIN DASHBOARD ---
 function ChartWorkspaceInner({
@@ -380,9 +397,12 @@ function ChartWorkspaceInner({
     setFormData(prev => ({ ...prev, hour: parseInt(h), minute: parseInt(m) }));
   };
 
-  const natalDateString = `${formData.year}-${String(formData.month).padStart(2, '0')}-${String(formData.day).padStart(2, '0')}`;
+  // The year is always written back with four digits: while a year is being
+  // typed the input reports values like "0002-04-23", and a bare "2-04-23"
+  // is not a valid date string — the browser would clear the whole field.
+  const natalDateString = `${String(formData.year).padStart(4, '0')}-${String(formData.month).padStart(2, '0')}-${String(formData.day).padStart(2, '0')}`;
   const natalTimeString = `${String(formData.hour).padStart(2, '0')}:${String(formData.minute).padStart(2, '0')}`;
-  const transitDateString = `${formData.transit_year}-${String(formData.transit_month).padStart(2, '0')}-${String(formData.transit_day).padStart(2, '0')}`;
+  const transitDateString = `${String(formData.transit_year).padStart(4, '0')}-${String(formData.transit_month).padStart(2, '0')}-${String(formData.transit_day).padStart(2, '0')}`;
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -408,6 +428,8 @@ function ChartWorkspaceInner({
     e.preventDefault();
     if (formData.latitude === 0 && formData.longitude === 0) return toast(t.errNoLoc);
     if (enablePersistence && !personName.trim()) return toast(t.errNoName);
+    // A half-typed year (e.g. 0200) must not reach the engine.
+    if (formData.year < 1800 || formData.year > 2100) return toast(toolUiCopy[lang].errDate);
     setIsLoading(true);
     try {
       // Same-origin proxy rather than the Render service directly: identical
@@ -542,7 +564,7 @@ function ChartWorkspaceInner({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="min-w-0">
               <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.dob}</label>
-              <input type="date" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
+              <input type="date" min="1800-01-01" max="2100-12-31" value={natalDateString} onChange={(e) => handleDateChange(e, 'natal')} className="washi-field w-full min-w-0 p-3 text-sm focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none transition-all cursor-pointer text-ink" />
             </div>
             <div className="min-w-0">
               <label className="block text-[10px] text-text-muted mb-1.5 ml-1">{t.tob}</label>
@@ -590,17 +612,9 @@ function ChartWorkspaceInner({
           <div className={`grid grid-cols-1 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'} gap-8`}>
             {/* LEFT COLUMN: Form */}
             <m.div layout className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} space-y-6 min-w-0`}>
-              <div className="washi-card p-6 sm:p-8">
-                <div className="mb-8 flex items-center gap-4">
-                  {/* Phone / tablet: the armillary as a small turning emblem;
-                      wide screens show it full size in the empty column. */}
-                  <div aria-hidden className={`shrink-0 ${enablePersistence ? 'xl:hidden' : 'lg:hidden'}`}>
-                    <Armillary
-                      signLabels={SIGNS.map((sign) => t.signs[sign] ?? sign)}
-                      style={{ '--size': '88px' } as React.CSSProperties}
-                    />
-                  </div>
-                  <h1 className="text-3xl font-header font-medium text-ink tracking-tight">{chartCopy.appTitle}</h1>
+              <div className="chart-card p-6 sm:p-8">
+                <div className="mb-8">
+                  <h1 className="font-header text-3xl font-medium leading-tight tracking-tight text-ink">{chartCopy.appTitle}</h1>
                 </div>
                 {formFields}
               </div>
@@ -617,118 +631,89 @@ function ChartWorkspaceInner({
               )}
             </m.div>
 
-            {/* RIGHT COLUMN: Empty state */}
+            {/* RIGHT COLUMN: what the result will hold, drawn as its cards. */}
             <div className={`${enablePersistence ? 'hidden xl:block xl:col-span-8' : 'hidden lg:block lg:col-span-8'} min-w-0`}>
-              {/* design-magic: the armillary turns, waiting for a birth moment. */}
-              <m.div initial={false} animate={{ opacity: 1 }} className="flex h-full min-h-[600px] flex-col items-center justify-center gap-8 py-8 text-center">
-                <Armillary
-                  signLabels={SIGNS.map((sign) => t.signs[sign] ?? sign)}
-                  style={{ '--size': 'min(460px, 84vw)' } as React.CSSProperties}
-                >
-                  <div className="flex h-full items-center justify-center">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border text-terracotta">
-                      <MapPin size={22} aria-hidden />
-                    </span>
-                  </div>
-                </Armillary>
+              <div className="chart-card flex h-full min-h-[600px] flex-col items-center justify-center gap-8 overflow-hidden p-10 text-center">
+                <ChartPreviewArt t={t} />
                 <div className="max-w-sm text-text-muted">
                   <h2 className="mb-2 font-header text-[length:var(--step-2)] text-ink">{t.awaitingTitle}</h2>
                   <p className="text-sm leading-relaxed">{t.awaitingDesc}</p>
                 </div>
-              </m.div>
+              </div>
             </div>
           </div>
         ) : (
-          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }} className="space-y-6">
-            {/* Entry form, collapsed once a chart exists — the vertical
-                section stack below gets the full width instead of sharing
-                it with a permanently-open form column. */}
-            <div className="washi-card overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setIsFormOpen((v) => !v)}
-                aria-expanded={isFormOpen}
-                className="flex w-full items-center justify-between gap-3 p-5 text-left"
-              >
-                <span className="min-w-0">
-                  <span className="block text-[10px] font-body font-semibold text-text-muted uppercase tracking-widest">{t.natalParams}</span>
-                  <span className="block truncate font-chart text-sm text-ink">
-                    {personName.trim() || t.personNamePlaceholder} — {selectedLocationName || t.birthCity}
-                  </span>
-                </span>
-                <ChevronDown size={18} className={`shrink-0 text-text-muted transition-transform ${isFormOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isFormOpen && <div className="border-t border-border p-8 pt-6">{formFields}</div>}
+          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }} className="space-y-4 sm:space-y-5">
+            <ChartCover
+              subject={personName}
+              birthDate={natalDateString}
+              birthTime={natalTimeString}
+              place={selectedLocationName}
+              data={chartData}
+              t={t}
+              lang={lang}
+              onDownloadPdf={handleDownloadPdf}
+              onReset={handleReset}
+              save={
+                enablePersistence && currentChartId
+                  ? { isSaved: isCurrentSaved, isBusy: isSavingChart, onToggle: () => handleToggleSave() }
+                  : undefined
+              }
+              editOpen={isFormOpen}
+              onToggleEdit={() => setIsFormOpen((v) => !v)}
+            >
+              {formFields}
+            </ChartCover>
+
+            {/* The four facts first; the cards below are the detail. */}
+            <ChartSummaryCard data={chartData} t={t} lang={lang} />
+
+            {/* Shared display controls — one flip updates every chart
+                drawing below (ChartFigure is fully controlled). */}
+            <ChartDisplayControls
+              t={t}
+              useSymbols={useSymbols}
+              onUseSymbolsChange={setUseSymbols}
+              chartStyle={chartStyle}
+              onChartStyleChange={setChartStyle}
+              className="md:justify-end"
+            />
+
+            {/* The bar and the cards share a wrapper, so the bar stops
+                sticking where the cards end. */}
+            <div className="space-y-4 sm:space-y-5">
+            <ChartSectionBar
+              items={WORKSPACE_SECTIONS.map((entry) => ({ id: entry.id, label: sectionLabel(entry, t, lang) }))}
+              ariaLabel={t.ui.sectionsNavAria}
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-12">
+              {WORKSPACE_SECTIONS.map((entry, i) => (
+                <SectionCard
+                  key={entry.id}
+                  id={entry.id}
+                  index={i + 1}
+                  title={sectionHeading(entry, t, lang)}
+                  className={CARD_SPAN[entry.id]?.span ?? 'md:col-span-12'}
+                  minHeight={CARD_SPAN[entry.id]?.minHeight}
+                  figure={['lagna', 'navamsha', 'chalit', 'moon', 'gochar'].includes(entry.id)}
+                >
+                  <ChartSectionBody
+                    id={entry.id}
+                    data={chartData}
+                    t={t}
+                    lang={lang}
+                    chartStyle={chartStyle}
+                    useSymbols={useSymbols}
+                    gocharBase={gocharBase}
+                    onGocharBaseChange={setGocharBase}
+                    openCurrentDasha={entry.id === 'dasha'}
+                    showHeading={false}
+                  />
+                </SectionCard>
+              ))}
             </div>
 
-
-            {/* No `overflow-hidden` on this card: the sticky rail below is a
-                descendant, and an ancestor with any `overflow` other than
-                `visible` becomes its scroll-containing block, breaking
-                `position: sticky` entirely. Corner-rounding for the header
-                (which sits flush at the top with its own background) is
-                scoped to just that wrapper instead. */}
-            <div className="washi-card text-text">
-              <div className="overflow-hidden rounded-t-[var(--radius-card)]">
-                <ChartResultHeader
-                  subject={personName}
-                  t={t}
-                  onDownloadPdf={handleDownloadPdf}
-                  onReset={handleReset}
-                  save={
-                    enablePersistence && currentChartId
-                      ? { isSaved: isCurrentSaved, isBusy: isSavingChart, onToggle: () => handleToggleSave() }
-                      : undefined
-                  }
-                />
-              </div>
-
-              <div className="p-8 md:p-12">
-                <ChartMetaStrip data={chartData} t={t} />
-
-                {/* The four facts first; the sections below are the detail. */}
-                <div className="mb-12 mt-8">
-                  <ChartSummaryCard data={chartData} t={t} lang={lang} />
-                </div>
-
-                <div className="flex flex-col lg:flex-row lg:gap-12">
-                  <ChartSectionRail
-                    items={WORKSPACE_SECTIONS.map((entry) => ({ id: entry.id, label: sectionLabel(entry, t, lang) }))}
-                    ariaLabel={t.ui.sectionsNavAria}
-                  />
-
-                  <div className="min-w-0 flex-1 space-y-16">
-                    {/* Shared display controls — one flip updates every
-                        chart-figure section below, since ChartFigure is
-                        fully controlled and never owns this state itself. */}
-                    <ChartDisplayControls
-                      t={t}
-                      useSymbols={useSymbols}
-                      onUseSymbolsChange={setUseSymbols}
-                      chartStyle={chartStyle}
-                      onChartStyleChange={setChartStyle}
-                      className="border-b border-border pb-6 lg:sticky lg:top-[4.25rem] lg:z-10 lg:bg-washi-elevated/95 lg:pt-3 lg:backdrop-blur"
-                    />
-
-                    {WORKSPACE_SECTIONS.map((entry) => (
-                      <DeferredSection key={entry.id} id={entry.id} title={sectionHeading(entry, t, lang)}>
-                        <ChartSectionBody
-                          id={entry.id}
-                          data={chartData}
-                          t={t}
-                          lang={lang}
-                          chartStyle={chartStyle}
-                          useSymbols={useSymbols}
-                          gocharBase={gocharBase}
-                          onGocharBaseChange={setGocharBase}
-                          openCurrentDasha={entry.id === 'dasha'}
-                          showHeading={false}
-                        />
-                      </DeferredSection>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* The library comes after the result, not before it. */}

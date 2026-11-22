@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
@@ -14,15 +14,13 @@ import BirthDetailsFields, {
   isBirthDetailsComplete,
   type BirthDetailsValue,
 } from "@/components/shared/BirthDetailsFields";
-import SkyRing from "@/components/home/SkyRing";
-import Armillary from "@/components/celestial/Armillary";
-import Starfield from "@/components/celestial/Starfield";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { homeStoryCopy } from "@/lib/home/home-story-copy";
 import { tr } from "@/lib/sky/entity-links";
 import { NAKSHATRAS } from "@/lib/jyotish/nakshatra-data";
 import { useGsapEffect, MOTION_OK } from "@/lib/motion/gsap";
-import { SIGNS, estimateUtcOffset, quickSkyFromFields } from "@/lib/sky/quick-sky";
+import { estimateUtcOffset, quickSkyFromFields } from "@/lib/sky/quick-sky";
+import { cosmosBus } from "@/lib/cosmos/bus";
 import { trackEvent } from "@/lib/analytics/events";
 
 /**
@@ -33,11 +31,12 @@ import { trackEvent } from "@/lib/analytics/events";
  *   - phone: headline, form, and a slim preview strip that slides in between
  *     the fields and the button once a date exists (the button stays above
  *     the fold at 390×844);
- *   - desktop: a split screen — copy and form on the left, the armillary
- *     sphere on the right with the live sky ring as its plate.
+ *   - desktop: copy and form on the left; on the right, the 3D solar
+ *     system behind the page (HomeCosmos), with a caption.
  *
- * design-magic: the whole screen is the night sky (CSS sky + Starfield),
- * and the armillary sphere is the page's signature object.
+ * design-magic: the live preview *is* the solar system — as a date is
+ * typed, the scene time-lapses to that moment (via `cosmosBus`), and the
+ * caption names where the Moon and Sun stood.
  */
 export default function HomeHero({
   onComputed,
@@ -68,7 +67,22 @@ export default function HomeHero({
     return quickSkyFromFields(entry.date, effectiveTime(entry), offset);
   }, [entry]);
 
-  const signLabels = SIGNS.map((s) => tr(t.signs, s));
+  // Hand the typed moment to the 3D scene (UTC), or back to "now".
+  useEffect(() => {
+    const dm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(entry.date);
+    if (!dm || Number(dm[1]) < 1800 || Number(dm[1]) > 2200) {
+      cosmosBus.setBirth(null);
+      return;
+    }
+    const tm = /^(\d{2}):(\d{2})/.exec(effectiveTime(entry) || "12:00");
+    const offset = entry.location
+      ? estimateUtcOffset(entry.location.display_name, Number(entry.location.lon))
+      : -new Date().getTimezoneOffset() / 60;
+    const utc = Date.UTC(Number(dm[1]), Number(dm[2]) - 1, Number(dm[3]), tm ? Number(tm[1]) : 12, tm ? Number(tm[2]) : 0) - offset * 3600_000;
+    cosmosBus.setBirth(new Date(utc));
+  }, [entry]);
+  useEffect(() => () => cosmosBus.setBirth(null), []);
+
   const moonSign = sky ? (tr(t.signs, sky.moon.sign)) : "";
   const moonNakEngine = sky ? NAKSHATRAS[sky.moon.nakshatraNumber - 1]?.name : "";
   const moonNak = moonNakEngine ? (tr(t.nakshatras, moonNakEngine)) : "";
@@ -79,7 +93,7 @@ export default function HomeHero({
   const joiner = language === "ja" ? "" : " ";
 
   // Signature moment #1: the headline's phrases rise in, staggered, while
-  // the sky ring draws itself (SkyRing owns its own timeline).
+  // the 3D solar system time-lapses to whatever is typed (HomeCosmos).
   useGsapEffect(
     root,
     ({ gsap }) => {
@@ -153,16 +167,9 @@ export default function HomeHero({
       ref={root}
       id="start"
       aria-labelledby="hero-title"
-      className="night-sky relative isolate overflow-hidden"
+      className="relative"
     >
-      <Starfield />
-      {/* Phone and tablet: the armillary turns behind the headline, so the
-          form keeps its place above the fold. */}
-      <div aria-hidden className="pointer-events-none absolute -right-[22vw] -top-6 opacity-55 sm:-right-24 lg:hidden">
-        <Armillary signLabels={signLabels} style={{ "--size": "min(440px, 96vw)" } as React.CSSProperties} />
-      </div>
-
-      <div className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-14 pt-6 md:px-8 md:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12 lg:pb-20">
+      <div className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-16 pt-6 md:px-8 md:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12 lg:pb-20">
       <div className="min-w-0">
         <h1 id="hero-title" className="ma-display max-w-[13em] lg:text-[clamp(2.75rem,3.5vw,3.6rem)]">
           {phrases.map((phrase, i) => (
@@ -182,7 +189,7 @@ export default function HomeHero({
         <form
           data-hero-after
           onSubmit={handleSubmit}
-          className="mt-5 max-w-md rounded-[16px] border border-border bg-washi-elevated/85 p-4 shadow-[0_18px_48px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-5 md:mt-9 md:p-6"
+          className="hero-form mt-5 max-w-md p-4 sm:p-5 md:mt-9 md:p-6"
           aria-label={copy.submit}
         >
           <BirthDetailsFields
@@ -216,17 +223,16 @@ export default function HomeHero({
                 transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
                 className="overflow-hidden lg:hidden"
               >
-                <div className="mt-3 flex items-center gap-3 rounded-[14px] border border-border bg-washi-elevated p-3" aria-live="polite">
-                  <div className="w-14 shrink-0">
-                    <SkyRing sky={sky} signLabels={signLabels} ariaLabel={copy.previewLabel} size="sm" />
-                  </div>
-                  <div className="min-w-0 text-sm leading-relaxed">
-                    <p className="text-text-muted">{copy.previewLabel}</p>
-                    <p className="text-ink">
-                      <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-terracotta align-middle" aria-hidden />
-                      {copy.moon} {copy.moonIn(moonSign, moonNak)}
-                    </p>
-                  </div>
+                <div className="mt-3 rounded-[14px] border border-border bg-washi p-3 text-sm leading-relaxed" aria-live="polite">
+                  <p className="text-xs text-text-muted">{copy.previewLabel}</p>
+                  <p className="mt-1 text-ink">
+                    <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-terracotta align-middle" aria-hidden />
+                    {copy.moon} {copy.moonIn(moonSign, moonNak)}
+                  </p>
+                  <p className="text-ink">
+                    <span className="mr-1.5 inline-block h-2 w-2 rounded-full border-2 border-ink align-middle" aria-hidden />
+                    {copy.sun} {copy.sunIn(sunSign)}
+                  </p>
                 </div>
               </m.div>
             )}
@@ -245,35 +251,26 @@ export default function HomeHero({
         </form>
       </div>
 
-      {/* Desktop: the armillary sphere with the visitor's live sky as its plate. */}
-      <div className="hidden min-w-0 lg:block" aria-live="polite">
-        <div className="mx-auto flex max-w-[560px] flex-col items-center">
-          <Armillary signLabels={signLabels} style={{ "--size": "min(560px, 44vw)" } as React.CSSProperties}>
-          <SkyRing
-            sky={sky}
-            signLabels={signLabels}
-            ariaLabel={copy.previewLabel}
-            centerTop={sky ? copy.moon : copy.previewLabel}
-            centerMain={sky ? moonNak : undefined}
-            centerSub={sky ? `${moonSign} · ${t.ui.pada} ${sky.moon.pada}` : undefined}
-          />
-          </Armillary>
-          <div className="mt-6 min-h-[4.5rem] text-center text-sm leading-relaxed text-text-muted">
-            {sky ? (
-              <>
-                <p>
-                  <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-terracotta align-middle" aria-hidden />
-                  {copy.moon} {copy.moonIn(moonSign, moonNak)}
-                  <span className="mx-3 text-border">|</span>
-                  <span className="mr-1.5 inline-block h-2 w-2 rounded-full border-2 border-ink align-middle" aria-hidden />
-                  {copy.sun} {copy.sunIn(sunSign)}
-                </p>
-                <p className="mt-1 text-xs">{copy.previewNote}</p>
-              </>
-            ) : (
-              <p>{copy.previewEmpty}</p>
-            )}
-          </div>
+      {/* Desktop: the solar system behind the page is the preview; this
+          caption says what it shows. */}
+      <div className="hidden min-w-0 self-end lg:block" aria-live="polite">
+        <div className="ml-auto max-w-[22rem] pb-16 text-right text-sm leading-relaxed text-text-muted">
+          {sky ? (
+            <>
+              <p className="text-xs">{copy.previewLabel}</p>
+              <p className="mt-1 text-ink">
+                <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-terracotta align-middle" aria-hidden />
+                {copy.moon} {copy.moonIn(moonSign, moonNak)}
+              </p>
+              <p className="text-ink">
+                <span className="mr-1.5 inline-block h-2 w-2 rounded-full border-2 border-ink align-middle" aria-hidden />
+                {copy.sun} {copy.sunIn(sunSign)}
+              </p>
+              <p className="mt-1 text-xs">{copy.previewNote}</p>
+            </>
+          ) : (
+            <p>{copy.previewEmpty}</p>
+          )}
         </div>
       </div>
       </div>

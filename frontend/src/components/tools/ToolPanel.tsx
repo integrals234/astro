@@ -36,15 +36,16 @@ const PANELS = {
 } satisfies Record<NonNullable<ToolLanding["resultPanel"]>, unknown>;
 
 const ChartSectionBody = dynamic(() => import("@/components/chart/ChartSectionBody"), { ssr: false, loading });
+const ChartSectionResult = dynamic(() => import("@/components/tools/ChartSectionResult"), { ssr: false, loading });
 
 /**
- * Can this tool answer in place, given what the page already knows? A
- * remembered person is enough: if their chart is still calculating (or
- * failed) the sheet opens with that state instead of navigating away.
+ * Can this tool answer in place? Every tool can: with a remembered person
+ * the sheet shows their answer (or its calculating / failed state); for a
+ * first-time visitor it opens on the tool's own short form — quick use
+ * without leaving the page.
  */
-export function canOpenInPlace(tool: ToolSummary, hasChart: boolean, hasProfile: boolean) {
-  if (tool.resultPanel || tool.sections) return hasProfile || hasChart;
-  return false;
+export function canOpenInPlace(tool: ToolSummary) {
+  return Boolean(tool.resultPanel || tool.sections);
 }
 
 /** The tool's answer, rendered inside a sheet. Needs a `ChartDataProvider` above it. */
@@ -64,14 +65,16 @@ export default function ToolPanel({ tool }: { tool: ToolSummary }) {
         <p className="text-sm text-text-muted">{ui.resultFor(profilePersonName(primary))}</p>
       ) : null}
       {Panel ? <Panel /> : null}
-      {showSections && !data && status === "error" ? (
+      {/* No one remembered yet: the tool's own form, right here. */}
+      {showSections && !data && !primary ? <ChartSectionResult sections={tool.sections!} toolSlug={tool.slug} /> : null}
+      {showSections && !data && primary && status === "error" ? (
         <InlineError message={ui.computeError}>
           <button type="button" onClick={() => void retry()} className="washi-btn-primary px-4 text-sm">
             {ui.retry}
           </button>
         </InlineError>
       ) : null}
-      {showSections && !data && status !== "error" ? <Calculating /> : null}
+      {showSections && !data && primary && status !== "error" ? <Calculating /> : null}
       {showSections && data
         ? tool.sections!.map((id) => (
             <ChartSectionBody

@@ -10,6 +10,7 @@
  *   4  nakshatras  — the twenty-seven mansions, the Moon among them
  *   5  grahas      — the nine grahas placed on the band where they stand
  *   6  now         — the same, for this very moment
+ *   7  outro       — the camera draws back while the page fades the sky out
  *
  * Positions are real (JPL Keplerian elements; see lib/sky/orbits.ts),
  * distances compressed so Saturn and Mercury fit one screen. Typing a birth
@@ -121,13 +122,16 @@ interface Key {
 }
 
 const KEYS: Key[] = [
-  { focus: 0, radius: 38, elev: 22, az: -30, azEarth: 0, helio: 1, orbits: 1, labels: 0, zodiac: 0, naks: 0, grahas: 0, moon: 0, rays: 0, shiftX: 0.2, shiftY: 0.2 },
+  // shiftY 0.33: on phones the system sits in the hero's open-sky window, above the headline.
+  { focus: 0, radius: 38, elev: 22, az: -30, azEarth: 0, helio: 1, orbits: 1, labels: 0, zodiac: 0, naks: 0, grahas: 0, moon: 0, rays: 0, shiftX: 0.2, shiftY: 0.33 },
   { focus: 0, radius: 27, elev: 40, az: 20, azEarth: 0, helio: 1, orbits: 1, labels: 1, zodiac: 0, naks: 0, grahas: 0, moon: 0, rays: 0, shiftX: 0.2, shiftY: 0.16 },
   { focus: 1, radius: 17, elev: 20, az: 20, azEarth: 1, helio: 0.9, orbits: 0.6, labels: 0.6, zodiac: 0.85, naks: 0, grahas: 0, moon: 0, rays: 0, shiftX: 0.2, shiftY: 0.16 },
   { focus: 1, radius: 25, elev: 74, az: 30, azEarth: 1, helio: 0.35, orbits: 0.25, labels: 0, zodiac: 1, naks: 0, grahas: 0, moon: 0, rays: 0, shiftX: 0.21, shiftY: 0.16 },
   { focus: 1, radius: 22, elev: 82, az: 50, azEarth: 1, helio: 0.2, orbits: 0.15, labels: 0, zodiac: 0.55, naks: 1, grahas: 0, moon: 1, rays: 0, shiftX: 0.21, shiftY: 0.16 },
   { focus: 1, radius: 23, elev: 64, az: 70, azEarth: 1, helio: 0.12, orbits: 0.1, labels: 0, zodiac: 1, naks: 0.35, grahas: 1, moon: 1, rays: 1, shiftX: 0.21, shiftY: 0.16 },
   { focus: 1, radius: 24, elev: 58, az: 92, azEarth: 1, helio: 0.12, orbits: 0.1, labels: 0, zodiac: 1, naks: 0.35, grahas: 1, moon: 1, rays: 1, shiftX: 0.21, shiftY: 0.16 },
+  // 7 — outro: the camera draws back as the page fades the sky away.
+  { focus: 1, radius: 44, elev: 50, az: 116, azEarth: 1, helio: 0.12, orbits: 0.1, labels: 0, zodiac: 0.7, naks: 0, grahas: 0.6, moon: 0.6, rays: 0.3, shiftX: 0.1, shiftY: 0.1 },
 ];
 
 const smoothstep = (t: number) => t * t * (3 - 2 * t);
@@ -164,6 +168,8 @@ export class CosmosScene {
   // Simulated time (Julian centuries since J2000) and its time-lapse.
   private tCur: number;
   private anim: { from: number; to: number; start: number; dur: number } | null = null;
+  // A cut through darkness: the sky dips out, the moment swaps, it returns.
+  private dip: { to: number; start: number; dur: number; swapped: boolean } | null = null;
   private lastDateEmit = 0;
 
   // Scroll stage (target) and the eased camera state that follows it.
@@ -230,25 +236,54 @@ export class CosmosScene {
 
   setStage(stage: number) {
     this.stageTarget = Math.max(0, Math.min(KEYS.length - 1, stage));
+    // From chapter 2 the camera follows Earth; a time-lapse still running
+    // there would carry the camera round the Sun with it. Finish it as a dip.
+    if (this.anim && this.stageTarget > 1.5) {
+      const to = this.anim.to;
+      this.anim = null;
+      this.dip = { to, start: this.elapsed, dur: 1.1, swapped: false };
+    }
     if (this.opts.reduced) this.snapState();
     if (!this.running) this.renderOnce();
   }
 
-  /** Time-lapse the system to `date`. */
-  setDate(date: Date) {
+  /**
+   * Show `date`. "lapse" runs time there (typing a birth date: the planets
+   * wheel back to it). "dip" fades the sky out, swaps, and fades it back —
+   * for jumps made by scrolling (birth moment ↔ now), where a decades-long
+   * time-lapse would spin the whole view, the camera following Earth.
+   */
+  setDate(date: Date, mode: "lapse" | "dip" = "lapse") {
     const to = centuries(date);
-    if (Math.abs(to - (this.anim?.to ?? this.tCur)) < 1e-9) {
-      if (!this.anim) this.emitDate(true);
+    const pending = this.dip?.to ?? this.anim?.to ?? this.tCur;
+    if (Math.abs(to - pending) < 1e-9) {
+      if (!this.anim && !this.dip) this.emitDate(true);
       return;
     }
     if (this.opts.reduced) {
       this.anim = null;
+      this.dip = null;
       this.tCur = to;
       this.placeBodies();
       this.emitDate(true);
       if (!this.running) this.renderOnce();
       return;
     }
+    if (mode === "dip") {
+      this.anim = null;
+      // Already dipping: keep the same fade, just retarget the swap.
+      if (this.dip && !this.dip.swapped) this.dip.to = to;
+      else this.dip = { to, start: this.elapsed, dur: 1.1, swapped: false };
+      if (!this.running) {
+        this.tCur = to;
+        this.dip = null;
+        this.placeBodies();
+        this.renderOnce();
+      }
+      return;
+    }
+    this.dip = null;
+    this.renderer.domElement.style.opacity = "";
     const days = Math.abs(to - this.tCur) * 36525;
     const dur = Math.min(3.2, 1 + Math.log10(1 + days) * 0.45);
     this.anim = { from: this.tCur, to, start: this.elapsed, dur };
@@ -734,6 +769,21 @@ export class CosmosScene {
       if (k === 1) this.anim = null;
     }
 
+    // Dip: out, swap at the darkest point (camera included), back in.
+    if (this.dip) {
+      const k = Math.min(1, (this.elapsed - this.dip.start) / this.dip.dur);
+      if (k >= 0.5 && !this.dip.swapped) {
+        this.dip.swapped = true;
+        this.tCur = this.dip.to;
+        this.placeBodies();
+        this.snapState();
+        this.emitDate(true);
+      }
+      const v = Math.abs(1 - 2 * k);
+      this.renderer.domElement.style.opacity = k >= 1 ? "" : String(v * v * (3 - 2 * v));
+      if (k >= 1) this.dip = null;
+    }
+
     // Ease the camera state toward the scroll stage.
     const target = this.targetKey();
     const ease = reduced ? 1 : 1 - Math.exp(-dt * 3.2);
@@ -774,7 +824,10 @@ export class CosmosScene {
     const fit = portrait ? lerp(1.2, 1.55, st.focus) : 1;
     const radius = st.radius * fit;
     const az = (lerp(st.az, st.az + this.earthAngle, st.azEarth) + this.drift + this.pointer.x * 4) * DEG;
-    const el = Math.max(4, Math.min(88, st.elev + this.pointer.y * 3)) * DEG;
+    // Portrait hero: a flatter view keeps the outer orbits inside the
+    // open-sky window above the headline; it rises again as the journey starts.
+    const flatten = portrait ? 11 * Math.max(0, 1 - this.stageTarget) : 0;
+    const el = Math.max(4, Math.min(88, st.elev - flatten + this.pointer.y * 3)) * DEG;
     this.camera.position.set(
       st.fx + radius * Math.cos(el) * Math.cos(az),
       st.fy + radius * Math.sin(el),

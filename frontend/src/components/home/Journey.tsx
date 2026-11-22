@@ -63,15 +63,50 @@ export default function Journey() {
           });
         }
 
+        // Outro: after the last chapter the camera draws back (stage 6 → 7)
+        // while the sky, the chapter rail and the last card fade away, so
+        // the next section begins on the page's own ground.
+        const outro = document.getElementById("journey-outro");
+        const layer = document.querySelector<HTMLElement>("[data-cosmos-layer]");
+        const rail = document.querySelector<HTMLElement>("[data-cosmos-rail]");
+        if (outro) {
+          ScrollTrigger.create({
+            trigger: outro,
+            start: "top bottom",
+            end: "bottom 70%",
+            onUpdate: (self) => cosmosBus.setStage(els.length - 1 + self.progress),
+            onLeaveBack: () => cosmosBus.setStage(els.length - 1),
+          });
+          // Finishes while the next section is already rising into view —
+          // no empty screen between the sky and the page.
+          const fadeOut = { trigger: outro, start: "top bottom", end: "bottom 70%", scrub: reduced ? true : 0.5 };
+          if (layer) gsap.fromTo(layer, { opacity: 1 }, { opacity: 0, ease: "power1.in", scrollTrigger: fadeOut });
+          if (rail) gsap.fromTo(rail, { opacity: 1 }, { opacity: 0, ease: "none", scrollTrigger: { ...fadeOut, end: "top 50%" } });
+        }
+
         if (!reduced) {
-          // Each card rises in as its screen arrives and recedes as it goes.
-          gsap.utils.toArray<HTMLElement>("[data-journey-card]").forEach((card) => {
+          // Each card rises in as its screen arrives and recedes as it goes;
+          // the last one dissolves fully into the outro.
+          const cards = gsap.utils.toArray<HTMLElement>("[data-journey-card]");
+          cards.forEach((card, i) => {
+            const last = i === cards.length - 1;
             gsap.fromTo(
               card,
               { opacity: 0, y: 48 },
-              { opacity: 1, y: 0, ease: "none", scrollTrigger: { trigger: card, start: "top 92%", end: "top 58%", scrub: 0.6 } },
+              { opacity: 1, y: 0, ease: "none", immediateRender: false, scrollTrigger: { trigger: card, start: "top 92%", end: "top 58%", scrub: 0.6 } },
             );
-            gsap.to(card, { opacity: 0.15, y: -24, ease: "none", scrollTrigger: { trigger: card, start: "bottom 32%", end: "bottom 6%", scrub: 0.6 } });
+            gsap.fromTo(
+              card,
+              { opacity: 1, y: 0, scale: 1 },
+              {
+                opacity: last ? 0 : 0.15,
+                y: last ? -40 : -24,
+                scale: last ? 0.97 : 1,
+                ease: "none",
+                immediateRender: false,
+                scrollTrigger: { trigger: card, start: "bottom 32%", end: last ? "bottom 0%" : "bottom 6%", scrub: 0.6 },
+              },
+            );
           });
         }
       }, root.current);
@@ -104,7 +139,8 @@ export default function Journey() {
             const first = els[0].getBoundingClientRect().top + y;
             const lastEl = els[els.length - 1];
             const last = lastEl.getBoundingClientRect().top + y + lastEl.offsetHeight / 2 - vh / 2;
-            if (y < first - 4 || y > last + vh * 0.3) return;
+            // Never pull back from the outro: past the last chapter, scroll is free.
+            if (y < first - 4 || y > last + 4) return;
             let best = Infinity;
             let target = y;
             for (const el of els) {
@@ -228,6 +264,8 @@ export default function Journey() {
           </div>
         </div>
       ))}
+      {/* The outro: room for the sky to draw back and fade before the next section. */}
+      <div id="journey-outro" aria-hidden className="h-[28svh] md:h-[40svh]" />
     </section>
   );
 }

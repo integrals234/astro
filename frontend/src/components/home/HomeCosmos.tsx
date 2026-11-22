@@ -20,7 +20,8 @@ const CHAPTERS: JourneyChapterId[] = ["start", ...JOURNEY_CHAPTERS];
 /**
  * The hero and the journey share one sky: a viewport-tall sticky layer
  * (the 3D scene, or its CSS poster) that the hero and the six chapters
- * scroll over, released when the journey ends. A small readout says which
+ * scroll over; after the last chapter it draws back and fades out (the
+ * journey's outro), so the next section starts on a clean page. A small readout says which
  * moment is on screen; on desktop a rail of chapter marks sits at the edge.
  */
 export default function HomeCosmos({ children }: { children: React.ReactNode }) {
@@ -52,7 +53,7 @@ export default function HomeCosmos({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="cosmos-stage relative isolate">
-      <div aria-hidden className="pointer-events-none sticky top-0 -z-10 -mb-[100svh] h-[100svh] overflow-hidden">
+      <div data-cosmos-layer aria-hidden className="pointer-events-none sticky top-0 -z-10 -mb-[100svh] h-[100svh] overflow-hidden">
         <CosmosCanvas onDate={onDate} />
         <div className="cosmos-veil absolute inset-0" />
         <p className="cosmos-hud absolute bottom-5 right-5 hidden text-right md:block">
@@ -63,7 +64,7 @@ export default function HomeCosmos({ children }: { children: React.ReactNode }) 
         </p>
       </div>
 
-      <nav aria-label={copy.railLabel} className="journey-rail">
+      <nav data-cosmos-rail aria-label={copy.railLabel} className="journey-rail">
         <ol>
           {CHAPTERS.map((id, i) => (
             <li key={id}>

@@ -81,11 +81,17 @@ export default function CosmosCanvas({ onDate }: { onDate?: (date: Date) => void
 
       // "Now" is the moment the page opened — not re-read on every scroll tick.
       const now = new Date();
+      // Crossing into or out of "the sky now" by scrolling dips the sky;
+      // typing a birth date time-lapses to it.
+      let wasNowSide = cosmosBus.getStage() >= NOW_STAGE;
       const sync = () => {
         const stage = cosmosBus.getStage();
         scene.setStage(stage);
         const birth = cosmosBus.getBirth();
-        scene.setDate(stage < NOW_STAGE && birth ? birth : now);
+        const nowSide = stage >= NOW_STAGE;
+        const mode = nowSide !== wasNowSide ? "dip" : "lapse";
+        wasNowSide = nowSide;
+        scene.setDate(!nowSide && birth ? birth : now, mode);
       };
       sync();
       const unsub = cosmosBus.subscribe(sync);

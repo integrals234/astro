@@ -169,8 +169,11 @@ export default function HomeHero({
       aria-labelledby="hero-title"
       className="relative"
     >
-      <div className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-16 pt-6 md:px-8 md:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12 lg:pb-20">
+      <div className="relative mx-auto grid w-full max-w-6xl scroll-mt-20 gap-10 px-4 pb-16 pt-0 md:px-8 lg:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12 lg:pb-20">
       <div className="min-w-0">
+        {/* Phone and tablet: a window of open sky for the solar system, so
+            it never sits behind the headline or the lead. */}
+        <div aria-hidden className="pointer-events-none -mx-4 h-[30svh] min-h-[200px] max-h-[300px] lg:hidden" />
         <h1 id="hero-title" className="ma-display max-w-[13em] lg:text-[clamp(2.75rem,3.5vw,3.6rem)]">
           {phrases.map((phrase, i) => (
             <span key={`${phrase}-${i}`}>

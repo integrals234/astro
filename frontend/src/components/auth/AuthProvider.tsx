@@ -66,6 +66,16 @@ function readSessionHint(): boolean {
 
 const noopSubscribe = () => () => {};
 
+/**
+ * True once the browser is known to carry session cookies (before Clerk has
+ * confirmed them); false on the server and for anonymous visitors. Lets a
+ * page server-render its public layout and step aside only for browsers
+ * that are probably signed in.
+ */
+export function useSessionHint(): boolean {
+  return useSyncExternalStore(noopSubscribe, readSessionHint, () => false);
+}
+
 const ClerkIsland = dynamic(() => import("@/components/auth/ClerkIsland"), { ssr: false });
 
 const AuthContext = createContext<AuthState>(UNKNOWN);

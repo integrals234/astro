@@ -1,6 +1,6 @@
 "use client";
 
-import { SignedIn, SignedOut, useAuthState } from "@/components/auth/AuthProvider";
+import { SignedIn, useAuthState, useSessionHint } from "@/components/auth/AuthProvider";
 import AppShell from "@/components/layout/AppShell";
 import PublicHeader from "@/components/layout/PublicHeader";
 import ChartSectionNav from "@/components/chart/ChartSectionNav";
@@ -25,6 +25,20 @@ function UnlessSignedIn({ children }: { children: React.ReactNode }) {
   return isLoaded && isSignedIn ? null : <>{children}</>;
 }
 
+/**
+ * The public layout: server-rendered (crawlers and first paint get the real
+ * page, not an empty shell) and kept for anyone not signed in. A browser
+ * carrying session cookies swaps to a blank placeholder after hydration
+ * until Clerk confirms, then gets the app frame.
+ */
+function PublicUnlessSignedIn({ children }: { children: React.ReactNode }) {
+  const { isLoaded, isSignedIn } = useAuthState();
+  const likelySignedIn = useSessionHint();
+  if (isLoaded && isSignedIn) return null;
+  if (!isLoaded && likelySignedIn) return <div aria-hidden className="min-h-screen bg-washi" />;
+  return <>{children}</>;
+}
+
 export default function ChartShell({ children, showPublicAuthBar, after }: ChartShellProps) {
   return (
     <>
@@ -37,7 +51,7 @@ export default function ChartShell({ children, showPublicAuthBar, after }: Chart
           </div>
         </AppShell>
       </SignedIn>
-      <SignedOut>
+      <PublicUnlessSignedIn>
         <div className="chart-stage relative isolate min-h-screen bg-washi text-ink">
           {showPublicAuthBar && <PublicHeader showChartCta={false} />}
           <div className="page-enter mx-auto max-w-7xl px-4 py-4 md:px-8 md:py-8">
@@ -45,7 +59,7 @@ export default function ChartShell({ children, showPublicAuthBar, after }: Chart
             {children}
           </div>
         </div>
-      </SignedOut>
+      </PublicUnlessSignedIn>
       {after ? (
         <UnlessSignedIn>
           <div className="bg-washi">{after}</div>

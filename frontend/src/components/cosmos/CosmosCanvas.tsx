@@ -27,9 +27,8 @@ function webglOk() {
  * The WebGL layer behind the home page's hero and journey.
  *
  * The first paint is a CSS poster (sun glow and stars, `.cosmos-poster`),
- * so nothing waits on Three.js. The scene's chunk loads once the page is
- * idle on a desktop, and on touch devices at the visitor's first touch or
- * scroll — a phone never parses 3D code during its first load. It renders
+ * so nothing waits on Three.js. The scene's chunk loads at the visitor's
+ * first touch, scroll, key or mouse move — never during the first load. It renders
  * only while on screen and in a visible tab.
  */
 export default function CosmosCanvas({ onDate }: { onDate?: (date: Date) => void }) {
@@ -125,25 +124,19 @@ export default function CosmosCanvas({ onDate }: { onDate?: (date: Date) => void
       };
     };
 
-    // Desktop: when the page is idle. Touch: at the first sign of a visitor.
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    let idleHandle: number | undefined;
-    const events = ["pointerdown", "touchstart", "scroll", "keydown", "wheel"] as const;
+    // At the first sign of a visitor — a touch, scroll, key, or (desktop) a
+    // mouse move — never during the initial load, where parsing and
+    // compiling 3D would block the main thread (and the speed score).
+    const events = ["pointerdown", "touchstart", "scroll", "keydown", "wheel", "pointermove"] as const;
     const onFirst = () => {
       events.forEach((ev) => window.removeEventListener(ev, onFirst));
       void boot();
     };
-    if (coarse) {
-      events.forEach((ev) => window.addEventListener(ev, onFirst, { passive: true, once: true }));
-    } else {
-      const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 900));
-      idleHandle = idle(() => void boot(), { timeout: 2500 } as IdleRequestOptions) as number;
-    }
+    events.forEach((ev) => window.addEventListener(ev, onFirst, { passive: true, once: true }));
 
     return () => {
       cancelled = true;
       events.forEach((ev) => window.removeEventListener(ev, onFirst));
-      if (idleHandle !== undefined) (window.cancelIdleCallback ?? window.clearTimeout)(idleHandle);
       cleanup?.();
     };
   }, [language]);

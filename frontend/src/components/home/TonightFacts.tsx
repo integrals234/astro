@@ -72,12 +72,14 @@ export default function TonightFacts() {
 
   return (
     <dl className="grid min-h-[7.5rem] grid-cols-2 gap-x-6 gap-y-6" aria-live="polite">
-      <div className="col-span-2 flex items-center gap-4">
-        {sky ? <MoonPhase elongation={elongation} /> : <span className="h-16 w-16 shrink-0 rounded-full bg-neutral-tag" aria-hidden />}
-        <div className="min-w-0">
-          <dt className="text-xs text-text-muted">{copy.phaseLabel}</dt>
-          <dd className="mt-1 font-chart text-sm tabular-nums text-ink">{sky ? copy.illumination(illumination) : "—"}</dd>
-        </div>
+      {/* dt/dd only, as direct children (valid list for screen readers);
+          the Moon glyph is placed by the grid, not by a wrapper. */}
+      <div className="col-span-2 grid grid-cols-[auto_minmax(0,1fr)] content-center items-center gap-x-4">
+        <dt className="col-start-2 self-end text-xs text-text-muted">{copy.phaseLabel}</dt>
+        <dd className="col-start-2 mt-1 self-start font-chart text-sm tabular-nums text-ink">{sky ? copy.illumination(illumination) : "—"}</dd>
+        <dd aria-hidden className="col-start-1 row-span-2 row-start-1">
+          {sky ? <MoonPhase elongation={elongation} /> : <span className="block h-16 w-16 shrink-0 rounded-full bg-neutral-tag" />}
+        </dd>
       </div>
       <div className="min-w-0">
         <dt className="text-xs text-text-muted">{copy.moonLabel}</dt>

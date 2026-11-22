@@ -755,9 +755,38 @@ function ChartWorkspaceInner({
   );
 }
 
+/**
+ * What the server renders in the workspace's place. `useSearchParams` keeps
+ * the workspace itself out of the static HTML, so without this the first
+ * paint was an empty page and its heading (the LCP) waited for JavaScript.
+ * Same card, same heading, same height: the live form replaces it in place.
+ */
+function WorkspaceFallback({ enablePersistence = false }: { enablePersistence?: boolean }) {
+  const { language } = useLanguage();
+  const chartCopy = getChartUi(language);
+  const t = chartFormCopy[language];
+  return (
+    <div className="chart-workspace-embedded w-full" aria-busy="true">
+      <div className={`mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 ${enablePersistence ? 'xl:grid-cols-12' : 'lg:grid-cols-12'}`}>
+        <div className={`${enablePersistence ? 'xl:col-span-4' : 'lg:col-span-4'} min-w-0`}>
+          <div className="chart-card min-h-[820px] p-6 sm:p-8">
+            <div className="mb-8">
+              <h1 className="font-header text-3xl font-medium leading-tight tracking-tight text-ink">{chartCopy.appTitle}</h1>
+            </div>
+            <p className="text-sm leading-relaxed text-text-muted">{t.awaitingDesc}</p>
+          </div>
+        </div>
+        <div className={`${enablePersistence ? 'hidden xl:block xl:col-span-8' : 'hidden lg:block lg:col-span-8'} min-w-0`}>
+          <div className="chart-card min-h-[600px]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ChartWorkspace(props: ChartWorkspaceProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={props.embedded ? <WorkspaceFallback enablePersistence={props.enablePersistence} /> : null}>
       <ChartWorkspaceInner {...props} />
     </Suspense>
   );

@@ -7,6 +7,10 @@ import { computeChart, useProfileResult } from "@/components/tools/useProfileRes
 import { chartFormCopy, type ChartTranslations } from "@/lib/chart-i18n";
 import { findNakshatra } from "@/lib/jyotish/nakshatra-data";
 import { sukuyoCopy } from "@/lib/tools/sukuyo-copy";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import ShukuPicker from "@/components/sukuyo/ShukuPicker";
+import { shukuByKanji, shukuHref } from "@/lib/sukuyo/shuku";
 
 /**
  * 宿曜 (Sukuyō) — the visitor's birth mansion.
@@ -58,6 +62,18 @@ export default function SukuyoResult() {
                 {copy.derivation(row.sukuyo, t.nakshatras[row.name] ?? row.name)}
               </p>
             </div>
+
+            {/* 宿曜 pages are Japanese only: the 宿's own page and a
+                compatibility picker preset to this 宿. */}
+            {language === "ja" && shukuByKanji(row.sukuyo) ? (
+              <div className="space-y-4">
+                <Link href={shukuHref(shukuByKanji(row.sukuyo)!)} className="washi-btn-secondary gap-2 px-5 text-sm">
+                  {row.sukuyo}の性格と相性一覧を見る
+                  <ArrowRight size={14} aria-hidden />
+                </Link>
+                <ShukuPicker self={shukuByKanji(row.sukuyo)!.slug} title="相手の宿を選んで相性を見る" />
+              </div>
+            ) : null}
 
             <BookingHandoff tool="sukuyo" />
           </div>

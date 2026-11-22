@@ -20,10 +20,14 @@ export const CONTENT_REVISIONS = {
   articles: "2026-08-17",
   /** Nakshatra / rashi / graha entity corpus. */
   entities: "2026-08-17",
-  /** `src/lib/education/horoscope-engine.ts` output rotates on a weekly cycle. */
-  horoscope: "2026-08-16",
+  /** /horoscope readings are computed from transits (horoscope-transits.ts). */
+  horoscope: "2026-11-22",
   /** `src/lib/vedic-course/`. */
   course: "2026-06-06",
+  /** 宿曜 hub, 27 宿 pages, pair pages. */
+  sukuyo: "2026-11-22",
+  /** /today (content changes daily; this is the template revision). */
+  daily: "2026-11-22",
 } as const;
 
 export type ContentCollection = keyof typeof CONTENT_REVISIONS;

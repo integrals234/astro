@@ -215,6 +215,17 @@ export default async function ToolLandingPage({ params }: Params) {
           </div>
         ) : null}
 
+        {/* 宿曜 compatibility pages (Japanese only) from the 宿曜 tool. */}
+        {tool.slug === "sukuyo" && language === "ja" ? (
+          <Link href="/sukuyo" className="washi-card washi-card-interactive mt-10 flex items-center justify-between gap-4 p-5">
+            <span>
+              <span className="block font-header text-[length:var(--step-1)] text-ink">宿曜占星術の相性早見表</span>
+              <span className="mt-1 block text-sm text-text-muted">27宿の性格と、三九の秘法による729通りの相性</span>
+            </span>
+            <span aria-hidden className="text-terracotta">→</span>
+          </Link>
+        ) : null}
+
         <hr className="my-12 h-px border-0 bg-border" />
 
         {/*

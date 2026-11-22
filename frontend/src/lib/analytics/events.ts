@@ -28,8 +28,9 @@ export type AnalyticsEvent =
   | { name: "inquiry_failed"; props: { locale: string; reason: string } }
   // Engagement
   | { name: "instagram_clicked"; props: { locale: string; placement: string } }
-  | { name: "result_shared"; props: { locale: string; method: "native" | "clipboard" } }
-  | { name: "course_chapter_completed"; props: { chapter: number; locale: string } };
+  | { name: "result_shared"; props: { locale: string; method: "native" | "clipboard" | "line" | "x"; page?: string } }
+  | { name: "course_chapter_completed"; props: { chapter: number; locale: string } }
+  | { name: "sukuyo_pair_opened"; props: { from: string; to: string } };
 
 type EventName = AnalyticsEvent["name"];
 type PropsOf<N extends EventName> = Extract<AnalyticsEvent, { name: N }>["props"];

@@ -7,6 +7,7 @@ import {
 } from "@/lib/education/article-routes";
 import { ENTITY_SETS, entityPath } from "@/lib/education/entity-routes";
 import { TOOL_LANDINGS } from "@/lib/tools/landing-content";
+import { SHUKUS } from "@/lib/sukuyo/shuku";
 import { DEFAULT_APP_LANGUAGE } from "@/lib/i18n/language";
 import {
   revisionOf,
@@ -32,6 +33,9 @@ import { languageAlternates, localeUrl } from "@/lib/seo/site";
 type Entry = MetadataRoute.Sitemap[number];
 
 const ARTICLE_EXCLUDED_LOCALES = ["en"] as const;
+
+/** See the 宿曜 block in buildSitemap. */
+const SUKUYO_PAIRS_IN_SITEMAP = false;
 
 function entry(
   path: string,
@@ -107,6 +111,8 @@ export function buildSitemap({
       priority: 0.8,
     }),
     entry("/course", { collection: "course", priority: 0.7 }),
+    // Computed daily from the Moon (all four languages).
+    entry("/today", { collection: "daily", priority: 0.8, changeFrequency: "daily" }),
     entry("/about", { collection: "core", priority: 0.7 }),
   ];
 
@@ -152,9 +158,24 @@ export function buildSitemap({
   // /legal/* is deliberately absent: those pages are noindex drafts.
   // /blogs and /premium are absent too: /blogs had no content and was removed,
   // and /premium is a noindex waitlist until it becomes the pricing page.
+  // 宿曜 (Japanese only — no other-locale alternates). The 729 pair pages
+  // are linked from the hub and every 宿 page, so crawlers reach them; they
+  // join the sitemap once Search Console shows the hub and 27 宿 pages
+  // indexed (staged launch against scaled-content signals). Flip
+  // SUKUYO_PAIRS_IN_SITEMAP then.
+  const JA_ONLY = ["en", "hi", "ko"] as const;
+  const sukuyo: Entry[] = [
+    entry("/sukuyo", { collection: "sukuyo", priority: 0.8, changeFrequency: "daily", excludeLocales: JA_ONLY }),
+    ...SHUKUS.map((s) => entry(`/sukuyo/${s.slug}`, { collection: "sukuyo", priority: 0.7, changeFrequency: "daily", excludeLocales: JA_ONLY })),
+    ...(SUKUYO_PAIRS_IN_SITEMAP
+      ? SHUKUS.flatMap((a) => SHUKUS.map((b) => entry(`/sukuyo/${a.slug}/${b.slug}`, { collection: "sukuyo", priority: 0.5, excludeLocales: JA_ONLY })))
+      : []),
+  ];
+
   return [
     ...landing,
     ...tools,
+    ...sukuyo,
     ...sectionHubs,
     ...(includeArticles ? articles : []),
     ...entities,

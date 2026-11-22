@@ -7,6 +7,8 @@ import type { AppLanguage } from "@/lib/i18n/language";
  * outcome, no fear framing. Every key exists in all four locales.
  */
 export interface HomeStoryCopy {
+  /** Small line inside the hero <h1>, above the title: the search phrase. */
+  heroKicker: string;
   heroTitle: string;
   heroLead: string;
   addName: string;
@@ -100,6 +102,7 @@ export const TOOL_GROUPS: Record<ToolGroupId, readonly string[]> = {
 
 export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
   ja: {
+    heroKicker: "無料・インド占星術の出生図（ホロスコープ）",
     heroTitle: "生まれた日の|空を、|静かに読む。",
     heroLead:
       "インド占星術（ジョーティッシュ）の出生図を無料で。生年月日と時刻を入れると、その瞬間の月と太陽が、すぐにここに現れます。",
@@ -188,6 +191,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     tabsAria: "メインメニュー",
   },
   en: {
+    heroKicker: "Free Vedic astrology birth chart",
     heroTitle: "Read the sky you were born under.",
     heroLead:
       "A free Vedic (Jyotish) birth chart. Enter your date and time of birth and the Moon and Sun of that moment appear here straight away.",
@@ -276,6 +280,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     tabsAria: "Main menu",
   },
   hi: {
+    heroKicker: "निःशुल्क वैदिक ज्योतिष जन्म कुंडली",
     heroTitle: "जिस आकाश में आप जन्मे, उसे पढ़ें।",
     heroLead:
       "निःशुल्क वैदिक (ज्योतिष) जन्म कुंडली। जन्म की तिथि और समय दर्ज करें — उस क्षण का चंद्रमा और सूर्य तुरंत यहाँ दिखाई देंगे।",
@@ -364,6 +369,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
     tabsAria: "मुख्य मेनू",
   },
   ko: {
+    heroKicker: "무료 인도 점성술 출생 차트",
     heroTitle: "당신이 태어난 날의 하늘을, 고요히 읽다.",
     heroLead:
       "무료 베다 점성술(조티시) 출생 차트. 생년월일과 시간을 입력하면 그 순간의 달과 태양이 바로 이곳에 나타납니다.",

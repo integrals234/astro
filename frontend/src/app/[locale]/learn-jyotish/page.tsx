@@ -7,6 +7,7 @@ import { sectionPath } from "@/lib/education/article-routes";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { seoPageCopy } from "@/lib/seo/page-copy";
 import {
   breadcrumbSchema,
   itemListSchema,
@@ -26,8 +27,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return buildPageMetadata({
     language,
     path: PATH,
-    title: copy.navigation.learn,
-    description: copy.navigation.learnDescription,
+    title: seoPageCopy[language].learn.title,
+    description: seoPageCopy[language].learn.description,
   });
 }
 

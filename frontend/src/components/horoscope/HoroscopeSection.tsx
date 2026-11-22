@@ -97,7 +97,7 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
           {uiText("liveForecasts", lang)}
         </p>
         <h1 className="font-header text-[length:var(--step-3)] tracking-tight text-ink">
-          {uiText("horoscope", lang)}
+          {uiText("horoscopeHeading", lang)}
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {horoscopeIntro[lang]}

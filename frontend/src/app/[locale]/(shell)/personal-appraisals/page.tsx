@@ -7,6 +7,7 @@ import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { getAppraisalContent } from "@/lib/personal-appraisals/i18n/content";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { seoPageCopy } from "@/lib/seo/page-copy";
 import {
   breadcrumbSchema,
   organizationSchema,
@@ -29,8 +30,8 @@ export async function generateMetadata({
   return buildPageMetadata({
     language,
     path: PATH,
-    title: copy.appraisals,
-    description: copy.appraisalsDescription,
+    title: seoPageCopy[language].appraisals.title,
+    description: seoPageCopy[language].appraisals.description,
   });
 }
 

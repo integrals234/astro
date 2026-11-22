@@ -6,6 +6,7 @@ import { buildCourseChapters } from "@/lib/vedic-course/localized-chapters";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { seoPageCopy } from "@/lib/seo/page-copy";
 
 export async function generateMetadata({
   params,
@@ -19,8 +20,8 @@ export async function generateMetadata({
   return buildPageMetadata({
     language,
     path: "/course",
-    title: copy.course,
-    description: copy.courseDescription,
+    title: seoPageCopy[language].course.title,
+    description: seoPageCopy[language].course.description,
   });
 }
 

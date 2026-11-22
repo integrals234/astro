@@ -3,6 +3,7 @@ import HoroscopePage from "@/components/horoscope/HoroscopePage";
 import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { seoPageCopy } from "@/lib/seo/page-copy";
 
 type Params = { params: Promise<{ locale: string }> };
 
@@ -14,8 +15,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return buildPageMetadata({
     language,
     path: "/horoscope",
-    title: copy.navigation.horoscope,
-    description: copy.navigation.horoscopeDescription,
+    title: seoPageCopy[language].horoscope.title,
+    description: seoPageCopy[language].horoscope.description,
   });
 }
 

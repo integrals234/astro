@@ -1021,7 +1021,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     title: {
       en: "Vedic compatibility calculator (Ashtakoot, 36 points)",
       hi: "वैदिक अनुकूलता गणक (अष्टकूट, 36 अंक)",
-      ja: "インド占星術 相性診断｜アシュタクータ三十六点",
+      ja: "インド占星術の相性占い｜アシュタクータ36点で相性診断",
       ko: "베다 궁합 계산기 (아슈타쿠타 36점)",
     },
     description: {

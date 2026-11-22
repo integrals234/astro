@@ -1,7 +1,7 @@
 import type { BilingualText, EducationLang } from "../types";
 
 export const educationUi = {
-  heroTitle: { en: "Learn Jyotish", hi: "ज्योतिष सीखें", ja: "ジョーティッシュを学ぶ", ko: "조티시 배우기",},
+  heroTitle: { en: "Learn Vedic astrology (Jyotish)", hi: "वैदिक ज्योतिष सीखें", ja: "インド占星術（ジョーティッシュ）を学ぶ", ko: "인도 점성술(조티시) 배우기",},
   learnJyotish: { en: "Learn Jyotish", hi: "ज्योतिष सीखें", ja: "ジョーティッシュを学ぶ", ko: "조티시 배우기",},
   home: { en: "Home", hi: "होम", ja: "ホーム", ko: "홈",},
   generateChart: { en: "Generate Chart", hi: "चार्ट जनरेट करें", ja: "チャート作成", ko: "차트 생성",},
@@ -29,6 +29,7 @@ export const educationUi = {
   aspectsHouses: { en: "Aspects houses", hi: "दृष्टि वाले भाव", ja: "アスペクトするハウス", ko: "드리시티하는 궁",},
   liveForecasts: { en: "Live Forecasts", hi: "लाइव पूर्वानुमान", ja: "自動更新", ko: "실시간 예측",},
   horoscope: { en: "Horoscope", hi: "राशिफल", ja: "運勢", ko: "운세",},
+  horoscopeHeading: { en: "Horoscope for all 12 signs", hi: "12 राशियों का राशिफल", ja: "12星座の運勢", ko: "12별자리 운세",},
   updated: { en: "Updated", hi: "अद्यतन", ja: "最終更新", ko: "업데이트됨",},
   allSigns: { en: "All signs", hi: "सभी राशियाँ", ja: "全ラーシ", ko: "모든 별자리",},
   allTwelveSigns: { en: "All twelve signs — jump to read", hi: "सभी बारह राशियाँ — पढ़ने के लिए चुनें", ja: "12ラーシすべて", ko: "열두 별자리 — 선택해서 읽기",},

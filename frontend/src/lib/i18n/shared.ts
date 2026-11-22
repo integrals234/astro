@@ -201,7 +201,7 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
   },
   ja: {
     metadata: {
-      title: "インド占星術で出生図を無料作成｜Jyotish Life",
+      title: "インド占星術で出生図（ホロスコープ）を無料作成｜Jyotish Life",
       description: "生年月日・時刻・出生地からインド占星術の出生図（ホロスコープ）を無料で作成。ラグナ、月のナクシャトラ、ダシャーの読み方や西洋占星術との違いもやさしく解説します。登録不要。",
     },
     navigation: {

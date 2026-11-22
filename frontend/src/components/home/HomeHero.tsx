@@ -175,6 +175,10 @@ export default function HomeHero({
             it never sits behind the headline or the lead. */}
         <div aria-hidden className="pointer-events-none -mx-4 h-[30svh] min-h-[200px] max-h-[300px] lg:hidden" />
         <h1 id="hero-title" className="ma-display max-w-[13em] lg:text-[clamp(2.75rem,3.5vw,3.6rem)]">
+          {/* The search phrase, in the headline itself (SEO), set small. */}
+          <span className="mb-3 block font-body text-xs font-medium tracking-[0.08em] text-terracotta sm:text-sm md:mb-4">
+            {copy.heroKicker}
+          </span>
           {phrases.map((phrase, i) => (
             <span key={`${phrase}-${i}`}>
               <span data-hero-phrase className="hero-phrase">

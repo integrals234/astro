@@ -244,7 +244,7 @@ const en: AppraisalPageContent = {
 const ja: AppraisalPageContent = {
   header: {
     eyebrow: "プライベート鑑定",
-    title: "パーソナル鑑定",
+    title: "インド占星術の個人鑑定",
     description:
       "答えを急がず、ご自身と静かに向き合いたい方のためのヴェーダ占星術（ジョーティシュ）鑑定です。古典の伝統に基づき、一件ずつ丁寧に読み解き、プライバシーに配慮してお届けします。",
   },

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "i18n:audit": "node scripts/audit-localization.mjs",
+    "verify:sukuyo": "npx --yes tsx scripts/verify-sukuyo.ts",
     "pdf:text-smoke": "node scripts/smoke-pdf-hindi-text.mjs",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",

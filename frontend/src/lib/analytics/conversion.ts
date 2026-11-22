@@ -12,7 +12,7 @@ import type { AppLanguage } from "@/lib/i18n/language";
  * business runs on. Anything that decides spend, or that answers "did this page
  * produce a booking", is written here instead.
  *
- * Reads the `jl_anon` cookie set in middleware so a conversion can be traced
+ * Reads the `jl_anon` cookie set in the proxy (src/proxy.ts) so a conversion can be traced
  * back across the sign-in boundary to the session that started it.
  */
 export const ANON_COOKIE = "jl_anon";

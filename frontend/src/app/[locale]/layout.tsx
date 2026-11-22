@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo/site";
 import { Lora } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -62,7 +63,9 @@ export async function generateMetadata({
   params,
 }: LocaleParams): Promise<Metadata> {
   const { locale } = await params;
-  return getSharedCopy(parseAppLanguage(locale)).metadata;
+  // metadataBase here, once, so every page's Open Graph image resolves to
+  // the real site — pages without buildPageMetadata fell back to localhost.
+  return { metadataBase: new URL(SITE_URL), ...getSharedCopy(parseAppLanguage(locale)).metadata };
 }
 
 export default async function RootLayout({

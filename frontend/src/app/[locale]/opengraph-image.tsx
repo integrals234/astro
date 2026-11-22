@@ -62,8 +62,10 @@ export default async function OpengraphImage({
           {SITE_NAME}
         </div>
 
+        {/* The full-width bar (｜) in the Japanese title has no glyph in the
+            card's fonts — the build then tried, and failed, to download one. */}
         <div style={{ fontSize: 68, lineHeight: 1.2, marginTop: 32 }}>
-          {copy.title}
+          {copy.title.replace(/｜/g, " | ")}
         </div>
 
         <div
@@ -78,10 +80,14 @@ export default async function OpengraphImage({
           {copy.description}
         </div>
 
-        <div
-          style={{ display: "flex", gap: 18, marginTop: 48, color: GOLD, fontSize: 26 }}
-        >
-          ✦ ✦ ✦
+        {/* Three four-point stars, drawn: the ✦ character needed a font
+            download at build time that Google Fonts refuses (HTTP 400). */}
+        <div style={{ display: "flex", gap: 18, marginTop: 48 }}>
+          {[0, 1, 2].map((i) => (
+            <svg key={i} width="26" height="26" viewBox="0 0 24 24">
+              <path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z" fill={GOLD} />
+            </svg>
+          ))}
         </div>
       </div>
     ),

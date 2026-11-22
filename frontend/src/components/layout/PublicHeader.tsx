@@ -41,10 +41,12 @@ import { useNavIndicator } from "@/lib/nav/use-nav-indicator";
 /** Which nav items survive narrower desktop widths: the four core places
  * always; horoscope from 1024 px; the course from 1280 px (it is also in the
  * drawer, footer and the learn section). */
-const NAV_PRIORITY: Record<string, string> = {
-  "/horoscope": "hidden xl:inline-flex",
-  "/course": "hidden 2xl:inline-flex",
-};
+/**
+ * Every tab is always shown from lg up (Vedic Course used to be hidden below
+ * 1536px — i.e. on most laptops). The "Generate chart" button yields
+ * instead below xl: the Chart tab beside it goes to the same place.
+ */
+const NAV_PRIORITY: Record<string, string> = {};
 
 export default function PublicHeader({
   pageLabel,
@@ -84,7 +86,7 @@ export default function PublicHeader({
     <>
     <header className="relative z-40 border-b border-border bg-washi/85 backdrop-blur-md lg:sticky lg:top-0">
       <div
-        className="mx-auto hidden w-full max-w-7xl items-center justify-between gap-6 px-8 py-3 lg:flex"
+        className="mx-auto hidden w-full max-w-7xl items-center justify-between gap-3 px-6 py-3 lg:flex xl:gap-6 xl:px-8"
       >
         <SiteBrand size="lg" className="shrink-0" />
 
@@ -99,7 +101,7 @@ export default function PublicHeader({
               href={item.href}
               title={item.description}
               data-active={isActive(item.match ?? item.href)}
-              className={`nav-link-underline whitespace-nowrap px-2.5 py-2 text-[13px] transition-colors ${NAV_PRIORITY[item.href] ?? ""} ${
+              className={`nav-link-underline whitespace-nowrap px-1.5 py-2 text-[13px] transition-colors xl:px-2.5 ${NAV_PRIORITY[item.href] ?? ""} ${
                 isActive(item.match ?? item.href)
                   ? "text-ink"
                   : "text-text-muted hover:text-ink"
@@ -146,7 +148,7 @@ export default function PublicHeader({
           {showChartCta && (
             <Link
               href="/chart"
-              className="washi-btn-primary min-h-[38px] px-4 text-xs"
+              className="washi-btn-primary hidden min-h-[38px] px-4 text-xs xl:inline-flex"
             >
               {uiText("generateChart", language)}
             </Link>

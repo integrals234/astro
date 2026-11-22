@@ -3,11 +3,15 @@
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import BackToNavButton from "@/components/education/BackToNavButton";
-import { FormattedText } from "@/lib/format-inline-text";
+import Link from "@/components/i18n/LocaleLink";
 // Specific modules, not the "@/lib/education" barrel: the barrel re-exports
 // the whole article corpus, which this page never renders.
 import { educationUi, uiText } from "@/lib/education/i18n/ui";
-import { generateHoroscopeReading, horoscopeIntro, horoscopeSectionLabels, type HoroscopeSignId } from "@/lib/education/horoscope-engine";
+import type { HoroscopeSignId } from "@/lib/education/horoscope-engine";
+import { forecastForSign, transitCopy } from "@/lib/education/horoscope-transits";
+import { chartFormCopy } from "@/lib/chart-i18n";
+import { SIGNS } from "@/lib/sky/quick-sky";
+import { tr } from "@/lib/sky/entity-links";
 import { getPeriodForType, useHoroscopePeriods } from "@/lib/education/use-horoscope-periods";
 import { periodTypeLabel, type HoroscopePeriodType } from "@/lib/education/horoscope-periods";
 import { horoscopeSigns } from "@/lib/education/horoscope-signs";
@@ -17,9 +21,11 @@ function t(text: BilingualText, lang: EducationLang) {
   return text[lang];
 }
 
-function formatted(text: BilingualText, lang: EducationLang) {
-  return <FormattedText text={t(text, lang)} />;
-}
+const TONE = {
+  good: "bg-terracotta/12 text-terracotta",
+  mixed: "bg-neutral-tag text-text",
+  caution: "bg-moss/12 text-moss",
+} as const;
 
 function InfographicImage({
   src,
@@ -68,14 +74,21 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
 
   const activePeriod = getPeriodForType(periods, periodType);
 
-  const readingsBySign = useMemo(() => {
+  // Computed from the planets' actual positions for the period (gochar),
+  // read from each sign as a Moon sign — no templated text.
+  const forecasts = useMemo(() => {
+    const weekly = activePeriod.type === "weekly";
     return Object.fromEntries(
-      horoscopeSigns.map((sign) => [
-        sign.id,
-        generateHoroscopeReading(sign, activePeriod),
-      ])
-    ) as Record<HoroscopeSignId, ReturnType<typeof generateHoroscopeReading>>;
+      horoscopeSigns.map((sign) => {
+        const index = SIGNS.findIndex((x) => x.toLowerCase() === sign.id);
+        return [sign.id, forecastForSign(index, activePeriod.start, activePeriod.end, weekly)];
+      }),
+    ) as Record<HoroscopeSignId, ReturnType<typeof forecastForSign>>;
   }, [activePeriod]);
+  const tc = transitCopy[lang];
+  const cf = chartFormCopy[lang];
+  const shortDate = (d: Date) => d.toLocaleDateString(dateLocales[lang], { month: "short", day: "numeric" });
+  const weekday = (d: Date) => d.toLocaleDateString(dateLocales[lang], { weekday: "short", day: "numeric" });
 
   const updatedLabel = now.toLocaleString(dateLocales[lang], {
     month: "short",
@@ -100,7 +113,7 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
           {uiText("horoscopeHeading", lang)}
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-text-muted">
-          {horoscopeIntro[lang]}
+          {tc.intro}
         </p>
         <p className="mt-3 text-xs text-text-muted">
           {uiText("updated", lang)}: {updatedLabel}
@@ -164,7 +177,7 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
 
       <div className="space-y-8">
         {horoscopeSigns.map((sign, index) => {
-          const reading = readingsBySign[sign.id];
+          const f = forecasts[sign.id];
           return (
             <article
               key={sign.id}
@@ -199,33 +212,62 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
                       </span>
                     </div>
                   </div>
-                  <div className="rounded-[4px] bg-neutral-tag px-2.5 py-1 font-body text-[11px] text-text">
-                    {t(horoscopeSectionLabels.mood, lang)}: {t(reading.mood, lang)}
-                  </div>
+                  <div className={`rounded-full px-3 py-1 font-body text-[11px] font-medium ${TONE[f.tone]}`}>{tc.tone[f.tone]}</div>
                 </div>
 
                 <div className="min-w-0 flex-1 space-y-5 p-6 md:p-8">
+                  <p className="font-body text-[11px] font-semibold uppercase tracking-widest text-terracotta">
+                    {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
+                  </p>
+
+                  {f.sadeSati || f.saturnHard ? (
+                    <p className="rounded-[12px] border border-moss/30 bg-moss/5 p-3 text-sm leading-relaxed text-text">
+                      {f.sadeSati ? tc.sadeSati : f.saturnHard === 4 ? tc.saturn4 : tc.saturn8}
+                    </p>
+                  ) : null}
+
                   <div>
-                    <p className="mb-2 font-body text-[10px] font-semibold uppercase tracking-widest text-terracotta">
-                      {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
-                    </p>
-                    <p className="text-sm leading-relaxed text-text">
-                      {formatted(reading.overview, lang)}
-                    </p>
+                    <p className="mb-2 font-body text-sm font-semibold text-ink">{tc.planetsTitle}</p>
+                    <ul className="space-y-1.5">
+                      {f.planets.map((p) => (
+                        <li key={p.planet} className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-border/60 pb-1.5 text-sm">
+                          <span className="text-text">{tc.inHouse(cf.planets[p.planet] ?? p.planet, p.house, tc.houseTopic[p.house])}</span>
+                          <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${p.good ? TONE.good : TONE.caution}`}>
+                            {p.good ? tc.favourable : tc.challenging}
+                          </span>
+                          {p.ingress ? (
+                            <span className="w-full text-xs text-text-muted">
+                              {tc.ingress(cf.planets[p.planet] ?? p.planet, shortDate(p.ingress.date), tr(cf.signs, SIGNS[p.ingress.toSign]))} →{" "}
+                              {tc.inHouse("", p.ingress.toHouse, tc.houseTopic[p.ingress.toHouse]).replace(/^[:：]\s*/, "")}
+                            </span>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  {(Object.keys(horoscopeSectionLabels) as Array<keyof typeof horoscopeSectionLabels>)
-                    .filter((key) => key !== "mood")
-                    .map((key) => (
-                      <div key={key}>
-                        <p className="mb-1 font-body text-sm font-semibold text-terracotta">
-                          {t(horoscopeSectionLabels[key], lang)}
-                        </p>
-                        <p className="text-sm leading-relaxed text-text">
-                          {formatted(reading[key], lang)}
-                        </p>
-                      </div>
-                    ))}
+                  {f.days.length ? (
+                    <div>
+                      <p className="mb-2 font-body text-sm font-semibold text-ink">{tc.daysTitle}</p>
+                      <ol className="grid grid-cols-7 gap-1">
+                        {f.days.map((d) => (
+                          <li key={d.date.toISOString()} className={`rounded-[8px] px-1 py-1.5 text-center text-[11px] ${TONE[d.quality]}`}>
+                            {weekday(d.date)}
+                          </li>
+                        ))}
+                      </ol>
+                      {f.days.some((d) => d.quality === "good") ? (
+                        <p className="mt-2 text-xs text-text">{tc.bestDays(f.days.filter((d) => d.quality === "good").map((d) => weekday(d.date)).join("・"))}</p>
+                      ) : null}
+                      {f.days.some((d) => d.house === 8) ? (
+                        <p className="mt-1 text-xs text-moss">{tc.careDays(f.days.filter((d) => d.house === 8).map((d) => weekday(d.date)).join("・"))}</p>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  <Link href="/today" className="inline-flex text-sm text-terracotta underline-offset-4 hover:underline">
+                    {tc.todayLink} →
+                  </Link>
                 </div>
               </div>
             </article>

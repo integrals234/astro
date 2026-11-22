@@ -20,6 +20,8 @@ export interface JourneyCopy {
   hudBirth: string;
   scrollHint: string;
   approxNote: string;
+  /** Link from the last chapter to /today. */
+  todayCta: string;
 }
 
 export const journeyCopy: Record<AppLanguage, JourneyCopy> = {
@@ -38,6 +40,7 @@ export const journeyCopy: Record<AppLanguage, JourneyCopy> = {
     hudBirth: "生まれた瞬間",
     scrollHint: "スクロールして、空の旅へ",
     approxNote: "位置は天文計算による概算です。距離は画面に収まるよう縮めています。",
+    todayCta: "今日の運勢を見る",
   },
   en: {
     ariaLabel: "A journey through the sky",
@@ -54,6 +57,7 @@ export const journeyCopy: Record<AppLanguage, JourneyCopy> = {
     hudBirth: "Your birth moment",
     scrollHint: "Scroll to travel the sky",
     approxNote: "Positions are calculated approximations; distances are compressed to fit the screen.",
+    todayCta: "Today's reading by sign",
   },
   hi: {
     ariaLabel: "आकाश की यात्रा",
@@ -70,6 +74,7 @@ export const journeyCopy: Record<AppLanguage, JourneyCopy> = {
     hudBirth: "आपका जन्म क्षण",
     scrollHint: "आकाश की यात्रा के लिए स्क्रॉल करें",
     approxNote: "स्थितियाँ गणना पर आधारित अनुमान हैं; दूरियाँ स्क्रीन में समाने के लिए छोटी की गई हैं।",
+    todayCta: "आज का राशिफल देखें",
   },
   ko: {
     ariaLabel: "하늘 여행",
@@ -86,5 +91,6 @@ export const journeyCopy: Record<AppLanguage, JourneyCopy> = {
     hudBirth: "태어난 순간",
     scrollHint: "스크롤해서 하늘 여행으로",
     approxNote: "위치는 천문 계산에 의한 근사치이며, 거리는 화면에 맞게 줄였습니다.",
+    todayCta: "오늘의 운세 보기",
   },
 };

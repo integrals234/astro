@@ -22,8 +22,6 @@ const PATH = "/learn-jyotish";
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const language = parseAppLanguage(locale);
-  const copy = getSharedCopy(language);
-
   return buildPageMetadata({
     language,
     path: PATH,

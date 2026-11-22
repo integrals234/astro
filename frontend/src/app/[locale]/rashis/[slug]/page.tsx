@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import EntityDetailPage from "@/components/education/EntityDetailPage";
+import { SignDaily } from "@/components/daily/EntityDaily";
 import {
   ENTITY_SETS,
   entityPath,
@@ -15,6 +16,8 @@ const SET = ENTITY_SETS.rashis;
 type Params = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = false;
+/** The daily section changes through the day. */
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return APP_LANGUAGES.flatMap((locale) =>
@@ -48,6 +51,7 @@ export default async function RashiDetailRoute({ params }: Params) {
       set={SET}
       entity={entity}
       language={parseAppLanguage(locale)}
+      extra={<SignDaily engineSign={entity.id} lang={parseAppLanguage(locale)} />}
     />
   );
 }

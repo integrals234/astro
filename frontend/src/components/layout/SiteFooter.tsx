@@ -21,6 +21,9 @@ const INSTAGRAM_URL = "https://www.instagram.com/jyotishlife.jp/";
  * LEGAL_DOCUMENTS here put the whole education corpus and all four legal
  * texts (~430KB gzipped) into every page's JavaScript.
  */
+/** Inline labels (not the daily/宿曜 copy modules) to keep the footer light. */
+const TODAY_LABEL = { ja: "今日の運勢", en: "Today's horoscope", hi: "आज का राशिफल", ko: "오늘의 운세" } as const;
+
 const ENTITY_LINKS = [
   { id: "nakshatras", path: "/nakshatras", title: entityLabels.nakshatrasTitle },
   { id: "rashis", path: "/rashis", title: entityLabels.rashisTitleLong },
@@ -88,6 +91,19 @@ export default function SiteFooter() {
                   {homeStoryCopy[language].tabs.tools}
                 </LocaleLink>
               </li>
+              <li>
+                <LocaleLink href="/today" className="inline-flex min-h-[40px] items-center text-sm opacity-80 transition-opacity hover:opacity-100 lg:min-h-0">
+                  {TODAY_LABEL[language]}
+                </LocaleLink>
+              </li>
+              {/* 宿曜 pages exist in Japanese only. */}
+              {language === "ja" ? (
+                <li>
+                  <LocaleLink href="/sukuyo" className="inline-flex min-h-[40px] items-center text-sm opacity-80 transition-opacity hover:opacity-100 lg:min-h-0">
+                    宿曜占星術の相性
+                  </LocaleLink>
+                </li>
+              ) : null}
               {/* Entity set hubs — the shortest path from any page into the
                   programmatic corpus, which is what keeps it inside three
                   clicks of the root (Phase 3.7). */}

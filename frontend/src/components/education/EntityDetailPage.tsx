@@ -50,10 +50,13 @@ export default function EntityDetailPage({
   set,
   entity,
   language,
+  extra,
 }: {
   set: EntitySet;
   entity: EntityView;
   language: AppLanguage;
+  /** Rendered after the entry's sections (e.g. the daily reading on sign and nakshatra pages). */
+  extra?: React.ReactNode;
 }) {
   const setTitle = set.title[language];
   const name = entity.name[language];
@@ -175,6 +178,8 @@ export default function EntityDetailPage({
                 </details>
               ))}
             </div>
+
+            {extra ? <div className="mt-10">{extra}</div> : null}
 
             {/* Previous / next in the set's own order. */}
             <nav className="mt-10 grid grid-cols-2 gap-3" aria-label={setTitle}>

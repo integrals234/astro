@@ -31,7 +31,7 @@ import { useNavIndicator } from "@/lib/nav/use-nav-indicator";
  * to `AppShell` when signed in. That swap is what used to wrap those pages in
  * `<SignedIn>`/`<SignedOut>`, which forces a bailout to client-side rendering
  * during static prerender — so the homepage and the learn hub shipped an empty
- * shell to crawlers. `AppShell` still owns the app-like routes under `(shell)`.
+ * shell to crawlers. `AppShell` still owns the account routes under `(shell)` (dashboard, settings, saved/recent charts, premium).
  *
  * The brandbar is the reference's device: a slim ink strip above the nav that
  * gives the header a top edge and reads as a masthead. The ॐ mark is drawn

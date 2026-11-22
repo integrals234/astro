@@ -65,7 +65,7 @@ export default function ChartCollectionPage({ mode }: ChartCollectionPageProps) 
   return (
     <div className="max-w-5xl">
       <div className="mb-8">
-        <div className="inline-flex items-center gap-2 border border-border px-3 py-1 text-[10px] font-body uppercase tracking-[0.12em] text-terracotta mb-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-washi-elevated px-3 py-1 text-xs font-body tracking-[0.06em] text-terracotta mb-4">
           <Icon size={12} className="text-terracotta" />
           {copy.libraryEyebrow}
         </div>

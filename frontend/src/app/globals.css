@@ -89,7 +89,7 @@
   --measure: 34em; /* ~34 JP chars — researched optimum is 25–35 */
   --measure-latin: 68ch;
 
-  --radius-card: 14px;
+  --radius-card: 18px;
   --radius-button: 999px;
   --radius-chip: 4px;
   --shadow-elevated: 0 1px 3px rgba(47, 47, 47, 0.06);
@@ -347,8 +347,17 @@ svg {
 
 .washi-card.washi-card-interactive:hover,
 .washi-card.group:hover {
-  border-color: color-mix(in srgb, var(--color-moss) 40%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-terracotta) 42%, var(--color-border));
   transform: translateY(-2px);
+}
+
+/* design-magic: every card on the site shares the chart cards' material —
+   in deep space a faint brass edge and a little light along the top. */
+.dark .washi-card {
+  border-color: color-mix(in srgb, var(--color-gold) 16%, var(--color-border));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-terracotta) 4%, transparent), transparent 120px),
+    var(--color-washi-elevated);
 }
 
 .washi-card.washi-card-interactive:active,

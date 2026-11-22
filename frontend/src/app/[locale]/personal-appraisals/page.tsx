@@ -7,6 +7,7 @@ import { parseAppLanguage } from "@/lib/i18n/language";
 import { getSharedCopy } from "@/lib/i18n/shared";
 import { getAppraisalContent } from "@/lib/personal-appraisals/i18n/content";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import PublicPageShell from "@/components/layout/PublicPageShell";
 import { seoPageCopy } from "@/lib/seo/page-copy";
 import {
   breadcrumbSchema,
@@ -25,8 +26,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const language = parseAppLanguage(locale);
-  const copy = getSharedCopy(language).navigation;
-
   return buildPageMetadata({
     language,
     path: PATH,
@@ -77,7 +76,13 @@ export default async function PersonalAppraisalsPage({
           }),
         ]}
       />
-      <PersonalAppraisalsPageClient defaultDialCode={defaultDialCode} />
+      {/* Public layout, like every other content tab (it used to sit in
+          the signed-in app frame, so the header and scrolling changed here). */}
+      <PublicPageShell>
+        <div className="mx-auto w-full max-w-4xl px-4 py-6 md:px-8 md:py-10">
+          <PersonalAppraisalsPageClient defaultDialCode={defaultDialCode} />
+        </div>
+      </PublicPageShell>
     </>
   );
 }

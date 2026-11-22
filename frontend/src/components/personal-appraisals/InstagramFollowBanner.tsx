@@ -42,7 +42,7 @@ export default function InstagramFollowBanner({
     >
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 flex-1 space-y-4">
-          <p className="ig-badge inline-flex items-center gap-2 border px-3 py-1 text-[10px] font-body font-medium uppercase tracking-[0.22em]">
+          <p className="ig-badge inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-body font-medium uppercase tracking-[0.22em]">
             <span className="ig-icon-chip inline-flex h-5 w-5 items-center justify-center rounded-[4px]">
               <InstagramIcon className="h-3 w-3" />
             </span>
@@ -69,7 +69,7 @@ export default function InstagramFollowBanner({
             {copy.perks.map((perk) => (
               <li
                 key={perk}
-                className="ig-perk rounded border px-3 py-1 text-xs text-text"
+                className="ig-perk rounded-full border px-3 py-1 text-xs text-text"
               >
                 {perk}
               </li>

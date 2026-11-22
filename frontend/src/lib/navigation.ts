@@ -18,6 +18,8 @@ export interface NavItem {
   label: string;
   icon: LucideIcon;
   description?: string;
+  /** Path prefix that marks the item active, when it differs from `href`. */
+  match?: string;
 }
 
 const navMeta = [
@@ -34,7 +36,10 @@ const navMeta = [
     descriptionKey: "learnDescription",
   },
   {
-    href: "/horoscope",
+    // The Horoscope tab opens on today (the most-used page); the weekly,
+    // monthly and yearly readings sit beside it under /horoscope.
+    href: "/horoscope/today",
+    match: "/horoscope",
     icon: CalendarRange,
     labelKey: "horoscope",
     descriptionKey: "horoscopeDescription",
@@ -72,6 +77,7 @@ export function getMainNavItems(language: AppLanguage): NavItem[] {
     icon: item.icon,
     label: copy[item.labelKey],
     description: copy[item.descriptionKey],
+    ...("match" in item && item.match ? { match: item.match } : {}),
   }));
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import BackToNavButton from "@/components/education/BackToNavButton";
 import Link from "@/components/i18n/LocaleLink";
 // Specific modules, not the "@/lib/education" barrel: the barrel re-exports
@@ -9,6 +9,9 @@ import Link from "@/components/i18n/LocaleLink";
 import { educationUi, uiText } from "@/lib/education/i18n/ui";
 import type { HoroscopeSignId } from "@/lib/education/horoscope-engine";
 import { forecastForSign, transitCopy } from "@/lib/education/horoscope-transits";
+import HoroscopeTabStrip from "@/components/horoscope/HoroscopeTabStrip";
+import { todayReport } from "@/lib/daily/today";
+import { dailyCopy } from "@/lib/daily/daily-copy";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { SIGNS } from "@/lib/sky/quick-sky";
 import { tr } from "@/lib/sky/entity-links";
@@ -59,7 +62,6 @@ function InfographicImage({
   );
 }
 
-const horoscopePeriodTypes: HoroscopePeriodType[] = ["weekly", "monthly", "yearly"];
 const dateLocales: Record<EducationLang, string> = {
   en: "en-US",
   hi: "hi-IN",
@@ -73,6 +75,24 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
   const [periodType, setPeriodType] = useState<HoroscopePeriodType>("weekly");
 
   const activePeriod = getPeriodForType(periods, periodType);
+
+  // Deep links from the today page: /horoscope#monthly opens that period;
+  // switching keeps the hash in step (shareable, back-button friendly).
+  useEffect(() => {
+    const fromHash = window.location.hash.slice(1);
+    if (fromHash === "weekly" || fromHash === "monthly" || fromHash === "yearly") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reading the URL once on mount
+      setPeriodType(fromHash);
+    }
+  }, []);
+  const selectPeriod = (type: HoroscopePeriodType) => {
+    setPeriodType(type);
+    window.history.replaceState(null, "", `#${type}`);
+  };
+
+  // Today's Moon line for every sign card (the daily page has the detail).
+  const today = useMemo(() => todayReport(now), [now]);
+  const dc = dailyCopy[lang];
 
   // Computed from the planets' actual positions for the period (gochar),
   // read from each sign as a Moon sign — no templated text.
@@ -122,27 +142,16 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-6">
-        {horoscopePeriodTypes.map((type) => {
-          const active = periodType === type;
-          const period = getPeriodForType(periods, type);
-          return (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setPeriodType(type)}
-              className={`border-b-2 px-1 pb-1.5 text-left font-body transition-colors ${
-                active
-                  ? "border-terracotta text-ink"
-                  : "border-transparent text-text-muted hover:text-ink"
-              }`}
-            >
-              <span className="block text-sm font-medium">{periodTypeLabel(type, lang)}</span>
-              <span className="mt-0.5 block text-[11px] opacity-80">{period.label[lang]}</span>
-            </button>
-          );
-        })}
-      </div>
+      <HoroscopeTabStrip
+        active={periodType}
+        onSelect={selectPeriod}
+        sublabels={{
+          today: dc.moonInSign(tr(cf.signs, SIGNS[today.sign])),
+          weekly: getPeriodForType(periods, "weekly").label[lang],
+          monthly: getPeriodForType(periods, "monthly").label[lang],
+          yearly: getPeriodForType(periods, "yearly").label[lang],
+        }}
+      />
 
       <nav
         ref={navRef}
@@ -220,6 +229,21 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
                     {periodTypeLabel(periodType, lang)} · {activePeriod.label[lang]}
                   </p>
 
+                  {(() => {
+                    const idx = SIGNS.findIndex((x) => x.toLowerCase() === sign.id);
+                    const row = today.bySign[idx];
+                    return row ? (
+                      <Link href="/horoscope/today" className="block rounded-[12px] border border-border bg-washi p-3 transition-colors hover:border-terracotta/50">
+                        <span className="flex flex-wrap items-center gap-2 text-xs">
+                          <span className="font-medium text-ink">{dc.sectionTitle}</span>
+                          <span className="text-text-muted">{dc.house(row.house)}</span>
+                          <span className={`rounded-full px-2 py-0.5 font-medium ${TONE[row.quality]}`}>{dc.quality[row.quality]}</span>
+                        </span>
+                        <span className="mt-1 block text-sm leading-relaxed text-text">{dc.houseText[row.house]}</span>
+                      </Link>
+                    ) : null;
+                  })()}
+
                   {f.sadeSati || f.saturnHard ? (
                     <p className="rounded-[12px] border border-moss/30 bg-moss/5 p-3 text-sm leading-relaxed text-text">
                       {f.sadeSati ? tc.sadeSati : f.saturnHard === 4 ? tc.saturn4 : tc.saturn8}
@@ -265,7 +289,7 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
                     </div>
                   ) : null}
 
-                  <Link href="/today" className="inline-flex text-sm text-terracotta underline-offset-4 hover:underline">
+                  <Link href="/horoscope/today" className="inline-flex text-sm text-terracotta underline-offset-4 hover:underline">
                     {tc.todayLink} →
                   </Link>
                 </div>

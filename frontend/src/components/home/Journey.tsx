@@ -254,7 +254,7 @@ export default function Journey() {
                       {tonight.ctaChart}
                       <ArrowRight size={15} aria-hidden />
                     </button>
-                    <Link href="/today" className="washi-btn-secondary gap-2 px-5 text-sm">
+                    <Link href="/horoscope/today" className="washi-btn-secondary gap-2 px-5 text-sm">
                       {copy.todayCta}
                     </Link>
                     <Link href="/tools/panchang" className="washi-btn-tertiary gap-2 px-3 text-sm">

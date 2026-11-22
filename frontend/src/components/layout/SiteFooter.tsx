@@ -92,7 +92,7 @@ export default function SiteFooter() {
                 </LocaleLink>
               </li>
               <li>
-                <LocaleLink href="/today" className="inline-flex min-h-[40px] items-center text-sm opacity-80 transition-opacity hover:opacity-100 lg:min-h-0">
+                <LocaleLink href="/horoscope/today" className="inline-flex min-h-[40px] items-center text-sm opacity-80 transition-opacity hover:opacity-100 lg:min-h-0">
                   {TODAY_LABEL[language]}
                 </LocaleLink>
               </li>

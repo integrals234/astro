@@ -68,7 +68,7 @@ export interface HomeStoryCopy {
 
   closingTitle: string;
 
-  tabs: { home: string; chart: string; tools: string; learn: string; reading: string };
+  tabs: { home: string; chart: string; today: string; tools: string; learn: string; reading: string };
   tabsAria: string;
 }
 
@@ -187,7 +187,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
 
     closingTitle: "まずは、生まれた日の空から。",
 
-    tabs: { home: "ホーム", chart: "チャート", tools: "ツール", learn: "学ぶ", reading: "鑑定" },
+    tabs: { home: "ホーム", chart: "チャート", today: "運勢", tools: "ツール", learn: "学ぶ", reading: "鑑定" },
     tabsAria: "メインメニュー",
   },
   en: {
@@ -276,7 +276,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
 
     closingTitle: "Begin with the sky on the day you were born.",
 
-    tabs: { home: "Home", chart: "Chart", tools: "Tools", learn: "Learn", reading: "Reading" },
+    tabs: { home: "Home", chart: "Chart", today: "Today", tools: "Tools", learn: "Learn", reading: "Reading" },
     tabsAria: "Main menu",
   },
   hi: {
@@ -365,7 +365,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
 
     closingTitle: "अपने जन्म के दिन के आकाश से शुरुआत करें।",
 
-    tabs: { home: "होम", chart: "कुंडली", tools: "उपकरण", learn: "सीखें", reading: "रीडिंग" },
+    tabs: { home: "होम", chart: "कुंडली", today: "आज", tools: "उपकरण", learn: "सीखें", reading: "रीडिंग" },
     tabsAria: "मुख्य मेनू",
   },
   ko: {
@@ -454,7 +454,7 @@ export const homeStoryCopy: Record<AppLanguage, HomeStoryCopy> = {
 
     closingTitle: "먼저, 태어난 날의 하늘에서부터.",
 
-    tabs: { home: "홈", chart: "차트", tools: "도구", learn: "배우기", reading: "감정" },
+    tabs: { home: "홈", chart: "차트", today: "운세", tools: "도구", learn: "배우기", reading: "감정" },
     tabsAria: "메인 메뉴",
   },
 };

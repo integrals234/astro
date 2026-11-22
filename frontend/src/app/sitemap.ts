@@ -112,7 +112,7 @@ export function buildSitemap({
     }),
     entry("/course", { collection: "course", priority: 0.7 }),
     // Computed daily from the Moon (all four languages).
-    entry("/today", { collection: "daily", priority: 0.8, changeFrequency: "daily" }),
+    entry("/horoscope/today", { collection: "daily", priority: 0.8, changeFrequency: "daily" }),
     entry("/about", { collection: "core", priority: 0.7 }),
   ];
 

@@ -69,7 +69,7 @@ export default function PublicHeader({
   const chartIndex = mainItems.findIndex((item) => item.href === "/chart");
   const navItems = [
     ...mainItems.slice(0, chartIndex + 1),
-    { href: "/tools", label: homeStoryCopy[language].tabs.tools, description: undefined as string | undefined },
+    { href: "/tools", label: homeStoryCopy[language].tabs.tools, description: undefined as string | undefined, match: undefined as string | undefined },
     ...mainItems.slice(chartIndex + 1),
   ];
 
@@ -78,7 +78,7 @@ export default function PublicHeader({
   const isActive = (href: string) =>
     href === "/" ? shownPath === "/" : shownPath.startsWith(href);
   const navRef = useRef<HTMLElement>(null);
-  useNavIndicator("public-nav", navRef, navItems.find((item) => isActive(item.href))?.href ?? null, "after");
+  useNavIndicator("public-nav", navRef, navItems.find((item) => isActive(item.match ?? item.href))?.href ?? null, "after");
 
   return (
     <>
@@ -98,9 +98,9 @@ export default function PublicHeader({
               key={item.href}
               href={item.href}
               title={item.description}
-              data-active={isActive(item.href)}
+              data-active={isActive(item.match ?? item.href)}
               className={`nav-link-underline whitespace-nowrap px-2.5 py-2 text-[13px] transition-colors ${NAV_PRIORITY[item.href] ?? ""} ${
-                isActive(item.href)
+                isActive(item.match ?? item.href)
                   ? "text-ink"
                   : "text-text-muted hover:text-ink"
               }`}

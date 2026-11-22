@@ -35,7 +35,7 @@ export function SignDaily({ engineSign, lang }: { engineSign: string; lang: AppL
         <p className="mt-2 leading-[1.85] text-text">{copy.houseText[row.house]}</p>
       </div>
       <DailyMoonCard report={report} lang={lang} />
-      <Link href="/today" className="inline-flex items-center gap-1.5 text-sm text-terracotta">
+      <Link href="/horoscope/today" className="inline-flex items-center gap-1.5 text-sm text-terracotta">
         {copy.title}
         <ArrowRight size={14} aria-hidden />
       </Link>
@@ -65,7 +65,7 @@ export function NakshatraDaily({ slug, lang }: { slug: string; lang: AppLanguage
         <p className="mt-2 leading-[1.85] text-text">{lang === "ja" ? DAILY_KIND[row.kind].text : copy.taraText[row.tara]}</p>
       </div>
       <DailyMoonCard report={report} lang={lang} />
-      <Link href="/today" className="inline-flex items-center gap-1.5 text-sm text-terracotta">
+      <Link href="/horoscope/today" className="inline-flex items-center gap-1.5 text-sm text-terracotta">
         {copy.title}
         <ArrowRight size={14} aria-hidden />
       </Link>

@@ -209,7 +209,7 @@ export const sharedCopy: Record<AppLanguage, SharedCopy> = {
       homeDescription: "Jyotish Lifeへようこそ",
       learn: "ジョーティッシュを学ぶ",
       learnDescription: "ヴェーダ占星術の学習ハブ",
-      horoscope: "ホロスコープ",
+      horoscope: "運勢",
       horoscopeDescription: "最新のヴェーダ占星術予報",
       chart: "チャート",
       chartDescription: "チャートを作成・閲覧",

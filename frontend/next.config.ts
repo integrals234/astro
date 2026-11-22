@@ -17,6 +17,8 @@ const LEGACY_PATHS: Array<{ from: string; to: string }> = [
   // Lagna chart + planetary details); its FAQs and "free" framing moved
   // into birth-chart rather than being lost.
   { from: "/tools/free-horoscope", to: "/tools/birth-chart" },
+  // The daily page lives inside the Horoscope tab now.
+  { from: "/today", to: "/horoscope/today" },
 ];
 
 const nextConfig: NextConfig = {

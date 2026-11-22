@@ -29,12 +29,12 @@ export default function TopNav() {
   // The clicked item is active immediately; its underline glides over.
   const shownPath = usePendingNav() ?? pathname;
   const navRef = useRef<HTMLElement>(null);
-  useNavIndicator("shell-nav", navRef, mainNavItems.find((item) => isActive(shownPath, item.href))?.href ?? null, "after");
+  useNavIndicator("shell-nav", navRef, mainNavItems.find((item) => isActive(shownPath, item.match ?? item.href))?.href ?? null, "after");
 
   return (
     <nav ref={navRef} className="desktop-topnav min-w-0 flex-1 items-center justify-end gap-1 overflow-x-auto border-b border-transparent">
       {mainNavItems.map((item) => {
-        const active = isActive(shownPath, item.href);
+        const active = isActive(shownPath, item.match ?? item.href);
         const Icon = item.icon;
 
         return (

@@ -3,6 +3,7 @@ import PublicPageShell from "@/components/layout/PublicPageShell";
 import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import MoonSignFinder from "@/components/daily/MoonSignFinder";
+import HoroscopeTabStrip from "@/components/horoscope/HoroscopeTabStrip";
 import { DailyMoonCard, NakshatraTable, SignTable } from "@/components/daily/DailyParts";
 import { dailyCopy } from "@/lib/daily/daily-copy";
 import { todayReport, tomorrowReport } from "@/lib/daily/today";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const language = parseAppLanguage(locale);
   const copy = dailyCopy[language];
-  return buildPageMetadata({ language, path: "/today", title: copy.metaTitle, description: copy.metaDescription });
+  return buildPageMetadata({ language, path: "/horoscope/today", title: copy.metaTitle, description: copy.metaDescription });
 }
 
 export default async function TodayPage({ params }: Params) {
@@ -50,7 +51,8 @@ export default async function TodayPage({ params }: Params) {
           websiteSchema(language),
           breadcrumbSchema(language, [
             { name: uiText("home", language), path: "/" },
-            { name: copy.title, path: "/today" },
+            { name: uiText("horoscopeHeading", language), path: "/horoscope" },
+            { name: copy.title, path: "/horoscope/today" },
           ]),
         ]}
       />
@@ -61,13 +63,19 @@ export default async function TodayPage({ params }: Params) {
             label="Breadcrumb"
             crumbs={[
               { name: uiText("home", language), path: "/" },
-              { name: copy.title, path: "/today" },
+              { name: uiText("horoscopeHeading", language), path: "/horoscope" },
+              { name: copy.title, path: "/horoscope/today" },
             ]}
           />
           <header className="max-w-3xl">
             <h1 className="font-header text-[length:var(--step-4)] leading-[1.15] tracking-tight text-ink">{copy.title}</h1>
             <p className="mt-4 leading-[1.9] text-text">{copy.lead}</p>
           </header>
+
+          {/* Same tabs as /horoscope: today here, the periods beside it. */}
+          <div className="mt-8">
+            <HoroscopeTabStrip active="today" sublabels={{ today: copy.moonInSign(tr(t.signs, SIGNS[today.sign])) }} />
+          </div>
 
           <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <DailyMoonCard report={today} lang={language} />

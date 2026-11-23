@@ -4,7 +4,8 @@ import Breadcrumbs from "@/components/education/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import MoonSignFinder from "@/components/daily/MoonSignFinder";
 import HoroscopeTabStrip from "@/components/horoscope/HoroscopeTabStrip";
-import { DailyMoonCard, NakshatraTable, SignTable } from "@/components/daily/DailyParts";
+import { DailyMoonCard, MethodNote, NakshatraTable, SignTable, TomorrowLine } from "@/components/daily/DailyParts";
+import { DayReportProvider } from "@/components/daily/DayReportProvider";
 import { dailyCopy } from "@/lib/daily/daily-copy";
 import { todayReport, tomorrowReport } from "@/lib/daily/today";
 import { APP_LANGUAGES, parseAppLanguage } from "@/lib/i18n/language";
@@ -57,6 +58,7 @@ export default async function TodayPage({ params }: Params) {
         ]}
       />
       <PublicPageShell>
+        <DayReportProvider initial={today} initialTomorrow={tomorrow}>
         <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-10">
           <Breadcrumbs
             language={language}
@@ -78,7 +80,7 @@ export default async function TodayPage({ params }: Params) {
           </div>
 
           <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-            <DailyMoonCard report={today} lang={language} />
+            <DailyMoonCard lang={language} />
             <MoonSignFinder />
           </div>
 
@@ -88,7 +90,7 @@ export default async function TodayPage({ params }: Params) {
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-[1.85] text-text-muted">{copy.signTableLead}</p>
             <div className="mt-5">
-              <SignTable report={today} lang={language} />
+              <SignTable lang={language} />
             </div>
           </section>
 
@@ -98,7 +100,7 @@ export default async function TodayPage({ params }: Params) {
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-[1.85] text-text-muted">{copy.taraTableLead}</p>
             <div className="mt-5">
-              <NakshatraTable report={today} lang={language} />
+              <NakshatraTable lang={language} />
             </div>
           </section>
 
@@ -106,14 +108,12 @@ export default async function TodayPage({ params }: Params) {
             <h2 id="tomorrow" className="font-header text-[length:var(--step-1)] text-ink">
               {copy.tomorrow}
             </h2>
-            <p className="mt-2 text-sm text-text">
-              {copy.moonInSign(tr(t.signs, SIGNS[tomorrow.sign]))} ·{" "}
-              {language === "ja" ? `${tomorrow.main.kanji}（${tr(t.nakshatras, tomorrow.main.nakshatra)}）` : tr(t.nakshatras, tomorrow.main.nakshatra)}
-            </p>
+            <TomorrowLine lang={language} />
           </section>
 
-          <p className="mt-8 max-w-3xl text-[11px] leading-relaxed text-text-muted">{copy.methodNote}</p>
+          <MethodNote lang={language} />
         </div>
+        </DayReportProvider>
       </PublicPageShell>
     </>
   );

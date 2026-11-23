@@ -1,5 +1,6 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { ZONE_COOKIE, zoneFromCountry } from "@/lib/time/site-zone";
+import { NextResponse, type NextRequest } from "next/server";
 import { DEFAULT_APP_LANGUAGE } from "@/lib/i18n/language";
 import {
   LOCALE_SEGMENT_PATTERN,
@@ -52,6 +53,26 @@ const PROTECTED_PATTERNS = [
  */
 const ANON_COOKIE = "jl_anon";
 const ANON_MAX_AGE = 60 * 60 * 24 * 365;
+
+/**
+ * The site clock (lib/time/site-zone.ts): JST for everyone except visitors
+ * whose IP Vercel places in India, who get IST. Refreshed whenever the
+ * country changes; absent header (local dev) leaves JST.
+ */
+function withZone(response: NextResponse, request: NextRequest) {
+  const country = request.headers.get("x-vercel-ip-country");
+  if (!country) return response;
+  const zone = zoneFromCountry(country);
+  if (request.cookies.get(ZONE_COOKIE)?.value === zone) return response;
+  response.cookies.set(ZONE_COOKIE, zone, {
+    maxAge: 60 * 60 * 24 * 30,
+    sameSite: "lax",
+    httpOnly: false,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  });
+  return response;
+}
 
 function withAnonId(response: NextResponse, existing: string | undefined) {
   if (existing) return response;
@@ -117,12 +138,12 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   // `/en`, `/hi`, `/ko` are real URLs — serve them as-is.
-  if (localeMatch) return withAnonId(NextResponse.next(), anonId);
+  if (localeMatch) return withZone(withAnonId(NextResponse.next(), anonId), request);
 
   // Everything else is Japanese, served from the root and rewritten inward.
   const url = request.nextUrl.clone();
   url.pathname = `/${DEFAULT_APP_LANGUAGE}${pathname === "/" ? "" : pathname}`;
-  return withAnonId(NextResponse.rewrite(url), anonId);
+  return withZone(withAnonId(NextResponse.rewrite(url), anonId), request);
 });
 
 export const config = {

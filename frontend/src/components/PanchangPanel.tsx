@@ -10,6 +10,8 @@ import { trackEvent } from '@/lib/analytics/events';
 import { chartFormCopy, type ChartTranslations } from '@/lib/chart-i18n';
 import { panchangCopy } from '@/lib/panchang-copy';
 import { toolUiCopy } from '@/lib/tools/tool-ui-copy';
+import { useSiteZone } from "@/components/time/useSiteZone";
+import { zoneIsoDate } from "@/lib/time/site-zone";
 
 interface PanchangResult {
   date: string;
@@ -56,7 +58,11 @@ export default function PanchangPanel() {
   const ui = toolUiCopy[language];
   const { primary, isLoaded } = useBirthProfile();
 
-  const [date, setDate] = useState(() => isoDate(new Date()));
+  // null = "today" in the site zone (JST; IST in India) until a date is picked.
+  const zone = useSiteZone();
+  const todayIso = zoneIsoDate(zone);
+  const [pickedDate, setDate] = useState<string | null>(null);
+  const date = pickedDate ?? todayIso;
   const [place, setPlace] = useState<Place | null>(null);
   const [placeEntry, setPlaceEntry] = useState<BirthDetailsValue>(EMPTY_BIRTH_DETAILS);
   const [changingPlace, setChangingPlace] = useState(false);
@@ -145,7 +151,7 @@ export default function PanchangPanel() {
             {copy.dateLabel}
           </label>
           <div className="flex flex-wrap items-center gap-2">
-            <button type="button" onClick={() => setDate((d) => shiftDay(d, -1))} aria-label={ui.prevDay} className="washi-btn-secondary px-2.5 py-2">
+            <button type="button" onClick={() => setDate(shiftDay(date, -1))} aria-label={ui.prevDay} className="washi-btn-secondary px-2.5 py-2">
               <ChevronLeft size={16} aria-hidden />
             </button>
             <input
@@ -157,11 +163,11 @@ export default function PanchangPanel() {
               onChange={(e) => e.target.value && setDate(e.target.value)}
               className="washi-field cursor-pointer p-2.5 text-sm"
             />
-            <button type="button" onClick={() => setDate((d) => shiftDay(d, 1))} aria-label={ui.nextDay} className="washi-btn-secondary px-2.5 py-2">
+            <button type="button" onClick={() => setDate(shiftDay(date, 1))} aria-label={ui.nextDay} className="washi-btn-secondary px-2.5 py-2">
               <ChevronRight size={16} aria-hidden />
             </button>
-            {date !== isoDate(new Date()) ? (
-              <button type="button" onClick={() => setDate(isoDate(new Date()))} className="washi-btn-secondary px-3 py-2 text-xs">
+            {date !== todayIso ? (
+              <button type="button" onClick={() => setDate(null)} className="washi-btn-secondary px-3 py-2 text-xs">
                 {ui.today}
               </button>
             ) : null}

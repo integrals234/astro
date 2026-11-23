@@ -9,19 +9,22 @@ import { dailyCopy } from "@/lib/daily/daily-copy";
 import { NAKSHATRAS } from "@/lib/jyotish/nakshatra-data";
 import { quickSkyFromFields } from "@/lib/sky/quick-sky";
 import { tr } from "@/lib/sky/entity-links";
+import { useSiteZone } from "@/components/time/useSiteZone";
+import { ZONE_LABEL, ZONE_OFFSET } from "@/lib/time/site-zone";
 
 /**
  * "Don't know your Moon sign?" — a birth date and time give an estimate on
- * the spot (Japan time, the quick-sky series). The exact answer, with the
+ * the spot (in the site zone — JST, or IST in India — via the quick-sky series). The exact answer, with the
  * birthplace, is one link away.
  */
 export default function MoonSignFinder() {
   const { language } = useLanguage();
   const copy = dailyCopy[language];
   const t = chartFormCopy[language];
+  const zone = useSiteZone();
   const [date, setDate] = useState("");
   const [time, setTime] = useState("12:00");
-  const sky = date ? quickSkyFromFields(date, time, 9) : null;
+  const sky = date ? quickSkyFromFields(date, time, ZONE_OFFSET[zone]) : null;
   const nak = sky ? NAKSHATRAS[sky.moon.nakshatraNumber - 1] : null;
 
   return (
@@ -29,7 +32,7 @@ export default function MoonSignFinder() {
       <h2 id="find-moon" className="font-header text-[length:var(--step-1)] text-ink">
         {copy.findTitle}
       </h2>
-      <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{copy.findLead}</p>
+      <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{copy.findLead(ZONE_LABEL[language][zone])}</p>
       <div className="mt-4 grid grid-cols-2 gap-3">
         <label className="block min-w-0">
           <span className="mb-1.5 block text-xs text-text-muted">{copy.findDate}</span>

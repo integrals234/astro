@@ -11,7 +11,7 @@ export interface DailyCopy {
   metaTitle: string;
   metaDescription: string;
   lead: string;
-  dateLabel: (date: string) => string;
+  dateLabel: (date: string, zone: string) => string;
   moonNow: string;
   moonInSign: (sign: string) => string;
   moonEnters: (time: string, next: string) => string;
@@ -29,12 +29,12 @@ export interface DailyCopy {
   taraTableLead: string;
   yourNakshatra: string;
   findTitle: string;
-  findLead: string;
+  findLead: (zone: string) => string;
   findDate: string;
   findTime: string;
   findResult: (sign: string, nak: string) => string;
   findExact: string;
-  methodNote: string;
+  methodNote: (zone: string) => string;
   sectionTitle: string;
   updated: (time: string) => string;
   tomorrow: string;
@@ -50,7 +50,7 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     metaDescription:
       "今日の月がどの星座・宿（ナクシャトラ）にあるかを毎日計算し、12の月星座別の運勢と、27宿別の日運を表示します。インド占星術の古典的なチャンドラ・ゴーチャラとターラ・バラに基づく一日の目安です。",
     lead: "インド占星術では、一日の流れを月の位置で読みます。今日の月が、あなたの月星座から数えて何番目の星座にあるか、あなたの生まれの宿から数えて何番目の宿にあるかで、その日の目安がわかるとされます。",
-    dateLabel: (d) => `${d}（日本時間）`,
+    dateLabel: (d, z) => `${d}（${z}）`,
     moonNow: "今日の月",
     moonInSign: (s) => `月は${s}に`,
     moonEnters: (t, n) => `${t}に${n}へ移ります`,
@@ -68,12 +68,12 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     taraTableLead: "生まれたときの月のナクシャトラ（宿）から、今日のナクシャトラまでを数える「ターラ・バラ」。宿曜の日運と同じ九つの巡りです。",
     yourNakshatra: "生まれのナクシャトラ",
     findTitle: "月星座がわからない方へ",
-    findLead: "生年月日と生まれた時刻から、月星座とナクシャトラの目安を計算します（日本時間）。",
+    findLead: (z) => `生年月日と生まれた時刻から、月星座とナクシャトラの目安を計算します（${z}）。`,
     findDate: "生年月日",
     findTime: "出生時刻",
     findResult: (s, n) => `月星座：${s}／ナクシャトラ：${n}`,
     findExact: "出生地まで入れて正確に調べる",
-    methodNote: "月の位置は天文計算（ラヒリ方式のサイデリアル）による概算で、日本時間で表示しています。宿は月の実際の位置で判定しているため、宿曜暦の日付で宿を割り当てるサイトとは、日によって異なることがあります。",
+    methodNote: (z) => `月の位置は天文計算（ラヒリ方式のサイデリアル）による概算で、${z}で表示しています。宿は月の実際の位置で判定しているため、宿曜暦の日付で宿を割り当てるサイトとは、日によって異なることがあります。`,
     sectionTitle: "今日の運勢",
     updated: (t) => `${t} 更新`,
     tomorrow: "明日の月",
@@ -110,7 +110,7 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     metaDescription:
       "Where today's Moon is — its sign and nakshatra — computed daily, with a reading for each of the twelve Moon signs and each of the 27 nakshatras, from classical Chandra gochar and tara bala.",
     lead: "Vedic astrology reads the day from the Moon. Count from your natal Moon sign to the sign the Moon is in today, and from your birth nakshatra to today's nakshatra, and the tradition gives a reading for the day.",
-    dateLabel: (d) => `${d} (Japan time)`,
+    dateLabel: (d, z) => `${d} (${z})`,
     moonNow: "Today's Moon",
     moonInSign: (s) => `The Moon is in ${s}`,
     moonEnters: (t, n) => `enters ${n} at ${t}`,
@@ -128,12 +128,12 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     taraTableLead: "Tara bala counts from your birth nakshatra to today's nakshatra — nine taras in a repeating cycle.",
     yourNakshatra: "Birth nakshatra",
     findTitle: "Don't know your Moon sign?",
-    findLead: "Enter your birth date and time for an estimate of your Moon sign and nakshatra (Japan time).",
+    findLead: (z) => `Enter your birth date and time for an estimate of your Moon sign and nakshatra (${z}).`,
     findDate: "Date of birth",
     findTime: "Time of birth",
     findResult: (s, n) => `Moon sign: ${s} · Nakshatra: ${n}`,
     findExact: "Check it exactly, with your birthplace",
-    methodNote: "The Moon's position is an astronomical approximation (Lahiri sidereal), shown in Japan time.",
+    methodNote: (z) => `The Moon's position is an astronomical approximation (Lahiri sidereal), shown in ${z}.`,
     sectionTitle: "Today",
     updated: (t) => `Updated ${t}`,
     tomorrow: "Tomorrow's Moon",
@@ -170,7 +170,7 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     metaDescription:
       "आज चंद्रमा किस राशि और नक्षत्र में है — प्रतिदिन गणना, बारह चंद्र राशियों और 27 नक्षत्रों के लिए फल, शास्त्रीय चंद्र गोचर और तारा बल के आधार पर।",
     lead: "वैदिक ज्योतिष दिन को चंद्रमा से पढ़ता है। अपनी जन्म चंद्र राशि से आज की राशि तक, और जन्म नक्षत्र से आज के नक्षत्र तक गिनें — परंपरा उस दिन का फल बताती है।",
-    dateLabel: (d) => `${d} (जापान समय)`,
+    dateLabel: (d, z) => `${d} (${z})`,
     moonNow: "आज का चंद्रमा",
     moonInSign: (s) => `चंद्रमा ${s} में`,
     moonEnters: (t, n) => `${t} पर ${n} में प्रवेश`,
@@ -188,12 +188,12 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     taraTableLead: "तारा बल जन्म नक्षत्र से आज के नक्षत्र तक गिनता है — नौ तारे एक चक्र में।",
     yourNakshatra: "जन्म नक्षत्र",
     findTitle: "अपनी चंद्र राशि नहीं जानते?",
-    findLead: "जन्म तिथि और समय से चंद्र राशि और नक्षत्र का अनुमान (जापान समय)।",
+    findLead: (z) => `जन्म तिथि और समय से चंद्र राशि और नक्षत्र का अनुमान (${z})।`,
     findDate: "जन्म तिथि",
     findTime: "जन्म समय",
     findResult: (s, n) => `चंद्र राशि: ${s} · नक्षत्र: ${n}`,
     findExact: "जन्म स्थान सहित सटीक जाँचें",
-    methodNote: "चंद्रमा की स्थिति खगोलीय अनुमान (लाहिड़ी निरयन) है, जापान समय में।",
+    methodNote: (z) => `चंद्रमा की स्थिति खगोलीय अनुमान (लाहिड़ी निरयन) है, ${z} में।`,
     sectionTitle: "आज",
     updated: (t) => `अद्यतन ${t}`,
     tomorrow: "कल का चंद्रमा",
@@ -230,7 +230,7 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     metaDescription:
       "오늘 달이 어느 별자리·낙샤트라에 있는지 매일 계산하여, 12개 달 별자리별 운세와 27낙샤트라별 운세를 보여줍니다. 고전 찬드라 고차라와 타라 발라에 근거합니다.",
     lead: "인도 점성술은 하루를 달로 읽습니다. 태어날 때의 달 별자리에서 오늘 달의 별자리까지, 태어난 낙샤트라에서 오늘의 낙샤트라까지 세면 전통적인 그날의 지침이 나옵니다.",
-    dateLabel: (d) => `${d} (일본 시간)`,
+    dateLabel: (d, z) => `${d} (${z})`,
     moonNow: "오늘의 달",
     moonInSign: (s) => `달은 ${s}에`,
     moonEnters: (t, n) => `${t}에 ${n}(으)로 이동`,
@@ -248,12 +248,12 @@ export const dailyCopy: Record<AppLanguage, DailyCopy> = {
     taraTableLead: "타라 발라는 태어난 낙샤트라에서 오늘의 낙샤트라까지 셉니다 — 아홉 타라가 반복됩니다.",
     yourNakshatra: "태어난 낙샤트라",
     findTitle: "달 별자리를 모르시나요?",
-    findLead: "생년월일과 태어난 시간으로 달 별자리와 낙샤트라를 추정합니다(일본 시간).",
+    findLead: (z) => `생년월일과 태어난 시간으로 달 별자리와 낙샤트라를 추정합니다(${z}).`,
     findDate: "생년월일",
     findTime: "태어난 시간",
     findResult: (s, n) => `달 별자리: ${s} · 낙샤트라: ${n}`,
     findExact: "출생지까지 넣어 정확히 확인",
-    methodNote: "달의 위치는 천문 계산(라히리 항성식) 근사치이며 일본 시간으로 표시합니다.",
+    methodNote: (z) => `달의 위치는 천문 계산(라히리 항성식) 근사치이며 ${z}으로 표시합니다.`,
     sectionTitle: "오늘",
     updated: (t) => `${t} 업데이트`,
     tomorrow: "내일의 달",

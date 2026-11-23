@@ -5,7 +5,6 @@
 import { SHUKUS, SHUKU_DISPLAY_ORDER, type Shuku } from "./shuku";
 import { relationOf, DISTANCE_LABEL, GROUP_KANJI, RELATION_KANJI, type Relation, type RelationGroup } from "./relations";
 import { DAILY_KIND, GROUP_MEANING, SHUKU_PROFILES } from "./content";
-import { jstDate, shukuSpansOfDay } from "@/lib/daily/moon-day";
 
 /** Good relations first, the demanding ones last. */
 export const GROUP_ORDER: readonly RelationGroup[] = ["eishin", "yuusui", "gyoutai", "mei", "kisei", "ankai"];
@@ -47,38 +46,6 @@ export function pairSummary(a: Shuku, b: Shuku, r: Relation): string {
 
 export function profileOf(s: Shuku) {
   return SHUKU_PROFILES[s.kanji];
-}
-
-/** "HH:MM" in Japan time. */
-export const fmtJst = (d: Date) => new Date(d.getTime() + 9 * 3600_000).toISOString().slice(11, 16);
-
-export interface TodayInfo {
-  dateLabel: string;
-  spans: { kanji: string; slug: string; reading: string; from: string; until: string; startsToday: boolean; endsToday: boolean }[];
-  /** The 宿 holding most of the day. */
-  main: Shuku;
-  /** When this was computed (Japan time), for "updated". */
-  computedAt: string;
-}
-
-export function todayInfo(now = new Date()): TodayInfo {
-  const date = jstDate(now);
-  const spans = shukuSpansOfDay(date);
-  const main = spans.reduce((x, y) => (y.until.getTime() - y.from.getTime() > x.until.getTime() - x.from.getTime() ? y : x)).shuku;
-  return {
-    dateLabel: `${date.year}年${date.month}月${date.day}日`,
-    spans: spans.map((s) => ({
-      kanji: s.shuku.kanji,
-      slug: s.shuku.slug,
-      reading: s.shuku.reading,
-      from: fmtJst(s.from),
-      until: fmtJst(s.until),
-      startsToday: s.startsToday,
-      endsToday: s.endsToday,
-    })),
-    main,
-    computedAt: fmtJst(now),
-  };
 }
 
 /** Today's 日運 for one 本命宿. */

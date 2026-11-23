@@ -1,6 +1,7 @@
 'use client';
 
 import ChartSummaryCard from '@/components/chart/ChartSummaryCard';
+import { readZoneCookie, zoneDate, zoneTime } from '@/lib/time/site-zone';
 import { toolUiCopy } from '@/lib/tools/tool-ui-copy';
 import ChartCover from '@/components/chart/ChartCover';
 import ChartSectionBar from '@/components/chart/ChartSectionBar';
@@ -51,19 +52,26 @@ function scrollWorkspaceToTop() {
   else window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/**
+ * "Now" in the site zone (JST; IST for visitors in India). The workspace
+ * renders only in the browser (its Suspense fallback is the server HTML),
+ * so reading the zone cookie here cannot cause a hydration mismatch.
+ */
 function getDefaultFormData(): ChartFormData {
-  const now = new Date();
+  const zone = readZoneCookie();
+  const { year, month, day } = zoneDate(zone);
+  const { hour, minute } = zoneTime(zone);
   return {
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    day: now.getDate(),
-    hour: now.getHours(),
-    minute: now.getMinutes(),
+    year,
+    month,
+    day,
+    hour,
+    minute,
     latitude: 25.4488,
     longitude: 78.5698,
-    transit_year: now.getFullYear(),
-    transit_month: now.getMonth() + 1,
-    transit_day: now.getDate(),
+    transit_year: year,
+    transit_month: month,
+    transit_day: day,
   };
 }
 

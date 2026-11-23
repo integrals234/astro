@@ -21,6 +21,8 @@ import { NAKSHATRAS } from "@/lib/jyotish/nakshatra-data";
 import { useGsapEffect, MOTION_OK } from "@/lib/motion/gsap";
 import { estimateUtcOffset, quickSkyFromFields } from "@/lib/sky/quick-sky";
 import { cosmosBus } from "@/lib/cosmos/bus";
+import { useSiteZone } from "@/components/time/useSiteZone";
+import { ZONE_OFFSET } from "@/lib/time/site-zone";
 import { trackEvent } from "@/lib/analytics/events";
 
 /**
@@ -50,6 +52,7 @@ export default function HomeHero({
   const { compute, status } = useChartData();
   const { upsertProfile } = useBirthProfile();
   const { toast } = useToast();
+  const zone = useSiteZone();
   const root = useRef<HTMLElement>(null);
 
   // Noon pre-filled here so the live sky preview has something to show;
@@ -61,11 +64,11 @@ export default function HomeHero({
   const sky = useMemo(() => {
     const offset = entry.location
       ? estimateUtcOffset(entry.location.display_name, Number(entry.location.lon))
-      : // No place yet: assume the visitor's own zone — right for most of
-        // them, and corrected the moment a place is chosen.
-        -new Date().getTimezoneOffset() / 60;
+      : // No place yet: the site zone (JST; IST for visitors in India),
+        // corrected the moment a place is chosen.
+        ZONE_OFFSET[zone];
     return quickSkyFromFields(entry.date, effectiveTime(entry), offset);
-  }, [entry]);
+  }, [entry, zone]);
 
   // Hand the typed moment to the 3D scene (UTC), or back to "now".
   useEffect(() => {
@@ -77,10 +80,10 @@ export default function HomeHero({
     const tm = /^(\d{2}):(\d{2})/.exec(effectiveTime(entry) || "12:00");
     const offset = entry.location
       ? estimateUtcOffset(entry.location.display_name, Number(entry.location.lon))
-      : -new Date().getTimezoneOffset() / 60;
+      : ZONE_OFFSET[zone];
     const utc = Date.UTC(Number(dm[1]), Number(dm[2]) - 1, Number(dm[3]), tm ? Number(tm[1]) : 12, tm ? Number(tm[2]) : 0) - offset * 3600_000;
     cosmosBus.setBirth(new Date(utc));
-  }, [entry]);
+  }, [entry, zone]);
   useEffect(() => () => cosmosBus.setBirth(null), []);
 
   const moonSign = sky ? (tr(t.signs, sky.moon.sign)) : "";

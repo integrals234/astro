@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "@/components/i18n/LocaleLink";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { dailyCopy } from "@/lib/daily/daily-copy";
-import type { DayReport } from "@/lib/daily/today";
+import { useDayReport } from "@/components/daily/DayReportProvider";
+import { ZONE_LABEL } from "@/lib/time/site-zone";
 import type { AppLanguage } from "@/lib/i18n/language";
 import { tonightCopy } from "@/lib/home/tonight-copy";
 import { nakshatraHref, rashiHref, tr } from "@/lib/sky/entity-links";
@@ -10,9 +13,10 @@ import { DAILY_KIND } from "@/lib/sukuyo/content";
 import { shukuHref, type Shuku } from "@/lib/sukuyo/shuku";
 
 /**
- * The daily pieces, shared by /today and the daily sections on the sign and
- * nakshatra pages. Server components: computed at render, the pages
- * revalidate hourly.
+ * The daily pieces, shared by /horoscope/today and the daily sections on the
+ * sign, nakshatra and 宿 pages. They read the day from DayReportProvider:
+ * JST in the server HTML, the visitor's site zone (IST in India) after
+ * hydration.
  */
 export const QUALITY_TONE = {
   good: "bg-terracotta/12 text-terracotta",
@@ -26,7 +30,8 @@ const nakName = (lang: AppLanguage, s: Shuku) => {
 };
 
 /** Today's Moon: sign, nakshatra/宿 spans with times, tithi. */
-export function DailyMoonCard({ report, lang, title }: { report: DayReport; lang: AppLanguage; title?: string }) {
+export function DailyMoonCard({ lang, title }: { lang: AppLanguage; title?: string }) {
+  const { today: report, zone } = useDayReport();
   const copy = dailyCopy[lang];
   const t = chartFormCopy[lang];
   const tonight = tonightCopy[lang];
@@ -37,7 +42,7 @@ export function DailyMoonCard({ report, lang, title }: { report: DayReport; lang
   return (
     <section aria-label={title ?? copy.moonNow} className="chart-cover p-5 sm:p-7">
       <p className="text-xs text-text-muted">
-        {copy.dateLabel(dateText)} · {copy.updated(report.computedAt)}
+        {copy.dateLabel(dateText, ZONE_LABEL[lang][zone])} · {copy.updated(report.computedAt)}
       </p>
       <h2 className="mt-2 font-header text-[length:var(--step-3)] leading-tight text-ink">
         {copy.moonInSign(signName(report.sign))}
@@ -74,7 +79,8 @@ export function DailyMoonCard({ report, lang, title }: { report: DayReport; lang
 }
 
 /** 12 Moon signs → today's house, quality and reading. */
-export function SignTable({ report, lang, highlight }: { report: DayReport; lang: AppLanguage; highlight?: number }) {
+export function SignTable({ lang, highlight }: { lang: AppLanguage; highlight?: number }) {
+  const { today: report } = useDayReport();
   const copy = dailyCopy[lang];
   const t = chartFormCopy[lang];
   return (
@@ -98,7 +104,8 @@ export function SignTable({ report, lang, highlight }: { report: DayReport; lang
 }
 
 /** 27 birth nakshatras (宿) → today's tara (and, in Japanese, the 宿曜 日運). */
-export function NakshatraTable({ report, lang, highlight }: { report: DayReport; lang: AppLanguage; highlight?: string }) {
+export function NakshatraTable({ lang, highlight }: { lang: AppLanguage; highlight?: string }) {
+  const { today: report } = useDayReport();
   const copy = dailyCopy[lang];
   return (
     <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -120,4 +127,23 @@ export function NakshatraTable({ report, lang, highlight }: { report: DayReport;
       ))}
     </ul>
   );
+}
+
+/** Tomorrow's Moon, one line (the today page). */
+export function TomorrowLine({ lang }: { lang: AppLanguage }) {
+  const { tomorrow } = useDayReport();
+  if (!tomorrow) return null;
+  const copy = dailyCopy[lang];
+  const t = chartFormCopy[lang];
+  return (
+    <p className="mt-2 text-sm text-text">
+      {copy.moonInSign(tr(t.signs, SIGNS[tomorrow.sign]))} · {nakName(lang, tomorrow.main)}
+    </p>
+  );
+}
+
+/** The method note, naming the zone in use. */
+export function MethodNote({ lang }: { lang: AppLanguage }) {
+  const { zone } = useDayReport();
+  return <p className="mt-8 max-w-3xl text-[11px] leading-relaxed text-text-muted">{dailyCopy[lang].methodNote(ZONE_LABEL[lang][zone])}</p>;
 }

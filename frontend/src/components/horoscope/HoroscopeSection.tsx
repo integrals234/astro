@@ -12,6 +12,8 @@ import { forecastForSign, transitCopy } from "@/lib/education/horoscope-transits
 import HoroscopeTabStrip from "@/components/horoscope/HoroscopeTabStrip";
 import { todayReport } from "@/lib/daily/today";
 import { dailyCopy } from "@/lib/daily/daily-copy";
+import { useSiteZone } from "@/components/time/useSiteZone";
+import { ZONE_OFFSET } from "@/lib/time/site-zone";
 import { chartFormCopy } from "@/lib/chart-i18n";
 import { SIGNS } from "@/lib/sky/quick-sky";
 import { tr } from "@/lib/sky/entity-links";
@@ -91,7 +93,8 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
   };
 
   // Today's Moon line for every sign card (the daily page has the detail).
-  const today = useMemo(() => todayReport(now), [now]);
+  const zone = useSiteZone();
+  const today = useMemo(() => todayReport(now, ZONE_OFFSET[zone]), [now, zone]);
   const dc = dailyCopy[lang];
 
   // Computed from the planets' actual positions for the period (gochar),
@@ -107,10 +110,11 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
   }, [activePeriod]);
   const tc = transitCopy[lang];
   const cf = chartFormCopy[lang];
-  const shortDate = (d: Date) => d.toLocaleDateString(dateLocales[lang], { month: "short", day: "numeric" });
-  const weekday = (d: Date) => d.toLocaleDateString(dateLocales[lang], { weekday: "short", day: "numeric" });
+  const shortDate = (d: Date) => d.toLocaleDateString(dateLocales[lang], { month: "short", day: "numeric", timeZone: zone });
+  const weekday = (d: Date) => d.toLocaleDateString(dateLocales[lang], { weekday: "short", day: "numeric", timeZone: zone });
 
   const updatedLabel = now.toLocaleString(dateLocales[lang], {
+    timeZone: zone,
     month: "short",
     day: "numeric",
     hour: "numeric",
@@ -135,7 +139,9 @@ export default function HoroscopeSection({ lang }: { lang: EducationLang }) {
         <p className="mt-4 text-sm leading-relaxed text-text-muted">
           {tc.intro}
         </p>
-        <p className="mt-3 text-xs text-text-muted">
+        {/* The clock differs between the cached server copy and the browser
+            by a minute or more; that is expected, not a hydration bug. */}
+        <p className="mt-3 text-xs text-text-muted" suppressHydrationWarning>
           {uiText("updated", lang)}: {updatedLabel}
           <span className="mx-2">·</span>
           {activePeriod.rangeLabel[lang]}

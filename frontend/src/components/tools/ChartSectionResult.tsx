@@ -15,6 +15,8 @@ import type { NatalInput } from "@/lib/profile/types";
 import { chartPreviewCopy } from "@/lib/tools/chart-preview-copy";
 import type { ToolHandoffId } from "@/lib/tools/handoff-copy";
 import { toolUiCopy } from "@/lib/tools/tool-ui-copy";
+import { useSiteZone } from "@/components/time/useSiteZone";
+import { zoneIsoDate } from "@/lib/time/site-zone";
 
 /**
  * One or more chart sections, computed and drawn without leaving the page.
@@ -28,10 +30,6 @@ import { toolUiCopy } from "@/lib/tools/tool-ui-copy";
  * toggle (client-side re-anchoring, no new request) and a date picker
  * (recomputes the transits for that day).
  */
-function isoDate(d: Date) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
 export default function ChartSectionResult({
   sections,
   toolSlug,
@@ -54,7 +52,11 @@ export default function ChartSectionResult({
   const hasTransits = sections.includes("gochar") || sections.includes("sadeSati");
 
   const [gocharBase, setGocharBase] = useState<"Lagna" | "Chandra">("Lagna");
-  const [transitDay, setTransitDay] = useState(() => isoDate(new Date()));
+  // null = "today" in the site zone (JST; IST in India) until a date is picked.
+  const zone = useSiteZone();
+  const todayIso = zoneIsoDate(zone);
+  const [pickedDay, setTransitDay] = useState<string | null>(null);
+  const transitDay = pickedDay ?? todayIso;
 
   const compute = useCallback(
     (natal: NatalInput) => {
@@ -101,8 +103,8 @@ export default function ChartSectionResult({
                   onChange={(e) => e.target.value && setTransitDay(e.target.value)}
                   className="washi-field cursor-pointer p-2 text-sm"
                 />
-                {transitDay !== isoDate(new Date()) ? (
-                  <button type="button" onClick={() => setTransitDay(isoDate(new Date()))} className="washi-btn-secondary px-3 py-2 text-xs">
+                {transitDay !== todayIso ? (
+                  <button type="button" onClick={() => setTransitDay(null)} className="washi-btn-secondary px-3 py-2 text-xs">
                     {ui.today}
                   </button>
                 ) : null}

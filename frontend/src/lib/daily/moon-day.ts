@@ -7,8 +7,9 @@
  * series + Lahiri ayanamsha as the rest of the site's quick sky (accurate to
  * a fraction of a degree, i.e. a change time good to within minutes).
  *
- * Days are Japan days (JST): the pages are for Japanese readers, and "today"
- * must turn over at midnight in Tokyo, not on the server's clock.
+ * Days are site-zone days (lib/time/site-zone.ts): JST by default, IST for
+ * visitors in India — "today" turns over at midnight there, never on the
+ * server's clock. `offsetHours` defaults to JST (9).
  *
  * Today's 宿 is the 宿 of the Moon's actual position — the site's stated
  * method — not the 宿曜暦 calendar 宿 some sites use; on some days the two
@@ -19,7 +20,7 @@ import { centuries } from "@/lib/sky/orbits";
 import { SHUKU_COUNT, shukuByIndex, type Shuku } from "@/lib/sukuyo/shuku";
 
 const SPAN = 360 / SHUKU_COUNT;
-const JST_OFFSET_MS = 9 * 3600_000;
+const JST_OFFSET_HOURS = 9;
 const norm = (deg: number) => ((deg % 360) + 360) % 360;
 
 /** The Moon's sidereal (Lahiri) longitude at an instant, degrees. */
@@ -33,14 +34,14 @@ export const moonShukuIndex = (at: Date) => Math.floor(moonSidereal(at) / SPAN) 
 export const moonSignIndex = (at: Date) => Math.floor(moonSidereal(at) / 30) % 12;
 
 /** The calendar date in Japan at an instant. */
-export function jstDate(at: Date): { year: number; month: number; day: number } {
-  const d = new Date(at.getTime() + JST_OFFSET_MS);
+export function jstDate(at: Date, offsetHours = JST_OFFSET_HOURS): { year: number; month: number; day: number } {
+  const d = new Date(at.getTime() + offsetHours * 3600_000);
   return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate() };
 }
 
 /** Midnight JST at the start of a Japan date, as an instant. */
-export function jstMidnight(date: { year: number; month: number; day: number }): Date {
-  return new Date(Date.UTC(date.year, date.month - 1, date.day) - JST_OFFSET_MS);
+export function jstMidnight(date: { year: number; month: number; day: number }, offsetHours = JST_OFFSET_HOURS): Date {
+  return new Date(Date.UTC(date.year, date.month - 1, date.day) - offsetHours * 3600_000);
 }
 
 /**
@@ -80,8 +81,8 @@ export interface ShukuSpan {
 }
 
 /** The 宿 the Moon passes through during one Japan day (one or two). */
-export function shukuSpansOfDay(date: { year: number; month: number; day: number }): ShukuSpan[] {
-  const dayStart = jstMidnight(date);
+export function shukuSpansOfDay(date: { year: number; month: number; day: number }, offsetHours = JST_OFFSET_HOURS): ShukuSpan[] {
+  const dayStart = jstMidnight(date, offsetHours);
   const dayEnd = new Date(dayStart.getTime() + 24 * 3600_000);
   const spans: ShukuSpan[] = [];
   let cursor = dayStart;
@@ -101,8 +102,8 @@ export function shukuSpansOfDay(date: { year: number; month: number; day: number
 }
 
 /** The 宿 that holds most of a Japan day — "today's 宿" for daily readings. */
-export function mainShukuOfDay(date: { year: number; month: number; day: number }): Shuku {
-  const spans = shukuSpansOfDay(date);
+export function mainShukuOfDay(date: { year: number; month: number; day: number }, offsetHours = JST_OFFSET_HOURS): Shuku {
+  const spans = shukuSpansOfDay(date, offsetHours);
   return spans.reduce((a, b) => (b.until.getTime() - b.from.getTime() > a.until.getTime() - a.from.getTime() ? b : a)).shuku;
 }
 

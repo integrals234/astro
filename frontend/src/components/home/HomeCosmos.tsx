@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "@/components/i18n/LanguageProvider";
 import Journey, { JOURNEY_CHAPTERS, chapterDomId } from "@/components/home/Journey";
 import { cosmosBus } from "@/lib/cosmos/bus";
+import { useSiteZone } from "@/components/time/useSiteZone";
 import { smoothScrollTo } from "@/lib/cosmos/smooth";
 import { journeyCopy, type JourneyChapterId } from "@/lib/home/journey-copy";
 
@@ -42,9 +43,10 @@ export default function HomeCosmos({ children }: { children: React.ReactNode }) 
   );
 
   const fmt = useRef<Intl.DateTimeFormat | null>(null);
+  const zone = useSiteZone();
   useEffect(() => {
-    fmt.current = new Intl.DateTimeFormat(language, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-  }, [language]);
+    fmt.current = new Intl.DateTimeFormat(language, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: zone });
+  }, [language, zone]);
 
   // Written straight to the DOM: the time-lapse updates it ~12×/s.
   const onDate = useCallback((d: Date) => {
